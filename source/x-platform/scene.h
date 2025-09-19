@@ -1,9 +1,15 @@
 #pragma once
 
+#include <vector>
+#include "../components/component.h"
+
 class Scene
 {
+private:
+
 public:
-    Scene();
     virtual void Init() = 0;
     virtual void Update() = 0;
+
+    std::vector<Component*> components;
 };

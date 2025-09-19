@@ -9,8 +9,8 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 add_executable(QtVulkan
-    source/modules/renderer/vulkan/renderer.cpp
-    source/modules/renderer/vulkan/renderer.h
+    source/modules/renderer/vulkan/vulkanrenderer.cpp
+    source/modules/renderer/vulkan/vulkanrenderer.h
     source/platforms/qt/mainwindow.h
     source/platforms/qt/mainwindow.cpp
     source/modules/renderer/vulkan/utilities.h
@@ -23,6 +23,12 @@ add_executable(QtVulkan
     source/platforms/qt/qtapplication.cpp
     source/platforms/qt/qtapplication.h
     source/x-platform/scene.h
+    source/demos/vikingscene.cpp
+    source/demos/vikingscene.h
+    source/components/component.h
+    source/components/mesh.cpp
+    source/components/mesh.h
+    source/modules/renderer/renderer.h
 )
 
 include_directories(${CMAKE_SOURCE_DIR}/include)

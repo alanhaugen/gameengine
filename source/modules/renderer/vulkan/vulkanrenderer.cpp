@@ -1,4 +1,4 @@
-#include "renderer.h"
+#include "vulkanrenderer.h"
 #include "utilities.h"
 
 #define GLM_FORCE_RADIANS
@@ -1770,7 +1770,7 @@ void Renderer::exposeEvent(QExposeEvent* event)
 {
     /*qDebug("exposeEvent called");
     if (isExposed()) {
-        drawFrame();			//actual drawing
+        drawFrame();
     }*/
 }
 

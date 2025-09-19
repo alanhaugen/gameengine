@@ -1,5 +1,5 @@
-#ifndef RENDERER_H
-#define RENDERER_H
+#ifndef VULKANRENDERER_H
+#define VULKANRENDERER_H
 
 #include <QWindow>
 #include <vulkan/vulkan_core.h>
@@ -163,4 +163,4 @@ private:
 
 
 
-#endif // RENDERER_H
+#endif // VULKANRENDERER_H

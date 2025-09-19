@@ -1,6 +1,6 @@
 #include "mainwindow.h"
 #include "ui_MainWindow.h"
-#include "../../modules/renderer/vulkan/renderer.h"
+#include "../../modules/renderer/vulkan/vulkanrenderer.h"
 #include <QKeyEvent>
 
 MainWindow::MainWindow(QWidget *parent, const char* windowTitle, int windowWidth, int windowHeight)
