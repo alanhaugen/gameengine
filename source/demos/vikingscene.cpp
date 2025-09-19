@@ -13,7 +13,7 @@ void VikingScene::Init()
     components.push_back(vikingCamp2);
 }
 
-void VikingScene::Update(float time)
+void VikingScene::Update()
 {
     vikingCamp1->drawable->ubo.model = glm::rotate(vikingCamp1->drawable->ubo.model, glm::radians(1.0f), glm::vec3(0,0,1));
     vikingCamp2->drawable->ubo.model = glm::rotate(vikingCamp2->drawable->ubo.model, glm::radians(-1.0f), glm::vec3(0,0,1));

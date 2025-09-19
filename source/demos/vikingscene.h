@@ -11,5 +11,5 @@ private:
 
 public:
     void Init();
-    void Update(float time);
+    void Update();
 };
