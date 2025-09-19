@@ -3,17 +3,21 @@ Application {
     name: "Game"
 
     files: [
-        "source/renderer.cpp",
-        "source/renderer.h",
-        "source/mainwindow.h",
-        "source/mainwindow.cpp",
-        "source/utilities.h",
-        "source/vertex.h",
+        "source/modules/renderer/vulkan/renderer.cpp",
+        "source/modules/renderer/vulkan/renderer.h",
+        "source/platforms/qt/mainwindow.h",
+        "source/platforms/qt/mainwindow.cpp",
+        "source/modules/renderer/vulkan/utilities.h",
+        "source/modules/renderer/vertex.h",
         "source/main.cpp",
         "CMakeLists.txt",
-        "source/MainWindow.ui",
-        "Shaders/Shader.vert",
-        "Shaders/Shader.frag",
+        "source/platforms/application.cpp",
+        "source/platforms/application.h",
+        "source/platforms/qt/MainWindow.ui",
+        "source/platforms/qt/qtapplication.cpp",
+        "source/platforms/qt/qtapplication.h",
+        "shaders/shader.vert",
+        "shaders/shader.frag",
     ]
 
     Depends { name: "cpp" }

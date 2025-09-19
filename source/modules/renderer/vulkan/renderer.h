@@ -5,7 +5,7 @@
 #include <vulkan/vulkan_core.h>
 #include <string>
 #include <vector>
-#include "vertex.h"
+#include "../vertex.h"
 
 //Forward declarations
 struct SwapChainSupportDetails;

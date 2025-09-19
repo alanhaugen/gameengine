@@ -1,13 +1,7 @@
-#include "mainwindow.h"
-#include <QApplication>
-#include <QWindow>
+#include "platforms/application.h"
 
-int main(int argc, char *argv[])
+int main(int argumentQuantity, char *argumentArray[])
 {
-    QApplication a(argc, argv);
-    MainWindow w;
-    w.move(200, 100);
-    w.show();
-    w.start();
-    return a.exec();
+    Application application(argumentQuantity, argumentArray);
+    return application.Run();
 }

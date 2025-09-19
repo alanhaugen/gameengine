@@ -6,7 +6,7 @@
 #include <optional>
 #include <string>
 #include <vector>
-#include "Vertex.h"
+#include "../Vertex.h"
 
 #define GLM_FORCE_RADIANS
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
@@ -17,7 +17,7 @@
 const uint32_t WIDTH = 800;
 const uint32_t HEIGHT = 600;
 
-const std::string PATH = "../../";
+const std::string PATH = "";
 const std::string MODEL_PATH = PATH + "Assets/Models/viking_room.obj";
 const std::string TEXTURE_PATH = PATH + "Assets/Textures/viking_room.png";
 
@@ -30,7 +30,11 @@ const std::vector<const char*> deviceExtensions = { VK_KHR_SWAPCHAIN_EXTENSION_N
 #ifdef NDEBUG
 const bool enableValidationLayers = false;
 #else
+#ifdef _WIN32
 const bool enableValidationLayers = true;
+#else
+const bool enableValidationLayers = false; // MoltenVK has problems with validation layers
+#endif
 #endif
 
 VkResult CreateDebugUtilsMessengerEXT(VkInstance instance, const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDebugUtilsMessengerEXT* pDebugMessenger) {

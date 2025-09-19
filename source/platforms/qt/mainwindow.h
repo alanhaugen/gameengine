@@ -18,9 +18,10 @@ public:
     ~MainWindow();
 
     void start();
+    void cleanup();
 
 private:
-    Ui::MainWindow *ui;
+    Ui::MainWindow *ui = nullptr;
 
     //QWidget* mRenderWindowContainer{nullptr};   //Qt container for the RenderWindow
     class Renderer* mVulkanWindow{nullptr};

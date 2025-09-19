@@ -1,6 +1,6 @@
 #include "mainwindow.h"
 #include "ui_MainWindow.h"
-#include "renderer.h"
+#include "../../modules/renderer/vulkan/renderer.h"
 #include <QKeyEvent>
 
 MainWindow::MainWindow(QWidget *parent)
@@ -35,13 +35,7 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow()
 {
-    if(mVulkanWindow)
-    {
-        delete mVulkanWindow;
-        mVulkanWindow = nullptr;
-    }
-
-    delete ui;
+    cleanup();
 }
 
 void MainWindow::start()
@@ -51,6 +45,20 @@ void MainWindow::start()
     if (mVulkanWindow)
     {
         mVulkanWindow->requestUpdate();
+    }
+}
+
+void MainWindow::cleanup()
+{
+    if(mVulkanWindow)
+    {
+        delete mVulkanWindow;
+        mVulkanWindow = nullptr;
+    }
+
+    if (ui)
+    {
+        delete ui;
     }
 }
 
