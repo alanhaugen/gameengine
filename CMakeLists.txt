@@ -9,13 +9,22 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 add_executable(QtVulkan
+    source/modules/renderer/vulkan/renderer.cpp
+    source/modules/renderer/vulkan/renderer.h
+    source/platforms/qt/mainwindow.h
+    source/platforms/qt/mainwindow.cpp
+    source/modules/renderer/vulkan/utilities.h
+    source/modules/renderer/vertex.h
     source/main.cpp
-    source/renderer.h source/renderer.cpp
-    source/utilities.h
-    source/vertex.h
-    source/mainwindow.h source/mainwindow.cpp
-    source/mainwindow.ui
+    CMakeLists.txt
+    source/platforms/application.cpp
+    source/platforms/application.h
+    source/platforms/qt/MainWindow.ui
+    source/platforms/qt/qtapplication.cpp
+    source/platforms/qt/qtapplication.h
 )
+
+include_directories(${CMAKE_SOURCE_DIR}/include)
 
 if(MSVC)
     # Required for proper C++ exception handling with MSVC
@@ -28,7 +37,21 @@ if(MSVC)
     Qt::Widgets
     "C:/VulkanSDK/1.4.321.1/Lib/vulkan-1.lib"
     )
-target_link_libraries(QtVulkan PRIVATE Qt6::Widgets)
+    target_link_libraries(QtVulkan PRIVATE Qt6::Widgets)
+else()
+    find_library(COREAUDIO CoreAudio "/usr")
+    target_link_libraries(QtVulkan PRIVATE
+    Qt::Core
+    Qt::Widgets
+    "-framework QuartzCore"
+    "-framework Metal"
+    "-framework Foundation"
+    "-framework IOSurface"
+    "-framework CoreGraphics"
+    "-framework IOKit"
+    "-framework AppKit"
+    ${CMAKE_SOURCE_DIR}/lib/darwin/arm64/libMoltenVK.a
+    )
 endif()
 
 include(GNUInstallDirs)
