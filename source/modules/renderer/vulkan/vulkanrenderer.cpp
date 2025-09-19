@@ -49,7 +49,6 @@ Renderer::Renderer(QWindow* parent) : QWindow(parent)
 
 Renderer::~Renderer()
 {
-    qDebug("VulkanRenderer Destructor");
     cleanup();
 }
 

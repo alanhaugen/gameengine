@@ -6,7 +6,7 @@
 #include <optional>
 #include <string>
 #include <vector>
-#include "../Vertex.h"
+#include "../vertex.h"
 
 #define GLM_FORCE_RADIANS
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE

@@ -6,5 +6,4 @@ Mesh::Mesh(const char *filePath)
 
 void Mesh::Update()
 {
-
 }

@@ -1,11 +1,13 @@
 #include "vikingscene.h"
-#include "../components/mesh.h"
+#include "glm/gtc/matrix_transform.hpp"
 
 void VikingScene::Init()
 {
-    components.push_back(new Mesh("Assets/Models/viking_room.obj"));
+    vikingCamp = new Mesh("Assets/Models/viking_room.obj");
+    components.push_back(vikingCamp);
 }
 
-void VikingScene::Update()
+void VikingScene::Update(float time)
 {
+    glm::rotate(vikingCamp->matrix, time * glm::radians(90.0f), glm::vec3(0,1,0));
 }
