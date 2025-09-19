@@ -14,7 +14,10 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    MainWindow(QWidget *parent = nullptr);
+    MainWindow(QWidget *parent = nullptr,
+               const char *windowTitle = "Inngine",
+               int windowWidth = 1100,
+               int windowHeight = 700);
     ~MainWindow();
 
     void start();

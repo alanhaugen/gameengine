@@ -8,7 +8,7 @@
 class Application : public PLATFORM
 {
 public:
-    Application(int argc, char* argv[]);
+    Application(int argc, char* argv[], const char* windowTitle, int windowWidth, int windowHeight);
     int Run();
 };
 

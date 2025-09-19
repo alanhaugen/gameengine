@@ -3,7 +3,7 @@
 #include "../../modules/renderer/vulkan/renderer.h"
 #include <QKeyEvent>
 
-MainWindow::MainWindow(QWidget *parent)
+MainWindow::MainWindow(QWidget *parent, const char* windowTitle, int windowWidth, int windowHeight)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
@@ -11,14 +11,14 @@ MainWindow::MainWindow(QWidget *parent)
     //MainWindow size:
     resize(1300, 850);
 
-    setWindowTitle("Tower Defense");  //Main app title
+    setWindowTitle(windowTitle);  //Main app title
 
     mVulkanWindow = new Renderer();
     mVulkanWindow->setTitle("Renderer");    //Render window title
 
     //Have to set the size of the Vulkan window here, otherwise it can not set up the swapchain correctly
-    mVulkanWindow->setWidth(1100);
-    mVulkanWindow->setHeight(700);
+    mVulkanWindow->setWidth(windowWidth);
+    mVulkanWindow->setHeight(windowHeight);
     mVulkanWindow->initVulkan();
 
     // Wrap VulkanRenderer (QWindow) into a QWidget
