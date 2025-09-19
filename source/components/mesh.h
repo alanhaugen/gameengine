@@ -7,7 +7,7 @@
 class Mesh : public Component
 {
 private:
-    Drawable* drawable;
+    Renderer::Drawable* drawable;
 
 public:
     Mesh(const char* filePath);

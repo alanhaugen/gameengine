@@ -6,19 +6,21 @@
 #include <string>
 #include <vector>
 #include "../vertex.h"
+#include "../renderer.h"
 
 //Forward declarations
 struct SwapChainSupportDetails;
 struct QueueFamilyIndices;
 
-class Renderer : public QWindow
+class VulkanRenderer : public QWindow, public Renderer
 {
     Q_OBJECT
 public:
-    explicit Renderer(QWindow* parent = nullptr);
-    ~Renderer();
+    explicit VulkanRenderer(QWindow* parent = nullptr);
+    ~VulkanRenderer();
 
     void initVulkan();
+    Drawable CreateDrawable() override;
 
 protected:
     //Qt event handlers - called when requestUpdate(); is called
@@ -52,7 +54,6 @@ private:
     VkRenderPass renderPass;
     VkDescriptorSetLayout descriptorSetLayout;
     VkPipelineLayout pipelineLayout;
-    VkPipeline graphicsPipeline;
 
     VkCommandPool commandPool;
 
@@ -99,6 +100,8 @@ private:
 
     // ---- Functions ----
 
+    Drawable drawable;
+
     void drawFrame();
 
     void cleanupSwapChain();
@@ -114,7 +117,8 @@ private:
     void createImageViews();
     void createRenderPass();
     void createDescriptorSetLayout();
-    void createGraphicsPipeline();
+    VkPipeline createGraphicsPipeline(const char *vertexShaderPath,
+                                      const char *fragmentShaderPath);
     void createFramebuffers();
     void createCommandPool();
     void createColorResources();

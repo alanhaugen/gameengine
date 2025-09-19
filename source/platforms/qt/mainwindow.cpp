@@ -13,7 +13,7 @@ MainWindow::MainWindow(QWidget *parent, const char* windowTitle, int windowWidth
 
     setWindowTitle(windowTitle);  //Main app title
 
-    mVulkanWindow = new Renderer();
+    mVulkanWindow = new VulkanRenderer();
     mVulkanWindow->setTitle("Renderer");    //Render window title
 
     //Have to set the size of the Vulkan window here, otherwise it can not set up the swapchain correctly
