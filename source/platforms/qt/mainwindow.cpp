@@ -9,7 +9,7 @@ MainWindow::MainWindow(QWidget *parent, const char* windowTitle, int windowWidth
 {
     ui->setupUi(this);
     //MainWindow size:
-    resize(1300, 850);
+    resize((1300 - 1100) + windowWidth, (850 - 700) + windowHeight);
 
     setWindowTitle(windowTitle);  //Main app title
 
@@ -23,7 +23,7 @@ MainWindow::MainWindow(QWidget *parent, const char* windowTitle, int windowWidth
 
     // Wrap VulkanRenderer (QWindow) into a QWidget
     QWidget* vulkanWidget = QWidget::createWindowContainer(mVulkanWindow, this);
-    vulkanWidget->setMinimumSize(1100, 700);
+    vulkanWidget->setMinimumSize(windowWidth, windowHeight);
 
     ui->VulkanLayout->addWidget(vulkanWidget);
 
@@ -40,8 +40,6 @@ MainWindow::~MainWindow()
 
 void MainWindow::start()
 {
-    qDebug("Start is called");
-
     if (mVulkanWindow)
     {
         mVulkanWindow->requestUpdate();

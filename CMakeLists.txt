@@ -22,6 +22,7 @@ add_executable(QtVulkan
     source/platforms/qt/MainWindow.ui
     source/platforms/qt/qtapplication.cpp
     source/platforms/qt/qtapplication.h
+    source/x-platform/scene.h
 )
 
 include_directories(${CMAKE_SOURCE_DIR}/include)
