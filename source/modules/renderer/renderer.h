@@ -25,7 +25,7 @@ public:
 
         bool isVisible = true;
 
-        VkDeviceSize offset = 0;
+        int offset = 0;
     };
 
     virtual Drawable& CreateDrawable(std::vector<Vertex> vertices,

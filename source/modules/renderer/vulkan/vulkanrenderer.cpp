@@ -328,7 +328,6 @@ void VulkanRenderer::pickPhysicalDevice() {
     int i{ 0 };
     for (const auto& device : devices)
     {
-        VkPhysicalDeviceProperties deviceProperties;
         vkGetPhysicalDeviceProperties(device, &deviceProperties);
         qDebug("\nPhysical Device No.%d, Name: %s", i, deviceProperties.deviceName);
         qDebug("   Max Vulkan API support: %u.%u.%u\n",
@@ -566,7 +565,7 @@ void VulkanRenderer::createDescriptorSetLayout() {
     VkDescriptorSetLayoutBinding uboLayoutBinding{};
     uboLayoutBinding.binding = 0;
     uboLayoutBinding.descriptorCount = 1;
-    uboLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+    uboLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC;
     uboLayoutBinding.pImmutableSamplers = nullptr;
     uboLayoutBinding.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
 
@@ -1180,7 +1179,7 @@ void VulkanRenderer::createIndexBuffer(std::vector<uint32_t> indices, Drawable& 
 }
 
 void VulkanRenderer::createUniformBuffers() {
-    VkDeviceSize bufferSize = sizeof(Drawable::UniformBufferObject);
+    VkDeviceSize bufferSize = sizeof(Drawable::UniformBufferObject) * MAX_DRAWABLES;
 
     uniformBuffers.resize(swapChainImages.size());
     uniformBuffersMemory.resize(swapChainImages.size());
@@ -1192,7 +1191,7 @@ void VulkanRenderer::createUniformBuffers() {
 
 void VulkanRenderer::createDescriptorPool() {
     std::array<VkDescriptorPoolSize, 2> poolSizes{};
-    poolSizes[0].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+    poolSizes[0].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC;
     poolSizes[0].descriptorCount = static_cast<uint32_t>(swapChainImages.size());
     poolSizes[1].type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
     poolSizes[1].descriptorCount = static_cast<uint32_t>(swapChainImages.size());
@@ -1238,7 +1237,7 @@ void VulkanRenderer::createDescriptorSets() {
         descriptorWrites[0].dstSet = descriptorSets[i];
         descriptorWrites[0].dstBinding = 0;
         descriptorWrites[0].dstArrayElement = 0;
-        descriptorWrites[0].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+        descriptorWrites[0].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC;
         descriptorWrites[0].descriptorCount = 1;
         descriptorWrites[0].pBufferInfo = &bufferInfo;
 
@@ -1382,16 +1381,28 @@ void VulkanRenderer::createSyncObjects()
     }
 }
 
-void VulkanRenderer::updateUniformBuffer(uint32_t currentImage, Drawable::UniformBufferObject ubo) {
+void VulkanRenderer::updateUniformBuffer(uint32_t currentImage, Drawable::UniformBufferObject ubo, int offset) {
     //ubo.model = glm::rotate(glm::mat4(1.0f), time * glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-    ubo.view = glm::lookAt(glm::vec3(2.0f, 2.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+    ubo.view = glm::lookAt(glm::vec3(0.0f, 2.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
     ubo.proj = glm::perspective(glm::radians(45.0f), swapChainExtent.width / (float) swapChainExtent.height, 0.1f, 10.0f);
     ubo.proj[1][1] *= -1;
 
-    void* data;
-    vkMapMemory(device, uniformBuffersMemory[currentImage], 0, sizeof(ubo), 0, &data);
+    char* data;
+    vkMapMemory(device, uniformBuffersMemory[currentImage], 0, sizeof(ubo), 0, (void**)&data);
+    data += PadUniformBufferSize(sizeof(Drawable::UniformBufferObject)) * offset;
     memcpy(data, &ubo, sizeof(ubo));
     vkUnmapMemory(device, uniformBuffersMemory[currentImage]);
+}
+
+size_t VulkanRenderer::PadUniformBufferSize(size_t originalSize)
+{
+    // Calculate required alignment based on minimum device offset alignment
+    size_t minUboAlignment = deviceProperties.limits.minUniformBufferOffsetAlignment;
+    size_t alignedSize = originalSize;
+    if (minUboAlignment > 0) {
+        alignedSize = (alignedSize + minUboAlignment - 1) & ~(minUboAlignment - 1);
+    }
+    return alignedSize;
 }
 
 void VulkanRenderer::drawFrame() {
@@ -1417,10 +1428,12 @@ void VulkanRenderer::drawFrame() {
     VkCommandBufferBeginInfo beginInfo{};
     beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
 
+    // Begin a new command buffer
     if (vkBeginCommandBuffer(commandBuffers[imageIndex], &beginInfo) != VK_SUCCESS) {
         throw std::runtime_error("failed to begin recording command buffer!");
     }
 
+    // Time to begin the rendering commands
     VkRenderPassBeginInfo renderPassInfo{};
     renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
     renderPassInfo.renderPass = renderPass;
@@ -1435,6 +1448,7 @@ void VulkanRenderer::drawFrame() {
     renderPassInfo.clearValueCount = static_cast<uint32_t>(clearValues.size());
     renderPassInfo.pClearValues = clearValues.data();
 
+    // In Vulkan, all of the rendering happens inside a VkRenderPass (NOTE: For Vulkan 1.3, this has changed)
     vkCmdBeginRenderPass(commandBuffers[imageIndex], &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
 
     // Main render loop. Loop through all drawables and draw/render them
@@ -1447,21 +1461,39 @@ void VulkanRenderer::drawFrame() {
             continue;
         }
 
-        updateUniformBuffer(imageIndex, drawable.ubo);
+        // Upload uniforms to shader program
+        updateUniformBuffer(imageIndex, drawable.ubo, drawable.offset);
 
+        // TODO: Only bind pipeline and bind descriptor sets when the pipeline actually needs to change (per shader)
         vkCmdBindPipeline(commandBuffers[imageIndex], VK_PIPELINE_BIND_POINT_GRAPHICS, drawable.graphicsPipeline);
 
-        vkCmdBindVertexBuffers(commandBuffers[imageIndex], 0, 1, &drawable.vertexBuffer, &drawable.offset);
+        // Bind the mesh vertex buffer with offset 0
+        VkDeviceSize offset = 0;
+        vkCmdBindVertexBuffers(commandBuffers[imageIndex], 0, 1, &drawable.vertexBuffer, &offset);
 
-        vkCmdBindIndexBuffer(commandBuffers[imageIndex], drawable.indexBuffer, 0, VK_INDEX_TYPE_UINT32);
+        // Bind descriptor set (shader uniforms)
+        uint32_t uniformOffset = PadUniformBufferSize(sizeof(Drawable::UniformBufferObject) * drawable.offset);
 
-        vkCmdBindDescriptorSets(commandBuffers[imageIndex], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, &descriptorSets[0], 0, nullptr);
+        // Descriptor set 0 has the uniforms
+        vkCmdBindDescriptorSets(commandBuffers[imageIndex], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, &descriptorSets[0], 1, &uniformOffset);
 
-        vkCmdDrawIndexed(commandBuffers[imageIndex], static_cast<uint32_t>(drawable.indicesQuantity), 1, 0, 0, 0);
+        if (drawable.indicesQuantity == 0)
+        {
+            vkCmdDraw(commandBuffers[imageIndex], drawable.verticesQuantity, 1, 0, 0);
+        }
+        else
+        {
+            // Bind index buffer
+            vkCmdBindIndexBuffer(commandBuffers[imageIndex], drawable.indexBuffer, 0, VK_INDEX_TYPE_UINT32);
+
+            vkCmdDrawIndexed(commandBuffers[imageIndex], static_cast<uint32_t>(drawable.indicesQuantity), 1, 0, 0, 0);
+        }
     }
 
+    // End render pass (Remember, we are currently targeting Vulkan before Vulkan 1.3)
     vkCmdEndRenderPass(commandBuffers[imageIndex]);
 
+    // Finalize the command buffer (we can no longer add commands, but it can now be executed)
     if (vkEndCommandBuffer(commandBuffers[imageIndex]) != VK_SUCCESS) {
         throw std::runtime_error("failed to record command buffer!");
     }
@@ -1489,6 +1521,7 @@ void VulkanRenderer::drawFrame() {
 
     vkResetFences(device, 1, &inFlightFences[currentFrame]);
 
+    // Submit command buffer commands. Note we are not using vkQueueSubmit2 since we are using Vulkan 1.0.
     if (vkQueueSubmit(graphicsQueue, 1, &submitInfo, inFlightFences[currentFrame]) != VK_SUCCESS) {
         throw std::runtime_error("failed to submit draw command buffer!");
     }
@@ -1505,6 +1538,7 @@ void VulkanRenderer::drawFrame() {
 
     presentInfo.pImageIndices = &imageIndex;
 
+    // Put the graphics onto the screen
     result = vkQueuePresentKHR(presentQueue, &presentInfo);
 
     if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR || framebufferResized) {

@@ -39,6 +39,8 @@ protected:
 private:
     int drawablesQuantity = 0;
     Drawable drawables[MAX_DRAWABLES];
+    size_t PadUniformBufferSize(size_t originalSize);
+    VkPhysicalDeviceProperties deviceProperties;
     // class GLFWwindow* window;
     //GLFWwindow* window{nullptr};
     //QWindow* window{ nullptr }; //this object IS a QWindow
@@ -150,7 +152,7 @@ private:
     uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
     void createCommandBuffers();
     void createSyncObjects();
-    void updateUniformBuffer(uint32_t currentImage, Drawable::UniformBufferObject ubo);
+    void updateUniformBuffer(uint32_t currentImage, Drawable::UniformBufferObject ubo, int offset);
     VkShaderModule createShaderModule(const std::vector<char>& code);
     VkSurfaceFormatKHR chooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats);
     VkPresentModeKHR chooseSwapPresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes);
