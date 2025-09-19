@@ -3,8 +3,11 @@ Application {
     name: "Game"
 
     files: [
-        "source/modules/renderer/vulkan/renderer.cpp",
-        "source/modules/renderer/vulkan/renderer.h",
+        "CMakeLists.txt",
+        "shaders/shader.vert",
+        "shaders/shader.frag",
+        "source/modules/renderer/vulkan/vulkanrenderer.cpp",
+        "source/modules/renderer/vulkan/vulkanrenderer.h",
         "source/platforms/qt/mainwindow.h",
         "source/platforms/qt/mainwindow.cpp",
         "source/modules/renderer/vulkan/utilities.h",
@@ -16,8 +19,13 @@ Application {
         "source/platforms/qt/MainWindow.ui",
         "source/platforms/qt/qtapplication.cpp",
         "source/platforms/qt/qtapplication.h",
-        "shaders/shader.vert",
-        "shaders/shader.frag",
+        "source/x-platform/scene.h",
+        "source/demos/vikingscene.cpp",
+        "source/demos/vikingscene.h",
+        "source/components/component.h",
+        "source/components/mesh.cpp",
+        "source/components/mesh.h",
+        "source/modules/renderer/renderer.h",
     ]
 
     Depends { name: "cpp" }

@@ -10,4 +10,5 @@ private:
 
 public:
     Mesh(const char* filePath);
+    void Update();
 };
