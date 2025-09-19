@@ -11,9 +11,6 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
-#define TINYOBJLOADER_IMPLEMENTATION
-#include "tiny_obj_loader.h"
-
 #include <iostream>
 #include <fstream>
 #include <stdexcept>
@@ -26,7 +23,6 @@
 #include <array>
 #include <optional>
 #include <set>
-#include <unordered_map>
 #include <QDebug>
 
 #ifdef _WIN32			// Windows specific includes
@@ -49,7 +45,17 @@ VulkanRenderer::VulkanRenderer(QWindow* parent) : QWindow(parent)
 
 VulkanRenderer::~VulkanRenderer()
 {
-    vkDestroyPipeline(device, drawable.graphicsPipeline, nullptr);
+    for (int i = 0; i < drawablesQuantity; i++)
+    {
+        vkDestroyPipeline(device, drawables[i].graphicsPipeline, nullptr);
+
+        vkDestroyBuffer(device, drawables[i].indexBuffer, nullptr);
+        vkFreeMemory(device, drawables[i].indexBufferMemory, nullptr);
+
+        vkDestroyBuffer(device, drawables[i].vertexBuffer, nullptr);
+        vkFreeMemory(device, drawables[i].vertexBufferMemory, nullptr);
+    }
+
     vkDestroyPipelineLayout(device, pipelineLayout, nullptr);
     cleanup();
 }
@@ -86,21 +92,31 @@ void VulkanRenderer::initVulkan() {
     createTextureImage();
     createTextureImageView();
     createTextureSampler();
-    loadModel();
-    createVertexBuffer();
-    createIndexBuffer();
     createUniformBuffers();
     createDescriptorPool();
     createDescriptorSets();
     createCommandBuffers();
     createSyncObjects();
-
-    drawable.graphicsPipeline = createGraphicsPipeline("../../shaders/vert.spv", "../../shaders/frag.spv");
 }
 
-Renderer::Drawable VulkanRenderer::CreateDrawable()
+Renderer::Drawable& VulkanRenderer::CreateDrawable(std::vector<Vertex> vertices,
+                                                  std::vector<uint32_t> indices,
+                                                  const char* vertexShader,
+                                                  const char* fragmentShader)
 {
-    return Drawable();
+    Drawable drawable;
+    drawable.offset = drawablesQuantity;
+    drawable.indicesQuantity = indices.size();
+    drawable.verticesQuantity = vertices.size();
+    drawable.graphicsPipeline = createGraphicsPipeline(vertexShader, fragmentShader);
+
+    createVertexBuffer(vertices, drawable);
+    createIndexBuffer(indices, drawable);
+
+    drawables[drawablesQuantity] = drawable;
+    drawablesQuantity++;
+
+    return drawables[drawablesQuantity - 1];
 }
 
 void VulkanRenderer::cleanupSwapChain() {
@@ -144,12 +160,6 @@ void VulkanRenderer::cleanup() {
     vkFreeMemory(device, textureImageMemory, nullptr);
 
     vkDestroyDescriptorSetLayout(device, descriptorSetLayout, nullptr);
-
-    vkDestroyBuffer(device, indexBuffer, nullptr);
-    vkFreeMemory(device, indexBufferMemory, nullptr);
-
-    vkDestroyBuffer(device, vertexBuffer, nullptr);
-    vkFreeMemory(device, vertexBufferMemory, nullptr);
 
     for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
         vkDestroySemaphore(device, renderFinishedSemaphores[i], nullptr);
@@ -1129,46 +1139,7 @@ void VulkanRenderer::copyBufferToImage(VkBuffer buffer, VkImage image, uint32_t 
     endSingleTimeCommands(commandBuffer);
 }
 
-void VulkanRenderer::loadModel() {
-    tinyobj::attrib_t attrib;
-    std::vector<tinyobj::shape_t> shapes;
-    std::vector<tinyobj::material_t> materials;
-    std::string warn, err;
-
-    if (!tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, MODEL_PATH.c_str())) {
-        throw std::runtime_error(warn + err);
-    }
-
-    std::unordered_map<Vertex, uint32_t> uniqueVertices{};
-
-    for (const auto& shape : shapes) {
-        for (const auto& index : shape.mesh.indices) {
-            Vertex vertex{};
-
-            vertex.pos = {
-                attrib.vertices[3 * index.vertex_index + 0],
-                attrib.vertices[3 * index.vertex_index + 1],
-                attrib.vertices[3 * index.vertex_index + 2]
-            };
-
-            vertex.texCoord = {
-                attrib.texcoords[2 * index.texcoord_index + 0],
-                1.0f - attrib.texcoords[2 * index.texcoord_index + 1]
-            };
-
-            vertex.color = {1.0f, 1.0f, 1.0f};
-
-            if (uniqueVertices.count(vertex) == 0) {
-                uniqueVertices[vertex] = static_cast<uint32_t>(vertices.size());
-                vertices.push_back(vertex);
-            }
-
-            indices.push_back(uniqueVertices[vertex]);
-        }
-    }
-}
-
-void VulkanRenderer::createVertexBuffer() {
+void VulkanRenderer::createVertexBuffer(std::vector<Vertex> vertices, Drawable& drawable) {
     VkDeviceSize bufferSize = sizeof(vertices[0]) * vertices.size();
 
     VkBuffer stagingBuffer;
@@ -1180,15 +1151,15 @@ void VulkanRenderer::createVertexBuffer() {
     memcpy(data, vertices.data(), (size_t) bufferSize);
     vkUnmapMemory(device, stagingBufferMemory);
 
-    createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, vertexBuffer, vertexBufferMemory);
+    createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, drawable.vertexBuffer, drawable.vertexBufferMemory);
 
-    copyBuffer(stagingBuffer, vertexBuffer, bufferSize);
+    copyBuffer(stagingBuffer, drawable.vertexBuffer, bufferSize);
 
     vkDestroyBuffer(device, stagingBuffer, nullptr);
     vkFreeMemory(device, stagingBufferMemory, nullptr);
 }
 
-void VulkanRenderer::createIndexBuffer() {
+void VulkanRenderer::createIndexBuffer(std::vector<uint32_t> indices, Drawable& drawable) {
     VkDeviceSize bufferSize = sizeof(indices[0]) * indices.size();
 
     VkBuffer stagingBuffer;
@@ -1200,16 +1171,16 @@ void VulkanRenderer::createIndexBuffer() {
     memcpy(data, indices.data(), (size_t) bufferSize);
     vkUnmapMemory(device, stagingBufferMemory);
 
-    createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_INDEX_BUFFER_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, indexBuffer, indexBufferMemory);
+    createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_INDEX_BUFFER_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, drawable.indexBuffer, drawable.indexBufferMemory);
 
-    copyBuffer(stagingBuffer, indexBuffer, bufferSize);
+    copyBuffer(stagingBuffer, drawable.indexBuffer, bufferSize);
 
     vkDestroyBuffer(device, stagingBuffer, nullptr);
     vkFreeMemory(device, stagingBufferMemory, nullptr);
 }
 
 void VulkanRenderer::createUniformBuffers() {
-    VkDeviceSize bufferSize = sizeof(UniformBufferObject);
+    VkDeviceSize bufferSize = sizeof(Drawable::UniformBufferObject);
 
     uniformBuffers.resize(swapChainImages.size());
     uniformBuffersMemory.resize(swapChainImages.size());
@@ -1254,7 +1225,7 @@ void VulkanRenderer::createDescriptorSets() {
         VkDescriptorBufferInfo bufferInfo{};
         bufferInfo.buffer = uniformBuffers[i];
         bufferInfo.offset = 0;
-        bufferInfo.range = sizeof(UniformBufferObject);
+        bufferInfo.range = sizeof(Drawable::UniformBufferObject);
 
         VkDescriptorImageInfo imageInfo{};
         imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
@@ -1411,14 +1382,8 @@ void VulkanRenderer::createSyncObjects()
     }
 }
 
-void VulkanRenderer::updateUniformBuffer(uint32_t currentImage) {
-    static auto startTime = std::chrono::high_resolution_clock::now();
-
-    auto currentTime = std::chrono::high_resolution_clock::now();
-    float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
-
-    UniformBufferObject ubo{};
-    ubo.model = glm::rotate(glm::mat4(1.0f), time * glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+void VulkanRenderer::updateUniformBuffer(uint32_t currentImage, Drawable::UniformBufferObject ubo) {
+    //ubo.model = glm::rotate(glm::mat4(1.0f), time * glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
     ubo.view = glm::lookAt(glm::vec3(2.0f, 2.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
     ubo.proj = glm::perspective(glm::radians(45.0f), swapChainExtent.width / (float) swapChainExtent.height, 0.1f, 10.0f);
     ubo.proj[1][1] *= -1;
@@ -1430,6 +1395,13 @@ void VulkanRenderer::updateUniformBuffer(uint32_t currentImage) {
 }
 
 void VulkanRenderer::drawFrame() {
+    static auto startTime = std::chrono::high_resolution_clock::now();
+
+    auto currentTime = std::chrono::high_resolution_clock::now();
+    float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
+
+    scene->Update(time);
+
     vkWaitForFences(device, 1, &inFlightFences[currentFrame], VK_TRUE, UINT64_MAX);
 
     uint32_t imageIndex;
@@ -1441,8 +1413,6 @@ void VulkanRenderer::drawFrame() {
     } else if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR) {
         throw std::runtime_error("failed to acquire swap chain image!");
     }
-
-    updateUniformBuffer(imageIndex);
 
     VkCommandBufferBeginInfo beginInfo{};
     beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
@@ -1467,17 +1437,28 @@ void VulkanRenderer::drawFrame() {
 
     vkCmdBeginRenderPass(commandBuffers[imageIndex], &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
 
-    vkCmdBindPipeline(commandBuffers[imageIndex], VK_PIPELINE_BIND_POINT_GRAPHICS, drawable.graphicsPipeline);
+    // Main render loop. Loop through all drawables and draw/render them
+    for (int i = 0; i < drawablesQuantity; i++)
+    {
+        Drawable& drawable = drawables[i];
 
-    VkBuffer vertexBuffers[] = {vertexBuffer};
-    VkDeviceSize offsets[] = {0};
-    vkCmdBindVertexBuffers(commandBuffers[imageIndex], 0, 1, vertexBuffers, offsets);
+        if (drawable.isVisible == false || drawable.verticesQuantity == 0)
+        {
+            continue;
+        }
 
-    vkCmdBindIndexBuffer(commandBuffers[imageIndex], indexBuffer, 0, VK_INDEX_TYPE_UINT32);
+        updateUniformBuffer(imageIndex, drawable.ubo);
 
-    vkCmdBindDescriptorSets(commandBuffers[imageIndex], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, &descriptorSets[0], 0, nullptr);
+        vkCmdBindPipeline(commandBuffers[imageIndex], VK_PIPELINE_BIND_POINT_GRAPHICS, drawable.graphicsPipeline);
 
-    vkCmdDrawIndexed(commandBuffers[imageIndex], static_cast<uint32_t>(indices.size()), 1, 0, 0, 0);
+        vkCmdBindVertexBuffers(commandBuffers[imageIndex], 0, 1, &drawable.vertexBuffer, &drawable.offset);
+
+        vkCmdBindIndexBuffer(commandBuffers[imageIndex], drawable.indexBuffer, 0, VK_INDEX_TYPE_UINT32);
+
+        vkCmdBindDescriptorSets(commandBuffers[imageIndex], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, &descriptorSets[0], 0, nullptr);
+
+        vkCmdDrawIndexed(commandBuffers[imageIndex], static_cast<uint32_t>(drawable.indicesQuantity), 1, 0, 0, 0);
+    }
 
     vkCmdEndRenderPass(commandBuffers[imageIndex]);
 
@@ -1776,10 +1757,10 @@ VkBool32 VulkanRenderer::debugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT me
 
 void VulkanRenderer::exposeEvent(QExposeEvent* event)
 {
-    /*qDebug("exposeEvent called");
-    if (isExposed()) {
-        drawFrame();
-    }*/
+    //qDebug("exposeEvent called");
+    //if (isExposed()) {
+    //    drawFrame();
+    //}
 }
 
 void VulkanRenderer::resizeEvent(QResizeEvent *event)

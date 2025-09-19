@@ -7,9 +7,12 @@ QtApplication::QtApplication(int argc, char* argv[], const char* windowTitle, in
     w.move(200, 100);
     w.show();
     w.start();
+
+    renderer = w.mVulkanWindow;
 }
 
 int QtApplication::Run()
 {
+    w.mVulkanWindow->scene = currentScene;
     return a.exec();
 }

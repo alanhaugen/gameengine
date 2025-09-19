@@ -6,9 +6,21 @@ Application::Application(int argc, char* argv[], const char *windowTitle, int wi
 {
 }
 
+void Application::SetScene(Scene *scene)
+{
+    currentScene = scene;
+    scene->Init();
+}
+
 void Application::AddScene(Scene *scene)
 {
+    scene->renderer = renderer;
     scenes.push_back(scene);
+
+    if (currentScene == nullptr)
+    {
+        SetScene(scene);
+    }
 }
 
 int Application::Run()

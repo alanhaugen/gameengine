@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include "../../modules/renderer/vulkan/vulkanrenderer.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -23,11 +24,12 @@ public:
     void start();
     void cleanup();
 
+    VulkanRenderer* mVulkanWindow{nullptr};
+
 private:
     Ui::MainWindow *ui = nullptr;
 
     //QWidget* mRenderWindowContainer{nullptr};   //Qt container for the RenderWindow
-    class VulkanRenderer* mVulkanWindow{nullptr};
 
 protected:
     void keyPressEvent(QKeyEvent* event) override;

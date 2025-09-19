@@ -7,10 +7,13 @@
 #include <vector>
 #include "../vertex.h"
 #include "../renderer.h"
+#include "../../../x-platform/scene.h"
 
 //Forward declarations
 struct SwapChainSupportDetails;
 struct QueueFamilyIndices;
+
+const int MAX_DRAWABLES = 4000;
 
 class VulkanRenderer : public QWindow, public Renderer
 {
@@ -20,7 +23,12 @@ public:
     ~VulkanRenderer();
 
     void initVulkan();
-    Drawable CreateDrawable() override;
+    Drawable& CreateDrawable(std::vector<Vertex> vertices,
+                            std::vector<uint32_t> indices,
+                            const char* vertexShader,
+                            const char* fragmentShader) override;
+
+    Scene* scene;
 
 protected:
     //Qt event handlers - called when requestUpdate(); is called
@@ -29,6 +37,8 @@ protected:
     bool event(QEvent* event) override;
 
 private:
+    int drawablesQuantity = 0;
+    Drawable drawables[MAX_DRAWABLES];
     // class GLFWwindow* window;
     //GLFWwindow* window{nullptr};
     //QWindow* window{ nullptr }; //this object IS a QWindow
@@ -71,13 +81,6 @@ private:
     VkImageView textureImageView;
     VkSampler textureSampler;
 
-    std::vector<Vertex> vertices;
-    std::vector<uint32_t> indices;
-    VkBuffer vertexBuffer;
-    VkDeviceMemory vertexBufferMemory;
-    VkBuffer indexBuffer;
-    VkDeviceMemory indexBufferMemory;
-
     std::vector<VkBuffer> uniformBuffers;
     std::vector<VkDeviceMemory> uniformBuffersMemory;
 
@@ -99,8 +102,6 @@ private:
     // static void framebufferResizeCallback(GLFWwindow* window, int width, int height);
 
     // ---- Functions ----
-
-    Drawable drawable;
 
     void drawFrame();
 
@@ -137,9 +138,8 @@ private:
                      VkImage& image, VkDeviceMemory& imageMemory);
     void transitionImageLayout(VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout, uint32_t mipLevels);
     void copyBufferToImage(VkBuffer buffer, VkImage image, uint32_t width, uint32_t height);
-    void loadModel();
-    void createVertexBuffer();
-    void createIndexBuffer();
+    void createVertexBuffer(std::vector<Vertex> vertices, Drawable &drawable);
+    void createIndexBuffer(std::vector<uint32_t> indices, Drawable &drawable);
     void createUniformBuffers();
     void createDescriptorPool();
     void createDescriptorSets();
@@ -150,7 +150,7 @@ private:
     uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
     void createCommandBuffers();
     void createSyncObjects();
-    void updateUniformBuffer(uint32_t currentImage);
+    void updateUniformBuffer(uint32_t currentImage, Drawable::UniformBufferObject ubo);
     VkShaderModule createShaderModule(const std::vector<char>& code);
     VkSurfaceFormatKHR chooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats);
     VkPresentModeKHR chooseSwapPresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes);

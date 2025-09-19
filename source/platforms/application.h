@@ -14,6 +14,7 @@ private:
 
 public:
     Application(int argc, char* argv[], const char* windowTitle, int windowWidth, int windowHeight);
+    void SetScene(Scene* scene);
     void AddScene(Scene* scene);
     int Run();
 };
