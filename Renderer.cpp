@@ -33,6 +33,9 @@
 #define NOMINMAX		// Prevent Windows.h from defining min/max macros
 #include <windows.h>	// For HWND and GetModuleHandle
 #include <vulkan/vulkan_win32.h>
+#elif defined(__APPLE__)
+#include <vulkan/vulkan_macos.h>
+class NSView;
 #endif
 
 Renderer::Renderer(QWindow* parent) : QWindow(parent)
@@ -202,9 +205,9 @@ void Renderer::createInstance() {
     //Needed in VkInstanceCreateInfo
     VkApplicationInfo appInfo{};
     appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
-    appInfo.pApplicationName = "Vulkan App";
+    appInfo.pApplicationName = "Tower of Power";
     appInfo.applicationVersion = VK_MAKE_VERSION(1, 0, 0);
-    appInfo.pEngineName = "No Engine";
+    appInfo.pEngineName = "INNgine";
     appInfo.engineVersion = VK_MAKE_VERSION(1, 0, 0);
     appInfo.apiVersion = VK_API_VERSION_1_0;
 
@@ -267,6 +270,23 @@ void Renderer::createSurface() {
     createInfo.hinstance = GetModuleHandle(nullptr);
 
     if (vkCreateWin32SurfaceKHR(instance, &createInfo, nullptr, &surface) != VK_SUCCESS) {
+        throw std::runtime_error("Failed to create a surface!");
+    }
+    else
+    {
+        qDebug("\nSuccessfully created a surface!");
+    }
+#elif defined(__APPLE__)
+    NSView* nsview = reinterpret_cast<NSView*>(this->winId());
+
+    VkMacOSSurfaceCreateInfoMVK createInfo = {};
+    createInfo.sType = VK_STRUCTURE_TYPE_MACOS_SURFACE_CREATE_INFO_MVK;
+    createInfo.pNext = NULL;
+    createInfo.flags = 0;
+    createInfo.pView = nsview;
+
+    if (vkCreateMacOSSurfaceMVK(instance, &createInfo, nullptr, &surface) != VK_SUCCESS)
+    {
         throw std::runtime_error("Failed to create a surface!");
     }
     else
@@ -1681,12 +1701,12 @@ std::vector<const char *> Renderer::getRequiredExtensions() {
     }
 
     extensions.push_back("VK_KHR_surface");
-    #ifdef Q_OS_WIN
+    #ifdef _WIN32
         extensions.push_back("VK_KHR_win32_surface");	// Only on Windows
     #elif defined(Q_OS_LINUX)
         instanceExtensions.push_back("VK_KHR_xcb_surface");		// or xlib_surface, depending on your Qt build
-    #elif defined(Q_OS_MAC)
-        instanceExtensions.push_back("VK_MVK_macos_surface");
+    #elif defined(__APPLE__)
+        extensions.push_back("VK_MVK_macos_surface");
     #endif
 
     // If validation is enabled, add extension to report validation debug info
@@ -1748,10 +1768,13 @@ VkBool32 Renderer::debugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageS
 
 void Renderer::exposeEvent(QExposeEvent* event)
 {
+    #ifdef _WIN32   // These lines does not work on macOS !?!
+
     qDebug("exposeEvent called");
     if (isExposed()) {
         drawFrame();			//actual drawing
     }
+    #endif
 }
 
 void Renderer::resizeEvent(QResizeEvent *event)
