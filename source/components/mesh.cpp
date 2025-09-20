@@ -5,7 +5,10 @@
 
 #include <unordered_map>
 
-Mesh::Mesh(const char *filePath, Renderer* renderer)
+Mesh::Mesh(const char *filePath,
+           Renderer* renderer,
+           const char* vertexShaderPath,
+           const char* fragmentShaderPath)
 {
     std::vector<Vertex> vertices;
     std::vector<uint32_t> indices;
@@ -47,7 +50,7 @@ Mesh::Mesh(const char *filePath, Renderer* renderer)
         }
     }
 
-    drawable = &renderer->CreateDrawable(vertices, indices);
+    drawable = &renderer->CreateDrawable(vertices, indices, vertexShaderPath, fragmentShaderPath);
 }
 
 void Mesh::Update()

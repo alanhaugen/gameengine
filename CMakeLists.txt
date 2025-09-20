@@ -23,6 +23,7 @@ add_executable(QtVulkan
     source/platforms/qt/qtapplication.cpp
     source/platforms/qt/qtapplication.h
     source/x-platform/scene.h
+    source/x-platform/locator.h
     source/demos/vikingscene.cpp
     source/demos/vikingscene.h
     source/components/component.h
