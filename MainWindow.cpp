@@ -23,14 +23,20 @@ MainWindow::MainWindow(QWidget *parent)
 
     // Wrap VulkanRenderer (QWindow) into a QWidget
     QWidget* vulkanWidget = QWidget::createWindowContainer(mVulkanWindow, this);
-    vulkanWidget->setMinimumSize(1100, 700);
+    //vulkanWidget->setMinimumSize(1100, 700);
+
+    vulkanWidget->sizePolicy().setHorizontalPolicy(QSizePolicy::Expanding);
+    vulkanWidget->sizePolicy().setVerticalPolicy(QSizePolicy::Expanding);
+    vulkanWidget->setMinimumWidth(200.0f);
 
     ui->VulkanLayout->addWidget(vulkanWidget);
+
+    ui->splitter->setSizes(QList<int>()<<200<<900<<300);
 
     //sets the keyboard input focus to the MainWindow when program starts
     this->setFocus();
 
-    statusBar()->showMessage(" put something cool here! ");
+   // statusBar()->showMessage(" put something cool here! ");
 }
 
 MainWindow::~MainWindow()
