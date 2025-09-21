@@ -17,9 +17,7 @@
 const uint32_t WIDTH = 800;
 const uint32_t HEIGHT = 600;
 
-const std::string PATH = "../../";
-const std::string MODEL_PATH = PATH + "Assets/Models/viking_room.obj";
-const std::string TEXTURE_PATH = PATH + "Assets/Textures/viking_room.png";
+const std::string TEXTURE_PATH = "Assets/Textures/viking_room.png";
 
 const int MAX_FRAMES_IN_FLIGHT = 2;
 

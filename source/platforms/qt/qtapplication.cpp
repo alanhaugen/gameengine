@@ -13,6 +13,6 @@ QtApplication::QtApplication(int argc, char* argv[], const char* windowTitle, in
 
 int QtApplication::Run()
 {
-    w.mVulkanWindow->scene = currentScene;
+    w.scene = currentScene;
     return a.exec();
 }

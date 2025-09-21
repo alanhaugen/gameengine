@@ -2,6 +2,7 @@
 #include "ui_MainWindow.h"
 #include "../../modules/renderer/vulkan/vulkanrenderer.h"
 #include <QKeyEvent>
+#include <QTimer>
 
 MainWindow::MainWindow(QWidget *parent, const char* windowTitle, int windowWidth, int windowHeight)
     : QMainWindow(parent)
@@ -22,7 +23,7 @@ MainWindow::MainWindow(QWidget *parent, const char* windowTitle, int windowWidth
     mVulkanWindow->initVulkan();
 
     // Wrap VulkanRenderer (QWindow) into a QWidget
-    QWidget* vulkanWidget = QWidget::createWindowContainer(mVulkanWindow, this);
+    vulkanWidget = QWidget::createWindowContainer(mVulkanWindow, this);
     vulkanWidget->setMinimumSize(windowWidth, windowHeight);
 
     ui->VulkanLayout->addWidget(vulkanWidget);
@@ -31,6 +32,13 @@ MainWindow::MainWindow(QWidget *parent, const char* windowTitle, int windowWidth
     this->setFocus();
 
     statusBar()->showMessage(" put something cool here! ");
+
+    QTimer* timer = new QTimer(this);
+    connect(timer, &QTimer::timeout, this, &MainWindow::MainGameLoop);
+
+    timer->start(8); // 120 Hz
+
+    lastTime = std::chrono::high_resolution_clock::now();
 }
 
 MainWindow::~MainWindow()
@@ -57,6 +65,47 @@ void MainWindow::cleanup()
     if (ui)
     {
         delete ui;
+    }
+}
+
+// Fixed update time step
+void MainWindow::MainGameLoop()
+{
+    // Calculate delta time, this can be used for a variable time step
+    auto currentTime = std::chrono::high_resolution_clock::now();
+    float deltaTime = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - lastTime).count();
+    lastTime = std::chrono::high_resolution_clock::now();
+
+    if (scene)
+    {
+        scene->Update();
+    }
+
+    /*if (audio)
+    {
+        audio->Update();
+    }
+
+    if (filesystem)
+    {
+        filesystem->Update();
+    }
+
+    if (physics)
+    {
+        physics->Update();
+    }
+
+    if (script)
+    {
+        script->Update();
+    }*/
+
+    if (mVulkanWindow)
+    {
+        mVulkanWindow->Render();
+
+        vulkanWidget->repaint();
     }
 }
 

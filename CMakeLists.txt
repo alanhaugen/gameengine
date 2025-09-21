@@ -30,6 +30,10 @@ add_executable(QtVulkan
     source/components/mesh.cpp
     source/components/mesh.h
     source/modules/renderer/renderer.h
+    shaders/phong.frag
+    shaders/phong.vert
+    shaders/shader.frag
+    shaders/shader.vert
 )
 
 include_directories(${CMAKE_SOURCE_DIR}/include)
@@ -61,6 +65,9 @@ else()
     ${CMAKE_SOURCE_DIR}/lib/darwin/arm64/libMoltenVK.a
     )
 endif()
+
+file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/shaders" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
+file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/Assets" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
 
 include(GNUInstallDirs)
 install(TARGETS QtVulkan

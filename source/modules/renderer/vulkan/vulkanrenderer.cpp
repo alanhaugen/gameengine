@@ -1405,9 +1405,7 @@ size_t VulkanRenderer::PadUniformBufferSize(size_t originalSize)
     return alignedSize;
 }
 
-void VulkanRenderer::drawFrame() {
-    scene->Update();
-
+void VulkanRenderer::Render() {
     vkWaitForFences(device, 1, &inFlightFences[currentFrame], VK_TRUE, UINT64_MAX);
 
     uint32_t imageIndex;
@@ -1782,31 +1780,4 @@ VkBool32 VulkanRenderer::debugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT me
     std::cerr << "validation layer: " << pCallbackData->pMessage << std::endl;
 
     return VK_FALSE;
-}
-
-void VulkanRenderer::exposeEvent(QExposeEvent* event)
-{
-    //qDebug("exposeEvent called");
-    //if (isExposed()) {
-    //    drawFrame();
-    //}
-}
-
-void VulkanRenderer::resizeEvent(QResizeEvent *event)
-{
-    qDebug("resizeEvent called");
-    if (isExposed()) {
-        drawFrame();			//actual drawing
-    }
-}
-
-bool VulkanRenderer::event(QEvent* ev)
-{
-    //qDebug("event(QEvent* ev) called");
-    if (ev->type() == QEvent::UpdateRequest && isExposed()) {
-        drawFrame();			//actual drawing
-        requestUpdate();        // schedule the next UpdateRequest == render loop
-        return true;
-    }
-    return QWindow::event(ev);
 }

@@ -24,10 +24,17 @@ public:
     void start();
     void cleanup();
 
+    void MainGameLoop();
+
     VulkanRenderer* mVulkanWindow{nullptr};
+
+    Scene* scene = nullptr;
 
 private:
     Ui::MainWindow *ui = nullptr;
+    QWidget* vulkanWidget;
+
+    std::chrono::time_point<std::chrono::steady_clock> lastTime;
 
     //QWidget* mRenderWindowContainer{nullptr};   //Qt container for the RenderWindow
 

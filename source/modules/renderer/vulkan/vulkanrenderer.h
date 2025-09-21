@@ -28,14 +28,9 @@ public:
                             const char* vertexShader,
                             const char* fragmentShader) override;
 
-    Scene* scene;
+    void Render();
 
 protected:
-    //Qt event handlers - called when requestUpdate(); is called
-    void exposeEvent(QExposeEvent* event) override;
-    void resizeEvent(QResizeEvent* event) override;
-    bool event(QEvent* event) override;
-
 private:
     int drawablesQuantity = 0;
     Drawable drawables[MAX_DRAWABLES];
@@ -104,8 +99,6 @@ private:
     // static void framebufferResizeCallback(GLFWwindow* window, int width, int height);
 
     // ---- Functions ----
-
-    void drawFrame();
 
     void cleanupSwapChain();
     void cleanup();
