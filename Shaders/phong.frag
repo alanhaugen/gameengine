@@ -1,4 +1,4 @@
-#version 330 core
+#version 450 core
 
 // Can be mediump or highp
 precision highp float; // affects all floats (vec3, vec4 etc)
@@ -12,11 +12,10 @@ layout(set=0,location = 1) in vec3 o_toLight; // direction to light
 layout(set=0,location = 2) in vec3 o_toCamera; // direction to camera
 layout(set=0,location = 3) in vec2 o_texcoords;
 layout(set=0,location = 4) in vec4 o_colour;
-layout(set=0,location = 5) in float vTime;
 
 layout(location=0) out vec4 resultingColor;
 
-layout(set=1, binding=0) uniform sampler2D u_diffuseTexture;
+layout(binding=1) uniform sampler2D u_diffuseTexture;
 
 #else
 in vec3 o_normal;
@@ -67,7 +66,7 @@ smooth in vec4 vSmoothColor;		//interpolated colour to fragment shader
 //TODO: remove these, use uniforms instead (see above)
     vec3 u_lightAmbientIntensity = vec3(0.6, 0.3, 0.0);
     vec3 u_lightDiffuseIntensity = vec3(1.0, 0.5, 0.0);
-    vec3 u_lightSpecularIntensity = vec3(0.0, 1.0, 0.0);
+    vec3 u_lightSpecularIntensity = vec3(1.0, 1.0, 0.0);
 
     // parameters of the material and possible values
     vec3 u_matAmbientReflectance = vec3(1.0, 1.0, 1.0);
@@ -133,7 +132,7 @@ void main(void)
     vec3 Ispe = specularLighting(N, L, V);
 
     // diffuse color of the object from texture
-    vec3 diffuseColor = o_colour.rgb;//texture(u_diffuseTexture, o_texcoords).rgb;
+    vec3 diffuseColor = texture(u_diffuseTexture, o_texcoords).rgb;
 
     // combination of all components and diffuse color of the object
     resultingColor.xyz = diffuseColor * (Iamb + Idif + Ispe);

@@ -1,9 +1,14 @@
 #version 450
 
-layout(binding = 0) uniform UniformBufferObject {
+layout(set = 0, binding = 0) uniform UniformBufferObject {
     mat4 model;
     mat4 view;
     mat4 proj;
+    vec4 colour;
+    mat4 modelMat;
+    mat4 normalMat;
+    vec4 lightPosition;
+    vec4 cameraPosition;
 } ubo;
 
 layout(location = 0) in vec3 inPosition;

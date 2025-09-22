@@ -12,6 +12,11 @@ public:
             alignas(16) glm::mat4 model;
             alignas(16) glm::mat4 view;
             alignas(16) glm::mat4 proj;
+            alignas(16) glm::vec4 colour;
+            alignas(16) glm::mat4 modelMat;
+            alignas(16) glm::mat4 normalMat;
+            alignas(16) glm::vec4 lightPosition;
+            alignas(16) glm::vec4 cameraPosition;
         } ubo;
 
         VkPipeline graphicsPipeline;
