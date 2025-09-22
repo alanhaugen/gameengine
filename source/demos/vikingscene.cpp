@@ -5,10 +5,10 @@ void VikingScene::Init()
 {
     vikingCamp1 = new Mesh("Assets/Models/viking_room.obj", renderer);
     vikingCamp2 = new Mesh("Assets/Models/viking_room.obj", renderer, "shaders/phong.vert.spv", "shaders/phong.frag.spv");
-    vikingCamp1->drawable->ubo.model = glm::scale(vikingCamp1->drawable->ubo.model, glm::vec3(0.7, 0.7, 0.7));
-    vikingCamp2->drawable->ubo.model = glm::scale(vikingCamp2->drawable->ubo.model, glm::vec3(0.7, 0.7, 0.7));
-    vikingCamp1->drawable->ubo.model = glm::translate(vikingCamp1->drawable->ubo.model, glm::vec3(1, 0, 0));
-    vikingCamp2->drawable->ubo.model = glm::translate(vikingCamp2->drawable->ubo.model, glm::vec3(-1, 0, 0));
+    vikingCamp1->drawable->ubo.model = glm::scale(vikingCamp1->drawable->ubo.model, glm::vec3(0.4, 0.4, 0.4));
+    vikingCamp2->drawable->ubo.model = glm::scale(vikingCamp2->drawable->ubo.model, glm::vec3(0.4, 0.4, 0.4));
+    vikingCamp1->drawable->ubo.model = glm::translate(vikingCamp1->drawable->ubo.model, glm::vec3(-0.3, 0, 0));
+    vikingCamp2->drawable->ubo.model = glm::translate(vikingCamp2->drawable->ubo.model, glm::vec3(1.7, 0, 0));
     components.push_back(vikingCamp1);
     components.push_back(vikingCamp2);
 }
