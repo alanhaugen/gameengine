@@ -26,17 +26,18 @@ public:
 
     void MainGameLoop();
 
-    VulkanRenderer* mVulkanWindow{nullptr};
+    VulkanRenderer* renderer{nullptr};
 
     Scene* scene = nullptr;
+    Ui::MainWindow *ui = nullptr;
 
 private:
-    Ui::MainWindow *ui = nullptr;
     QWidget* vulkanWidget;
 
     std::chrono::time_point<std::chrono::steady_clock> lastTime;
 
     //QWidget* mRenderWindowContainer{nullptr};   //Qt container for the RenderWindow
+    void AddVikingRoom();
 
 protected:
     void keyPressEvent(QKeyEvent* event) override;

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include "editor.h"
 #include "../components/component.h"
 #include "../modules/renderer/renderer.h"
 
@@ -13,4 +14,5 @@ public:
     std::vector<Component*> components;
 
     Renderer* renderer;
+    Editor* editor;
 };

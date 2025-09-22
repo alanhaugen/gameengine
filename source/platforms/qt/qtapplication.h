@@ -13,6 +13,7 @@ private:
 
 protected:
     Scene* currentScene = nullptr;
+    Editor* editor;
 
 public:
     QtApplication(int argc, char* argv[], const char* windowTitle, int windowWidth, int windowHeight);

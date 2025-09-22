@@ -15,6 +15,7 @@ void Application::SetScene(Scene *scene)
 void Application::AddScene(Scene *scene)
 {
     scene->renderer = renderer;
+    scene->editor   = editor;
     scenes.push_back(scene);
 
     if (currentScene == nullptr)

@@ -1,4 +1,5 @@
 #include "qtapplication.h"
+#include "qteditor.h"
 
 QtApplication::QtApplication(int argc, char* argv[], const char* windowTitle, int windowWidth, int windowHeight)
     : a(argc, argv),
@@ -8,7 +9,8 @@ QtApplication::QtApplication(int argc, char* argv[], const char* windowTitle, in
     w.show();
     w.start();
 
-    renderer = w.mVulkanWindow;
+    renderer = w.renderer;
+    editor = new QtEditor(w.ui);
 }
 
 int QtApplication::Run()

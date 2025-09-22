@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_MainWindow.h"
 #include "../../modules/renderer/vulkan/vulkanrenderer.h"
+#include "../../components/mesh.h"
 #include <QKeyEvent>
 #include <QTimer>
 
@@ -14,16 +15,16 @@ MainWindow::MainWindow(QWidget *parent, const char* windowTitle, int windowWidth
 
     setWindowTitle(windowTitle);  //Main app title
 
-    mVulkanWindow = new VulkanRenderer();
-    mVulkanWindow->setTitle("Renderer");    //Render window title
+    renderer = new VulkanRenderer();
+    renderer->setTitle("Renderer");    //Render window title
 
     //Have to set the size of the Vulkan window here, otherwise it can not set up the swapchain correctly
-    mVulkanWindow->setWidth(windowWidth);
-    mVulkanWindow->setHeight(windowHeight);
-    mVulkanWindow->initVulkan();
+    renderer->setWidth(windowWidth);
+    renderer->setHeight(windowHeight);
+    renderer->initVulkan();
 
     // Wrap VulkanRenderer (QWindow) into a QWidget
-    vulkanWidget = QWidget::createWindowContainer(mVulkanWindow, this);
+    vulkanWidget = QWidget::createWindowContainer(renderer, this);
     //vulkanWidget->setMinimumSize(windowWidth, windowHeight);
 
     vulkanWidget->sizePolicy().setHorizontalPolicy(QSizePolicy::Expanding);
@@ -39,15 +40,13 @@ MainWindow::MainWindow(QWidget *parent, const char* windowTitle, int windowWidth
 
     statusBar()->showMessage(" put something cool here! ");
 
-    QTreeWidgetItem* item1 = new QTreeWidgetItem(QStringList("Viking Room 1"), 0);
-    QTreeWidgetItem* item2 = new QTreeWidgetItem(QStringList("Viking Room 2"), 0);
-    ui->treeGameObjects->addTopLevelItem(item1);
-    ui->treeGameObjects->addTopLevelItem(item2);
-
     QTimer* timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, &MainWindow::MainGameLoop);
 
     timer->start(8); // 120 Hz
+
+    connect(ui->actionTriangle, &QAction::triggered, this, &MainWindow::AddVikingRoom);
+    connect(ui->pushButton, &QPushButton::clicked, this, &MainWindow::AddVikingRoom);
 
     lastTime = std::chrono::high_resolution_clock::now();
 }
@@ -59,18 +58,18 @@ MainWindow::~MainWindow()
 
 void MainWindow::start()
 {
-    if (mVulkanWindow)
+    if (renderer)
     {
-        mVulkanWindow->requestUpdate();
+        renderer->requestUpdate();
     }
 }
 
 void MainWindow::cleanup()
 {
-    if(mVulkanWindow)
+    if(renderer)
     {
-        delete mVulkanWindow;
-        mVulkanWindow = nullptr;
+        delete renderer;
+        renderer = nullptr;
     }
 
     if (ui)
@@ -112,19 +111,25 @@ void MainWindow::MainGameLoop()
         script->Update();
     }*/
 
-    if (mVulkanWindow)
+    if (renderer)
     {
-        mVulkanWindow->Render();
+        renderer->Render();
 
         vulkanWidget->repaint();
     }
 }
 
+void MainWindow::AddVikingRoom()
+{
+    scene->components.push_back(new Mesh("Assets/Models/viking_room.obj", renderer, scene->editor));
+    qDebug() << "Viking room";
+}
+
 void MainWindow::keyPressEvent(QKeyEvent* event)
 {
     if (event->key() == Qt::Key_Escape) {
-        delete mVulkanWindow;
-        mVulkanWindow = nullptr;
+        delete renderer;
+        renderer = nullptr;
         close(); // Example: close window on ESC
     }
     if (event->key() == Qt::Key_Space) {

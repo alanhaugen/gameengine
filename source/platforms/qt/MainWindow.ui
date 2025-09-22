@@ -33,7 +33,7 @@
         </property>
        </column>
       </widget>
-      <widget class="QWidget" name="">
+      <widget class="QWidget" name="layoutWidget">
        <layout class="QVBoxLayout" name="VulkanLayout">
         <property name="spacing">
          <number>6</number>
@@ -73,9 +73,9 @@
            <property name="geometry">
             <rect>
              <x>0</x>
-             <y>-97</y>
-             <width>150</width>
-             <height>320</height>
+             <y>0</y>
+             <width>161</width>
+             <height>311</height>
             </rect>
            </property>
            <property name="sizePolicy">
@@ -339,6 +339,13 @@
       </widget>
      </widget>
     </item>
+    <item row="1" column="0">
+     <widget class="QPushButton" name="pushButton">
+      <property name="text">
+       <string>Add viking room</string>
+      </property>
+     </widget>
+    </item>
    </layout>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
@@ -372,7 +379,7 @@
      <x>0</x>
      <y>0</y>
      <width>429</width>
-     <height>17</height>
+     <height>37</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -395,6 +402,7 @@
     <addaction name="actionCube"/>
     <addaction name="actionTriangle"/>
     <addaction name="actionSphere"/>
+    <addaction name="actionViking_Room"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
@@ -445,6 +453,11 @@
   <action name="actionSphere">
    <property name="text">
     <string>Sphere</string>
+   </property>
+  </action>
+  <action name="actionViking_Room">
+   <property name="text">
+    <string>Viking Room</string>
    </property>
   </action>
  </widget>

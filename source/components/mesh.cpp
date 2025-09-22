@@ -7,6 +7,7 @@
 
 Mesh::Mesh(const char *filePath,
            Renderer* renderer,
+           Editor* editor,
            const char* vertexShaderPath,
            const char* fragmentShaderPath)
 {
@@ -51,6 +52,7 @@ Mesh::Mesh(const char *filePath,
     }
 
     drawable = &renderer->CreateDrawable(vertices, indices, vertexShaderPath, fragmentShaderPath);
+    editor->AddEntity(filePath);
 }
 
 void Mesh::Update()

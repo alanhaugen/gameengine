@@ -34,6 +34,10 @@ add_executable(QtVulkan
     shaders/phong.vert
     shaders/shader.frag
     shaders/shader.vert
+    source/x-platform/editor.h
+    source/platforms/qt/qteditor.h source/platforms/qt/qteditor.cpp
+    source/demos/empty.h source/demos/empty.cpp
+
 )
 
 include_directories(${CMAKE_SOURCE_DIR}/include)

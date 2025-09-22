@@ -3,8 +3,8 @@
 
 void VikingScene::Init()
 {
-    vikingCamp1 = new Mesh("Assets/Models/viking_room.obj", renderer);
-    vikingCamp2 = new Mesh("Assets/Models/viking_room.obj", renderer, "shaders/phong.vert.spv", "shaders/phong.frag.spv");
+    vikingCamp1 = new Mesh("Assets/Models/viking_room.obj", renderer, editor);
+    vikingCamp2 = new Mesh("Assets/Models/viking_room.obj", renderer, editor, "shaders/phong.vert.spv", "shaders/phong.frag.spv");
 
     vikingCamp2->drawable->ubo.colour = glm::vec4(1,1,1,1);
     //vikingCamp2->drawable->ubo.modelMat = glm::mat4(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1);
