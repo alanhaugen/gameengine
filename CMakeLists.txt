@@ -9,12 +9,12 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 add_executable(QtVulkan
-    main.cpp
-    Renderer.h Renderer.cpp
-    Utilities.h
-    Vertex.h
-    MainWindow.h MainWindow.cpp
-    MainWindow.ui
+    source/main.cpp
+    source/renderer.h source/renderer.cpp
+    source/utilities.h
+    source/vertex.h
+    source/mainwindow.h source/mainwindow.cpp
+    source/mainwindow.ui
 )
 
 if(MSVC)
