@@ -39,6 +39,11 @@ MainWindow::MainWindow(QWidget *parent, const char* windowTitle, int windowWidth
 
     statusBar()->showMessage(" put something cool here! ");
 
+    QTreeWidgetItem* item1 = new QTreeWidgetItem(QStringList("Viking Room 1"), 0);
+    QTreeWidgetItem* item2 = new QTreeWidgetItem(QStringList("Viking Room 2"), 0);
+    ui->treeGameObjects->addTopLevelItem(item1);
+    ui->treeGameObjects->addTopLevelItem(item2);
+
     QTimer* timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, &MainWindow::MainGameLoop);
 
