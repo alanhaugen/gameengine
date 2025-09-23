@@ -15,6 +15,9 @@ add_executable(QtVulkan
     Vertex.h
     MainWindow.h MainWindow.cpp
     MainWindow.ui
+    Components.h
+    Entity.h
+    System.h
 )
 
 if(MSVC)
