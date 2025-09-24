@@ -21,12 +21,12 @@ if(MSVC)
     # Required for proper C++ exception handling with MSVC
     target_compile_options(QtVulkan PRIVATE /EHsc)
     target_include_directories(QtVulkan PRIVATE
-    "C:/VulkanSDK/1.4.321.1/Include"
+    "C:/VulkanSDK/1.4.321.1.withHeaders/Include"
     )
     target_link_libraries(QtVulkan PRIVATE
     Qt::Core
     Qt::Widgets
-    "C:/VulkanSDK/1.4.321.1/Lib/vulkan-1.lib"
+    "C:/VulkanSDK/1.4.321.1.withHeaders/Lib/vulkan-1.lib"
     )
 target_link_libraries(QtVulkan PRIVATE Qt6::Widgets)
 endif()
