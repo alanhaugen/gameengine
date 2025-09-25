@@ -4,12 +4,16 @@
 #include "../../components/mesh.h"
 #include <QKeyEvent>
 #include <QTimer>
+#include "../../components/GameObject.h"
+#include <qinputdialog.h>
+
 
 MainWindow::MainWindow(QWidget *parent, const char* windowTitle, int windowWidth, int windowHeight)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    ui->treeGameObjects->setContextMenuPolicy(Qt::CustomContextMenu);
     //MainWindow size:
     resize((1300 - 1100) + windowWidth, (850 - 700) + windowHeight);
 
@@ -35,18 +39,30 @@ MainWindow::MainWindow(QWidget *parent, const char* windowTitle, int windowWidth
 
     ui->splitter->setSizes(QList<int>()<<200<<900<<300);
 
+    //GameObject treewidget
+    ui->treeGameObjects->setMinimumWidth(100);
+
+
     //sets the keyboard input focus to the MainWindow when program starts
     this->setFocus();
-
-    statusBar()->showMessage(" put something cool here! ");
 
     QTimer* timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, &MainWindow::MainGameLoop);
 
     timer->start(8); // 120 Hz
 
-    connect(ui->actionTriangle, &QAction::triggered, this, &MainWindow::AddVikingRoom);
-    connect(ui->pushButton, &QPushButton::clicked, this, &MainWindow::AddVikingRoom);
+
+    //Connections to functions
+    connect(ui->actionViking_Room, &QAction::triggered, this, &MainWindow::AddVikingRoom);
+    connect(ui->actionCube, &QAction::triggered, this, &MainWindow::AddCube);
+    connect(ui->actionSphere, &QAction::triggered, this, &MainWindow::AddSphere);
+
+    //
+    connect(ui->treeGameObjects, &QTreeWidget::customContextMenuRequested, this, &MainWindow::OnRightClickGameObjectWidget);
+
+
+
+
 
     lastTime = std::chrono::high_resolution_clock::now();
 }
@@ -89,6 +105,7 @@ void MainWindow::MainGameLoop()
     if (scene)
     {
         scene->Update();
+
     }
 
     /*if (audio)
@@ -111,6 +128,22 @@ void MainWindow::MainGameLoop()
         script->Update();
     }*/
 
+
+    for (auto* obj : scene->GameObjects)
+    {
+        if (!obj){
+
+            qDebug()<<"Empty";
+            continue;
+        }
+
+        qDebug()<<"Empty";
+        if(obj->GetEntityId()==1)
+        {
+            qDebug()<<"Name" << obj->GetName();
+        }
+    }
+
     if (renderer)
     {
         renderer->Render();
@@ -119,11 +152,87 @@ void MainWindow::MainGameLoop()
     }
 }
 
+void MainWindow::OnRightClickGameObjectWidget(const QPoint &ClickedOn)
+{
+    qDebug() << "Right-click detected at" << ClickedOn;
+    QTreeWidgetItem * GameObjSelected = ui->treeGameObjects->itemAt(ClickedOn);
+
+    if(!GameObjSelected)
+    {
+        return;
+    }
+
+    QMenu menu(this);
+    QAction* Rename = menu.addAction("Rename");
+
+    QAction* Selected = menu.exec(ui->treeGameObjects->viewport()->mapToGlobal(ClickedOn));
+
+
+    if(Selected == Rename)
+    {
+        QString newName = QInputDialog::getText(this,"Rename","NewName",QLineEdit::Normal,GameObjSelected->text(0));
+
+        if(!newName.isEmpty())
+        {
+            GameObjSelected->setText(0,newName);
+
+            void* ptrToObj = GameObjSelected->data(0,Qt::UserRole).value<void*>();
+            GameObject* obj = reinterpret_cast<GameObject*>(ptrToObj);
+
+            if(obj)
+            {
+                obj->SetName(newName);
+            }
+
+
+
+        }
+    }
+
+
+
+}
+
 void MainWindow::AddVikingRoom()
 {
-    scene->components.push_back(new Mesh("Assets/Models/viking_room.obj", renderer, scene->editor));
+    Entity EntityID = 1;
+    GameObject* gameobj = new GameObject("VikingRoom",EntityID);
+
+    Mesh* mesh = new Mesh("Assets/Models/viking_room.obj", renderer, scene->editor);
+
+    gameobj->AddComponent(mesh);
+
+    scene->GameObjects.push_back(gameobj);
+
+    scene->components.push_back(mesh);
+    QTreeWidgetItem * MainObj = new QTreeWidgetItem(ui->treeGameObjects);
+
+    MainObj->setText(0,gameobj->GetName());
+    MainObj->setData(0, Qt::UserRole, QVariant::fromValue((void*)gameobj));
+    MainObj->setExpanded(true);
+
+    QTreeWidgetItem * ObjItem = new QTreeWidgetItem(MainObj);
+   ObjItem->setText(0,"mesh");
+   ObjItem->setData(0, Qt::UserRole, QVariant::fromValue((void*)mesh));
+
+   MainObj->addChild(ObjItem);
+
     qDebug() << "Viking room";
 }
+
+void MainWindow::AddCube()
+{
+    //scene->components.push_back(new Mesh("Assets/Models/viking_room.obj", renderer, scene->editor));
+    qDebug() << "Cube";
+}
+
+void MainWindow::AddSphere()
+{
+    //scene->components.push_back(new Mesh("Assets/Models/viking_room.obj", renderer, scene->editor));
+    qDebug() << "Sphere";
+}
+
+
 
 void MainWindow::keyPressEvent(QKeyEvent* event)
 {
