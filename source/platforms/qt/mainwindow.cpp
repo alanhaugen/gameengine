@@ -196,7 +196,7 @@ void MainWindow::OnRightClickGameObjectWidget(const QPoint &ClickedOn)
 
 void MainWindow::AddVikingRoom()
 {
-    Entity EntityID = 1;
+    uint32_t EntityID = 1;
     GameObject* gameobj = new GameObject("VikingRoom",EntityID);
 
     Mesh* mesh = new Mesh("Assets/Models/viking_room.obj", renderer, scene->editor);
