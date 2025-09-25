@@ -10,7 +10,7 @@ QtApplication::QtApplication(int argc, char* argv[], const char* windowTitle, in
     w.start();
 
     renderer = w.renderer;
-    editor = new QtEditor(w.ui);
+    editor = new QtEditor(w.ui, w.statusBar());
 }
 
 int QtApplication::Run()
