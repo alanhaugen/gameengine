@@ -37,7 +37,20 @@ private:
     std::chrono::time_point<std::chrono::steady_clock> lastTime;
 
     //QWidget* mRenderWindowContainer{nullptr};   //Qt container for the RenderWindow
+
+
+    //Right click the object in gameobjectWidget
+   void OnRightClickGameObjectWidget(const QPoint& ClickedOn);
+
+
+
+    //for the Menuadd
+    //add Objects to the scene and to the gameobject
     void AddVikingRoom();
+    void AddCube();
+    void AddSphere();
+
+
 
 protected:
     void keyPressEvent(QKeyEvent* event) override;

@@ -1,4 +1,5 @@
 #include "mesh.h"
+#include <qdebug.h>
 
 #define TINYOBJLOADER_IMPLEMENTATION
 #include "tiny_obj_loader.h"
@@ -52,9 +53,20 @@ Mesh::Mesh(const char *filePath,
     }
 
     drawable = &renderer->CreateDrawable(vertices, indices, vertexShaderPath, fragmentShaderPath);
-    editor->AddEntity(filePath);
+   // editor->AddEntity(filePath);
 }
 
 void Mesh::Update()
 {
+
+}
+
+void Mesh::SetName(const QString NewName)
+{
+    Name = NewName;
+}
+
+const QString Mesh::GetName()
+{
+    return Name;
 }

@@ -37,6 +37,8 @@ add_executable(QtVulkan
     source/x-platform/editor.h
     source/platforms/qt/qteditor.h source/platforms/qt/qteditor.cpp
     source/demos/empty.h source/demos/empty.cpp
+    source/components/GameObject.h source/components/GameObject.cpp
+    source/components/Camera.h source/components/Camera.cpp
 
 )
 
