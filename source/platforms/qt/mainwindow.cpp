@@ -138,7 +138,10 @@ void MainWindow::keyPressEvent(QKeyEvent* event)
 }
 void MainWindow::closeEvent(QCloseEvent *event)
 {
-    delete renderer;
-    renderer = nullptr;
-    close();
+    if (renderer)
+    {
+        delete renderer;
+        renderer = nullptr;
+        close();
+    }
 }
