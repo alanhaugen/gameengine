@@ -136,3 +136,9 @@ void MainWindow::keyPressEvent(QKeyEvent* event)
         start();
     }
 }
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+    delete renderer;
+    renderer = nullptr;
+    close();
+}
