@@ -17,6 +17,7 @@ add_executable(QtVulkan
     MainWindow.ui
     Entity.h
     Components.h
+    System.h
 )
 
 if(MSVC)
