@@ -15,6 +15,9 @@ add_executable(QtVulkan
     Vertex.h
     MainWindow.h MainWindow.cpp
     MainWindow.ui
+    "Mesh.h" "Mesh.cpp"
+    "RenderComponent.h" "RenderComponent.cpp"
+ "Texture.cpp" "Texture.h")
 )
 
 if(MSVC)
