@@ -7,26 +7,21 @@
 #include <glm/glm.hpp>
 #include <vector>
 
-using Entity = uint32_t;
-
-
 struct Transform
 {
     glm::vec3 mPosition;
     glm::vec3 mRotation;
     glm::vec3 mScale;
-
 };
-
 
 class GameObject
 {
-
 protected:
-    Entity ID;
+    uint32_t ID;
     QString Name;
+
 public:
-    GameObject(const QString name, Entity id);
+    GameObject(const QString name, uint32_t id);
 
     Transform mTransform;
    // std::vector<GameObject*> children;
@@ -40,7 +35,7 @@ public:
 
     const QString GetName();
 
-    const Entity GetEntityId();
+    const uint32_t GetEntityId();
 
 };
 
