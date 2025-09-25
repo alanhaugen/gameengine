@@ -83,7 +83,8 @@ void Renderer::initVulkan() {
     createTextureImage();
     createTextureImageView();
     createTextureSampler();
-    loadModel();
+    importObjects();
+    //loadModel();
     createVertexBuffer();
     createIndexBuffer();
     createUniformBuffers();
@@ -1099,13 +1100,13 @@ void Renderer::copyBufferToImage(VkBuffer buffer, VkImage image, uint32_t width,
     endSingleTimeCommands(commandBuffer);
 }
 
-void Renderer::loadModel() {
+void Renderer::loadModel(QString MODEL_PATH) {
     tinyobj::attrib_t attrib;
     std::vector<tinyobj::shape_t> shapes;
     std::vector<tinyobj::material_t> materials;
     std::string warn, err;
 
-    if (!tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, MODEL_PATH.c_str())) {
+    if (!tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, MODEL_PATH.toStdString().c_str())) {
         throw std::runtime_error(warn + err);
     }
 

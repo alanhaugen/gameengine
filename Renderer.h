@@ -6,7 +6,8 @@
 #include <string>
 #include <vector>
 #include "Vertex.h"
-
+#include "QStack"
+#include "QDirIterator"
 //Forward declarations
 struct SwapChainSupportDetails;
 struct QueueFamilyIndices;
@@ -93,6 +94,8 @@ private:
 
     bool framebufferResized = false;
 
+    QStack<QString> filesStack;
+
     // void initWindow();
 
     // static void framebufferResizeCallback(GLFWwindow* window, int width, int height);
@@ -133,7 +136,17 @@ private:
                      VkImage& image, VkDeviceMemory& imageMemory);
     void transitionImageLayout(VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout, uint32_t mipLevels);
     void copyBufferToImage(VkBuffer buffer, VkImage image, uint32_t width, uint32_t height);
-    void loadModel();
+    void loadModel(QString MODEL_PATH);
+    void importObjects(){        QDirIterator it("../../Assets/Models/",QStringList()<<"*.obj", QDir::NoFilter,QDirIterator::Subdirectories );
+        while(it.hasNext()) {
+            QFileInfo fileInfo=it.fileInfo();
+            //qDebug()<<fileInfo.filePath()<<" "<<fileInfo.absoluteFilePath()<<"\n";
+            filesStack.push(it.next());
+        }
+        for(auto it1: filesStack){
+            loadModel(it1);
+
+        }};
     void createVertexBuffer();
     void createIndexBuffer();
     void createUniformBuffers();
