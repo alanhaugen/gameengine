@@ -49,6 +49,8 @@ add_executable(QtVulkan
     source/modules/ai/ai.h
     source/modules/filesystem/filesystem.h
     source/modules/physics/physics.h
+    source/modules/audio/openal/openalaudio.h source/modules/audio/openal/openalaudio.cpp
+    source/modules/audio/null/nullaudio.h source/modules/audio/null/nullaudio.cpp
 
 )
 
