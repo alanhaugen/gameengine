@@ -16,6 +16,7 @@ add_executable(QtVulkan
     MainWindow.h MainWindow.cpp
     MainWindow.ui
     Resource.qrc
+    Input.h
 )
 
 if(MSVC)
