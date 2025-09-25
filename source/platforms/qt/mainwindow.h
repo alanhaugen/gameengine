@@ -20,7 +20,7 @@ public:
                int windowWidth = 1100,
                int windowHeight = 700);
     ~MainWindow();
-
+    void closeEvent(QCloseEvent *event) override;
     void start();
     void cleanup();
 
