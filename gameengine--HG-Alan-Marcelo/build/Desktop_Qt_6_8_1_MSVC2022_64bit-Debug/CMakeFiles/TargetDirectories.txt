@@ -1,8 +1,0 @@
-C:/Skole/Programmering/GEA/gameengine--HG-Alan-Marcelo/gameengine--HG-Alan-Marcelo/build/Desktop_Qt_6_8_1_MSVC2022_64bit-Debug/CMakeFiles/QtVulkan.dir
-C:/Skole/Programmering/GEA/gameengine--HG-Alan-Marcelo/gameengine--HG-Alan-Marcelo/build/Desktop_Qt_6_8_1_MSVC2022_64bit-Debug/CMakeFiles/edit_cache.dir
-C:/Skole/Programmering/GEA/gameengine--HG-Alan-Marcelo/gameengine--HG-Alan-Marcelo/build/Desktop_Qt_6_8_1_MSVC2022_64bit-Debug/CMakeFiles/rebuild_cache.dir
-C:/Skole/Programmering/GEA/gameengine--HG-Alan-Marcelo/gameengine--HG-Alan-Marcelo/build/Desktop_Qt_6_8_1_MSVC2022_64bit-Debug/CMakeFiles/list_install_components.dir
-C:/Skole/Programmering/GEA/gameengine--HG-Alan-Marcelo/gameengine--HG-Alan-Marcelo/build/Desktop_Qt_6_8_1_MSVC2022_64bit-Debug/CMakeFiles/install.dir
-C:/Skole/Programmering/GEA/gameengine--HG-Alan-Marcelo/gameengine--HG-Alan-Marcelo/build/Desktop_Qt_6_8_1_MSVC2022_64bit-Debug/CMakeFiles/install/local.dir
-C:/Skole/Programmering/GEA/gameengine--HG-Alan-Marcelo/gameengine--HG-Alan-Marcelo/build/Desktop_Qt_6_8_1_MSVC2022_64bit-Debug/CMakeFiles/QtVulkan_autogen_timestamp_deps.dir
-C:/Skole/Programmering/GEA/gameengine--HG-Alan-Marcelo/gameengine--HG-Alan-Marcelo/build/Desktop_Qt_6_8_1_MSVC2022_64bit-Debug/CMakeFiles/QtVulkan_autogen.dir
