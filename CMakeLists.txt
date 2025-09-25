@@ -45,6 +45,10 @@ add_executable(QtVulkan
     source/modules/script/null/nullscript.cpp source/modules/script/null/nullscript.h
     source/components/GameObject.h source/components/GameObject.cpp
     source/components/Camera.h source/components/Camera.cpp
+    source/modules/audio/audio.h
+    source/modules/ai/ai.h
+    source/modules/filesystem/filesystem.h
+    source/modules/physics/physics.h
 
 )
 

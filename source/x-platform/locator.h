@@ -23,27 +23,24 @@ public:
     static void SetRenderer(Renderer::IRenderer *_renderer);
     static void SetScript(Script::IScript *_script);
 
-    static ITime *time;
-    static IDebug *debug;
-    static Audio::IAudio *audio;
-    static IFileSystem *filesystem;
+    static Time *time;
+    static Debug *debug;
+    static Audio *audio;
+    static FileSystem *filesystem;
     static Physics::IPhysics *physics;
-    static Renderer::IRenderer *renderer;
-    static Script::IScript *script;
+    static Renderer *renderer;
+    static Script *script;
     static Random random;
     static Input input;
-
-    static Array<glm::mat4> viewProjections;
-    static Array<glm::vec4> viewports;
 
     static float deltaTime;
 
 private:
-    static Audio::NullAudio nullAudio;
+    static NullAudio nullAudio;
     static NullFileSystem nullFileSystem;
-    static Physics::NullPhysics nullPhysics;
-    static Renderer::NullRenderer nullRenderer;
-    static Script::NullScript nullScript;
+    static NullPhysics nullPhysics;
+    static NullRenderer nullRenderer;
+    static NullScript nullScript;
 };
 
 //! Macro to easily access the debug singleton and Log a message

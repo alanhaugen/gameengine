@@ -131,6 +131,7 @@ void MainWindow::MainGameLoop()
 
     for (auto* obj : scene->GameObjects)
     {
+        //obj->Update();
         if (!obj){
 
             qDebug()<<"Empty";
@@ -212,10 +213,10 @@ void MainWindow::AddVikingRoom()
     MainObj->setExpanded(true);
 
     QTreeWidgetItem * ObjItem = new QTreeWidgetItem(MainObj);
-   ObjItem->setText(0,"mesh");
-   ObjItem->setData(0, Qt::UserRole, QVariant::fromValue((void*)mesh));
+    ObjItem->setText(0,"mesh");
+    ObjItem->setData(0, Qt::UserRole, QVariant::fromValue((void*)mesh));
 
-   MainObj->addChild(ObjItem);
+    MainObj->addChild(ObjItem);
 
     qDebug() << "Viking room";
 }
@@ -231,8 +232,6 @@ void MainWindow::AddSphere()
     //scene->components.push_back(new Mesh("Assets/Models/viking_room.obj", renderer, scene->editor));
     qDebug() << "Sphere";
 }
-
-
 
 void MainWindow::keyPressEvent(QKeyEvent* event)
 {
