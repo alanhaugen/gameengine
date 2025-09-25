@@ -18,6 +18,7 @@ add_executable(QtVulkan
     Entity.h
     Components.h
     System.h
+    Input.h
 )
 
 if(MSVC)
