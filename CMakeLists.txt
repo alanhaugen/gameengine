@@ -37,6 +37,13 @@ add_executable(QtVulkan
     source/x-platform/editor.h
     source/platforms/qt/qteditor.h source/platforms/qt/qteditor.cpp
     source/demos/empty.h source/demos/empty.cpp
+    source/components/fpscamera.h source/components/fpscamera.cpp
+    source/modules/ai/null/nullaudio.cpp source/modules/ai/null/nullaudio.h
+    source/modules/audio/null/nullaudio.cpp source/modules/audio/null/nullaudio.h
+    source/modules/filesystem/null/nullfilesystem.cpp source/modules/filesystem/null/nullfilesystem.h
+    source/modules/physics/null/nullphysics.cpp source/modules/physics/null/nullphysics.h
+    source/modules/renderer/null/nullrenderer.cpp source/modules/renderer/null/nullrenderer.h
+    source/modules/script/null/nullscript.cpp source/modules/script/null/nullscript.h
 
 )
 
