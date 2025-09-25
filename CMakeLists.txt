@@ -46,7 +46,20 @@ add_executable(QtVulkan
 
 )
 
-include_directories(${CMAKE_SOURCE_DIR}/include)
+#OpenAL
+if(DEFINED ENV{OPENAL_HOME})
+
+
+    target_include_directories(QtVulkan PRIVATE $ENV{OPENAL_HOME}/include)
+
+    target_link_libraries(QtVulkan PRIVATE $ENV{OPENAL_HOME}/libs/Win64/OpenAL32.lib)
+
+    add_custom_command(TARGET QtVulkan POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            $ENV{OPENAL_HOME}/bin/Win64/OpenAL32.dll
+            $<TARGET_FILE_DIR:QtVulkan>
+    )
+endif()
 
 if(MSVC)
     # Required for proper C++ exception handling with MSVC
