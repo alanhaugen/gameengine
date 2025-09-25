@@ -52,6 +52,7 @@ add_executable(QtVulkan
     source/modules/audio/openal/openalaudio.h source/modules/audio/openal/openalaudio.cpp
     source/modules/audio/null/nullaudio.h source/modules/audio/null/nullaudio.cpp
     source/modules/system.h
+    source/x-platform/locator.cpp
 
 )
 

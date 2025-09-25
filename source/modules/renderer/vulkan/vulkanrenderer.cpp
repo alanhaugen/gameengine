@@ -34,6 +34,16 @@
 class NSView;
 #endif
 
+void VulkanRenderer::Init()
+{
+
+}
+
+void VulkanRenderer::Update()
+{
+    Render();
+}
+
 VulkanRenderer::VulkanRenderer(QWindow* parent) : QWindow(parent)
 {
     setSurfaceType(QWindow::VulkanSurface);		// Seems to be important to get this to work

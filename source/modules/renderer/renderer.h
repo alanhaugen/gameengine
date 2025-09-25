@@ -5,6 +5,9 @@
 class Renderer
 {
 public:
+    virtual void Init() = 0;
+    virtual void Update() = 0;
+public:
     class Drawable
     {
     public:

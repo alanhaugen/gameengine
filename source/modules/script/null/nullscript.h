@@ -4,4 +4,7 @@
 
 class NullScript : public Script
 {
+public:
+    void Init();
+    void Update();
 };

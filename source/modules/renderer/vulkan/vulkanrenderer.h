@@ -19,6 +19,9 @@ class VulkanRenderer : public QWindow, public Renderer
 {
     Q_OBJECT
 public:
+    void Init() override;
+    void Update() override;
+
     explicit VulkanRenderer(QWindow* parent = nullptr);
     ~VulkanRenderer();
 

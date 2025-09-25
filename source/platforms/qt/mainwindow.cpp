@@ -7,6 +7,9 @@
 #include "../../components/GameObject.h"
 #include <qinputdialog.h>
 
+#include "../../x-platform/locator.h"
+
+#include "../../modules/audio/openal/openalaudio.h"
 
 MainWindow::MainWindow(QWidget *parent, const char* windowTitle, int windowWidth, int windowHeight)
     : QMainWindow(parent)
@@ -65,6 +68,11 @@ MainWindow::MainWindow(QWidget *parent, const char* windowTitle, int windowWidth
 
 
     lastTime = std::chrono::high_resolution_clock::now();
+
+    OpenALAudio* openAL = new OpenALAudio();
+
+    Locator::SetAudio(openAL);
+    Locator::SetRenderer(renderer);
 }
 
 MainWindow::~MainWindow()
@@ -108,26 +116,32 @@ void MainWindow::MainGameLoop()
 
     }
 
-    /*if (audio)
+    if (Locator::audio)
     {
-        audio->Update();
+        Locator::audio->Update();
     }
 
-    if (filesystem)
+    if (Locator::filesystem)
     {
-        filesystem->Update();
+        Locator::filesystem->Update();
     }
 
-    if (physics)
+    if (Locator::physics)
     {
-        physics->Update();
+        Locator::physics->Update();
     }
 
-    if (script)
+    if (Locator::script)
     {
-        script->Update();
-    }*/
+        Locator::script->Update();
+    }
 
+    if (Locator::renderer)
+    {
+        Locator::renderer->Update();
+
+        vulkanWidget->repaint();
+    }
 
     for (auto* obj : scene->GameObjects)
     {
@@ -143,13 +157,6 @@ void MainWindow::MainGameLoop()
         {
             qDebug()<<"Name" << obj->GetName();
         }
-    }
-
-    if (renderer)
-    {
-        renderer->Render();
-
-        vulkanWidget->repaint();
     }
 }
 
