@@ -17,4 +17,12 @@ public:
     void Update();
 
     Renderer::Drawable* drawable;
+
+    void SetName(const QString NewName);
+
+
+    const QString GetName();
+
+
+
 };
