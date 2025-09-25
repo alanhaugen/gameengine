@@ -31,7 +31,10 @@ MainWindow::MainWindow(QWidget *parent)
     this->setFocus();
 
     statusBar()->showMessage(" put something cool here! ");
+    //-------------------------------------------file system widget-------------------------------------------------------
+    filesWidget= new FilesWindow();
 }
+
 
 MainWindow::~MainWindow()
 {
