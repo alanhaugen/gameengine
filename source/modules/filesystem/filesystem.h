@@ -1,5 +1,10 @@
 #pragma once
 
-class FileSystem
+#include "../system.h"
+
+class FileSystem : public System
 {
+public:
+    void Init();
+    void Update();
 };

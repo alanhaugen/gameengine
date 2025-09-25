@@ -4,4 +4,7 @@
 
 class NullFileSystem : public FileSystem
 {
+public:
+    void Init();
+    void Update();
 };
