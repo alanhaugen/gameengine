@@ -1,6 +1,6 @@
 #include "GameObject.h"
 
-GameObject::GameObject(const QString name, Entity id)
+GameObject::GameObject(const QString name, uint32_t id)
 {
     Name = name;
     ID= id;
@@ -21,7 +21,7 @@ const QString GameObject::GetName()
     return Name;
 }
 
-const Entity GameObject::GetEntityId()
+const uint32_t GameObject::GetEntityId()
 {
     return ID;
 }
