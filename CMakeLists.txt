@@ -21,13 +21,13 @@ if(MSVC)
     # Required for proper C++ exception handling with MSVC
     target_compile_options(QtVulkan PRIVATE /EHsc)
     target_include_directories(QtVulkan PRIVATE
-        "C:/VulkanSDK/1.4.321.1/Include"
+        "C:/VulkanSDK/vulkan/Include"
     )
     target_link_libraries(QtVulkan PRIVATE
         Qt::Core
         Qt::Widgets
         Qt6::Widgets
-        "C:/VulkanSDK/1.4.321.1/Lib/vulkan-1.lib"
+        "C:/VulkanSDK/vulkan/Lib/vulkan-1.lib"
     )
 elseif(APPLE)
     # This will set NDEBUG for both debug and release build
