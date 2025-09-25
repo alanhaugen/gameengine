@@ -7,9 +7,9 @@ class OpenALAudio : public Audio
 {
 public:
     OpenALAudio();
-    void Init();
-    void Update();
-    void PlaySound(std::string filename, glm::vec3 pos);
+    void Init() override;
+    void Update() override;
+    void PlaySound(std::string filename, glm::vec3 pos) override;
 };
 
 #endif // OPENALAUDIO_H

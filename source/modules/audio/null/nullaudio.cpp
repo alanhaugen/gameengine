@@ -1,5 +1,10 @@
 #include "nullaudio.h"
 
+void NullAudio::Init()
+{
+
+}
+
 void NullAudio::Update()
 {
 

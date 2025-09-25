@@ -73,6 +73,9 @@ MainWindow::MainWindow(QWidget *parent, const char* windowTitle, int windowWidth
 
     Locator::SetAudio(openAL);
     Locator::SetRenderer(renderer);
+
+    Locator::audio->Init();
+    Locator::renderer->Init();
 }
 
 MainWindow::~MainWindow()
