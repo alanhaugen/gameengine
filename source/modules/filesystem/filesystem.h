@@ -5,6 +5,6 @@
 class FileSystem : public System
 {
 public:
-    void Init();
-    void Update();
+    virtual void Init() = 0;
+    virtual void Update() = 0;
 };

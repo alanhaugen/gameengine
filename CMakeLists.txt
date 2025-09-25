@@ -57,8 +57,6 @@ add_executable(QtVulkan
 
 #OpenAL
 if(DEFINED ENV{OPENAL_HOME})
-
-
     target_include_directories(QtVulkan PRIVATE $ENV{OPENAL_HOME}/include)
 
     target_link_libraries(QtVulkan PRIVATE $ENV{OPENAL_HOME}/libs/Win64/OpenAL32.lib)
@@ -83,6 +81,9 @@ if(MSVC)
     )
     target_link_libraries(QtVulkan PRIVATE Qt6::Widgets)
 else()
+    target_include_directories(QtVulkan PRIVATE
+    include
+    )
     find_library(COREAUDIO CoreAudio "/usr")
     target_link_libraries(QtVulkan PRIVATE
     Qt::Core

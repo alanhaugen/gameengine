@@ -6,6 +6,6 @@
 class Audio
 {
 public:
-    virtual void Update();
-    virtual void PlaySound(std::string filename, glm::vec3 pos);
+    virtual void Update() = 0;
+    virtual void PlaySound(std::string filename, glm::vec3 pos) = 0;
 };
