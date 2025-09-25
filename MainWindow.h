@@ -28,7 +28,6 @@ private:
 protected:
     void keyPressEvent(QKeyEvent* event) override;
 private slots:
-    void on_action_Quit_destroyed();
     void on_action_Quit_triggered();
 };
 #endif // MAINWINDOW_H

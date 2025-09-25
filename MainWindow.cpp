@@ -62,11 +62,6 @@ void MainWindow::keyPressEvent(QKeyEvent* event)
 
 }
 
-void MainWindow::on_action_Quit_destroyed()
-{
-    qDebug("Start is called");
-}
-
 
 void MainWindow::on_action_Quit_triggered()
 {
