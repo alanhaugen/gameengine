@@ -26,7 +26,7 @@ Mesh::Mesh(const char *filePath,
 
     for (const auto& shape : shapes) {
         for (const auto& index : shape.mesh.indices) {
-            Vertex vertex{};
+            Vertex vertex;
 
             vertex.pos = {
                 attrib.vertices[3 * index.vertex_index + 0],

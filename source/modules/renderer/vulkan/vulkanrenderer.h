@@ -27,9 +27,9 @@ public:
 
     void initVulkan();
     Drawable& CreateDrawable(std::vector<Vertex> vertices,
-                            std::vector<uint32_t> indices,
-                            const char* vertexShader,
-                            const char* fragmentShader) override;
+                             std::vector<uint32_t> indices,
+                             const char* vertexShader,
+                             const char* fragmentShader) override;
 
     void Render();
 

@@ -37,9 +37,9 @@ public:
     };
 
     virtual Drawable& CreateDrawable(std::vector<Vertex> vertices,
-                                    std::vector<uint32_t> indices,
-                                    const char* vertexShader = "shaders/vert.spv",
-                                    const char* fragmentShader = "shaders/frag.spv") = 0;
+                                     std::vector<uint32_t> indices = std::vector<uint32_t>(),
+                                     const char* vertexShader = "shaders/vert.spv",
+                                     const char* fragmentShader = "shaders/frag.spv") = 0;
 
     virtual void SetViewMatrix(glm::mat4 view) = 0;
 };

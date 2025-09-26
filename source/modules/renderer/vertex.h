@@ -14,6 +14,14 @@ struct Vertex {
     glm::vec3 normal;
     glm::vec2 texCoord;
 
+    Vertex(float x, float y, float z) {
+        pos = glm::vec3(x, y, z);
+    }
+
+    Vertex()
+    {
+    }
+
     static VkVertexInputBindingDescription getBindingDescription() {
         VkVertexInputBindingDescription bindingDescription{};
         bindingDescription.binding = 0;

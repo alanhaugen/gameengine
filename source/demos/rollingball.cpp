@@ -4,6 +4,7 @@
 #include "../components/spherecollider.h"
 #include "../components/trianglecollider.h"
 #include "../components/fpscamera.h"
+#include <glm/gtc/matrix_transform.hpp>
 
 RollingBall::RollingBall()
 {
@@ -12,7 +13,8 @@ RollingBall::RollingBall()
 void RollingBall::Init()
 {
     GameObject* ball = new GameObject;
-    ball->AddComponent(new Mesh("Assets/Models/ball.obj"));
+    ballMesh = new Mesh("Assets/Models/ball.obj");
+    ball->AddComponent(ballMesh);
     ball->AddComponent(new SphereCollider());
     ball->AddComponent(new FPSCamera(&camera));
 
@@ -26,5 +28,13 @@ void RollingBall::Init()
 
 void RollingBall::Update()
 {
+    glm::mat4& matrix = ballMesh->drawable->ubo.model;
+    matrix = glm::translate(matrix, glm::vec3(0,force,0));
 
+    force -= 0.000098f;
+
+    if (matrix[3].y < -1.0f)
+    {
+        force = 0.01f;
+    }
 }
