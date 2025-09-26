@@ -26,5 +26,5 @@ void main()
     outTexCoords = aTexCoords;
     outLightPos = ubo.lightPos;
     outViewPos = ubo.viewPos;
-    gl_Position = ubo.proj * ubo.view * vec4(aPos, 1.0);
+    gl_Position = ubo.proj * ubo.view * ubo.model * vec4(aPos, 1.0);
 }
