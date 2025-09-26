@@ -1,6 +1,7 @@
 #include "locator.h"
 
-//Debug *Locator::debug = NULL;
+Debug *Locator::debug = NULL;
+Editor *Locator::editor = NULL;
 
 NullAudio Locator::nullAudio;
 NullFileSystem Locator::nullFileSystem;
@@ -13,6 +14,30 @@ FileSystem *Locator::filesystem = &Locator::nullFileSystem;
 Physics *Locator::physics = &Locator::nullPhysics;
 Renderer *Locator::renderer = &Locator::nullRenderer;
 Script *Locator::script = &Locator::nullScript;
+
+void Locator::SetEditor(Editor *_editor)
+{
+    if (_editor == NULL)
+    {
+        editor = NULL;
+    }
+    else
+    {
+        editor = _editor;
+    }
+}
+
+void Locator::SetDebug(Debug *_debug)
+{
+    if (_debug == NULL)
+    {
+        debug = NULL;
+    }
+    else
+    {
+        debug = _debug;
+    }
+}
 
 void Locator::SetAudio(Audio *_audio)
 {

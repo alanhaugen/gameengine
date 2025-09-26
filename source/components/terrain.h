@@ -2,12 +2,12 @@
 
 #include "component.h"
 
-class Mesh : public Component
+class Terrain : public Component
 {
 private:
 
 public:
-    Mesh(const char* filePath,
+    Terrain(const char* filePath,
          const char* vertexShaderPath = "shaders/shader.vert.spv",
          const char* fragmentShaderPath = "shaders/shader.frag.spv");
     void Update();

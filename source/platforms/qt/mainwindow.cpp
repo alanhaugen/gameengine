@@ -4,11 +4,9 @@
 #include "../../components/mesh.h"
 #include <QKeyEvent>
 #include <QTimer>
-#include "../../components/GameObject.h"
+#include "../../components/gameobject.h"
 #include <qinputdialog.h>
-
 #include "../../x-platform/locator.h"
-
 #include "../../modules/audio/openal/openalaudio.h"
 
 MainWindow::MainWindow(QWidget *parent, const char* windowTitle, int windowWidth, int windowHeight)
@@ -45,7 +43,6 @@ MainWindow::MainWindow(QWidget *parent, const char* windowTitle, int windowWidth
     //GameObject treewidget
     ui->treeGameObjects->setMinimumWidth(100);
 
-
     //sets the keyboard input focus to the MainWindow when program starts
     this->setFocus();
 
@@ -62,10 +59,6 @@ MainWindow::MainWindow(QWidget *parent, const char* windowTitle, int windowWidth
 
     //
     connect(ui->treeGameObjects, &QTreeWidget::customContextMenuRequested, this, &MainWindow::OnRightClickGameObjectWidget);
-
-
-
-
 
     lastTime = std::chrono::high_resolution_clock::now();
 
@@ -146,20 +139,9 @@ void MainWindow::MainGameLoop()
         vulkanWidget->repaint();
     }
 
-    for (auto* obj : scene->GameObjects)
+    for (auto* obj : scene->gameObjects)
     {
-        //obj->Update();
-        if (!obj){
-
-            qDebug()<<"Empty";
-            continue;
-        }
-
-        qDebug()<<"Empty";
-        if(obj->GetEntityId()==1)
-        {
-            qDebug()<<"Name" << obj->GetName();
-        }
+        obj->Update();
     }
 }
 
@@ -194,41 +176,19 @@ void MainWindow::OnRightClickGameObjectWidget(const QPoint &ClickedOn)
             {
                 obj->SetName(newName);
             }
-
-
-
         }
     }
-
-
-
 }
 
 void MainWindow::AddVikingRoom()
 {
-    uint32_t EntityID = 1;
-    GameObject* gameobj = new GameObject("VikingRoom",EntityID);
+    GameObject* gameobj = new GameObject("VikingRoom");
 
-    Mesh* mesh = new Mesh("Assets/Models/viking_room.obj", renderer, scene->editor);
+    Mesh* mesh = new Mesh("Assets/Models/viking_room.obj");
 
     gameobj->AddComponent(mesh);
 
-    scene->GameObjects.push_back(gameobj);
-
-    scene->components.push_back(mesh);
-    QTreeWidgetItem * MainObj = new QTreeWidgetItem(ui->treeGameObjects);
-
-    MainObj->setText(0,gameobj->GetName());
-    MainObj->setData(0, Qt::UserRole, QVariant::fromValue((void*)gameobj));
-    MainObj->setExpanded(true);
-
-    QTreeWidgetItem * ObjItem = new QTreeWidgetItem(MainObj);
-    ObjItem->setText(0,"mesh");
-    ObjItem->setData(0, Qt::UserRole, QVariant::fromValue((void*)mesh));
-
-    MainObj->addChild(ObjItem);
-
-    qDebug() << "Viking room";
+    scene->gameObjects.push_back(gameobj);
 }
 
 void MainWindow::AddCube()

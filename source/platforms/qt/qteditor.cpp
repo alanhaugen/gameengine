@@ -10,8 +10,15 @@ QtEditor::QtEditor(Ui::MainWindow *inUi, QStatusBar *inStatusBar)
 
 void QtEditor::AddEntity(const char *name)
 {
-    QTreeWidgetItem* item = new QTreeWidgetItem(QStringList(name), 0);
-    ui->treeGameObjects->addTopLevelItem(item);
+    QTreeWidgetItem * MainObj = new QTreeWidgetItem(ui->treeGameObjects);
+
+    MainObj->setText(0, "GameObject");
+    MainObj->setExpanded(true);
+
+    QTreeWidgetItem * ObjItem = new QTreeWidgetItem(MainObj);
+    ObjItem->setText(0, "mesh");
+
+    MainObj->addChild(ObjItem);
 }
 
 void QtEditor::UpdateStatusBar(const char *text)

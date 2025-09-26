@@ -14,18 +14,20 @@ struct Transform
     glm::vec3 mScale;
 };
 
+static unsigned int ID_TOP = 0;
+
 class GameObject
 {
 protected:
-    uint32_t ID;
+    unsigned int ID;
     QString Name;
 
 public:
-    GameObject(const QString name, uint32_t id);
+    GameObject(const QString name = "empty");
 
     Transform mTransform;
    // std::vector<GameObject*> children;
-    std::vector<Component*> Components;
+    std::vector<Component*> components;
 
 
     void AddComponent(Component* newComponent);
@@ -37,6 +39,7 @@ public:
 
     const uint32_t GetEntityId();
 
+    void Update();
 };
 
 #endif // GAMEOBJECT_H

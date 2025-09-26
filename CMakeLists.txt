@@ -43,8 +43,8 @@ add_executable(QtVulkan
     source/modules/physics/null/nullphysics.cpp source/modules/physics/null/nullphysics.h
     source/modules/renderer/null/nullrenderer.cpp source/modules/renderer/null/nullrenderer.h
     source/modules/script/null/nullscript.cpp source/modules/script/null/nullscript.h
-    source/components/GameObject.h source/components/GameObject.cpp
-    source/components/Camera.h source/components/Camera.cpp
+    source/components/gameobject.h source/components/gameobject.cpp
+    source/components/camera.h source/components/camera.cpp
     source/modules/audio/audio.h
     source/modules/ai/ai.h
     source/modules/filesystem/filesystem.h
@@ -53,6 +53,11 @@ add_executable(QtVulkan
     source/modules/audio/null/nullaudio.h source/modules/audio/null/nullaudio.cpp
     source/modules/system.h
     source/x-platform/locator.cpp
+    source/x-platform/debug.h source/x-platform/debug.cpp
+    source/demos/rollingball.cpp source/demos/rollingball.h
+    source/components/terrain.cpp source/components/terrain.h
+    source/components/trianglecollider.cpp source/components/trianglecollider.h
+    source/components/spherecollider.cpp source/components/spherecollider.h
 
 )
 

@@ -7,8 +7,6 @@
 #include <unordered_map>
 
 Mesh::Mesh(const char *filePath,
-           Renderer* renderer,
-           Editor* editor,
            const char* vertexShaderPath,
            const char* fragmentShaderPath)
 {
@@ -53,20 +51,9 @@ Mesh::Mesh(const char *filePath,
     }
 
     drawable = &renderer->CreateDrawable(vertices, indices, vertexShaderPath, fragmentShaderPath);
-   // editor->AddEntity(filePath);
+    editor->AddEntity(filePath);
 }
 
 void Mesh::Update()
 {
-
-}
-
-void Mesh::SetName(const QString NewName)
-{
-    Name = NewName;
-}
-
-const QString Mesh::GetName()
-{
-    return Name;
 }
