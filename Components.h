@@ -2,6 +2,7 @@
 #define COMPONENT_H
 
 #include <glm/glm.hpp>
+#include <string>
 #include <vector>
 
 
@@ -13,15 +14,18 @@ namespace bbl
     {
         transform,
         mesh,
-        texture
+        texture,
+        audio,
+        physics,
+        collision
     };
 
     struct transform
     {
-        glm::vec3 mPosition;
-        glm::vec3 mRotation;
-        glm::vec3 mScale;
-        short mEntityId{-1}; //since it is a signed short int, it can hold -32,768 to 32,767 Integers
+        glm::vec3 mPosition{};
+        glm::vec3 mRotation{};
+        glm::vec3 mScale{1, 1, 1};
+        short mEntityId{-1};
     };
 
     struct mesh
@@ -37,11 +41,37 @@ namespace bbl
 
     };
 
+    struct audio
+    {
+        std::string mAUDIO_FILE{};
+        short mEntityId{-1};
+    };
+
+    struct physics
+    {
+        float mDeltaTime{0.016f};
+        float mGravity{9.81f};
+        short mEntityId{-1};
+    };
+
+    struct collision
+    {
+        bool isColliding{};
+        short mEntityId{-1};
+    };
+
 
     //Create vector of the structs so that we at a later time can implement them into different systems
     std::vector<bbl::transform> ComponentTransformVector;
     std::vector<bbl::mesh> ComponentMeshVector;
     std::vector<bbl::texture> ComponentTextureVector;
+    std::vector<bbl::audio> ComponentAudioVector;
+    std::vector<bbl::physics> ComponentPhysicsVector;
+    std::vector<bbl::collision> ComponentCollisionVector;
+
+
+
+    /////////////////////////////////////////////////////////////////////////
 
 
 
