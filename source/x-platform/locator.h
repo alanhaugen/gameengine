@@ -1,6 +1,6 @@
 #pragma once
 
-//#include "input.h"
+#include "input.h"
 #include "debug.h"
 #include "editor.h"
 #include "../modules/audio/null/nullaudio.h"
@@ -30,7 +30,7 @@ public:
     static Renderer* renderer;
     static Script* script;
     static Editor* editor;
-    //static Input input;
+    static Input input;
 
 private:
     static NullAudio nullAudio;

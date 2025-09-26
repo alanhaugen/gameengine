@@ -16,4 +16,6 @@ public:
                              std::vector<uint32_t> indices,
                              const char* vertexShader = "shaders/vert.spv",
                              const char* fragmentShader = "shaders/frag.spv");
+
+    void SetViewMatrix(glm::mat4 view);
 };

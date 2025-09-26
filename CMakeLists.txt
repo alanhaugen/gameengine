@@ -58,6 +58,8 @@ add_executable(QtVulkan
     source/components/terrain.cpp source/components/terrain.h
     source/components/trianglecollider.cpp source/components/trianglecollider.h
     source/components/spherecollider.cpp source/components/spherecollider.h
+    source/x-platform/input.h
+    source/x-platform/input.cpp
 
 )
 

@@ -3,6 +3,8 @@
 Debug *Locator::debug = NULL;
 Editor *Locator::editor = NULL;
 
+Input Locator::input = Input();
+
 NullAudio Locator::nullAudio;
 NullFileSystem Locator::nullFileSystem;
 NullPhysics Locator::nullPhysics;

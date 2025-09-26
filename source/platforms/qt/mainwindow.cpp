@@ -106,10 +106,12 @@ void MainWindow::MainGameLoop()
     float deltaTime = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - lastTime).count();
     lastTime = std::chrono::high_resolution_clock::now();
 
+    Locator::input.Update();
+
     if (scene)
     {
+        scene->camera.Update();
         scene->Update();
-
     }
 
     if (Locator::audio)
@@ -205,15 +207,30 @@ void MainWindow::AddSphere()
 
 void MainWindow::keyPressEvent(QKeyEvent* event)
 {
-    if (event->key() == Qt::Key_Escape) {
-        delete renderer;
-        renderer = nullptr;
-        close(); // Example: close window on ESC
-    }
-    if (event->key() == Qt::Key_Space) {
-        start();
-    }
+    Locator::input.OnButton(event->key(), true);
 }
+
+void MainWindow::keyReleaseEvent(QKeyEvent* event)
+{
+    Locator::input.OnButton(event->key(), false);
+}
+
+void MainWindow::mousePressEvent(QMouseEvent *eventPress)
+{
+    Locator::input.mouse.Down = true;
+}
+
+void MainWindow::mouseReleaseEvent(QMouseEvent *releaseEvent)
+{
+    Locator::input.mouse.Down = false;
+}
+
+void MainWindow::mouseMoveEvent(QMouseEvent *eventMove)
+{
+    Locator::input.mouse.x = eventMove->pos().x();
+    Locator::input.mouse.y = eventMove->pos().y();
+}
+
 void MainWindow::closeEvent(QCloseEvent *event)
 {
 #ifdef Q_OS_WIN

@@ -33,10 +33,14 @@ public:
 
     void Render();
 
+    void SetViewMatrix(glm::mat4 view) override;
+
 protected:
 private:
     int drawablesQuantity = 0;
     Drawable drawables[MAX_DRAWABLES];
+    glm::mat4 cameraView;
+
     size_t PadUniformBufferSize(size_t originalSize);
     VkPhysicalDeviceProperties deviceProperties;
     // class GLFWwindow* window;

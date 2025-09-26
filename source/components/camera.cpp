@@ -3,9 +3,6 @@
 
 void Camera::Init()
 {
-    fovDegrees = 60.f;
-    nearField = 0.1f;
-    farField = 100.f;
     position = glm::vec3(0.0f, 0.0f, 0.0f);
 
     forward = glm::vec3(0.0f, 0.0f, -1.0f);
@@ -31,5 +28,5 @@ Camera::Camera(float x, float y, float z)
 
 void Camera::Update()
 {
-    view = glm::lookAtRH(position, position + forward, up);
+    renderer->SetViewMatrix(glm::lookAtRH(position, position + forward, up));
 }

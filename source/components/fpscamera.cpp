@@ -1,12 +1,13 @@
 #include "fpscamera.h"
 
-FPSCamera::FPSCamera()
+FPSCamera::FPSCamera(Camera* innCamera)
 {
+    camera = innCamera;
 }
 
 void FPSCamera::Update()
 {
-    /*if (input.Mouse.Down)
+    if (input.mouse.Down)
     {
         if (input.Held(input.Key.W))
         {
@@ -25,23 +26,16 @@ void FPSCamera::Update()
             camera->position -= camera->right * speed;
         }
 
-        camera->yaw   += input.Mouse.dx;
-        camera->pitch -= input.Mouse.dy;
-
-        input.Mouse.Dragging = true;
+        camera->yaw   += input.mouse.dx;
+        camera->pitch -= input.mouse.dy;
 
         UpdateCamera();
     }
-    else
-    {
-        input.Mouse.Dragging = false;
-    }*/
 }
-
 
 void FPSCamera::UpdateCamera()
 {
-    /*if (camera->pitch > 89.0f)
+    if (camera->pitch > 89.0f)
     {
         camera->pitch = 89.0f;
     }
@@ -56,6 +50,5 @@ void FPSCamera::UpdateCamera()
     camera->forward = glm::normalize(camera->forward);
 
     camera->right = glm::normalize(glm::cross(camera->forward, camera->worldUp));
-    camera->up = glm::normalize(glm::cross(camera->right, camera->forward));*/
+    camera->up = glm::normalize(glm::cross(camera->right, camera->forward));
 }
-
