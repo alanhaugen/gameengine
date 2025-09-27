@@ -9,7 +9,7 @@ namespace gea
 {
     struct EntityComponents {
         ComponentTypes mComponentType;
-        short mCompoentIndex{-1};
+        short mComponentIndex{-1};
     };
 
     class Entity {
