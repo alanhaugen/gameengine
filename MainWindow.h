@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <qplaintextedit.h>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -17,6 +18,8 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+    QPlainTextEdit* messageLogWidget{nullptr};
+
     void start();
 
 private:
@@ -25,7 +28,10 @@ private:
     //QWidget* mRenderWindowContainer{nullptr};   //Qt container for the RenderWindow
     class Renderer* mVulkanWindow{nullptr};
 
+    //GameWorld mGameWorld;
+
 protected:
+    //bool eventFilter(QObject* obj, QEvent* event);
     void keyPressEvent(QKeyEvent* event) override;
 private slots:
     void on_action_Quit_triggered();
