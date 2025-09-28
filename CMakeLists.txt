@@ -26,14 +26,12 @@ set(SOURCES
     MainWindow.cpp
     MainWindow.h
     MainWindow.ui
-    engine.cpp
-    system.cpp
-    engine.h
+    Entity.h
+    Components.h
 )
 
 add_executable(QtVulkan ${SOURCES}
-    engine.h engine.cpp
-    system.cpp)
+    Components.h Entity.h)
 
 # Include Vulkan headers (as requested)
 target_include_directories(QtVulkan PRIVATE
