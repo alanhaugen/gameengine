@@ -96,13 +96,13 @@ namespace bbl
 
 
     //Create vector of the structs so that we at a later time can implement them into different systems
-    std::vector<bbl::transform> TransformComponent;
-    std::vector<bbl::mesh> MeshComponent;
-    std::vector<bbl::texture> TextureComponent;
-    std::vector<bbl::audio> AudioComponent;
-    std::vector<bbl::physics> PhysicsComponent;
-    std::vector<bbl::collision> CollisionComponent;
-    std::vector<bbl::Input> InputComponent;
+    inline std::vector<bbl::transform> TransformComponent;
+    inline std::vector<bbl::mesh> MeshComponent;
+    inline std::vector<bbl::texture> TextureComponent;
+    inline std::vector<bbl::audio> AudioComponent;
+    inline std::vector<bbl::physics> PhysicsComponent;
+    inline std::vector<bbl::collision> CollisionComponent;
+    inline std::vector<bbl::Input> InputComponent;
 
     /////////////////////////////////////////////////////////////////////////
 

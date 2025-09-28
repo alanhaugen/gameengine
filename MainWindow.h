@@ -28,7 +28,7 @@ private:
 
     //QWidget* mRenderWindowContainer{nullptr};   //Qt container for the RenderWindow
     class Renderer* mVulkanWindow{nullptr};
-    GameWorld mGameWorld;
+    bbl::GameWorld mGameWorld;
 
     //GameWorld mGameWorld;
 
