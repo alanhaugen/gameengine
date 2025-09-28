@@ -2,7 +2,6 @@
 #define COMPONENT_H
 
 #include <glm/glm.hpp>
-#include <string>
 #include <vector>
 
 
@@ -17,7 +16,8 @@ namespace bbl
         texture,
         audio,
         physics,
-        collision
+        collision,
+        input
     };
 
     struct transform
@@ -43,7 +43,7 @@ namespace bbl
 
     struct audio
     {
-        std::string mAUDIO_FILE{};
+        float mVolume{100};
         short mEntityId{-1};
     };
 
@@ -60,16 +60,49 @@ namespace bbl
         short mEntityId{-1};
     };
 
+    struct Input
+    {
+        bool W{false};
+        bool A{false};
+        bool S{false};
+        bool D{false};
+
+        bool UP{false};
+        bool DOWN{false};
+        bool LEFT{false};
+        bool RIGHT{false};
+
+        bool Q{false};
+        bool E{false};
+        bool R{false};
+        bool C{false};
+
+        bool LSHIFT{false};
+        bool LCTRL{false};
+        bool SPACE{false};
+
+        bool RMB{false};    //Glory Mouse
+        bool MMB{false};
+        bool LMB{false};
+        bool MB4{false};
+        bool MB5{false};
+
+
+        float MWHEEL{0.f};  //MouseWheel
+        int MOUSEX{0};
+        int MOUSEY{0};
+    };
+
+
 
     //Create vector of the structs so that we at a later time can implement them into different systems
-    std::vector<bbl::transform> ComponentTransformVector;
-    std::vector<bbl::mesh> ComponentMeshVector;
-    std::vector<bbl::texture> ComponentTextureVector;
-    std::vector<bbl::audio> ComponentAudioVector;
-    std::vector<bbl::physics> ComponentPhysicsVector;
-    std::vector<bbl::collision> ComponentCollisionVector;
-
-
+    std::vector<bbl::transform> TransformComponent;
+    std::vector<bbl::mesh> MeshComponent;
+    std::vector<bbl::texture> TextureComponent;
+    std::vector<bbl::audio> AudioComponent;
+    std::vector<bbl::physics> PhysicsComponent;
+    std::vector<bbl::collision> CollisionComponent;
+    std::vector<bbl::Input> InputComponent;
 
     /////////////////////////////////////////////////////////////////////////
 

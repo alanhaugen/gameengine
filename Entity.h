@@ -21,13 +21,9 @@ namespace bbl
         std::size_t mEntityId;
         std::vector<EntityComponents> mComponents;
 
-        static std::size_t nextId;
+        inline static std::size_t nextId{0};
 
     };
-
-    std::size_t Entity::nextId{0};
-
-
 
 }
 //namespace bbl

@@ -18,7 +18,8 @@ add_executable(QtVulkan
     Entity.h
     Components.h
     System.h
-    Input.h
+
+    GameWorld.h GameWorld.cpp
 )
 
 if(MSVC)
