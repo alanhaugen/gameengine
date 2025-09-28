@@ -79,7 +79,3 @@ CMakeLists.txt.user*
 .rcc/
 .uic/
 /build*/
-/.vs
-CMakePresets.json
-CMakeUserPresets.json
-/out
