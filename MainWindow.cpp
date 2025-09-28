@@ -2,6 +2,13 @@
 #include "ui_MainWindow.h"
 #include "Renderer.h"
 #include <QKeyEvent>
+#include <QApplication>
+#include <QPlainTextEdit>
+#include <QVulkanInstance>
+#include <QLibraryInfo>
+#include <QLoggingCategory>
+#include <QPointer>
+#include <QDockWidget>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -14,7 +21,7 @@ MainWindow::MainWindow(QWidget *parent)
     setWindowTitle("INNgine");  //Main app title
 
     mVulkanWindow = new Renderer();
-    mVulkanWindow->setTitle("Renderer");    //Render window title
+    mVulkanWindow->setTitle("Renderer");
 
     //Have to set the size of the Vulkan window here, otherwise it can not set up the swapchain correctly
     mVulkanWindow->setWidth(1100);
@@ -29,6 +36,26 @@ MainWindow::MainWindow(QWidget *parent)
 
     //sets the keyboard input focus to the MainWindow when program starts
     this->setFocus();
+
+
+
+    /*
+     * Logger Implementation in MainWindow
+     */
+    QDockWidget* logDock = new QDockWidget("Logger", this);
+    logDock->setAllowedAreas(Qt::BottomDockWidgetArea | Qt::TopDockWidgetArea);
+
+    // Creating the Log Widget
+    messageLogWidget = new QPlainTextEdit(logDock);
+    messageLogWidget->setReadOnly(true);
+
+    // Setting the logger inside the widget
+    logDock->setWidget(messageLogWidget);
+
+    // Adding dock
+    addDockWidget(Qt::BottomDockWidgetArea, logDock);
+
+
 
     statusBar()->showMessage(" put something cool here! ");
 }
@@ -59,6 +86,12 @@ void MainWindow::keyPressEvent(QKeyEvent* event)
     if (event->key() == Qt::Key_Space) {
         start();
     }
+    if (event->key() == Qt::Key_W) {
+        messageLogWidget->appendPlainText("Marvin Marvin Marvin");
+    }
+    if (event->key() == Qt::Key_A) {
+        messageLogWidget->appendPlainText("Erik Er Best");
+    }
 }
 
 
@@ -68,4 +101,6 @@ void MainWindow::on_action_Quit_triggered()
     mVulkanWindow = nullptr;
     close();
 }
+
+
 
