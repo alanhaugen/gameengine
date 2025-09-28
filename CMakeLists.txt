@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.19)
 project(QtVulkan LANGUAGES CXX)
 
-find_package(Qt6 6.5 REQUIRED COMPONENTS Core Widgets)
+find_package(Qt6 6.5 REQUIRED COMPONENTS Core Widgets Multimedia)
 
 qt_standard_project_setup()
 
@@ -20,6 +20,7 @@ add_executable(QtVulkan
     System.h
 
     GameWorld.h GameWorld.cpp
+    resourcemanager.h resourcemanager.cpp
 )
 
 if(MSVC)
@@ -32,6 +33,7 @@ if(MSVC)
         Qt::Core
         Qt::Widgets
         Qt6::Widgets
+        Qt6::Multimedia
         "C:/VulkanSDK/1.4.321.1/Lib/vulkan-1.lib"
     )
 elseif(APPLE)

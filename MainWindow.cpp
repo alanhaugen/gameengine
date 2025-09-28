@@ -1,4 +1,5 @@
 #include "MainWindow.h"
+#include "resourcemanager.h"
 #include "ui_MainWindow.h"
 #include "Renderer.h"
 #include <QKeyEvent>
@@ -10,9 +11,10 @@
 #include <QPointer>
 #include <QDockWidget>
 
-MainWindow::MainWindow(QWidget *parent)
+MainWindow::MainWindow(ResourceManager* resourceMgr, QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
+    , resourceManager(resourceMgr)          //Assign from main
 {
     ui->setupUi(this);
     //MainWindow size:
@@ -58,6 +60,9 @@ MainWindow::MainWindow(QWidget *parent)
 
 
     statusBar()->showMessage(" put something cool here! ");
+
+    //Background musick (not annoying)
+    resourceManager->backgroundMusick();
 }
 
 MainWindow::~MainWindow()
@@ -91,6 +96,8 @@ void MainWindow::keyPressEvent(QKeyEvent* event)
     }
     if (event->key() == Qt::Key_A) {
         messageLogWidget->appendPlainText("Erik Er Best");
+        if(resourceManager)
+            resourceManager->clickSound();
     }
 }
 
