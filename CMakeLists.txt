@@ -16,6 +16,7 @@ add_executable(QtVulkan
     MainWindow.h MainWindow.cpp
     MainWindow.ui
     camera.h camera.cpp
+    Input.h
 )
 
 if(MSVC)
