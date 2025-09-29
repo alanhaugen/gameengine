@@ -19,6 +19,10 @@ add_executable(QtVulkan
     Shaders/Shader.vert
     Shaders/Phong.frag
     Shaders/Phong.vert
+    Mesh.h Mesh.cpp
+    RenderComponent.h RenderComponent.cpp
+    Texture.cpp Texture.h
+    TransformComponent.cpp TransformComponent.h)
 )
 
 if(MSVC)
