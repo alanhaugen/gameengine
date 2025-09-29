@@ -33,9 +33,6 @@
 #define NOMINMAX		// Prevent Windows.h from defining min/max macros
 #include <windows.h>	// For HWND and GetModuleHandle
 #include <vulkan/vulkan_win32.h>
-#elif defined(__APPLE__)
-#include <vulkan/vulkan_macos.h>
-class NSView;
 #endif
 
 Renderer::Renderer(QWindow* parent) : QWindow(parent)
@@ -68,7 +65,24 @@ Renderer::~Renderer()
 //     app->framebufferResized = true;
 // }
 
+std::vector<gea::Mesh> mMeshes;
+std::vector<gea::Texture> mTextures;
+std::vector<gea::RenderComponent> mRenderComponents;
+std::vector<gea::TransformComponent> mTransformComponents;
+
 void Renderer::initVulkan() {
+	mMeshes.push_back(gea::Mesh());
+	mTextures.push_back(gea::Texture());
+	mRenderComponents.push_back(gea::RenderComponent(0,0, 0));
+	mRenderComponents.push_back(gea::RenderComponent(0,0, 1));
+    gea::TransformComponent t1 = gea::TransformComponent(0);
+	t1.position = glm::vec3(1.0f, 0.0f, 0.0f);
+	mTransformComponents.push_back(t1);
+
+    gea::TransformComponent t2 = gea::TransformComponent(1);
+    t2.position = glm::vec3(-1.0f, 0.0f, 0.0f);
+    mTransformComponents.push_back(t2);
+
     createInstance();
     setupDebugMessenger();
     createSurface();
@@ -83,15 +97,20 @@ void Renderer::initVulkan() {
     createColorResources();
     createDepthResources();
     createFramebuffers();
-    createTextureImage();
-    createTextureImageView();
-    createTextureSampler();
-    loadModel();
-    createVertexBuffer();
-    createIndexBuffer();
+    for (size_t i = 0; i < mTextures.size(); i++) {
+        createTextureImage(&mTextures[i]);
+    }
+	for (size_t i = 0; i < mMeshes.size(); i++) {
+        createVertexBuffer(&mMeshes[i]);
+	}
+    for (size_t i = 0; i < mMeshes.size(); i++) {
+        createIndexBuffer(&mMeshes[i]);
+    }
     createUniformBuffers();
     createDescriptorPool();
-    createDescriptorSets();
+    for (size_t i = 0; i < mTextures.size(); i++) {
+        createDescriptorSets(mTextures[i]);
+    }
     createCommandBuffers();
     createSyncObjects();
 }
@@ -132,19 +151,21 @@ void Renderer::cleanupSwapChain() {
 void Renderer::cleanup() {
     cleanupSwapChain();
 
-    vkDestroySampler(device, textureSampler, nullptr);
-    vkDestroyImageView(device, textureImageView, nullptr);
-
-    vkDestroyImage(device, textureImage, nullptr);
-    vkFreeMemory(device, textureImageMemory, nullptr);
+	for (gea::Texture texture : mTextures) {
+		vkDestroySampler(device, texture.textureSampler, nullptr);
+		vkDestroyImageView(device, texture.textureImageView, nullptr);
+		vkDestroyImage(device, texture.textureImage, nullptr);
+		vkFreeMemory(device, texture.textureImageMemory, nullptr);
+	}
 
     vkDestroyDescriptorSetLayout(device, descriptorSetLayout, nullptr);
 
-    vkDestroyBuffer(device, indexBuffer, nullptr);
-    vkFreeMemory(device, indexBufferMemory, nullptr);
-
-    vkDestroyBuffer(device, vertexBuffer, nullptr);
-    vkFreeMemory(device, vertexBufferMemory, nullptr);
+	for (gea::Mesh mesh : mMeshes) {
+		vkDestroyBuffer(device, mesh.indexBuffer, nullptr);
+		vkFreeMemory(device, mesh.indexBufferMemory, nullptr);
+		vkDestroyBuffer(device, mesh.vertexBuffer, nullptr);
+		vkFreeMemory(device, mesh.vertexBufferMemory, nullptr);
+	}
 
     for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
         vkDestroySemaphore(device, renderFinishedSemaphores[i], nullptr);
@@ -189,7 +210,9 @@ void Renderer::recreateSwapChain() {
     createFramebuffers();
     createUniformBuffers();
     createDescriptorPool();
-    createDescriptorSets();
+	for (size_t i = 0; i < mTextures.size(); i++) {
+        createDescriptorSets(mTextures[i]);
+	}
     createCommandBuffers();
 
     imagesInFlight.resize(swapChainImages.size(), VK_NULL_HANDLE);
@@ -205,9 +228,9 @@ void Renderer::createInstance() {
     //Needed in VkInstanceCreateInfo
     VkApplicationInfo appInfo{};
     appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
-    appInfo.pApplicationName = "Tower of Power";
+    appInfo.pApplicationName = "Vulkan App";
     appInfo.applicationVersion = VK_MAKE_VERSION(1, 0, 0);
-    appInfo.pEngineName = "INNgine";
+    appInfo.pEngineName = "No Engine";
     appInfo.engineVersion = VK_MAKE_VERSION(1, 0, 0);
     appInfo.apiVersion = VK_API_VERSION_1_0;
 
@@ -270,23 +293,6 @@ void Renderer::createSurface() {
     createInfo.hinstance = GetModuleHandle(nullptr);
 
     if (vkCreateWin32SurfaceKHR(instance, &createInfo, nullptr, &surface) != VK_SUCCESS) {
-        throw std::runtime_error("Failed to create a surface!");
-    }
-    else
-    {
-        qDebug("\nSuccessfully created a surface!");
-    }
-#elif defined(__APPLE__)
-    NSView* nsview = reinterpret_cast<NSView*>(this->winId());
-
-    VkMacOSSurfaceCreateInfoMVK createInfo = {};
-    createInfo.sType = VK_STRUCTURE_TYPE_MACOS_SURFACE_CREATE_INFO_MVK;
-    createInfo.pNext = NULL;
-    createInfo.flags = 0;
-    createInfo.pView = nsview;
-
-    if (vkCreateMacOSSurfaceMVK(instance, &createInfo, nullptr, &surface) != VK_SUCCESS)
-    {
         throw std::runtime_error("Failed to create a surface!");
     }
     else
@@ -686,20 +692,22 @@ void Renderer::createGraphicsPipeline() {
     colorBlending.blendConstants[2] = 0.0f;
     colorBlending.blendConstants[3] = 0.0f;
 
+    //Here we can adding a push constat for e.g. model matrix
+    VkPushConstantRange pushConstantRange{};
+    pushConstantRange.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
+    pushConstantRange.offset = 0;
+    pushConstantRange.size = sizeof(glm::mat4);
+
     VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
     pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
     pipelineLayoutInfo.setLayoutCount = 1;
     pipelineLayoutInfo.pSetLayouts = &descriptorSetLayout;
+    pipelineLayoutInfo.pushConstantRangeCount = 1;
+    pipelineLayoutInfo.pPushConstantRanges = &pushConstantRange;
 
     if (vkCreatePipelineLayout(device, &pipelineLayoutInfo, nullptr, &pipelineLayout) != VK_SUCCESS) {
         throw std::runtime_error("failed to create pipeline layout!");
     }
-
-    //Here we can adding a push constat for e.g. model matrix
-    // VkPushConstantRange pushConstantRange{};
-    // pushConstantRange.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
-    // pushConstantRange.offset = 0;
-    // pushConstantRange.size = sizeof(glm::mat4);
 
     //9. Create the pipeline
     //Overall information to create a graphics pipeline
@@ -826,12 +834,12 @@ bool Renderer::hasStencilComponent(VkFormat format) {
     return format == VK_FORMAT_D32_SFLOAT_S8_UINT || format == VK_FORMAT_D24_UNORM_S8_UINT;
 }
 
-void Renderer::createTextureImage()
+void Renderer::createTextureImage(gea::Texture* texture)
 {
     int texWidth, texHeight, texChannels;
-    stbi_uc* pixels = stbi_load(TEXTURE_PATH.c_str(), &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
+    stbi_uc* pixels = stbi_load(texture->texturePath.c_str(), &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
     VkDeviceSize imageSize = texWidth * texHeight * 4;
-    mipLevels = static_cast<uint32_t>(std::floor(std::log2(std::max(texWidth, texHeight)))) + 1;
+    texture->mipLevels = static_cast<uint32_t>(std::floor(std::log2(std::max(texWidth, texHeight)))) + 1;
 
     if (!pixels) {
         throw std::runtime_error("failed to load texture image!");
@@ -848,16 +856,19 @@ void Renderer::createTextureImage()
 
     stbi_image_free(pixels);
 
-    createImage(texWidth, texHeight, mipLevels, VK_SAMPLE_COUNT_1_BIT, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, textureImage, textureImageMemory);
+    createImage(texWidth, texHeight, texture->mipLevels, VK_SAMPLE_COUNT_1_BIT, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, texture->textureImage, texture->textureImageMemory);
 
-    transitionImageLayout(textureImage, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, mipLevels);
-    copyBufferToImage(stagingBuffer, textureImage, static_cast<uint32_t>(texWidth), static_cast<uint32_t>(texHeight));
+    transitionImageLayout(texture->textureImage, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, texture->mipLevels);
+    copyBufferToImage(stagingBuffer, texture->textureImage, static_cast<uint32_t>(texWidth), static_cast<uint32_t>(texHeight));
     //transitioned to VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL while generating mipmaps
 
     vkDestroyBuffer(device, stagingBuffer, nullptr);
     vkFreeMemory(device, stagingBufferMemory, nullptr);
 
-    generateMipmaps(textureImage, VK_FORMAT_R8G8B8A8_SRGB, texWidth, texHeight, mipLevels);
+    generateMipmaps(texture->textureImage, VK_FORMAT_R8G8B8A8_SRGB, texWidth, texHeight, texture->mipLevels);
+
+    createTextureImageView(texture);
+    createTextureSampler(texture);
 }
 
 void Renderer::generateMipmaps(VkImage image, VkFormat imageFormat, int32_t texWidth, int32_t texHeight, uint32_t mipLevels) {
@@ -962,12 +973,12 @@ VkSampleCountFlagBits Renderer::getMaxUsableSampleCount() {
     return VK_SAMPLE_COUNT_1_BIT;
 }
 
-void Renderer::createTextureImageView() {
-    textureImageView = createImageView(textureImage, VK_FORMAT_R8G8B8A8_SRGB,
-                                       VK_IMAGE_ASPECT_COLOR_BIT, mipLevels);
+void Renderer::createTextureImageView(gea::Texture* texture) {
+    texture->textureImageView = createImageView(texture->textureImage, VK_FORMAT_R8G8B8A8_SRGB,
+                                       VK_IMAGE_ASPECT_COLOR_BIT, texture->mipLevels);
 }
 
-void Renderer::createTextureSampler() {
+void Renderer::createTextureSampler(gea::Texture* texture) {
     VkPhysicalDeviceProperties properties{};
     vkGetPhysicalDeviceProperties(physicalDevice, &properties);
 
@@ -986,10 +997,10 @@ void Renderer::createTextureSampler() {
     samplerInfo.compareOp = VK_COMPARE_OP_ALWAYS;
     samplerInfo.mipmapMode = VK_SAMPLER_MIPMAP_MODE_LINEAR;
     samplerInfo.minLod = 0.0f;
-    samplerInfo.maxLod = static_cast<float>(mipLevels);
+    samplerInfo.maxLod = static_cast<float>(texture->mipLevels);
     samplerInfo.mipLodBias = 0.0f;
 
-    if (vkCreateSampler(device, &samplerInfo, nullptr, &textureSampler) != VK_SUCCESS) {
+    if (vkCreateSampler(device, &samplerInfo, nullptr, &texture->textureSampler) != VK_SUCCESS) {
         throw std::runtime_error("failed to create texture sampler!");
     }
 }
@@ -1119,85 +1130,6 @@ void Renderer::copyBufferToImage(VkBuffer buffer, VkImage image, uint32_t width,
     endSingleTimeCommands(commandBuffer);
 }
 
-void Renderer::loadModel() {
-    tinyobj::attrib_t attrib;
-    std::vector<tinyobj::shape_t> shapes;
-    std::vector<tinyobj::material_t> materials;
-    std::string warn, err;
-
-    if (!tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, MODEL_PATH.c_str())) {
-        throw std::runtime_error(warn + err);
-    }
-
-    std::unordered_map<Vertex, uint32_t> uniqueVertices{};
-
-    for (const auto& shape : shapes) {
-        for (const auto& index : shape.mesh.indices) {
-            Vertex vertex{};
-
-            vertex.pos = {
-                attrib.vertices[3 * index.vertex_index + 0],
-                attrib.vertices[3 * index.vertex_index + 1],
-                attrib.vertices[3 * index.vertex_index + 2]
-            };
-
-            vertex.texCoord = {
-                attrib.texcoords[2 * index.texcoord_index + 0],
-                1.0f - attrib.texcoords[2 * index.texcoord_index + 1]
-            };
-
-            vertex.color = {1.0f, 1.0f, 1.0f};
-
-            if (uniqueVertices.count(vertex) == 0) {
-                uniqueVertices[vertex] = static_cast<uint32_t>(vertices.size());
-                vertices.push_back(vertex);
-            }
-
-            indices.push_back(uniqueVertices[vertex]);
-        }
-    }
-}
-
-void Renderer::createVertexBuffer() {
-    VkDeviceSize bufferSize = sizeof(vertices[0]) * vertices.size();
-
-    VkBuffer stagingBuffer;
-    VkDeviceMemory stagingBufferMemory;
-    createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory);
-
-    void* data;
-    vkMapMemory(device, stagingBufferMemory, 0, bufferSize, 0, &data);
-    memcpy(data, vertices.data(), (size_t) bufferSize);
-    vkUnmapMemory(device, stagingBufferMemory);
-
-    createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, vertexBuffer, vertexBufferMemory);
-
-    copyBuffer(stagingBuffer, vertexBuffer, bufferSize);
-
-    vkDestroyBuffer(device, stagingBuffer, nullptr);
-    vkFreeMemory(device, stagingBufferMemory, nullptr);
-}
-
-void Renderer::createIndexBuffer() {
-    VkDeviceSize bufferSize = sizeof(indices[0]) * indices.size();
-
-    VkBuffer stagingBuffer;
-    VkDeviceMemory stagingBufferMemory;
-    createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory);
-
-    void* data;
-    vkMapMemory(device, stagingBufferMemory, 0, bufferSize, 0, &data);
-    memcpy(data, indices.data(), (size_t) bufferSize);
-    vkUnmapMemory(device, stagingBufferMemory);
-
-    createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_INDEX_BUFFER_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, indexBuffer, indexBufferMemory);
-
-    copyBuffer(stagingBuffer, indexBuffer, bufferSize);
-
-    vkDestroyBuffer(device, stagingBuffer, nullptr);
-    vkFreeMemory(device, stagingBufferMemory, nullptr);
-}
-
 void Renderer::createUniformBuffers() {
     VkDeviceSize bufferSize = sizeof(UniformBufferObject);
 
@@ -1227,7 +1159,7 @@ void Renderer::createDescriptorPool() {
     }
 }
 
-void Renderer::createDescriptorSets() {
+void Renderer::createDescriptorSets(gea::Texture texture) {
     std::vector<VkDescriptorSetLayout> layouts(swapChainImages.size(), descriptorSetLayout);
     VkDescriptorSetAllocateInfo allocInfo{};
     allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
@@ -1248,8 +1180,8 @@ void Renderer::createDescriptorSets() {
 
         VkDescriptorImageInfo imageInfo{};
         imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-        imageInfo.imageView = textureImageView;
-        imageInfo.sampler = textureSampler;
+        imageInfo.imageView = texture.textureImageView;
+        imageInfo.sampler = texture.textureSampler;
 
         std::array<VkWriteDescriptorSet, 2> descriptorWrites{};
 
@@ -1355,6 +1287,46 @@ uint32_t Renderer::findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags pro
     throw std::runtime_error("failed to find suitable memory type!");
 }
 
+void Renderer::createVertexBuffer(gea::Mesh* mesh) {
+    VkDeviceSize bufferSize = sizeof(mesh->vertices[0]) * mesh->vertices.size();
+
+    VkBuffer stagingBuffer;
+    VkDeviceMemory stagingBufferMemory;
+    createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory);
+
+    void* data;
+    vkMapMemory(device, stagingBufferMemory, 0, bufferSize, 0, &data);
+    memcpy(data, mesh->vertices.data(), (size_t)bufferSize);
+    vkUnmapMemory(device, stagingBufferMemory);
+
+    createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, mesh->vertexBuffer, mesh->vertexBufferMemory);
+
+    copyBuffer(stagingBuffer, mesh->vertexBuffer, bufferSize);
+
+    vkDestroyBuffer(device, stagingBuffer, nullptr);
+    vkFreeMemory(device, stagingBufferMemory, nullptr);
+}
+
+void Renderer::createIndexBuffer(gea::Mesh* mesh) {
+    VkDeviceSize bufferSize = sizeof(mesh->indices[0]) * mesh->indices.size();
+
+    VkBuffer stagingBuffer;
+    VkDeviceMemory stagingBufferMemory;
+    createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory);
+
+    void* data;
+    vkMapMemory(device, stagingBufferMemory, 0, bufferSize, 0, &data);
+    memcpy(data, mesh->indices.data(), (size_t)bufferSize);
+    vkUnmapMemory(device, stagingBufferMemory);
+
+    createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_INDEX_BUFFER_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, mesh->indexBuffer, mesh->indexBufferMemory);
+
+    copyBuffer(stagingBuffer, mesh->indexBuffer, bufferSize);
+
+    vkDestroyBuffer(device, stagingBuffer, nullptr);
+    vkFreeMemory(device, stagingBufferMemory, nullptr);
+}
+
 void Renderer::createCommandBuffers()
 {
     //Resize command buffer count to have one for each framebuffer
@@ -1399,15 +1371,24 @@ void Renderer::createCommandBuffers()
 
         vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline);
 
-        VkBuffer vertexBuffers[] = {vertexBuffer};
-        VkDeviceSize offsets[] = {0};
-        vkCmdBindVertexBuffers(commandBuffers[i], 0, 1, vertexBuffers, offsets);
+		for (size_t j = 0; j < mRenderComponents.size(); j++)
+		{
+			gea::RenderComponent renderComponent = mRenderComponents[j];
+			gea::Mesh mesh = mMeshes[renderComponent.meshIndex];
+			VkBuffer vertexBuffer = mesh.vertexBuffer;
+			VkBuffer indexBuffer = mesh.indexBuffer;
+			std::vector<uint32_t> indices = mesh.indices;
+			VkDeviceSize offsets[] = { 0 };
+			//glm::mat4 model = mTransformComponents[j].GetModelMatrix();
+			glm::mat4 model = glm::mat4(1.0f);
+			model = glm::translate(model, mTransformComponents[j].position);
+            vkCmdPushConstants(commandBuffers[i], pipelineLayout, VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(glm::mat4), &model);
 
-        vkCmdBindIndexBuffer(commandBuffers[i], indexBuffer, 0, VK_INDEX_TYPE_UINT32);
-
-        vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, &descriptorSets[i], 0, nullptr);
-
-        vkCmdDrawIndexed(commandBuffers[i], static_cast<uint32_t>(indices.size()), 1, 0, 0, 0);
+			vkCmdBindVertexBuffers(commandBuffers[i], 0, 1, &vertexBuffer, offsets);
+			vkCmdBindIndexBuffer(commandBuffers[i], indexBuffer, 0, VK_INDEX_TYPE_UINT32);
+			vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, &descriptorSets[i], 0, nullptr);
+			vkCmdDrawIndexed(commandBuffers[i], static_cast<uint32_t>(indices.size()), 1, 0, 0, 0);
+		}
 
         vkCmdEndRenderPass(commandBuffers[i]);
 
@@ -1702,12 +1683,12 @@ std::vector<const char *> Renderer::getRequiredExtensions() {
     }
 
     extensions.push_back("VK_KHR_surface");
-    #ifdef _WIN32
+    #ifdef Q_OS_WIN
         extensions.push_back("VK_KHR_win32_surface");	// Only on Windows
     #elif defined(Q_OS_LINUX)
         instanceExtensions.push_back("VK_KHR_xcb_surface");		// or xlib_surface, depending on your Qt build
-    #elif defined(__APPLE__)
-        extensions.push_back("VK_MVK_macos_surface");
+    #elif defined(Q_OS_MAC)
+        instanceExtensions.push_back("VK_MVK_macos_surface");
     #endif
 
     // If validation is enabled, add extension to report validation debug info
@@ -1769,13 +1750,10 @@ VkBool32 Renderer::debugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageS
 
 void Renderer::exposeEvent(QExposeEvent* event)
 {
-    #ifdef _WIN32   // These lines does not work on macOS !?!
-
     qDebug("exposeEvent called");
     if (isExposed()) {
         drawFrame();			//actual drawing
     }
-    #endif
 }
 
 void Renderer::resizeEvent(QResizeEvent *event)
