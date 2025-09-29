@@ -42,6 +42,10 @@ public:
 
     const Entity GetEntityId();
 
+    void SetPosition(double X,double Y, double Z);
+
+
+
 };
 
 #endif // GAMEOBJECT_H

@@ -25,3 +25,15 @@ const Entity GameObject::GetEntityId()
 {
     return ID;
 }
+
+void GameObject::SetPosition(double X, double Y, double Z)
+{
+    mTransform.mPosition.x = X;
+    mTransform.mPosition.z = Y;
+    mTransform.mPosition.y = Z;
+
+}
+
+
+
+

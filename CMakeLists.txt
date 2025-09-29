@@ -45,6 +45,7 @@ add_executable(QtVulkan
     source/modules/script/null/nullscript.cpp source/modules/script/null/nullscript.h
     source/components/GameObject.h source/components/GameObject.cpp
     source/components/Camera.h source/components/Camera.cpp
+    source/platforms/qt/logger.h source/platforms/qt/logger.cpp
 
 )
 
