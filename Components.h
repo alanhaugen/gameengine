@@ -5,26 +5,31 @@
 #include <vector>
 
 //Need namespace, since we start to get naming collisions with other code
-namespace gea{
+namespace gea {
 
-    //Add new component types here
+    //Add new component types here - Extended for tower defense (My addition: Movement, Health, Tower, Enemy, Projectile and AI)
     enum class ComponentTypes
     {
         Transform,
         Mesh,
-        Texture
+        Texture,
+        Movement,
+        Health,
+        Tower,
+        Enemy,
+        Projectile,
+        AI
     };
-
 
     //Below are examples of actual components
     //Systems need each component to know what entity it belongs to
 
     struct Transform
     {
-        glm::vec3 mPosition;
-        glm::vec3 mRotation;
-        glm::vec3 mScale;
-        short mEntityID{-1};
+        glm::vec3 mPosition{ 0.0f, 0.0f, 0.0f };
+        glm::vec3 mRotation{ 0.0f, 0.0f, 0.0f };
+        glm::vec3 mScale{ 1.0f, 1.0f, 1.0f };
+        short mEntityID{ -1 };
     };
 
     struct Mesh
@@ -46,9 +51,16 @@ namespace gea{
     //Each system just access the ones they need, and iterates through them and do their job.
     //Since the components are sorted by EntityID, the iteration should go well and we should get DOD benefits.
 
-    std::vector<gea::Transform> ComponentTransformVector;
-    std::vector<gea::Mesh> ComponentMeshVector;
-    std::vector<gea::Texture> ComponentTextureVector;
+    // Component vectors - sorted by EntityID for DOD performance
+    extern std::vector<gea::Transform> ComponentTransformVector;
+    extern std::vector<gea::Mesh> ComponentMeshVector;
+    extern std::vector<gea::Texture> ComponentTextureVector;
+    extern std::vector<gea::Movement> ComponentMovementVector;
+    extern std::vector<gea::Health> ComponentHealthVector;
+    extern std::vector<gea::Tower> ComponentTowerVector;
+    extern std::vector<gea::Enemy> ComponentEnemyVector;
+    extern std::vector<gea::Projectile> ComponentProjectileVector;
+    extern std::vector<gea::AI> ComponentAIVector;
 
 }   //namespace gea
 

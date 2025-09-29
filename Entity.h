@@ -20,10 +20,28 @@ namespace gea
         std::vector<EntityComponents> mComponents;  //holds the components for this Entity
 
         static std::size_t nextID; // should be increased by 1 for each entity made
+
+        // Helper methods for component management
+        bool HasComponent(ComponentTypes type) const {
+            for (const auto& comp : mComponents) {
+                if (comp.mComponentType == type) return true;
+            }
+            return false;
+        }
+
+        short GetComponentIndex(ComponentTypes type) const {
+            for (const auto& comp : mComponents) {
+                if (comp.mComponentType == type) return comp.mComponentIndex;
+            }
+            return -1;
+        }
     };
 
     //crude way to make unique IDs
     std::size_t Entity::nextID{0};  //initializing the static class value
+
+    // Global entity storage
+    extern std::vector<Entity> AllEntities;
 
 } // namespace gea
 
