@@ -9,6 +9,8 @@
 #include "Texture.h"
 #include "Mesh.h"
 #include "RenderComponent.h"
+#include "TransformComponent.h"
+
 
 //Forward declarations
 struct SwapChainSupportDetails;

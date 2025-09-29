@@ -5,9 +5,10 @@ namespace gea
 {
 	struct RenderComponent
 	{
-		RenderComponent(short m, short t) : meshIndex(m), textureIndex(t) {};
+		RenderComponent(short m, short t, short id) : meshIndex(m), textureIndex(t), entityID(id){};
 		short meshIndex;
 		short textureIndex;
+		short entityID;
 	};
 }
 

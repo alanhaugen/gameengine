@@ -68,12 +68,20 @@ Renderer::~Renderer()
 std::vector<gea::Mesh> mMeshes;
 std::vector<gea::Texture> mTextures;
 std::vector<gea::RenderComponent> mRenderComponents;
+std::vector<gea::TransformComponent> mTransformComponents;
 
 void Renderer::initVulkan() {
 	mMeshes.push_back(gea::Mesh());
 	mTextures.push_back(gea::Texture());
-	mRenderComponents.push_back(gea::RenderComponent(0,0));
-	mRenderComponents.push_back(gea::RenderComponent(0,0));
+	mRenderComponents.push_back(gea::RenderComponent(0,0, 0));
+	mRenderComponents.push_back(gea::RenderComponent(0,0, 1));
+    gea::TransformComponent t1 = gea::TransformComponent(0);
+	t1.position = glm::vec3(1.0f, 0.0f, 0.0f);
+	mTransformComponents.push_back(t1);
+
+    gea::TransformComponent t2 = gea::TransformComponent(1);
+    t2.position = glm::vec3(-1.0f, 0.0f, 0.0f);
+    mTransformComponents.push_back(t2);
 
     createInstance();
     setupDebugMessenger();
@@ -684,20 +692,22 @@ void Renderer::createGraphicsPipeline() {
     colorBlending.blendConstants[2] = 0.0f;
     colorBlending.blendConstants[3] = 0.0f;
 
+    //Here we can adding a push constat for e.g. model matrix
+    VkPushConstantRange pushConstantRange{};
+    pushConstantRange.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
+    pushConstantRange.offset = 0;
+    pushConstantRange.size = sizeof(glm::mat4);
+
     VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
     pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
     pipelineLayoutInfo.setLayoutCount = 1;
     pipelineLayoutInfo.pSetLayouts = &descriptorSetLayout;
+    pipelineLayoutInfo.pushConstantRangeCount = 1;
+    pipelineLayoutInfo.pPushConstantRanges = &pushConstantRange;
 
     if (vkCreatePipelineLayout(device, &pipelineLayoutInfo, nullptr, &pipelineLayout) != VK_SUCCESS) {
         throw std::runtime_error("failed to create pipeline layout!");
     }
-
-    //Here we can adding a push constat for e.g. model matrix
-    // VkPushConstantRange pushConstantRange{};
-    // pushConstantRange.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
-    // pushConstantRange.offset = 0;
-    // pushConstantRange.size = sizeof(glm::mat4);
 
     //9. Create the pipeline
     //Overall information to create a graphics pipeline
@@ -1369,6 +1379,11 @@ void Renderer::createCommandBuffers()
 			VkBuffer indexBuffer = mesh.indexBuffer;
 			std::vector<uint32_t> indices = mesh.indices;
 			VkDeviceSize offsets[] = { 0 };
+			//glm::mat4 model = mTransformComponents[j].GetModelMatrix();
+			glm::mat4 model = glm::mat4(1.0f);
+			model = glm::translate(model, mTransformComponents[j].position);
+            vkCmdPushConstants(commandBuffers[i], pipelineLayout, VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(glm::mat4), &model);
+
 			vkCmdBindVertexBuffers(commandBuffers[i], 0, 1, &vertexBuffer, offsets);
 			vkCmdBindIndexBuffer(commandBuffers[i], indexBuffer, 0, VK_INDEX_TYPE_UINT32);
 			vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, &descriptorSets[i], 0, nullptr);
