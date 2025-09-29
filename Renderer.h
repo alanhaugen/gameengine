@@ -21,6 +21,9 @@ public:
     ~Renderer();
 
     void initVulkan();
+    ObjAsset* obj_asset{nullptr};
+    AssetManager<ObjAsset>* objManager=new AssetManager<ObjAsset>();
+    bool filesImported=false;
 
 protected:
     //Qt event handlers - called when requestUpdate(); is called
@@ -95,10 +98,11 @@ private:
 
     bool framebufferResized = false;
 
-    QStack<QString> filesStack;
 
-    ObjAsset* obj_asset{nullptr};
-    AssetManager<ObjAsset>* objManager=new AssetManager<ObjAsset>();
+
+
+
+    //QStack<QString> filesStack=objManager->filesNamesStack;
     // void initWindow();
 
     // static void framebufferResizeCallback(GLFWwindow* window, int width, int height);
@@ -144,9 +148,9 @@ private:
         while(it.hasNext()) {
             QFileInfo fileInfo=it.fileInfo();
             //qDebug()<<fileInfo.filePath()<<" "<<fileInfo.absoluteFilePath()<<"\n";
-            filesStack.push(it.next());
+            objManager->filesNamesStack.push(it.next());
         }
-        for(auto it1: filesStack){
+        for(auto it1: objManager->filesNamesStack){
             loadModel(it1);
 
         }};

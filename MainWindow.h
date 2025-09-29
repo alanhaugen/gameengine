@@ -24,7 +24,8 @@ private:
 
     //QWidget* mRenderWindowContainer{nullptr};   //Qt container for the RenderWindow
     class Renderer* mVulkanWindow{nullptr};
-    FilesWindow* filesWidget{nullptr};
+
+    //FilesWindow<mVulkanWindow->objManager>(mVulkanWindow->objManager)* filesWidget{nullptr};
 
 protected:
     void keyPressEvent(QKeyEvent* event) override;

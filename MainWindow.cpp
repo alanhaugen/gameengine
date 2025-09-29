@@ -32,7 +32,14 @@ MainWindow::MainWindow(QWidget *parent)
 
     statusBar()->showMessage(" put something cool here! ");
     //-------------------------------------------file system widget-------------------------------------------------------
-    filesWidget= new FilesWindow();
+    // need to get asset manager from renderer itself, since manager that holds assets is created there
+    //AssetManager<ObjAsset>* objManager=new AssetManager<ObjAsset>();
+
+    if (mVulkanWindow->filesImported==true){
+        //FilesWindow<ObjAsset> filesWidget(mVulkanWindow->objManager);
+        FilesWindow* filesWidget= new FilesWindow(mVulkanWindow->objManager);
+    }
+
 }
 
 

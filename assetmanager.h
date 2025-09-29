@@ -2,6 +2,8 @@
 #define ASSETMANAGER_H
 #include <vector>
 #include "Vertex.h"
+#include <QString>
+#include <QStack>
 template <typename T>
 class AssetManager{
 public:
@@ -14,7 +16,7 @@ public:
             int_assets.push_back(it);
         }};
 
-
+    QStack<QString> filesNamesStack;
     // void import(T asset);
     // void deleteAsset(T asset);
 };

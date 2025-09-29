@@ -84,6 +84,7 @@ void Renderer::initVulkan() {
     createTextureImageView();
     createTextureSampler();
     importObjects();
+    filesImported=true;
     //loadModel();
     createVertexBuffer();
     createIndexBuffer();
