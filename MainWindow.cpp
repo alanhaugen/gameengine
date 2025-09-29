@@ -62,7 +62,7 @@ MainWindow::MainWindow(ResourceManager* resourceMgr, QWidget *parent)
     statusBar()->showMessage(" put something cool here! ");
 
     //Background musick (not annoying)
-    resourceManager->backgroundMusick();
+    resourceManager->toggleBackgroundMusick();
 }
 
 MainWindow::~MainWindow()
@@ -96,9 +96,12 @@ void MainWindow::keyPressEvent(QKeyEvent* event)
     }
     if (event->key() == Qt::Key_A) {
         messageLogWidget->appendPlainText("Erik Er Best");
-        if(resourceManager)
-            resourceManager->clickSound();
+        resourceManager->clickSound();
     }
+    if (event->key() == Qt::Key_Q) {
+        resourceManager->toggleBackgroundMusick();
+    }
+
 }
 
 

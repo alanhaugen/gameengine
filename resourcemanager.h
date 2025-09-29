@@ -14,12 +14,13 @@ public:
     ResourceManager(QObject* parent = nullptr);
 
     void clickSound();
-    void backgroundMusick();
+    void toggleBackgroundMusick();
 
 private:
     QMediaPlayer *click;
     QMediaPlayer *background;
-    QAudioOutput *outPut;
+    QAudioOutput *clickOutPut;
+    QAudioOutput *backOutPut;
 };
 
 #endif // RESOURCEMANAGER_H

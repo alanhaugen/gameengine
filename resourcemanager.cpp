@@ -3,27 +3,42 @@
 
 ResourceManager::ResourceManager(QObject* parent) : QObject(parent)
 {
-    outPut = new QAudioOutput(this);
-    outPut->setVolume(1.0f);
-
     //Click sound
+    clickOutPut = new QAudioOutput(this);
+    clickOutPut->setVolume(1.0f);
+
     click = new QMediaPlayer(this);
-    click->setAudioOutput(outPut);
+    click->setAudioOutput(clickOutPut);
     click->setSource(QUrl::fromLocalFile("../../Assets/Sounds/click.wav"));
 
     //Background musick
+    backOutPut = new QAudioOutput(this);
+    backOutPut->setVolume(1.0f);
+
     background = new QMediaPlayer(this);
-    background->setAudioOutput(outPut);
+    background->setAudioOutput(backOutPut);
     background->setSource(QUrl::fromLocalFile("../../Assets/Sounds/Background.mp3"));
+    background->setLoops(QMediaPlayer::Infinite);
 }
 
 void ResourceManager::clickSound()
 {
-
+    if(click->playbackState() == QMediaPlayer::PlayingState)
+        click->setPosition(0);
     click->play();
+
 }
 
-void ResourceManager::backgroundMusick()
+void ResourceManager::toggleBackgroundMusick()
 {
-    background->play();
+    if (background->playbackState() == QMediaPlayer::PlayingState)
+    {
+        background->stop();
+        qDebug("Shut that thing up!");
+    }
+    else
+    {
+        background->play();
+        qDebug("Play that good shit!");
+    }
 }
