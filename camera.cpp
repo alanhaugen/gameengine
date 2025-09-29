@@ -31,6 +31,16 @@ void camera::yaw(float deg)
     mYaw += deg;
 }
 
+void camera::moveRight(float delta)
+{
+    mPosition.setX( mPosition.x() + delta);
+}
+
+void camera::moveUp(float delta)
+{
+    mPosition.setY(mPosition.y() + delta);
+}
+
 void camera::update()
 {
     mViewMatrix.setToIdentity();
@@ -38,6 +48,11 @@ void camera::update()
     mViewMatrix.rotate(mPitch, 1.0, 0.0, 0.0);
     mViewMatrix.rotate(mYaw, 0.0, 1.0, 0.0);
     mViewMatrix.translate(mPosition);
+}
+
+void camera::setSpeed(float speed)
+{
+    mSpeed = speed;
 }
 
 void camera::setPosition(const QVector3D &newPos)
