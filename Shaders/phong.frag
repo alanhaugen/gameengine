@@ -18,10 +18,7 @@ void main()
     // ambient
     vec3 ambient = 0.05 * color;
     // diffuse
-    vec3 light = lightPos;
-    light.x = cos(time);
-    light.y = cos(time);
-    vec3 lightDir = normalize(light - FragPos);
+    vec3 lightDir = normalize(lightPos - FragPos);
     vec3 normal = normalize(Normal);
     float diff = max(dot(lightDir, normal), 0.0);
     vec3 diffuse = diff * color;

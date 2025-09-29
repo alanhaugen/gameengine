@@ -1396,7 +1396,7 @@ void VulkanRenderer::updateUniformBuffer(uint32_t currentImage, Drawable::Unifor
     static float time = 0.0f;
     time += 0.01f;
     ubo.time = time;
-    //ubo.cameraPosition = cameraPos;
+    ubo.cameraPosition = cameraPos;
     ubo.lightPosition  = lightPos;
     ubo.view = cameraView;
     ubo.proj = glm::perspective(glm::radians(45.0f), swapChainExtent.width / (float) swapChainExtent.height, 0.1f, 10.0f);

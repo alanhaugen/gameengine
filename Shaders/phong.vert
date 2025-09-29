@@ -24,7 +24,7 @@ layout(location = 5) out float time;
 void main()
 {
     FragPos = aPos;
-    Normal = aNormal;
+    Normal = inColor;
     lightPos = ubo.lightPosition;
     cameraPos = ubo.cameraPosition;
     TexCoords = aTexCoords;
