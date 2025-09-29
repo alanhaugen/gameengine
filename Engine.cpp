@@ -21,10 +21,10 @@ namespace gea {
     }
 
     void Engine::DestroyEntity(std::size_t entityID) {
-        // Remove from entity vector
+ 
         EntityVector.erase(std::remove_if(EntityVector.begin(), EntityVector.end(),
                           [entityID](const Entity& e){ return e.mEntityID == entityID; }), EntityVector.end());
-        // Remove components from each component vector
+       
         TransformVector.erase(std::remove_if(TransformVector.begin(), TransformVector.end(),
                           [entityID](const Transform& c){ return c.mEntityID == entityID; }), TransformVector.end());
         MovementVector.erase(std::remove_if(MovementVector.begin(), MovementVector.end(),
@@ -37,7 +37,7 @@ namespace gea {
                           [entityID](const Enemy& c){ return c.mEntityID == entityID; }), EnemyVector.end());
         ProjectileVector.erase(std::remove_if(ProjectileVector.begin(), ProjectileVector.end(),
                           [entityID](const Projectile& c){ return c.mEntityID == entityID; }), ProjectileVector.end());
-        // Repeat for all vectors
+        
     }
 
     Transform* Engine::AddTransform(Entity* entity) {
@@ -48,8 +48,7 @@ namespace gea {
         SortComponents();
         return &TransformVector.back();
     }
-    // Repeat for all AddComponent types
-
+   
     Movement* Engine::AddMovement(Entity* entity) {
         Movement m;
         m.mEntityID = entity->mEntityID;
@@ -100,12 +99,12 @@ namespace gea {
                   [](const Transform& a, const Transform& b){ return a.mEntityID < b.mEntityID; });
         std::sort(MovementVector.begin(), MovementVector.end(),
                   [](const Movement& a, const Movement& b){ return a.mEntityID < b.mEntityID; });
-        // Repeat for other vectors
+   
     }
 
     void Engine::Update(float deltaTime) {
-        // Call all systems (see Systems.cpp)
-        // Example:
+        // to call all systems 
+        // i am listing Example:
         //   MovementSystem::Update()
         //   TowerSystem::Update()
         //   ProjectileSystem::Update()
