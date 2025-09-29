@@ -13,6 +13,7 @@
 #include <QStandardPaths>
 #include <QDir>
 #include <QDebug>
+#include <QMessageBox>
 
 
     QPointer<QPlainTextEdit> MainWindow::messageLogWidget = nullptr;
@@ -74,10 +75,7 @@ MainWindow::MainWindow(ResourceManager* resourceMgr, QWidget *parent)
     connect(ui->actionLogger, &QAction::toggled, logDock, &QDockWidget::setVisible);
     connect(logDock, &QDockWidget::visibilityChanged, ui->actionLogger, &QAction::setChecked);
 
-    //Gets username from PC
-    QString username = QDir::home().dirName();
-
-    statusBar()->showMessage("I know who you are.... " + username );
+    statusBar()->showMessage("Don't be afraid of slow progress, be afraid of standing still.");
 
     //Background musick (not annoying)
     resourceManager->toggleBackgroundMusick();
@@ -124,9 +122,29 @@ void MainWindow::keyPressEvent(QKeyEvent* event)
 
 void MainWindow::on_action_Quit_triggered()
 {
-    delete mVulkanWindow;
-    mVulkanWindow = nullptr;
-    close();
+    QMessageBox::StandardButton reply;
+    reply = QMessageBox::question(this, "Quit INNgine", "Are you sure you want to quit? ", QMessageBox::Yes | QMessageBox::No);
+
+    if (reply == QMessageBox::Yes)
+    {
+        delete mVulkanWindow;
+        mVulkanWindow = nullptr;
+        close();
+    }
+}
+
+
+void MainWindow::on_action_Open_triggered()
+{
+    //Gets username from PC
+    QString username = QDir::home().dirName();
+    QString repeate;
+    for (int i = 0; i < 280; i++)
+    {
+        repeate += username + "! ";
+    }
+    QMessageBox::StandardButton creepy;
+    creepy = QMessageBox::warning(this,"Why would you do this? ", repeate,QMessageBox::No);
 }
 
 void MainWindow::messageHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg)
@@ -164,6 +182,8 @@ void MainWindow::messageHandler(QtMsgType type, const QMessageLogContext &contex
         abort();
     }
 }
+
+
 
 
 

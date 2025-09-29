@@ -41,5 +41,6 @@ protected:
 
 private slots:
     void on_action_Quit_triggered();
+    void on_action_Open_triggered();
 };
 #endif // MAINWINDOW_H
