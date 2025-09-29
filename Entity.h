@@ -14,33 +14,29 @@ namespace gea
 
     class Entity {
     public:
-        Entity() : mEntityID(++nextID) {}   //pre-increment - start at 1
+        Entity();
+        ~Entity();
 
-        std::size_t mEntityID;              //unique ID for each Entity
+        std::size_t mEntityID;                      //unique ID for each Entity
         std::vector<EntityComponents> mComponents;  //holds the components for this Entity
 
-        static std::size_t nextID; // should be increased by 1 for each entity made
+        static std::size_t nextID;  // should be increased by 1 for each entity made
+
 
         // Helper methods for component management
-        bool HasComponent(ComponentTypes type) const {
-            for (const auto& comp : mComponents) {
-                if (comp.mComponentType == type) return true;
-            }
-            return false;
-        }
+        bool HasComponent(ComponentTypes type) const;
 
-        short GetComponentIndex(ComponentTypes type) const {
+        inline short GetComponentIndex(ComponentTypes type) const
+        {
             for (const auto& comp : mComponents) {
-                if (comp.mComponentType == type) return comp.mComponentIndex;
+                if (comp.mComponentType == type)
+                    return comp.mComponentIndex;
             }
             return -1;
         }
     };
 
-    //crude way to make unique IDs
-    std::size_t Entity::nextID{0};  //initializing the static class value
-
-    // Global entity storage
+    // Global entity storage - should be stored in an Engine class!
     extern std::vector<Entity> AllEntities;
 
 } // namespace gea
