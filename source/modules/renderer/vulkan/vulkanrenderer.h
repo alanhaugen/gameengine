@@ -34,12 +34,16 @@ public:
     void Render();
 
     void SetViewMatrix(glm::mat4 view) override;
+    void SetCameraPosition(glm::vec3 pos) override;
+    void SetLightPos(glm::vec3 pos) override;
 
 protected:
 private:
     int drawablesQuantity = 0;
     Drawable drawables[MAX_DRAWABLES];
     glm::mat4 cameraView;
+    glm::vec3 cameraPos;
+    glm::vec3 lightPos;
 
     size_t PadUniformBufferSize(size_t originalSize);
     VkPhysicalDeviceProperties deviceProperties;
@@ -165,6 +169,13 @@ private:
     bool checkValidationLayerSupport();
     static std::vector<char> readFile(const std::string& filename);
     static VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity, VkDebugUtilsMessageTypeFlagsEXT messageType, const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData, void* pUserData);
+
+protected:
+    void keyPressEvent(QKeyEvent* event) override;
+    void keyReleaseEvent(QKeyEvent* event) override;
+    void mousePressEvent(QMouseEvent *eventPress) override;
+    void mouseReleaseEvent(QMouseEvent *releaseEvent) override;
+    void mouseMoveEvent(QMouseEvent *eventMove) override;
 };
 
 

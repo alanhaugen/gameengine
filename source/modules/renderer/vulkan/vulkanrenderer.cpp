@@ -23,6 +23,7 @@
 #include <optional>
 #include <set>
 #include <QDebug>
+#include <QKeyEvent>
 
 #ifdef _WIN32			// Windows specific includes
 #define NOMINMAX		// Prevent Windows.h from defining min/max macros
@@ -1392,7 +1393,12 @@ void VulkanRenderer::createSyncObjects()
 
 void VulkanRenderer::updateUniformBuffer(uint32_t currentImage, Drawable::UniformBufferObject ubo, int offset) {
     //ubo.model = glm::rotate(glm::mat4(1.0f), time * glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-    ubo.view = cameraView;//glm::lookAt(glm::vec3(0.0f, 2.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+    static float time = 0.0f;
+    time += 0.01f;
+    ubo.time = time;
+    //ubo.cameraPosition = cameraPos;
+    ubo.lightPosition  = lightPos;
+    ubo.view = cameraView;
     ubo.proj = glm::perspective(glm::radians(45.0f), swapChainExtent.width / (float) swapChainExtent.height, 0.1f, 10.0f);
     ubo.proj[1][1] *= -1;
 
@@ -1559,6 +1565,16 @@ void VulkanRenderer::Render() {
 void VulkanRenderer::SetViewMatrix(glm::mat4 view)
 {
     cameraView = view;
+}
+
+void VulkanRenderer::SetCameraPosition(glm::vec3 pos)
+{
+    cameraPos = pos;
+}
+
+void VulkanRenderer::SetLightPos(glm::vec3 pos)
+{
+    lightPos = pos;
 }
 
 VkShaderModule VulkanRenderer::createShaderModule(const std::vector<char> &code) {
@@ -1797,4 +1813,30 @@ VkBool32 VulkanRenderer::debugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT me
     std::cerr << "validation layer: " << pCallbackData->pMessage << std::endl;
 
     return VK_FALSE;
+}
+
+void VulkanRenderer::keyPressEvent(QKeyEvent* event)
+{
+    Locator::input.OnButton(event->key(), true);
+}
+
+void VulkanRenderer::keyReleaseEvent(QKeyEvent* event)
+{
+    Locator::input.OnButton(event->key(), false);
+}
+
+void VulkanRenderer::mousePressEvent(QMouseEvent *eventPress)
+{
+    Locator::input.mouse.Down = true;
+}
+
+void VulkanRenderer::mouseReleaseEvent(QMouseEvent *releaseEvent)
+{
+    Locator::input.mouse.Down = false;
+}
+
+void VulkanRenderer::mouseMoveEvent(QMouseEvent *eventMove)
+{
+    Locator::input.mouse.x = eventMove->pos().x();
+    Locator::input.mouse.y = eventMove->pos().y();
 }

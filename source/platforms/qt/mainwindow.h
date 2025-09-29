@@ -38,25 +38,13 @@ private:
 
     //QWidget* mRenderWindowContainer{nullptr};   //Qt container for the RenderWindow
 
-
     //Right click the object in gameobjectWidget
    void OnRightClickGameObjectWidget(const QPoint& ClickedOn);
-
-
 
     //for the Menuadd
     //add Objects to the scene and to the gameobject
     void AddVikingRoom();
     void AddCube();
     void AddSphere();
-
-
-
-protected:
-    void keyPressEvent(QKeyEvent* event) override;
-    void keyReleaseEvent(QKeyEvent* event) override;
-    void mousePressEvent(QMouseEvent *eventPress) override;
-    void mouseReleaseEvent(QMouseEvent *releaseEvent) override;
-    void mouseMoveEvent(QMouseEvent *eventMove) override;
 };
 #endif // MAINWINDOW_H

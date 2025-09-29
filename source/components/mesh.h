@@ -8,8 +8,8 @@ private:
 
 public:
     Mesh(const char* filePath,
-         const char* vertexShaderPath = "shaders/shader.vert.spv",
-         const char* fragmentShaderPath = "shaders/shader.frag.spv");
+         const char* vertexShaderPath = "shaders/phong.vert.spv",
+         const char* fragmentShaderPath = "shaders/phong.frag.spv");
     void Update();
 
     Renderer::Drawable* drawable;

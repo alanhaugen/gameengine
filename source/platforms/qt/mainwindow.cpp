@@ -2,7 +2,6 @@
 #include "ui_MainWindow.h"
 #include "../../modules/renderer/vulkan/vulkanrenderer.h"
 #include "../../components/mesh.h"
-#include <QKeyEvent>
 #include <QTimer>
 #include "../../components/gameobject.h"
 #include <qinputdialog.h>
@@ -35,6 +34,8 @@ MainWindow::MainWindow(QWidget *parent, const char* windowTitle, int windowWidth
     vulkanWidget->sizePolicy().setHorizontalPolicy(QSizePolicy::Expanding);
     vulkanWidget->sizePolicy().setVerticalPolicy(QSizePolicy::Expanding);
     vulkanWidget->setMinimumWidth(200.0f);
+
+    vulkanWidget->setFocusPolicy(Qt::NoFocus);
 
     ui->VulkanLayout->addWidget(vulkanWidget);
 
@@ -69,6 +70,10 @@ MainWindow::MainWindow(QWidget *parent, const char* windowTitle, int windowWidth
 
     Locator::audio->Init();
     Locator::renderer->Init();
+    Locator::script->Init();
+    Locator::physics->Init();
+    Locator::renderer->Init();
+    Locator::filesystem->Init();
 }
 
 MainWindow::~MainWindow()
@@ -107,6 +112,7 @@ void MainWindow::MainGameLoop()
     lastTime = std::chrono::high_resolution_clock::now();
 
     Locator::input.Update();
+    scene->editor->UpdateStatusBar((std::string("(") + std::to_string(Locator::input.mouse.x) + ", " + std::to_string(Locator::input.mouse.y) + std::string(")")).c_str());
 
     if (scene)
     {
@@ -203,32 +209,6 @@ void MainWindow::AddSphere()
 {
     //scene->components.push_back(new Mesh("Assets/Models/viking_room.obj", renderer, scene->editor));
     qDebug() << "Sphere";
-}
-
-void MainWindow::keyPressEvent(QKeyEvent* event)
-{
-    Locator::input.OnButton(event->key(), true);
-}
-
-void MainWindow::keyReleaseEvent(QKeyEvent* event)
-{
-    Locator::input.OnButton(event->key(), false);
-}
-
-void MainWindow::mousePressEvent(QMouseEvent *eventPress)
-{
-    Locator::input.mouse.Down = true;
-}
-
-void MainWindow::mouseReleaseEvent(QMouseEvent *releaseEvent)
-{
-    Locator::input.mouse.Down = false;
-}
-
-void MainWindow::mouseMoveEvent(QMouseEvent *eventMove)
-{
-    Locator::input.mouse.x = eventMove->pos().x();
-    Locator::input.mouse.y = eventMove->pos().y();
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)

@@ -1,6 +1,6 @@
 #include "locator.h"
 
-Debug *Locator::debug = NULL;
+Debug *Locator::debug = new Debug();
 Editor *Locator::editor = NULL;
 
 Input Locator::input = Input();

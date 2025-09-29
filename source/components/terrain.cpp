@@ -20,6 +20,7 @@ Terrain::Terrain(const char *filePath,
     indices.push_back(1);
 
     drawable = &renderer->CreateDrawable(vertices, indices, vertexShaderPath, fragmentShaderPath);
+    drawable->ubo.lightPosition = glm::vec3(0,9,0);
 }
 
 void Terrain::Update()

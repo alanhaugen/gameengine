@@ -5,6 +5,7 @@ class Editor
 {
 public:
     virtual void AddEntity(const char* name) = 0;
+    virtual void UpdateStatusBar(const char* text) = 0;
 };
 
 #endif // EDITOR_H

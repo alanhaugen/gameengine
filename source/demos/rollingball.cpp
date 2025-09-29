@@ -13,7 +13,7 @@ RollingBall::RollingBall()
 void RollingBall::Init()
 {
     GameObject* ball = new GameObject;
-    ballMesh = new Mesh("Assets/Models/ball.obj");
+    ballMesh = new Mesh("Assets/Models/ball.obj", "shaders/phong.vert.spv", "shaders/phong.frag.spv");
     ball->AddComponent(ballMesh);
     ball->AddComponent(new SphereCollider());
     ball->AddComponent(new FPSCamera(&camera));

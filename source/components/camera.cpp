@@ -29,4 +29,6 @@ Camera::Camera(float x, float y, float z)
 void Camera::Update()
 {
     renderer->SetViewMatrix(glm::lookAtRH(position, position + forward, up));
+    renderer->SetCameraPosition(position);
+    renderer->SetLightPos(position);
 }

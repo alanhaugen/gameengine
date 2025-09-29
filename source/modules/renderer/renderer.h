@@ -15,11 +15,9 @@ public:
             alignas(16) glm::mat4 model;
             alignas(16) glm::mat4 view;
             alignas(16) glm::mat4 proj;
-            alignas(16) glm::vec4 colour;
-            alignas(16) glm::mat4 modelMat;
-            alignas(16) glm::mat4 normalMat;
-            alignas(16) glm::vec4 lightPosition;
-            alignas(16) glm::vec4 cameraPosition;
+            alignas(16) glm::vec3 lightPosition;
+            alignas(16) glm::vec3 cameraPosition;
+            alignas(16) glm::float32_t time;
         } ubo;
 
         VkPipeline graphicsPipeline;
@@ -42,4 +40,6 @@ public:
                                      const char* fragmentShader = "shaders/frag.spv") = 0;
 
     virtual void SetViewMatrix(glm::mat4 view) = 0;
+    virtual void SetCameraPosition(glm::vec3 pos) = 0;
+    virtual void SetLightPos(glm::vec3 pos) = 0;
 };
