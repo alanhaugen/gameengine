@@ -14,9 +14,8 @@ public:
 
     void translate(float x, float y, float z);
     void rotate(float t, float x, float y, float z);
-    void pitch(float degrees);
-    void yaw(float degrees);
-    void setSpeed(float speed);
+    void pitch(float deg);
+    void yaw(float deg);
 
     void setPerspective(float fovy, float screenWidth, float near, float far);
     //void setPerspective(glm::radians(float fovy), float screenWidth, float near, float far);
@@ -27,7 +26,8 @@ public:
 
     inline void setViewMatrix(const QMatrix4x4 &newViewMatrix) { mViewMatrix = newViewMatrix; }
     inline void setProjectionMatrix(const QMatrix4x4 &newProjectionMatrix) {mProjectionMatrix = newProjectionMatrix; }
-    void setPosition(const QVector3D &newPos) {mPosition = newPos; }
+    void setPosition(const QVector3D &newPos);
+    void setSpeed(float &speed) {mSpeed = speed; }
 
     void update();
 
@@ -46,6 +46,8 @@ private:
 
     float mPitch = 0.f;
     float mYaw = 0.f;
+
+    float mSpeed = 100.f;
 };
 
 #endif // CAMERA_H
