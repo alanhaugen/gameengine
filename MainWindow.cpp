@@ -10,6 +10,9 @@
 #include <QLoggingCategory>
 #include <QPointer>
 #include <QDockWidget>
+#include <QStandardPaths>
+#include <QDir>
+#include <QDebug>
 
 
     QPointer<QPlainTextEdit> MainWindow::messageLogWidget = nullptr;
@@ -70,7 +73,11 @@ MainWindow::MainWindow(ResourceManager* resourceMgr, QWidget *parent)
 
     connect(ui->actionLogger, &QAction::toggled, logDock, &QDockWidget::setVisible);
     connect(logDock, &QDockWidget::visibilityChanged, ui->actionLogger, &QAction::setChecked);
-    statusBar()->showMessage(" put something cool here! ");
+
+    //Gets username from PC
+    QString username = QDir::home().dirName();
+
+    statusBar()->showMessage("I know who you are.... " + username );
 
     //Background musick (not annoying)
     resourceManager->toggleBackgroundMusick();
