@@ -1112,6 +1112,7 @@ void Renderer::loadModel(QString MODEL_PATH) {
 
     std::unordered_map<Vertex, uint32_t> uniqueVertices{};
 
+    obj_asset=new ObjAsset();
     for (const auto& shape : shapes) {
         for (const auto& index : shape.mesh.indices) {
             Vertex vertex{};
@@ -1129,14 +1130,21 @@ void Renderer::loadModel(QString MODEL_PATH) {
 
             vertex.color = {1.0f, 1.0f, 1.0f};
 
+
             if (uniqueVertices.count(vertex) == 0) {
                 uniqueVertices[vertex] = static_cast<uint32_t>(vertices.size());
+                obj_asset->vertices.push_back(vertex);
                 vertices.push_back(vertex);
             }
 
+            obj_asset->indices.push_back(uniqueVertices[vertex]);
             indices.push_back(uniqueVertices[vertex]);
+
+
         }
     }
+
+    objManager->assets.push_back(obj_asset);
 }
 
 void Renderer::createVertexBuffer() {

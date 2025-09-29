@@ -8,6 +8,7 @@
 #include "Vertex.h"
 #include "QStack"
 #include "QDirIterator"
+#include "assetmanager.h"
 //Forward declarations
 struct SwapChainSupportDetails;
 struct QueueFamilyIndices;
@@ -96,6 +97,8 @@ private:
 
     QStack<QString> filesStack;
 
+    ObjAsset* obj_asset{nullptr};
+    AssetManager<ObjAsset>* objManager=new AssetManager<ObjAsset>();
     // void initWindow();
 
     // static void framebufferResizeCallback(GLFWwindow* window, int width, int height);
