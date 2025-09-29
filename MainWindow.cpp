@@ -13,9 +13,10 @@
 
 QPointer<QPlainTextEdit> MainWindow::messageLogWidget = nullptr;
 
-MainWindow::MainWindow(QWidget *parent)
+MainWindow::MainWindow(ResourceManager* resourceMgr, QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
+    , resourceManager(resourceMgr)          //Assign from main
 {
     ui->setupUi(this);
     //MainWindow size:

@@ -11,12 +11,14 @@ class MainWindow;
 }
 QT_END_NAMESPACE
 
+class ResourceManager;
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
 public:
-    MainWindow(QWidget *parent = nullptr);
+    MainWindow(ResourceManager* resourceMgr, QWidget *parent = nullptr);
     ~MainWindow();
     static QPointer<QPlainTextEdit> messageLogWidget;
 
