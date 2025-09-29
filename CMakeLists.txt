@@ -22,7 +22,7 @@ add_executable(QtVulkan
     Mesh.h Mesh.cpp
     RenderComponent.h RenderComponent.cpp
     Texture.cpp Texture.h
-    TransformComponent.cpp TransformComponent.h)
+    TransformComponent.cpp TransformComponent.h
 )
 
 if(MSVC)
