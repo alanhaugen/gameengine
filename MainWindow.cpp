@@ -10,6 +10,9 @@
 #include <QPointer>
 #include <QDockWidget>
 
+
+QPointer<QPlainTextEdit> MainWindow::messageLogWidget = nullptr;
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -36,6 +39,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     //sets the keyboard input focus to the MainWindow when program starts
     this->setFocus();
+    vulkanWidget->setFocusPolicy(Qt::NoFocus);
 
 
 
@@ -48,14 +52,17 @@ MainWindow::MainWindow(QWidget *parent)
     // Creating the Log Widget
     messageLogWidget = new QPlainTextEdit(logDock);
     messageLogWidget->setReadOnly(true);
-
-    // Setting the logger inside the widget
     logDock->setWidget(messageLogWidget);
-
-    // Adding dock
     addDockWidget(Qt::BottomDockWidgetArea, logDock);
+    qInstallMessageHandler(MainWindow::messageHandler);
 
+    //Menu
+    logDock->setObjectName("LoggerDock");
+    ui->actionLogger->setCheckable(true);
+    ui->actionLogger->setChecked(true); // visible by default
 
+    connect(ui->actionLogger, &QAction::toggled, logDock, &QDockWidget::setVisible);
+    connect(logDock, &QDockWidget::visibilityChanged, ui->actionLogger, &QAction::setChecked);
 
     statusBar()->showMessage(" put something cool here! ");
 }
@@ -87,10 +94,12 @@ void MainWindow::keyPressEvent(QKeyEvent* event)
         start();
     }
     if (event->key() == Qt::Key_W) {
-        messageLogWidget->appendPlainText("Marvin Marvin Marvin");
+        //messageLogWidget->appendPlainText("Marvin Marvin Marvin");
+        qWarning("MARVIN");
     }
     if (event->key() == Qt::Key_A) {
-        messageLogWidget->appendPlainText("Erik Er Best");
+        //messageLogWidget->appendPlainText("Erik Er Best");
+
     }
 }
 
@@ -101,6 +110,43 @@ void MainWindow::on_action_Quit_triggered()
     mVulkanWindow = nullptr;
     close();
 }
+
+void MainWindow::messageHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg)
+{
+    if (!messageLogWidget)
+        return;
+
+    QString level;
+    QString color;
+
+    switch(type)
+    {
+    case QtDebugMsg:    level = "Debug";    color = "white";    break;
+    case QtInfoMsg:     level = "Info";     color = "blue";     break;
+    case QtWarningMsg:  level = "Warning";  color = "orange";   break;
+    case QtCriticalMsg: level = "Critical"; color = "red";      break;
+    case QtFatalMsg:    level = "Fatal";    color = "darkred";  break;
+    }
+
+    // Timestamp
+    QString timestamp = QDateTime::currentDateTime().toString("hh:mm:ss");
+
+    // Gives u which line and file the issue is within
+    QString location;
+    if (context.file && context.line > 0)
+        location = QString("%1:%2").arg(context.file).arg(context.line);
+
+    // Fow the format of the final message while look like
+    QString formattedMsg = QString("<span style=\"color:%1;\">[%2] [%3] [%4] %5</span>")
+                               .arg(color, timestamp, level, location.isEmpty() ? "unknown" : location, msg.toHtmlEscaped());
+
+    messageLogWidget->appendHtml(formattedMsg);
+
+    if (type == QtFatalMsg) {
+        abort();
+    }
+}
+
 
 
 

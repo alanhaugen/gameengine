@@ -18,8 +18,7 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-
-    QPlainTextEdit* messageLogWidget{nullptr};
+    static QPointer<QPlainTextEdit> messageLogWidget;
 
     void start();
 
@@ -30,11 +29,13 @@ private:
     class Renderer* mVulkanWindow{nullptr};
     bbl::GameWorld mGameWorld;
 
-    //GameWorld mGameWorld;
+    static void messageHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg);
+
 
 protected:
     //bool eventFilter(QObject* obj, QEvent* event);
     void keyPressEvent(QKeyEvent* event) override;
+
 private slots:
     void on_action_Quit_triggered();
 };
