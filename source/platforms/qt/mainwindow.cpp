@@ -13,6 +13,7 @@ MainWindow::MainWindow(QWidget *parent, const char* windowTitle, int windowWidth
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
     ui->treeGameObjects->setContextMenuPolicy(Qt::CustomContextMenu);
     //MainWindow size:
     resize((1300 - 1100) + windowWidth, (850 - 700) + windowHeight);
@@ -29,19 +30,29 @@ MainWindow::MainWindow(QWidget *parent, const char* windowTitle, int windowWidth
 
     // Wrap VulkanRenderer (QWindow) into a QWidget
     vulkanWidget = QWidget::createWindowContainer(renderer, this);
+    vulkanWidget->setMinimumSize(0, 0);
     //vulkanWidget->setMinimumSize(windowWidth, windowHeight);
 
     vulkanWidget->sizePolicy().setHorizontalPolicy(QSizePolicy::Expanding);
     vulkanWidget->sizePolicy().setVerticalPolicy(QSizePolicy::Expanding);
-    vulkanWidget->setMinimumWidth(200.0f);
+    //vulkanWidget->setMinimumWidth(200.0f);
+
+    splitDockWidget(ui->dockGameObjects,ui->SceneDock,Qt::Horizontal);
+    splitDockWidget(ui->SceneDock,ui->DockInspector ,Qt::Horizontal);
+
+
+
 
     ui->VulkanLayout->addWidget(vulkanWidget);
 
-    ui->splitter->setSizes(QList<int>()<<200<<900<<300);
 
 
-    //GameObject treewidget
-    ui->treeGameObjects->setMinimumWidth(100);
+
+    // ui->splitter->setSizes(QList<int>()<<200<<900<<300);
+
+
+    // //GameObject treewidget
+    // ui->treeGameObjects->setMinimumWidth(100);
 
 
     //sets the keyboard input focus to the MainWindow when program starts
@@ -53,7 +64,7 @@ MainWindow::MainWindow(QWidget *parent, const char* windowTitle, int windowWidth
     timer->start(8); // 120 Hz
 
 
-    //Connections to functions
+     //Connections to functions
     connect(ui->actionViking_Room, &QAction::triggered, this, &MainWindow::AddVikingRoom);
     connect(ui->actionCube, &QAction::triggered, this, &MainWindow::AddCube);
     connect(ui->actionSphere, &QAction::triggered, this, &MainWindow::AddSphere);
@@ -161,18 +172,23 @@ void MainWindow::MainGameLoop()
 
 void MainWindow::OnRightClickGameObjectWidget(const QPoint &ClickedOn)
 {
-    qDebug() << "Right-click detected at" << ClickedOn;
+
     QTreeWidgetItem * GameObjSelected = ui->treeGameObjects->itemAt(ClickedOn);
+
 
     if(!GameObjSelected)
     {
         return;
     }
 
+
+    qDebug() << "Right-click detected at" << ClickedOn;
+
     QMenu menu(this);
     QAction* ActRename = menu.addAction("Rename");
 
     QAction* ActAdd = menu.addAction("Add");
+
 
     QAction* ActSelected = menu.exec(ui->treeGameObjects->viewport()->mapToGlobal(ClickedOn));
 
@@ -281,21 +297,21 @@ void MainWindow::XposUpdate(double value)
 
 
 
-    // for(auto* SpinBox : ui->GroupTransform->findChildren<QDoubleSpinBox*>())
-    // {
-    //     if(SpinBox == ui->PosXSpin)
-    //     {
-    //         SpinBox->setValue(obj->mTransform.mPosition.x);
-    //     }
-    //     else if(SpinBox == ui->PosYSpin)
-    //     {
-    //         SpinBox->setValue(obj->mTransform.mPosition.y);
-    //     }
-    //     else
-    //     {
-    //         SpinBox->setValue(obj->mTransform.mPosition.z);
-    //     }
-    // }
+    for(auto* SpinBox : ui->groupTransform->findChildren<QDoubleSpinBox*>())
+    {
+        if(SpinBox == ui->PosXSpin)
+        {
+            SpinBox->setValue(SelectedObj->mTransform.mPosition.x);
+        }
+        else if(SpinBox == ui->PosYSpin)
+        {
+            SpinBox->setValue(SelectedObj->mTransform.mPosition.y);
+        }
+        else
+        {
+            SpinBox->setValue(SelectedObj->mTransform.mPosition.z);
+        }
+    }
 
 
 }

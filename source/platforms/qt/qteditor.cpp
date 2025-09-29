@@ -11,7 +11,7 @@ QtEditor::QtEditor(Ui::MainWindow *inUi, QStatusBar *inStatusBar)
 void QtEditor::AddEntity(const char *name)
 {
     QTreeWidgetItem* item = new QTreeWidgetItem(QStringList(name), 0);
-    ui->treeGameObjects->addTopLevelItem(item);
+    //ui->treeGameObjects->addTopLevelItem(item);
 }
 
 void QtEditor::UpdateStatusBar(const char *text)
