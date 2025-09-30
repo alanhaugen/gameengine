@@ -3,7 +3,6 @@
 
 #include "Entity.h"
 #include "Components.h"
-#include <algorithm>
 
 namespace gea {
 
