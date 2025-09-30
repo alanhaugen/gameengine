@@ -3,6 +3,7 @@
 
 #include "component.h"
 #include <cstdint>
+#include <qmatrix4x4.h>
 #include <qstring.h>
 #include <glm/glm.hpp>
 #include <vector>
@@ -25,6 +26,7 @@ class GameObject
 protected:
     Entity ID;
     QString Name;
+    QMatrix4x4 mMatrix;
 public:
     GameObject(const QString name, Entity id);
 
@@ -43,6 +45,7 @@ public:
     const Entity GetEntityId();
 
     void SetPosition(double X,double Y, double Z);
+
 
 
 

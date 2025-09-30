@@ -37,6 +37,8 @@ private:
 
     GameObject* SelectedObj = NULL;
 
+    std::vector<GameObject*> ObjList;
+
     std::chrono::time_point<std::chrono::steady_clock> lastTime;
 
     //QWidget* mRenderWindowContainer{nullptr};   //Qt container for the RenderWindow

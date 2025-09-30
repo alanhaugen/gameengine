@@ -231,6 +231,7 @@ void MainWindow::AddVikingRoom()
 {
     Entity EntityID = 1;
     GameObject* gameobj = new GameObject("VikingRoom",EntityID);
+    ObjList.push_back(gameobj);
 
     Mesh* mesh = new Mesh("Assets/Models/viking_room.obj", renderer, scene->editor);
 
