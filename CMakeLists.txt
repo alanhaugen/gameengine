@@ -22,6 +22,7 @@ add_executable(QtVulkan
     MainWindow.ui
     assetmanager.h assetmanager.cpp
     fileswindow.h fileswindow.cpp
+    displayWidget.cpp
 )
 
 if(MSVC)

@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include "fileswindow.h"
+
 QT_BEGIN_NAMESPACE
 namespace Ui {
 class MainWindow;
@@ -25,6 +26,7 @@ private:
     //QWidget* mRenderWindowContainer{nullptr};   //Qt container for the RenderWindow
     class Renderer* mVulkanWindow{nullptr};
 
+    FilesWindow* filesWidget{nullptr};
     //FilesWindow<mVulkanWindow->objManager>(mVulkanWindow->objManager)* filesWidget{nullptr};
 
 protected:
