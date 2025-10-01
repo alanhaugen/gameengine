@@ -2,11 +2,15 @@
 #include <math.h>
 #include <stdio.h>
 
-void findAngle(Vector2 A, Vector2 B, Vector2 C){
+#define PI 3.14159265359
+
+float findAngle(Vector2 A, Vector2 B, Vector2 C){
     float AB = sqrt(((B.x - A.x)*(B.x - A.x)) + ((B.y - A.y)*(B.y - A.y)));
     float BC = sqrt(((C.x - B.x)*(C.x - B.x)) + ((C.y - B.y)*(C.y - B.y)));
-    printf("length of AB is: %f\n", AB);
-    //return acos(A/B);
+    float angleRad = BC / AB;
+    float angleDeg = angleRad * (180 / PI);
+    printf("angle is: %f\n", angleDeg);
+    return angleDeg;
 }
 
 int main(void)
