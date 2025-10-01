@@ -1,18 +1,18 @@
 #ifndef SOUND_H
 #define SOUND_H
 
-#include <cstdint>
-#include <string>
-#include <cstdio>
-
-#ifdef _WIN32
+/*#ifdef _WIN32
 #include <AL/al.h>
 #include <AL/alc.h>
 #endif
-
+#ifdef __APPLE__
 #include <OpenAL/al.h>
 #include <OpenAL/alc.h>
 #endif
+
+#include <cstdint>
+#include <string>
+#include <cstdio>
 
 struct wave_t
 {
@@ -61,6 +61,8 @@ private:
     ALuint mBuffer;
     bool checkError(std::string name);
 };
+*/
+
 
 
 
