@@ -23,6 +23,7 @@ add_executable(QtVulkan
     assetmanager.h assetmanager.cpp
     fileswindow.h fileswindow.cpp
     displayWidget.cpp
+    draggablebutton.h draggablebutton.cpp
 )
 
 if(MSVC)

@@ -4,8 +4,12 @@
 #include "QPushButton"
 #include "assetmanager.h"
 #include <QFileDialog>
+#include <QDragEnterEvent>
+#include <QMimeData>
+#include <QDropEvent>
+#include <QFrame>
  //template <typename T>
-class FilesWindow: public QWidget
+class FilesWindow: public QFrame
 {
 public:
     FilesWindow(AssetManager<ObjAsset>* manager); // T
@@ -15,7 +19,12 @@ public:
     //QPushButton* test{nullptr};
     void handleButton(int index);
 
+    void dragEnterEvent(QDragEnterEvent* event) override;
+    void dropEvent(QDropEvent* event) override;
+    // void dragMoveEvent(QDragMoveEvent *event) override;
+    // void mousePressEvent(QMouseEvent *event) override;
 
+    void createButtons(AssetManager<ObjAsset>* assets_);
 };
 
 #endif // FILESWINDOW_H
