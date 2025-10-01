@@ -11,6 +11,11 @@ class MainWindow;
 }
 QT_END_NAMESPACE
 
+namespace gea {
+class EntityContainer;
+class EntityModel;
+}
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -25,6 +30,8 @@ private:
     Ui::MainWindow *ui;
 
     class Renderer* mVulkanWindow{nullptr};
+    class gea::EntityContainer* mEntityContainer{nullptr};
+    class gea::EntityModel* mEntityModel{nullptr};
 
 protected:
     void keyPressEvent(QKeyEvent* event) override;

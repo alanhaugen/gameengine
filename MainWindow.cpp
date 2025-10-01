@@ -1,4 +1,6 @@
 #include "MainWindow.h"
+#include "EntityContainer.h"
+#include "EntityModel.h"
 #include "ui_MainWindow.h"
 #include "Renderer.h"
 #include <QKeyEvent>
@@ -27,6 +29,11 @@ MainWindow::MainWindow(QWidget *parent)
 
     // Put the mVulkanWidget into the VulkanLayout spot, made in the MainWindow.ui file
     ui->VulkanLayout->addWidget(mVulkanWidget);
+
+    mEntityContainer = new gea::EntityContainer(this);
+    mEntityModel = new gea::EntityModel(mEntityContainer, this);
+
+    ui->entityList->setModel(mEntityModel);
 
     //sets the keyboard input focus to the MainWindow when program starts
     this->setFocus();

@@ -33,7 +33,9 @@ set(SOURCES
 )
 
 add_executable(QtVulkan ${SOURCES}
-    Components.h Entity.h)
+    Components.h Entity.h
+    EntityModel.h EntityModel.cpp
+    EntityContainer.h EntityContainer.cpp)
 
 
 # MSVC-specific compile options (if building with MSVC)
