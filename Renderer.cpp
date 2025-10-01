@@ -68,20 +68,24 @@ Renderer::~Renderer()
 std::vector<gea::Mesh> mMeshes;
 std::vector<gea::Texture> mTextures;
 std::vector<gea::RenderComponent> mRenderComponents;
+std::vector<gea::RenderComponent> mStaticRenderComponents;
+//this is done for testing sake. in the real ecs there would only be one vector of transform components
 std::vector<gea::TransformComponent> mTransformComponents;
+std::vector<gea::TransformComponent> mStaticTransformComponents;
 
 void Renderer::initVulkan() {
 	mMeshes.push_back(gea::Mesh());
 	mTextures.push_back(gea::Texture());
+
 	mRenderComponents.push_back(gea::RenderComponent(0,0, 0));
-	mRenderComponents.push_back(gea::RenderComponent(0,0, 1));
     gea::TransformComponent t1 = gea::TransformComponent(0);
 	t1.position = glm::vec3(1.0f, 0.0f, 0.0f);
 	mTransformComponents.push_back(t1);
 
+    mStaticRenderComponents.push_back(gea::RenderComponent(0,0, 1));
     gea::TransformComponent t2 = gea::TransformComponent(1);
     t2.position = glm::vec3(-1.0f, 0.0f, 0.0f);
-    mTransformComponents.push_back(t2);
+    mStaticTransformComponents.push_back(t2);
 
     createInstance();
     setupDebugMessenger();
@@ -128,7 +132,7 @@ void Renderer::cleanupSwapChain() {
         vkDestroyFramebuffer(device, framebuffer, nullptr);
     }
 
-    vkFreeCommandBuffers(device, commandPool, static_cast<uint32_t>(commandBuffers.size()), commandBuffers.data());
+    vkFreeCommandBuffers(device, commandPool, static_cast<uint32_t>(staticCommandBuffers.size()), staticCommandBuffers.data());
 
     vkDestroyPipeline(device, graphicsPipeline, nullptr);
     vkDestroyPipelineLayout(device, pipelineLayout, nullptr);
@@ -1327,72 +1331,66 @@ void Renderer::createIndexBuffer(gea::Mesh* mesh) {
     vkFreeMemory(device, stagingBufferMemory, nullptr);
 }
 
+//create static command buffer for non moving objects
 void Renderer::createCommandBuffers()
 {
     //Resize command buffer count to have one for each framebuffer
-    commandBuffers.resize(swapChainFramebuffers.size());
+    staticCommandBuffers.resize(swapChainFramebuffers.size());
 
     //Alloc and not create, because we are allocating memory for the command buffers
     VkCommandBufferAllocateInfo allocInfo{};
     allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
     allocInfo.commandPool = commandPool;
-    allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-    allocInfo.commandBufferCount = (uint32_t) commandBuffers.size();
+    allocInfo.level = VK_COMMAND_BUFFER_LEVEL_SECONDARY;
+    allocInfo.commandBufferCount = (uint32_t) staticCommandBuffers.size();
 
-    if (vkAllocateCommandBuffers(device, &allocInfo, commandBuffers.data()) != VK_SUCCESS) {
+    if (vkAllocateCommandBuffers(device, &allocInfo, staticCommandBuffers.data()) != VK_SUCCESS) {
         throw std::runtime_error("failed to allocate command buffers!");
-    } 	else {
-        qDebug("Successfully created Command Buffers!");
     }
 
-    for (size_t i = 0; i < commandBuffers.size(); i++) {
+    for (size_t i = 0; i < staticCommandBuffers.size(); i++) {
+        VkCommandBufferInheritanceInfo inheritanceInfo{};
+        inheritanceInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_INFO;
+        inheritanceInfo.renderPass = renderPass;
+        inheritanceInfo.subpass = 0;
+        inheritanceInfo.framebuffer = swapChainFramebuffers[i];
+
         VkCommandBufferBeginInfo beginInfo{};
         beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+        beginInfo.flags = VK_COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT;
+        beginInfo.pInheritanceInfo = &inheritanceInfo;
 
-        if (vkBeginCommandBuffer(commandBuffers[i], &beginInfo) != VK_SUCCESS) {
+        if (vkBeginCommandBuffer(staticCommandBuffers[i], &beginInfo) != VK_SUCCESS) {
             throw std::runtime_error("failed to begin recording command buffer!");
         }
 
-        VkRenderPassBeginInfo renderPassInfo{};
-        renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-        renderPassInfo.renderPass = renderPass;
-        renderPassInfo.framebuffer = swapChainFramebuffers[i];
-        renderPassInfo.renderArea.offset = {0, 0};
-        renderPassInfo.renderArea.extent = swapChainExtent;
+        vkCmdBindPipeline(staticCommandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline);
 
-        std::array<VkClearValue, 2> clearValues{};
-        clearValues[0].color = {0.0f, 0.3f, 0.5f, 1.0f};
-        clearValues[1].depthStencil = {1.0f, 0};
-
-        renderPassInfo.clearValueCount = static_cast<uint32_t>(clearValues.size());
-        renderPassInfo.pClearValues = clearValues.data();
-
-        vkCmdBeginRenderPass(commandBuffers[i], &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
-
-        vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline);
-
-		for (size_t j = 0; j < mRenderComponents.size(); j++)
+		for (size_t j = 0; j < mStaticRenderComponents.size(); j++)
 		{
-			gea::RenderComponent renderComponent = mRenderComponents[j];
+			gea::RenderComponent renderComponent = mStaticRenderComponents[j];
 			gea::Mesh mesh = mMeshes[renderComponent.meshIndex];
 			VkBuffer vertexBuffer = mesh.vertexBuffer;
 			VkBuffer indexBuffer = mesh.indexBuffer;
 			std::vector<uint32_t> indices = mesh.indices;
 			VkDeviceSize offsets[] = { 0 };
-			//glm::mat4 model = mTransformComponents[j].GetModelMatrix();
-			glm::mat4 model = glm::mat4(1.0f);
-			model = glm::translate(model, mTransformComponents[j].position);
-            vkCmdPushConstants(commandBuffers[i], pipelineLayout, VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(glm::mat4), &model);
 
-			vkCmdBindVertexBuffers(commandBuffers[i], 0, 1, &vertexBuffer, offsets);
-			vkCmdBindIndexBuffer(commandBuffers[i], indexBuffer, 0, VK_INDEX_TYPE_UINT32);
-			vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, &descriptorSets[i], 0, nullptr);
-			vkCmdDrawIndexed(commandBuffers[i], static_cast<uint32_t>(indices.size()), 1, 0, 0, 0);
+			glm::mat4 model = glm::mat4(1.0f);
+			model = glm::translate(model, mStaticTransformComponents[j].position);
+			model = glm::rotate(model, glm::radians(mStaticTransformComponents[j].rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
+			model = glm::rotate(model, glm::radians(mStaticTransformComponents[j].rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
+			model = glm::rotate(model, glm::radians(mStaticTransformComponents[j].rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
+			model = glm::scale(model, mStaticTransformComponents[j].scale);
+
+            vkCmdPushConstants(staticCommandBuffers[i], pipelineLayout, VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(glm::mat4), &model);
+
+			vkCmdBindVertexBuffers(staticCommandBuffers[i], 0, 1, &vertexBuffer, offsets);
+			vkCmdBindIndexBuffer(staticCommandBuffers[i], indexBuffer, 0, VK_INDEX_TYPE_UINT32);
+			vkCmdBindDescriptorSets(staticCommandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, &descriptorSets[i], 0, nullptr);
+			vkCmdDrawIndexed(staticCommandBuffers[i], static_cast<uint32_t>(indices.size()), 1, 0, 0, 0);
 		}
 
-        vkCmdEndRenderPass(commandBuffers[i]);
-
-        if (vkEndCommandBuffer(commandBuffers[i]) != VK_SUCCESS) {
+        if (vkEndCommandBuffer(staticCommandBuffers[i]) != VK_SUCCESS) {
             throw std::runtime_error("failed to record command buffer!");
         }
     }
@@ -1457,13 +1455,115 @@ void Renderer::drawFrame() {
         throw std::runtime_error("failed to acquire swap chain image!");
     }
 
-    updateUniformBuffer(imageIndex);
-
     if (imagesInFlight[imageIndex] != VK_NULL_HANDLE) {
         vkWaitForFences(device, 1, &imagesInFlight[imageIndex], VK_TRUE, UINT64_MAX);
     }
     imagesInFlight[imageIndex] = inFlightFences[currentFrame];
 
+    updateUniformBuffer(imageIndex);
+	        
+	//record dynamic secondary command buffer
+    VkCommandBuffer dynamicCommandBuffer;
+
+    VkCommandBufferAllocateInfo allocInfo{};
+    allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+    allocInfo.commandPool = commandPool;
+    allocInfo.level = VK_COMMAND_BUFFER_LEVEL_SECONDARY;
+    allocInfo.commandBufferCount = 1;
+
+    if (vkAllocateCommandBuffers(device, &allocInfo, &dynamicCommandBuffer) != VK_SUCCESS) {
+        throw std::runtime_error("failed to allocate command buffers!");
+    }
+
+    VkCommandBufferInheritanceInfo inheritanceInfo{};
+    inheritanceInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_INFO;
+    inheritanceInfo.renderPass = renderPass;
+    inheritanceInfo.subpass = 0;
+    inheritanceInfo.framebuffer = swapChainFramebuffers[imageIndex];
+
+    VkCommandBufferBeginInfo beginInfo{};
+    beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+    beginInfo.flags = VK_COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT;
+    beginInfo.pInheritanceInfo = &inheritanceInfo;
+
+    if (vkBeginCommandBuffer(dynamicCommandBuffer, &beginInfo) != VK_SUCCESS) {
+        throw std::runtime_error("failed to begin recording command buffer!");
+    }
+
+    vkCmdBindPipeline(dynamicCommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline);
+
+    for (size_t j = 0; j < mRenderComponents.size(); j++)
+    {
+        gea::RenderComponent renderComponent = mRenderComponents[j];
+        gea::Mesh mesh = mMeshes[renderComponent.meshIndex];
+        VkBuffer vertexBuffer = mesh.vertexBuffer;
+        VkBuffer indexBuffer = mesh.indexBuffer;
+        std::vector<uint32_t> indices = mesh.indices;
+        VkDeviceSize offsets[] = { 0 };
+
+        glm::mat4 model = glm::mat4(1.0f);
+        model = glm::translate(model, mTransformComponents[j].position);
+        model = glm::rotate(model, glm::radians(mTransformComponents[j].rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
+        model = glm::rotate(model, glm::radians(mTransformComponents[j].rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
+        model = glm::rotate(model, glm::radians(mTransformComponents[j].rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
+        model = glm::scale(model, mTransformComponents[j].scale);
+
+        vkCmdPushConstants(dynamicCommandBuffer, pipelineLayout, VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(glm::mat4), &model);
+
+        vkCmdBindVertexBuffers(dynamicCommandBuffer, 0, 1, &vertexBuffer, offsets);
+        vkCmdBindIndexBuffer(dynamicCommandBuffer, indexBuffer, 0, VK_INDEX_TYPE_UINT32);
+        vkCmdBindDescriptorSets(dynamicCommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, &descriptorSets[imageIndex], 0, nullptr);
+        vkCmdDrawIndexed(dynamicCommandBuffer, static_cast<uint32_t>(indices.size()), 1, 0, 0, 0);
+    }
+
+    if (vkEndCommandBuffer(dynamicCommandBuffer) != VK_SUCCESS) {
+        throw std::runtime_error("failed to record command buffer!");
+    }
+
+    //record primary command buffer
+    VkCommandBuffer primaryCommandBuffer;
+    VkCommandBufferAllocateInfo primaryAllocInfo{};
+    primaryAllocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+    primaryAllocInfo.commandPool = commandPool;
+    primaryAllocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+    primaryAllocInfo.commandBufferCount = 1;
+
+    if (vkAllocateCommandBuffers(device, &primaryAllocInfo, &primaryCommandBuffer) != VK_SUCCESS) {
+        throw std::runtime_error("failed to allocate command buffers!");
+    }
+
+    VkCommandBufferBeginInfo primaryBeginInfo{};
+    primaryBeginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+
+    vkBeginCommandBuffer(primaryCommandBuffer, &primaryBeginInfo);
+
+    VkRenderPassBeginInfo primaryRenderPassInfo{};
+    primaryRenderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
+    primaryRenderPassInfo.renderPass = renderPass;
+    primaryRenderPassInfo.framebuffer = swapChainFramebuffers[imageIndex];
+    primaryRenderPassInfo.renderArea.offset = { 0, 0 };
+    primaryRenderPassInfo.renderArea.extent = swapChainExtent;
+
+    std::array<VkClearValue, 2> clearValues{};
+    clearValues[0].color = { 0.0f, 0.3f, 0.5f, 1.0f };
+    clearValues[1].depthStencil = { 1.0f, 0 };
+
+    primaryRenderPassInfo.clearValueCount = static_cast<uint32_t>(clearValues.size());
+    primaryRenderPassInfo.pClearValues = clearValues.data();
+    vkCmdBeginRenderPass(primaryCommandBuffer, &primaryRenderPassInfo, VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS);
+
+    std::array<VkCommandBuffer, 2> secondaries = {
+        staticCommandBuffers[imageIndex],
+        dynamicCommandBuffer
+    };
+    vkCmdExecuteCommands(primaryCommandBuffer,
+        static_cast<uint32_t>(secondaries.size()),
+        secondaries.data());
+
+    vkCmdEndRenderPass(primaryCommandBuffer);
+    vkEndCommandBuffer(primaryCommandBuffer);
+
+    //submit primary command buffer
     VkSubmitInfo submitInfo{};
     submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
 
@@ -1474,7 +1574,7 @@ void Renderer::drawFrame() {
     submitInfo.pWaitDstStageMask = waitStages;
 
     submitInfo.commandBufferCount = 1;
-    submitInfo.pCommandBuffers = &commandBuffers[imageIndex];
+    submitInfo.pCommandBuffers = &primaryCommandBuffer;
 
     VkSemaphore signalSemaphores[] = {renderFinishedSemaphores[currentFrame]};
     submitInfo.signalSemaphoreCount = 1;
