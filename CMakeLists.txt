@@ -15,6 +15,10 @@ add_executable(QtVulkan
     Vertex.h
     MainWindow.h MainWindow.cpp
     MainWindow.ui
+    SoundComponent.h
+    resource.qrc
+    Sound.cpp
+    Sound.h
 )
 
 if(MSVC)
