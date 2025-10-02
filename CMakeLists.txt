@@ -77,6 +77,8 @@ if(DEFINED ENV{OPENAL_HOME})
     )
 endif()
 
+target_include_directories(QtVulkan PRIVATE include)
+
 if(MSVC)
     # Required for proper C++ exception handling with MSVC
     target_compile_options(QtVulkan PRIVATE /EHsc)
@@ -90,9 +92,6 @@ if(MSVC)
     )
     target_link_libraries(QtVulkan PRIVATE Qt6::Widgets)
 else()
-    target_include_directories(QtVulkan PRIVATE
-    include
-    )
     find_library(COREAUDIO CoreAudio "/usr")
     target_link_libraries(QtVulkan PRIVATE
     Qt::Core
