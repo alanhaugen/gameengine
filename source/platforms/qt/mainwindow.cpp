@@ -47,7 +47,7 @@ MainWindow::MainWindow(QWidget *parent, const char* windowTitle, int windowWidth
     //sets the keyboard input focus to the MainWindow when program starts
     this->setFocus();
 
-    QTimer* timer = new QTimer(this);
+    timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, &MainWindow::MainGameLoop);
 
     timer->start(8); // 120 Hz
@@ -219,6 +219,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
         delete renderer;
         renderer = nullptr;
         close();
+        timer->stop();
     }
 #endif
 }
