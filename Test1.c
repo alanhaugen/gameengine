@@ -4,6 +4,7 @@
 
 //#define PI 3.14159265359
 
+// counter clockwise
 float findAngle(Vector2 A, Vector2 B, Vector2 C){
     float AB = sqrt(((B.x - A.x)*(B.x - A.x)) + ((B.y - A.y)*(B.y - A.y)));
     float BC = sqrt(((C.x - B.x)*(C.x - B.x)) + ((C.y - B.y)*(C.y - B.y)));
@@ -35,7 +36,7 @@ int main(void)
     Vector2 triPosD = {0.0f, 700.0f};
     Vector2 triPosE = {0.0f, 1200.0f};
     
-    findAngle(triPosE, triPosA, triPosC);
+    findAngle(triPosE, triPosA, triPosC); 
     
     
     
@@ -63,7 +64,7 @@ int main(void)
             
             ballPos.x += velocity.x;
             ballPos.y += velocity.y;
-            //velocity.x += 0.1f;
+            //velocity.x += 0.5f;
             velocity.y += 9.81f / 10.0f;
             
             if(ballPos.y < 0 || ballPos.y > height)
