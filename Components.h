@@ -1,8 +1,18 @@
 #ifndef COMPONENTS_H
 #define COMPONENTS_H
-
+//Sound
+#ifdef _WIN32
+#include <AL/al.h>
+#include <AL/alc.h>
+#endif
+#ifdef __APPLE__
+#include <OpenAL/al.h>
+#include <OpenAL/alc.h>
+#endif
+//
 #include <glm/glm.hpp>
 #include <vector>
+
 
 //Need namespace, since we start to get naming collisions with other code
 namespace gea {
@@ -18,7 +28,8 @@ namespace gea {
         Tower,
         Enemy,
         Projectile,
-        AI
+        AI,
+        Sound
     };
 
     //Below are examples of actual components
@@ -98,6 +109,14 @@ namespace gea {
         short mEntityID{ -1 };
     };
 
+    struct Sound
+    {
+        ALuint mSoundSource{0};
+        ALuint mSoundBuffer{0};
+        short mEntityID{-1};
+
+    };
+
 
     //The plan is that the systems can use these vectors containing all components of the different types
     //The components should be sorted by EntityID when added to the vectors.
@@ -115,6 +134,7 @@ namespace gea {
     extern std::vector<gea::Enemy> ComponentEnemyVector;
     extern std::vector<gea::Projectile> ComponentProjectileVector;
     extern std::vector<gea::AI> ComponentAIVector;
+    extern std::vector<gea::Sound> ComponentSoundVector;
 
 }   //namespace gea
 

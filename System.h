@@ -25,6 +25,15 @@ namespace gea
         virtual ~System() = default;     // virtual dtor: safe deletion
 
     };
+    class SoundSystem
+    {
+        void play();
+        void playFromPosition();
+        void pause();
+        void stop();
+        void assignBuffer();
+        void removeBuffer();
+    };
 }
 
 #endif // SYSTEM_H
