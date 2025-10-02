@@ -42,15 +42,13 @@ void OpenALAudio::Update()
 
 }
 
-void OpenALAudio::PlaySound(std::string filename, glm::vec3 pos)
+SoundSource* OpenALAudio::PlaySound(std::string name, std::string filepath, glm::vec3 pos = glm::vec3(), bool loop = false, float gain = 1.0f)
 {
-    SoundSource* mTestSound{nullptr};
+    SoundSource* playSound{nullptr};
     getInstance()->updateListener(pos, glm::vec3(0,0,0), glm::vec3(0,0,-1), glm::vec3(0,1,0));
-    mTestSound = getInstance()->createSource(
-        "Test", glm::vec3(),
-        "Assets/Audio/Caravan_mono.wav", true, 1.0f
-        );
-    mTestSound->play();
+    playSound = getInstance()->createSource(name, pos, filepath, loop, gain);
+    playSound->Play();
+    return playSound;
 }
 
 void OpenALAudio::cleanUp()

@@ -28,7 +28,7 @@ SoundSource::SoundSource(std::string name, bool loop, float gain) :
 SoundSource::~SoundSource()
 {
     std::cout << "Destroying SoundSource " + mName;
-    stop();
+    Stop();
     alGetError();
     alSourcei(mSource, AL_BUFFER, 0);
     checkError("alSourcei");
@@ -102,19 +102,22 @@ bool SoundSource::loadWave(std::string filePath)
     return true;
 }
 
-void SoundSource::play()
+void SoundSource::Play()
 {
     alSourcePlay(mSource);
     checkError("Play source");
+    isPlaying = true;
 }
-void SoundSource::pause()
+void SoundSource::Pause()
 {
     alSourcePause(mSource);
+    isPlaying = false;
 }
-void SoundSource::stop()
+void SoundSource::Stop()
 {
     alSourceStop(mSource);
     checkError("Stop source");
+    isPlaying = false;
 }
 
 void SoundSource::setPosition(glm::vec3 newPos)

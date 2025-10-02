@@ -9,6 +9,7 @@
 #include <OpenAL/alc.h>
 #endif
 
+#include "../audio.h"
 #include <glm/glm.hpp>
 #include <string>
 
@@ -18,7 +19,7 @@
     Intended to play a single clip.
     Does not support streaming audio (yet).
 **/
-class SoundSource
+class SoundSource : public Audio::AudioComponent
 {
 public:
     /// Constructor.
@@ -31,11 +32,11 @@ public:
     ~SoundSource();
 
     /// Plays the sound source from the current position.
-    void play();
+    void Play() override;
     /// Pauses the sound source at the current position.
-    void pause();
+    void Pause() override;
     /// Stops the sound source and rewinds to start.
-    void stop();
+    void Stop() override;
 
     /// Loads one given WAVE file.
     /**

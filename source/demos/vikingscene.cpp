@@ -8,7 +8,7 @@ void VikingScene::Init()
     vikingCamp1 = new Mesh("Assets/Models/viking_room.obj");
     vikingCamp2 = new Mesh("Assets/Models/viking_room.obj", "shaders/shader.vert.spv", "shaders/shader.frag.spv");
 
-    audio->PlaySound("", glm::vec3());
+    Music = audio->PlaySound("Music", "Assets/Audio/Caravan_mono.wav", glm::vec3(), true, 1.0f);
 
     camera.position += glm::vec3(.6,0,3);
 
@@ -31,6 +31,17 @@ void VikingScene::Init()
 
 void VikingScene::Update()
 {
+    if(input.Held(input.Key.SPACE))
+    {
+        if(Music->isPlaying)
+        {
+            Music->Pause();
+        }
+        else
+        {
+            Music->Play();
+        }
+    }
     vikingCamp1->drawable->ubo.model = glm::rotate(vikingCamp1->drawable->ubo.model, glm::radians(1.0f), glm::vec3(0,0,1));
     vikingCamp2->drawable->ubo.model = glm::rotate(vikingCamp2->drawable->ubo.model, glm::radians(-1.0f), glm::vec3(0,0,1));
 }

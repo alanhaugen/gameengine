@@ -85,7 +85,7 @@ struct KeyMap
         COMMA,
         FULLSTOP,
         SLASH,
-        SPACE,
+        SPACE = 32,
 
         INSERT,
         DELETE_KEY,

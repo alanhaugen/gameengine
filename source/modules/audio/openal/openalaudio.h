@@ -11,13 +11,15 @@
 #include "soundsource.h"
 #include <glm/glm.hpp>
 
+//TODO: Array of soundsources
+
 class OpenALAudio : public Audio
 {
 public:
     OpenALAudio();
     bool Init() override;
     void Update() override;
-    void PlaySound(std::string filename, glm::vec3 pos) override;
+    SoundSource* PlaySound(std::string name, std::string filepath, glm::vec3 pos, bool loop, float gain) override;
 
 public:
     struct SoundListener
