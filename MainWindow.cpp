@@ -22,10 +22,11 @@ MainWindow::MainWindow(QWidget *parent)
     mVulkanWindow->initVulkan();
 
     // Wrap VulkanRenderer (QWindow) into a QWidget
-    QWidget* vulkanWidget = QWidget::createWindowContainer(mVulkanWindow, this);
-    vulkanWidget->setMinimumSize(1100, 700);
+    QWidget* mVulkanWidget = QWidget::createWindowContainer(mVulkanWindow, this);
+    mVulkanWidget->setMinimumSize(1100, 700);
 
-    ui->VulkanLayout->addWidget(vulkanWidget);
+    // Put the mVulkanWidget into the VulkanLayout spot, made in the MainWindow.ui file
+    ui->VulkanLayout->addWidget(mVulkanWidget);
 
     //sets the keyboard input focus to the MainWindow when program starts
     this->setFocus();

@@ -1,6 +1,5 @@
 # This file is used to ignore files which are generated
 # ----------------------------------------------------------------------------
-
 *~
 *.autosave
 *.a
@@ -79,6 +78,8 @@ CMakeLists.txt.user*
 .rcc/
 .uic/
 /build*/
+
+#Visual Studio
 /.vs
 CMakePresets.json
 CMakeUserPresets.json
