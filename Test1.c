@@ -17,8 +17,9 @@ float findAngle(Vector2 A, Vector2 B, Vector2 C){
 
 int main(void)
 {
+    int bounciness = 5.0f;
     const int width = 800;
-    const int height = 1200;
+    const int height = 800;
     
     InitWindow(width, height, "Physics_sim");
     
@@ -30,11 +31,11 @@ int main(void)
     Vector2 ball2Pos = {(float)width/2, (float)height/4};
     Vector2 velocity2 = {0.0f, 0.0f};
     
-    Vector2 triPosA = {200.0f, 1200.0f};
-    Vector2 triPosB = {800.0f, 1200.0f};
-    Vector2 triPosC = {800.0f, 800.0f};
-    Vector2 triPosD = {0.0f, 700.0f};
-    Vector2 triPosE = {0.0f, 1200.0f};
+    Vector2 triPosA = {200.0f, height};
+    Vector2 triPosB = {800.0f, height};
+    Vector2 triPosC = {800.0f, 400.0f};
+    Vector2 triPosD = {0.0f, 500.0f};
+    Vector2 triPosE = {0.0f, height};
     
     findAngle(triPosE, triPosA, triPosC); 
     
@@ -48,11 +49,11 @@ int main(void)
             ClearBackground(DARKGRAY);
             DrawText("ayo it's a window", 190, 200, 20, RAYWHITE);
             DrawCircleV(ballPos, 50, RED);
-            DrawTriangle(triPosA, triPosB, triPosC, RAYWHITE);
+            //DrawTriangle(triPosA, triPosB, triPosC, RAYWHITE);
             //DrawTriangle(triPosA, triPosD, triPosE, RAYWHITE);
             
-            if(CheckCollisionCircleLine(ballPos, 50, triPosA, triPosC)/* || 
-            CheckCollisionCircleLine(ballPos, 50, triPosD, triPosA)*/)
+            /*if(CheckCollisionCircleLine(ballPos, 50, triPosA, triPosC)/* || 
+            CheckCollisionCircleLine(ballPos, 50, triPosD, triPosA))
             {
                 DrawText("balls be balling", 190, 400, 20, RAYWHITE);
                 velocity.x += velocity.y;
@@ -60,20 +61,38 @@ int main(void)
                 velocity.y *= -0.45;
                 velocity.x *= -0.95;
                 
-            }
+            }*/
             
             ballPos.x += velocity.x;
             ballPos.y += velocity.y;
             //velocity.x += 0.5f;
             velocity.y += 9.81f / 10.0f;
             
-            if(ballPos.y < 0 || ballPos.y > height)
+            if(ballPos.y < 0 || ballPos.y > height - 50)
             {
                 velocity.y *= -0.95;
+                if(abs(velocity.y) < 10)
+                {
+                    velocity.y = 0.0f;
+                }
+                else
+                {
+                    velocity.y += bounciness;
+                    //printf("bounciness: %i\n", bounciness);
+                    //bounciness -= 1;
+                }
             }
-            if(/*ballPos.x < 0 || */ballPos.x > width)
+            if(ballPos.x < 0 || ballPos.x > width - 50)
             {
                 velocity.x *= -0.95;
+                if(abs(velocity.x) < 10)
+                {
+                    velocity.x = 0.0f;
+                }
+                else
+                {
+                    velocity.x += bounciness;
+                }
             }
             
         EndDrawing();
