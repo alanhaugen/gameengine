@@ -19,6 +19,7 @@ struct wave_t
     short channels;             ///< Number of audio channels.
     short bytesPerSample;       ///< Number of bytes per sample.
     short bitsPerSample;        ///< Number of bits per sample.
+    short arrayPosition;        ///< Position in array containing all Wave data
 
     unsigned char* buffer;      ///< Buffer to hold audio data.
     wave_t() : buffer(NULL) {}  ///< Structure Constructor. Initialises data buffer to NULL.

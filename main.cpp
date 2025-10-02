@@ -7,10 +7,12 @@ int main(int argc, char *argv[])
 {
     ///Loading Sounds
     /*
+    std::vector<wave_t> waveDataVector;
     const std::string ASSET_PATH = NULL;
     wave_t *exampleSound = new wave_t;
     WavFileReader SoundFileReader;
     SoundFileReader.loadWave(ASSET_PATH, exampleSound);
+    waveDataVector.push_back(*exampleSound);
     */
 
     QApplication a(argc, argv);
