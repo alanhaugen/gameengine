@@ -17,6 +17,11 @@ add_executable(QtVulkan
     MainWindow.ui
 )
 
+# Add include directory
+target_include_directories(QtVulkan PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/Lua/include)
+# Add lib directory
+target_link_libraries(QtVulkan PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/Lua/lib/lua5.4.3-static.lib)
+
 if(MSVC)
     # Required for proper C++ exception handling with MSVC
     target_compile_options(QtVulkan PRIVATE /EHsc)
