@@ -218,13 +218,12 @@ void MainWindow::AddSphere()
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
-#ifdef Q_OS_WIN
     if (renderer)
     {
         delete renderer;
         renderer = nullptr;
         close();
-        timer->stop();
     }
-#endif
+
+    timer->stop();
 }

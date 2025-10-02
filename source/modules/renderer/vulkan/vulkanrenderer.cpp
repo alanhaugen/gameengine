@@ -1299,7 +1299,7 @@ void VulkanRenderer::createDescriptorSets() {
         imageInfo.sampler = textureSampler;*/
 
         //std::array<VkWriteDescriptorSet, 2> descriptorWrites{};
-        VkWriteDescriptorSet descriptorWrite;
+        VkWriteDescriptorSet descriptorWrite = {};
 
         descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
         descriptorWrite.dstSet = descriptorSets[i];
