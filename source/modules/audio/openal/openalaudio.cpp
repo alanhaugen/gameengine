@@ -4,16 +4,6 @@
 
 OpenALAudio::OpenALAudio() {}
 
-void OpenALAudio::Update()
-{
-
-}
-
-void OpenALAudio::PlaySound(std::string filename, glm::vec3 pos)
-{
-
-}
-
 OpenALAudio* OpenALAudio::mInstance = NULL;
 
 bool OpenALAudio::Init()
@@ -37,7 +27,7 @@ bool OpenALAudio::Init()
         std::cout << "Intialization complete!\n";
 
     //Start listing of found sound devices:
-    //Not jet implemented
+    //Not yet implemented
     //ALDeviceList *pDeviceList = NULL;
     //ALCcontext *pContext = NULL;
     //ALCdevice *pDevice = NULL;
@@ -45,6 +35,22 @@ bool OpenALAudio::Init()
     //ALboolean bReturn = AL_FALSE;
 
     return true;
+}
+
+void OpenALAudio::Update()
+{
+
+}
+
+void OpenALAudio::PlaySound(std::string filename, glm::vec3 pos)
+{
+    SoundSource* mTestSound{nullptr};
+    getInstance()->updateListener(pos, glm::vec3(0,0,0), glm::vec3(0,0,-1), glm::vec3(0,1,0));
+    mTestSound = getInstance()->createSource(
+        "Test", glm::vec3(),
+        "Assets/Audio/Caravan_mono.wav", true, 1.0f
+        );
+    mTestSound->play();
 }
 
 void OpenALAudio::cleanUp()

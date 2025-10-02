@@ -8,6 +8,8 @@ void VikingScene::Init()
     vikingCamp1 = new Mesh("Assets/Models/viking_room.obj");
     vikingCamp2 = new Mesh("Assets/Models/viking_room.obj", "shaders/shader.vert.spv", "shaders/shader.frag.spv");
 
+    audio->PlaySound("", glm::vec3());
+
     camera.position += glm::vec3(.6,0,3);
 
     //vikingCamp2->drawable->ubo.modelMat = glm::mat4(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1);
