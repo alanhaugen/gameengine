@@ -112,8 +112,8 @@ namespace gea
                     checkError("alSourcei (loadWave)");
 
                     std::cout << "Loading complete!\n";
-                    if (waveData->buffer) delete waveData->buffer;
-                    if (waveData) delete waveData;
+                    //if (waveData->buffer) delete waveData->buffer;
+                    //if (waveData) delete waveData;
                     return true;
                 }
             }
