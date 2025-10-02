@@ -35,7 +35,7 @@ MainWindow::MainWindow(QWidget *parent, const char* windowTitle, int windowWidth
     vulkanWidget->sizePolicy().setVerticalPolicy(QSizePolicy::Expanding);
     vulkanWidget->setMinimumWidth(200.0f);
 
-    vulkanWidget->setFocusPolicy(Qt::StrongFocus);
+    vulkanWidget->setFocusPolicy(Qt::NoFocus);
 
     ui->VulkanLayout->addWidget(vulkanWidget);
 
@@ -44,8 +44,8 @@ MainWindow::MainWindow(QWidget *parent, const char* windowTitle, int windowWidth
     //GameObject treewidget
     ui->treeGameObjects->setMinimumWidth(100);
 
-    //sets the keyboard input focus to the renderer when program starts
-    vulkanWidget->setFocus();
+    //sets the keyboard input focus to the MainWindow when program starts
+    this->setFocus();
 
     QTimer* timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, &MainWindow::MainGameLoop);
@@ -207,13 +207,8 @@ void MainWindow::AddCube()
 
 void MainWindow::AddSphere()
 {
-    GameObject* gameobj = new GameObject("Sphere");
-
-    Mesh* mesh = new Mesh("Assets/Models/ball.obj");
-
-    gameobj->AddComponent(mesh);
-
-    scene->gameObjects.push_back(gameobj);
+    //scene->components.push_back(new Mesh("Assets/Models/viking_room.obj", renderer, scene->editor));
+    qDebug() << "Sphere";
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)

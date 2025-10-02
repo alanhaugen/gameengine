@@ -5,7 +5,6 @@
 #include <vulkan/vulkan_core.h>
 #include <string>
 #include <vector>
-#include "vulkantexture.h"
 #include "../vertex.h"
 #include "../renderer.h"
 #include "../../../x-platform/scene.h"
@@ -30,8 +29,7 @@ public:
     Drawable& CreateDrawable(std::vector<Vertex> vertices,
                              std::vector<uint32_t> indices,
                              const char* vertexShader,
-                             const char* fragmentShader,
-                             std::vector<std::string> textures) override;
+                             const char* fragmentShader) override;
 
     void Render();
 
@@ -42,9 +40,7 @@ public:
 protected:
 private:
     int drawablesQuantity = 0;
-    int texturesQuantity = 0;
     Drawable drawables[MAX_DRAWABLES];
-    VulkanTexture textures[MAX_DRAWABLES];
     glm::mat4 cameraView;
     glm::vec3 cameraPos;
     glm::vec3 lightPos;
@@ -74,8 +70,7 @@ private:
     std::vector<VkFramebuffer> swapChainFramebuffers;
 
     VkRenderPass renderPass;
-    VkDescriptorSetLayout uniformSetLayout;
-    VkDescriptorSetLayout textureSetLayout;
+    VkDescriptorSetLayout descriptorSetLayout;
     VkPipelineLayout pipelineLayout;
 
     VkCommandPool commandPool;
@@ -87,6 +82,12 @@ private:
     VkImage depthImage;
     VkDeviceMemory depthImageMemory;
     VkImageView depthImageView;
+
+    uint32_t mipLevels;
+    VkImage textureImage;
+    VkDeviceMemory textureImageMemory;
+    VkImageView textureImageView;
+    VkSampler textureSampler;
 
     std::vector<VkBuffer> uniformBuffers;
     std::vector<VkDeviceMemory> uniformBuffersMemory;
@@ -123,7 +124,6 @@ private:
     void createImageViews();
     void createRenderPass();
     void createDescriptorSetLayout();
-    VkDescriptorSet createTextureDescriptor(std::string filePath, int textureID);
     VkPipeline createGraphicsPipeline(const char *vertexShaderPath,
                                       const char *fragmentShaderPath);
     void createFramebuffers();
@@ -133,11 +133,11 @@ private:
     VkFormat findSupportedFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features);
     VkFormat findDepthFormat();
     bool hasStencilComponent(VkFormat format);
-    void createTextureImage(int textureID, std::string filePath);
+    void createTextureImage();
     void generateMipmaps(VkImage image, VkFormat imageFormat, int32_t texWidth, int32_t texHeight, uint32_t mipLevels);
     VkSampleCountFlagBits getMaxUsableSampleCount();
-    void createTextureImageView(int textureID);
-    void createTextureSampler(int textureID);
+    void createTextureImageView();
+    void createTextureSampler();
     VkImageView createImageView(VkImage image, VkFormat format, VkImageAspectFlags aspectFlags, uint32_t mipLevels);
     void createImage(uint32_t width, uint32_t height, uint32_t mipLevels, VkSampleCountFlagBits numSamples,
                      VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties,
