@@ -1,3 +1,4 @@
+set(Qt6_DIR C:\Qt\6.9.3\msvc2022_64\lib\cmake\Qt6)
 cmake_minimum_required(VERSION 3.19)
 project(QtVulkan LANGUAGES CXX)
 
@@ -21,8 +22,6 @@ add_executable(QtVulkan
     Sound.cpp
     Sound.h
 )
-
-target_link_libraries(your_target_name PRIVATE Qt6::Multimedia)
 
 if(MSVC)
     # Required for proper C++ exception handling with MSVC
