@@ -7,20 +7,20 @@
 #include <QSoundEffect>
 #include <QAudioOutput>
 
-class ResourceManager : public QObject
+class ResourceManager
 {
-    Q_OBJECT
 public:
-    ResourceManager(QObject* parent = nullptr);
+    ResourceManager();
+    ~ResourceManager();
 
     void clickSound();
     void toggleBackgroundMusick();
 
 private:
-    QMediaPlayer *click;
-    QMediaPlayer *background;
-    QAudioOutput *clickOutPut;
-    QAudioOutput *backOutPut;
+    std::unique_ptr <QMediaPlayer> click;
+    std::unique_ptr <QMediaPlayer> background;
+    std::unique_ptr <QAudioOutput> clickOutPut;
+    std::unique_ptr <QAudioOutput> backOutPut;
 };
 
 #endif // RESOURCEMANAGER_H

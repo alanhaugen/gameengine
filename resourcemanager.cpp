@@ -1,24 +1,28 @@
 #include "resourcemanager.h"
 #include <QUrl>
 
-ResourceManager::ResourceManager(QObject* parent) : QObject(parent)
+ResourceManager::ResourceManager()
 {
     //Click sound
-    clickOutPut = new QAudioOutput(this);
+    clickOutPut = std::make_unique<QAudioOutput>();
     clickOutPut->setVolume(1.0f);
 
-    click = new QMediaPlayer(this);
-    click->setAudioOutput(clickOutPut);
+    click = std::make_unique<QMediaPlayer>();
+    click->setAudioOutput(clickOutPut.get());
     click->setSource(QUrl::fromLocalFile("../../Assets/Sounds/click.wav"));
 
     //Background musick
-    backOutPut = new QAudioOutput(this);
+    backOutPut = std::make_unique<QAudioOutput>();
     backOutPut->setVolume(1.0f);
 
-    background = new QMediaPlayer(this);
-    background->setAudioOutput(backOutPut);
+    background = std::make_unique<QMediaPlayer>();
+    background->setAudioOutput(backOutPut.get());
     background->setSource(QUrl::fromLocalFile("../../Assets/Sounds/Background.mp3"));
     background->setLoops(QMediaPlayer::Infinite);
+}
+ResourceManager::~ResourceManager()
+{
+
 }
 
 void ResourceManager::clickSound()

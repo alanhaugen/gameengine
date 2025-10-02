@@ -23,6 +23,21 @@ add_executable(QtVulkan
     resourcemanager.h resourcemanager.cpp
 )
 
+#OpenAL
+# Add include directory
+target_include_directories(QtVulkan PRIVATE $ENV{OPENAL_HOME}/include)
+# Add lib directory
+target_link_libraries(QtVulkan PRIVATE $ENV{OPENAL_HOME}/libs/Win64/OpenAL32.lib)
+
+# Copy the DLL after build
+# This makes the .exe use the correct .dll from the library we compile to
+# (the "COMMAND echo" only works on Windows)
+add_custom_command(TARGET QtVulkan POST_BUILD
+    #COMMAND echo Copying OpenAL32.dll...
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        $ENV{OPENAL_HOME}/bin/Win64/OpenAL32.dll
+        $<TARGET_FILE_DIR:QtVulkan>)
+
 if(MSVC)
     # Required for proper C++ exception handling with MSVC
     target_compile_options(QtVulkan PRIVATE /EHsc)
