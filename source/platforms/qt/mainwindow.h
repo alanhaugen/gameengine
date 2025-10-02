@@ -46,5 +46,6 @@ private:
     void AddVikingRoom();
     void AddCube();
     void AddSphere();
+    QTimer* timer;
 };
 #endif // MAINWINDOW_H
