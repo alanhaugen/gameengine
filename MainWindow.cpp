@@ -3,7 +3,9 @@
 #include "Renderer.h"
 #include <QKeyEvent>
 
-MainWindow::MainWindow(QWidget *parent)
+MainWindow::MainWindow(QWidget* parent,
+    std::vector<gea::RenderComponent> staticComponents, std::vector<gea::TransformComponent> staticTransformComponents,
+    std::vector<gea::Mesh> meshes, std::vector<gea::Texture> textures)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
@@ -19,7 +21,9 @@ MainWindow::MainWindow(QWidget *parent)
     //Have to set the size of the Vulkan window here, otherwise it can not set up the swapchain correctly
     mVulkanWindow->setWidth(1100);
     mVulkanWindow->setHeight(700);
-    mVulkanWindow->initVulkan();
+
+	SetupRenderSystem(staticComponents, staticTransformComponents, meshes, textures);
+    //mVulkanWindow->initVulkan();
 
     // Wrap VulkanRenderer (QWindow) into a QWidget
     QWidget* mVulkanWidget = QWidget::createWindowContainer(mVulkanWindow, this);
@@ -42,6 +46,17 @@ MainWindow::~MainWindow()
         mVulkanWindow = nullptr;
     }
     delete ui;
+}
+
+void MainWindow::SetupRenderSystem(std::vector<gea::RenderComponent> staticComponents, std::vector<gea::TransformComponent> staticTransformComponents, std::vector<gea::Mesh> meshes, std::vector<gea::Texture> textures)
+{
+    mRenderSystem = new gea::RenderSystem(mVulkanWindow);
+    mRenderSystem->Initialize(staticComponents, staticTransformComponents, meshes, textures);
+}
+
+void MainWindow::UpdateRenderSystem(std::vector<gea::RenderComponent> dynamicComponents, std::vector<gea::TransformComponent> dynamicTransformComponents)
+{
+	mRenderSystem->Update(dynamicComponents, dynamicTransformComponents);
 }
 
 void MainWindow::start()

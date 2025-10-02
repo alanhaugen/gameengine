@@ -38,6 +38,8 @@ set(SOURCES
     Entity.cpp
     Entity.h
     System.h
+    TransformComponent.cpp TransformComponent.h
+    RenderSystem.cpp RenderSystem.h
 )
 
 add_executable(QtVulkan ${SOURCES}

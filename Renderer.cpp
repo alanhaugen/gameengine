@@ -65,28 +65,7 @@ Renderer::~Renderer()
 //     app->framebufferResized = true;
 // }
 
-std::vector<gea::Mesh> mMeshes;
-std::vector<gea::Texture> mTextures;
-std::vector<gea::RenderComponent> mRenderComponents;
-std::vector<gea::RenderComponent> mStaticRenderComponents;
-//this is done for testing sake. in the real ecs there would only be one vector of transform components
-std::vector<gea::TransformComponent> mTransformComponents;
-std::vector<gea::TransformComponent> mStaticTransformComponents;
-
 void Renderer::initVulkan() {
-	mMeshes.push_back(gea::Mesh());
-	mTextures.push_back(gea::Texture());
-
-	mRenderComponents.push_back(gea::RenderComponent(0,0, 0));
-    gea::TransformComponent t1 = gea::TransformComponent(0);
-	t1.position = glm::vec3(1.0f, 0.0f, 0.0f);
-	mTransformComponents.push_back(t1);
-
-    mStaticRenderComponents.push_back(gea::RenderComponent(0,0, 1));
-    gea::TransformComponent t2 = gea::TransformComponent(1);
-    t2.position = glm::vec3(-1.0f, 0.0f, 0.0f);
-    mStaticTransformComponents.push_back(t2);
-
     createInstance();
     setupDebugMessenger();
     createSurface();
@@ -1503,9 +1482,9 @@ void Renderer::drawFrame() {
 
     vkCmdBindPipeline(dynamicCommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline);
 
-    for (size_t j = 0; j < mRenderComponents.size(); j++)
+    for (size_t j = 0; j < mDynamicRenderComponents.size(); j++)
     {
-        gea::RenderComponent renderComponent = mRenderComponents[j];
+        gea::RenderComponent renderComponent = mDynamicRenderComponents[j];
         gea::Mesh mesh = mMeshes[renderComponent.meshIndex];
         VkBuffer vertexBuffer = mesh.vertexBuffer;
         VkBuffer indexBuffer = mesh.indexBuffer;
@@ -1513,11 +1492,11 @@ void Renderer::drawFrame() {
         VkDeviceSize offsets[] = { 0 };
 
         glm::mat4 model = glm::mat4(1.0f);
-        model = glm::translate(model, mTransformComponents[j].position);
-        model = glm::rotate(model, glm::radians(mTransformComponents[j].rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
-        model = glm::rotate(model, glm::radians(mTransformComponents[j].rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
-        model = glm::rotate(model, glm::radians(mTransformComponents[j].rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
-        model = glm::scale(model, mTransformComponents[j].scale);
+        model = glm::translate(model, mDynamicTransformComponents[j].position);
+        model = glm::rotate(model, glm::radians(mDynamicTransformComponents[j].rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
+        model = glm::rotate(model, glm::radians(mDynamicTransformComponents[j].rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
+        model = glm::rotate(model, glm::radians(mDynamicTransformComponents[j].rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
+        model = glm::scale(model, mDynamicTransformComponents[j].scale);
 
         vkCmdPushConstants(dynamicCommandBuffer, pipelineLayout, VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(glm::mat4), &model);
 

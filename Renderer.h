@@ -23,6 +23,17 @@ public:
     ~Renderer();
 
     void initVulkan();
+    void drawFrame();
+	void initComponents(std::vector<gea::RenderComponent> staticComponents, std::vector<gea::TransformComponent> staticTransformComponents, std::vector<gea::Mesh> meshes, std::vector<gea::Texture> textures) {
+        mStaticRenderComponents = staticComponents;
+		mStaticTransformComponents = staticTransformComponents;
+        mMeshes = meshes;
+		mTextures = textures;
+    }
+	void UpdateCompoments(std::vector<gea::RenderComponent> renderComponents, std::vector<gea::TransformComponent> transformComponents) {
+        mDynamicRenderComponents = renderComponents;
+		mDynamicTransformComponents = transformComponents;
+	}
 
 protected:
     //Qt event handlers - called when requestUpdate(); is called
@@ -84,13 +95,19 @@ private:
 
     bool framebufferResized = false;
 
+    std::vector<gea::Mesh> mMeshes;
+    std::vector<gea::Texture> mTextures;
+    //this is done for testing sake. in the real ecs there would only be one vector of transform components
+    std::vector<gea::TransformComponent> mDynamicTransformComponents;
+    std::vector<gea::TransformComponent> mStaticTransformComponents;
+    std::vector<gea::RenderComponent> mDynamicRenderComponents;
+    std::vector<gea::RenderComponent> mStaticRenderComponents;
+
     // void initWindow();
 
     // static void framebufferResizeCallback(GLFWwindow* window, int width, int height);
 
     // ---- Functions ----
-
-    void drawFrame();
 
     void cleanupSwapChain();
     void cleanup();
