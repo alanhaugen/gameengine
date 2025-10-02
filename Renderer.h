@@ -6,6 +6,7 @@
 #include <string>
 #include <vector>
 #include "Vertex.h"
+#include "camera.h"
 
 //Forward declarations
 struct SwapChainSupportDetails;
@@ -20,6 +21,8 @@ public:
 
     void initVulkan();
 
+    camera getCamera() {return mCamera;}
+
 protected:
     //Qt event handlers - called when requestUpdate(); is called
     void exposeEvent(QExposeEvent* event) override;
@@ -27,6 +30,8 @@ protected:
     bool event(QEvent* event) override;
 
 private:
+
+    friend class MainWindow;
     // class GLFWwindow* window;
     //GLFWwindow* window{nullptr};
     //QWindow* window{ nullptr }; //this object IS a QWindow
@@ -92,6 +97,9 @@ private:
     size_t currentFrame = 0;
 
     bool framebufferResized = false;
+
+    camera mCamera;
+    class MainWindow* mMainWindow{nullptr};
 
     // void initWindow();
 
