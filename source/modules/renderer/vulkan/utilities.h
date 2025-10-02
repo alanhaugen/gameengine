@@ -17,8 +17,6 @@
 const uint32_t WIDTH = 800;
 const uint32_t HEIGHT = 600;
 
-const std::string TEXTURE_PATH = "Assets/Textures/viking_room.png";
-
 const int MAX_FRAMES_IN_FLIGHT = 2;
 
 const std::vector<const char*> validationLayers = { "VK_LAYER_KHRONOS_validation" };

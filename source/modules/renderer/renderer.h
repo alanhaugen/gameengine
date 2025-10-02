@@ -27,11 +27,13 @@ public:
         VkDeviceMemory vertexBufferMemory;
         VkBuffer indexBuffer;
         VkDeviceMemory indexBufferMemory;
+        VkDescriptorSet textureDescriptor;
 
         int indicesQuantity  = 0;
         int verticesQuantity = 0;
 
-        bool isVisible = true;
+        bool isVisible  = true;
+        bool isTextured = false;
 
         int offset = 0;
     };
@@ -39,7 +41,8 @@ public:
     virtual Drawable& CreateDrawable(std::vector<Vertex> vertices,
                                      std::vector<uint32_t> indices = std::vector<uint32_t>(),
                                      const char* vertexShader = "shaders/vert.spv",
-                                     const char* fragmentShader = "shaders/frag.spv") = 0;
+                                     const char* fragmentShader = "shaders/frag.spv",
+                                     std::vector<std::string> textures = std::vector<std::string>()) = 0;
 
     virtual void SetViewMatrix(glm::mat4 view) = 0;
     virtual void SetCameraPosition(glm::vec3 pos) = 0;
