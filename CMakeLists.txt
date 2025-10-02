@@ -1,34 +1,57 @@
 cmake_minimum_required(VERSION 3.19)
 project(QtVulkan LANGUAGES CXX)
 
-find_package(Qt6 6.5 REQUIRED COMPONENTS Core Widgets)
-
-qt_standard_project_setup()
-
+# C++ standard
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-add_executable(QtVulkan
+# Enable Qt's automoc/autouic/autorcc
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTOUIC ON)
+set(CMAKE_AUTORCC ON)
+
+# Find Qt (Widgets implies Core)
+find_package(Qt6 REQUIRED COMPONENTS Core Widgets)
+
+# Keep qt helper (optional but useful)
+qt_standard_project_setup()
+
+# Source files (include the .ui so AUTOUIC processes it)
+set(SOURCES
     main.cpp
-    Renderer.h Renderer.cpp
+    Renderer.cpp
+    Renderer.h
     Utilities.h
     Vertex.h
-    MainWindow.h MainWindow.cpp
+    MainWindow.cpp
+    MainWindow.h
     MainWindow.ui
+    Components.h
+    Entity.cpp
+    Entity.h
+    System.h
     wavfilereader.h wavfilereader.cpp
 )
 
-if(MSVC)
-    # Required for proper C++ exception handling with MSVC
+add_executable(QtVulkan ${SOURCES}
+    Components.h Entity.h)
+
+
+# MSVC-specific compile options (if building with MSVC)
+if (MSVC)
     target_compile_options(QtVulkan PRIVATE /EHsc)
+    # Include Vulkan headers (as requested)
     target_include_directories(QtVulkan PRIVATE
         "C:/VulkanSDK/1.4.321.1/Include"
     )
+
+    # Link the exact Vulkan library you specified
+    # (Use the full path to the .lib that you requested.)
+    # Also Link Qt libraries
     target_link_libraries(QtVulkan PRIVATE
-        Qt::Core
-        Qt::Widgets
-        Qt6::Widgets
         "C:/VulkanSDK/1.4.321.1/Lib/vulkan-1.lib"
+        Qt6::Widgets
+        Qt6::Core
     )
 elseif(APPLE)
     # This will set NDEBUG for both debug and release build
@@ -54,6 +77,8 @@ elseif(APPLE)
     )
 endif()
 
+
+# Install rules (optional)
 include(GNUInstallDirs)
 install(TARGETS QtVulkan
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}

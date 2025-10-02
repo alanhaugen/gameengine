@@ -263,7 +263,7 @@ void Renderer::createSurface() {
     //Create a surface (create info struct runs the create surface function)
     //Pure Vulkan code, but Qt handles the windowing system for us
     //If using GLFW, this is hidden in a GLFW function
-#ifdef Q_OS_WIN
+#ifdef _WIN32
     VkWin32SurfaceCreateInfoKHR createInfo{};
     createInfo.sType = VK_STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR;
     createInfo.hwnd = reinterpret_cast<HWND>(this->winId());
@@ -1703,8 +1703,8 @@ std::vector<const char *> Renderer::getRequiredExtensions() {
     extensions.push_back("VK_KHR_surface");
     #ifdef _WIN32
         extensions.push_back("VK_KHR_win32_surface");	// Only on Windows
-    #elif defined(Q_OS_LINUX)
-        instanceExtensions.push_back("VK_KHR_xcb_surface");		// or xlib_surface, depending on your Qt build
+    #elif defined(__linux__)
+        extensions.push_back("VK_KHR_xcb_surface");		// or xlib_surface, depending on your Qt build
     #elif defined(__APPLE__)
         extensions.push_back("VK_MVK_macos_surface");
     #endif
@@ -1768,12 +1768,13 @@ VkBool32 Renderer::debugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageS
 
 void Renderer::exposeEvent(QExposeEvent* event)
 {
-    #ifdef _WIN32   // These lines does not work on macOS !?!
+    #ifdef _WIN32   // These lines does not work on macOS so need this test
 
     qDebug("exposeEvent called");
     if (isExposed()) {
         drawFrame();			//actual drawing
     }
+
     #endif
 }
 
