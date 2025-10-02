@@ -1,22 +1,28 @@
 #ifndef FILESWINDOW_H
 #define FILESWINDOW_H
-#include "QWidget"
-#include "QPushButton"
+#include <QWidget>
+#include <QPushButton>
 #include "assetmanager.h"
 #include <QFileDialog>
 #include <QDragEnterEvent>
 #include <QMimeData>
 #include <QDropEvent>
 #include <QFrame>
+#include <QVBoxLayout>
+#include <QScrollArea>
+#include <QStatusBar>
  //template <typename T>
-class FilesWindow: public QFrame
+class FilesWindow: public QFrame //for drag and drop
 {
 public:
     FilesWindow(AssetManager<ObjAsset>* manager); // T
     std::vector<QPushButton*> displayAssets; //based on assets input vector size
-    //AssetManager<int>* assets_ptr{nullptr};
     AssetManager<ObjAsset>* assets_ptr{nullptr};
-    //QPushButton* test{nullptr};
+    QScrollArea* scrolling;
+    QWidget* scrollingWidget=new QWidget();
+    QVBoxLayout* scrollingLayout;
+    QVBoxLayout* mainLayout;
+    QStatusBar* status;
     void handleButton(int index);
 
     void dragEnterEvent(QDragEnterEvent* event) override;
@@ -25,6 +31,7 @@ public:
     // void mousePressEvent(QMouseEvent *event) override;
 
     void createButtons(AssetManager<ObjAsset>* assets_);
+
 };
 
 #endif // FILESWINDOW_H

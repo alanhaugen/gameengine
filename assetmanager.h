@@ -3,6 +3,7 @@
 #include <vector>
 #include "Vertex.h"
 #include <QString>
+#include <QSet>
 #include <QStack>
 template <typename T>
 class AssetManager{
@@ -16,6 +17,7 @@ public:
             int_assets.push_back(it);
         }};
 
+    QSet<QString> filesNamesSet;
     QStack<QString> filesNamesStack;
     // void import(T asset);
     // void deleteAsset(T asset);

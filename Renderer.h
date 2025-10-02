@@ -6,7 +6,6 @@
 #include <string>
 #include <vector>
 #include "Vertex.h"
-#include "QStack"
 #include "QDirIterator"
 #include "assetmanager.h"
 //Forward declarations
@@ -102,7 +101,7 @@ private:
 
 
 
-    //QStack<QString> filesStack=objManager->filesNamesStack;
+    //QSet<QString> filesSet=objManager->filesNamesSet;
     // void initWindow();
 
     // static void framebufferResizeCallback(GLFWwindow* window, int width, int height);
@@ -147,14 +146,18 @@ private:
     void importObjects(){
         QDirIterator it("../../Assets/Models/",QStringList()<<"*.obj", QDir::NoFilter,QDirIterator::Subdirectories );
         while(it.hasNext()) {
-            QFileInfo fileInfo=it.fileInfo();
+            QString path=it.next();
+            QFileInfo fileInfo(path);
+            QString name=fileInfo.baseName();
             //qDebug()<<fileInfo.filePath()<<" "<<fileInfo.absoluteFilePath()<<"\n";
-            objManager->filesNamesStack.push(it.next());
+            objManager->filesNamesSet.insert(name);
+            objManager->filesNamesStack.push_back(path);
+            //objManager->filesNamesSet.insert(name);
         }
         for(auto it1: objManager->filesNamesStack){
             loadModel(it1);
-
-        }};
+        }
+    };
     void createVertexBuffer();
     void createIndexBuffer();
     void createUniformBuffers();
