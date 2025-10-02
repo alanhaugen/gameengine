@@ -1,8 +1,8 @@
 #include "nullaudio.h"
 
-void NullAudio::Init()
+bool NullAudio::Init()
 {
-
+    return true;
 }
 
 void NullAudio::Update()

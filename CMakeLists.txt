@@ -60,7 +60,8 @@ add_executable(QtVulkan
     source/components/spherecollider.cpp source/components/spherecollider.h
     source/x-platform/input.h
     source/x-platform/input.cpp
-
+    source/modules/audio/openal/soundsource.h source/modules/audio/openal/soundsource.cpp
+    source/modules/audio/openal/wavfilereader.h source/modules/audio/openal/wavfilereader.cpp
 )
 
 #OpenAL

@@ -178,6 +178,6 @@ public:
     bool Released(int key);
     bool Pressed(int key);
 
-    void Init();
+    bool Init();
     void Update();
 };

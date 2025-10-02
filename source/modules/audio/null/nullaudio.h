@@ -6,7 +6,7 @@
 class NullAudio : public Audio
 {
 public:
-    void Init() override;
+    bool Init() override;
     void Update() override;
     void PlaySound(std::string filename, glm::vec3 pos) override;
 };

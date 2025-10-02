@@ -16,7 +16,7 @@ bool Input::Pressed(int key)
     return keys[key] == true && oldKeys[key] == false;
 }
 
-void Input::Init()
+bool Input::Init()
 {
     mouse.Down = false;
     mouse.x = 0;
@@ -30,6 +30,7 @@ void Input::Init()
     {
         keys[i] = false;
     }
+    return true;
 }
 
 void Input::Update()

@@ -1,8 +1,8 @@
 #include "nullphysics.h"
 
-void NullPhysics::Init()
+bool NullPhysics::Init()
 {
-
+    return true;
 }
 
 void NullPhysics::Update()

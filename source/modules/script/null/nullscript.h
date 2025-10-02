@@ -5,6 +5,6 @@
 class NullScript : public Script
 {
 public:
-    void Init();
+    bool Init();
     void Update();
 };

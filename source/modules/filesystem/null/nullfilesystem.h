@@ -5,6 +5,6 @@
 class NullFileSystem : public FileSystem
 {
 public:
-    void Init();
+    bool Init();
     void Update();
 };
