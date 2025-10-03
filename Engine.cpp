@@ -17,7 +17,7 @@ namespace gea
 
     void Engine::InitializeSystems()
     {
-        qDebug() << "Initializing all systems."
+        qDebug() << "Initializing all systems." ;
     }
 
     void Engine::Update(float deltaTime)
@@ -53,4 +53,5 @@ namespace gea
             }
         return nullptr;
     }
+
 }

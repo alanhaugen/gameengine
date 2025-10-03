@@ -1,4 +1,5 @@
 #include "Renderer.h"
+#include "Engine.h"
 #include "Utilities.h"
 
 #define GLM_FORCE_RADIANS
@@ -94,6 +95,22 @@ void Renderer::initVulkan() {
     createDescriptorSets();
     createCommandBuffers();
     createSyncObjects();
+
+    //create engine
+    mEngine = new gea::Engine();
+    mEngine->Initialize(this);
+    qDebug() << "Created " << mEngine << ".";
+
+    //entity
+    gea::Entity* testerEntity = mEngine->CreateEntity();
+    qDebug() << "Created " << testerEntity << ".";
+
+    gea::Transform transform;
+    transform.mPosition = glm::vec3(0.5f, 1.0f, 1.5f);
+    qDebug() << "Gave " << testerEntity << " the position x: " <<   transform.mPosition.x << ", y: " <<
+                                                                    transform.mPosition.y << ", z: " <<
+                                                                    transform.mPosition.z<< mEngine << ".";
+    testerEntity->AddComponent(transform);
 }
 
 void Renderer::cleanupSwapChain() {
