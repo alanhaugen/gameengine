@@ -78,7 +78,7 @@ MainWindow::MainWindow(ResourceManager* resourceMgr, QWidget *parent)
     statusBar()->showMessage("Don't be afraid of slow progress, be afraid of standing still.");
 
     //Background musick (not annoying)
-    resourceManager->toggleBackgroundMusick();
+    resourceManager->toggleBackgroundMusic();
 }
 
 MainWindow::~MainWindow()
@@ -114,7 +114,7 @@ void MainWindow::keyPressEvent(QKeyEvent* event)
         resourceManager->clickSound();
     }
     if (event->key() == Qt::Key_Q) {
-        resourceManager->toggleBackgroundMusick();
+        resourceManager->toggleBackgroundMusic();
     }
 
 }

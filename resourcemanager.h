@@ -3,9 +3,10 @@
 
 #pragma once
 
-#include <QMediaPlayer>
-#include <QSoundEffect>
-#include <QAudioOutput>
+#include <AL/al.h>
+#include <AL/alc.h>
+#include <string>
+#include <vector>
 
 class ResourceManager
 {
@@ -14,13 +15,22 @@ public:
     ~ResourceManager();
 
     void clickSound();
-    void toggleBackgroundMusick();
+    void toggleBackgroundMusic();
 
 private:
-    std::unique_ptr <QMediaPlayer> click;
-    std::unique_ptr <QMediaPlayer> background;
-    std::unique_ptr <QAudioOutput> clickOutPut;
-    std::unique_ptr <QAudioOutput> backOutPut;
+    // OpenAL device + context
+    ALCdevice* device;
+    ALCcontext* context;
+
+    // Buffers and sources
+    ALuint clickBuffer;
+    ALuint clickSource;
+
+    ALuint backgroundBuffer;
+    ALuint backgroundSource;
+
+    // Utility to load a WAV file
+    bool loadWavFile(const std::string& filename, ALuint* buffer);
 };
 
 #endif // RESOURCEMANAGER_H
