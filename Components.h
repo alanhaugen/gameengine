@@ -18,7 +18,9 @@ namespace gea {
         Tower,
         Enemy,
         Projectile,
-        AI
+        AI,
+        RigidBody,
+        Collider
     };
 
     //Below are examples of actual components
