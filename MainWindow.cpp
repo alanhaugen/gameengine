@@ -2,13 +2,21 @@
 #include "ui_MainWindow.h"
 #include "Renderer.h"
 #include <QKeyEvent>
+#include <QPointer>
+#include <QPlainTextEdit>
 
+//Extern declaration of logger variable from main
+extern QPointer<QPlainTextEdit> messageLogWidget;
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    //Assign logView widget
+    messageLogWidget = ui->logView;
+    messageLogWidget->setReadOnly(true);
+
     //MainWindow size:
     resize(1300, 850);
 

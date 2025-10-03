@@ -9,7 +9,7 @@
 
 Q_LOGGING_CATEGORY(lcVk, "qt.vulkan")
 
-static QPointer<QPlainTextEdit> messageLogWidget;
+QPointer<QPlainTextEdit> messageLogWidget;
 static QtMessageHandler oldMessageHandler{ nullptr };
 
 //Logger system from Qt. Nice to print out messages directly to our program
@@ -28,8 +28,8 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
 
     //Logger setup
-    messageLogWidget = new QPlainTextEdit(QLatin1String(QLibraryInfo::build()) + QLatin1Char('\n'));
-    messageLogWidget->setReadOnly(true);
+    //messageLogWidget = new QPlainTextEdit(QLatin1String(QLibraryInfo::build()) + QLatin1Char('\n'));
+    //messageLogWidget->setReadOnly(true);
     oldMessageHandler = qInstallMessageHandler(messageHandler);
     QLoggingCategory::setFilterRules(QStringLiteral("qt.vulkan=true"));
 
