@@ -60,7 +60,7 @@ add_executable(QtVulkan
     source/components/spherecollider.cpp source/components/spherecollider.h
     source/x-platform/input.h
     source/x-platform/input.cpp
-
+    source/modules/physics/aaphysics/aaphysics.h source/modules/physics/aaphysics/aaphysics.cpp
 )
 
 #OpenAL
@@ -82,27 +82,32 @@ if(MSVC)
     # Required for proper C++ exception handling with MSVC
     target_compile_options(QtVulkan PRIVATE /EHsc)
     target_include_directories(QtVulkan PRIVATE
-    "C:/VulkanSDK/1.4.321.1/Include"
+        "C:/VulkanSDK/1.4.321.1/Include"
     )
     target_link_libraries(QtVulkan PRIVATE
-    Qt::Core
-    Qt::Widgets
-    "C:/VulkanSDK/1.4.321.1/Lib/vulkan-1.lib"
+        Qt::Core
+        Qt::Widgets
+        Qt6::Widgets
+        "C:/VulkanSDK/1.4.321.1/Lib/vulkan-1.lib"
     )
-    target_link_libraries(QtVulkan PRIVATE Qt6::Widgets)
 else()
-    find_library(COREAUDIO CoreAudio "/usr")
+    # This will set NDEBUG for both debug and release build
+    # It stops Validation layers from being used - needs to be fixed!!!
+    add_compile_definitions(NDEBUG)
+
     target_link_libraries(QtVulkan PRIVATE
-    Qt::Core
-    Qt::Widgets
-    "-framework QuartzCore"
-    "-framework Metal"
-    "-framework Foundation"
-    "-framework IOSurface"
-    "-framework CoreGraphics"
-    "-framework IOKit"
-    "-framework AppKit"
-    ${CMAKE_SOURCE_DIR}/lib/darwin/arm64/libMoltenVK.a
+        Qt::Core
+        Qt::Widgets
+        "-framework QuartzCore"
+        "-framework Metal"
+        "-framework Foundation"
+        "-framework IOSurface"
+        "-framework CoreGraphics"
+        "-framework IOKit"
+        "-framework AppKit"
+        #Hardcoded path for Oles Macs for now:
+        #"/Users/ole/VulkanSDK/1.4.321.0/macOS/lib/MoltenVK.xcframework/macos-arm64_x86_64/libMoltenVK.a"
+    	${CMAKE_SOURCE_DIR}/lib/darwin/arm64/libMoltenVK.a
     )
 endif()
 

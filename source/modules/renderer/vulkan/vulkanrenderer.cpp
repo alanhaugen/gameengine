@@ -229,9 +229,9 @@ void VulkanRenderer::createInstance() {
     //Needed in VkInstanceCreateInfo
     VkApplicationInfo appInfo{};
     appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
-    appInfo.pApplicationName = "Inn";
+    appInfo.pApplicationName = "Tower of Power";
     appInfo.applicationVersion = VK_MAKE_VERSION(1, 0, 0);
-    appInfo.pEngineName = "Inn Engine";
+    appInfo.pEngineName = "INNgine";
     appInfo.engineVersion = VK_MAKE_VERSION(1, 0, 0);
     appInfo.apiVersion = VK_API_VERSION_1_0;
 
@@ -1750,7 +1750,7 @@ std::vector<const char *> VulkanRenderer::getRequiredExtensions() {
     }
 
     extensions.push_back("VK_KHR_surface");
-    #ifdef Q_OS_WIN
+    #ifdef _WIN32
         extensions.push_back("VK_KHR_win32_surface");	// Only on Windows
     #elif defined(Q_OS_LINUX)
         instanceExtensions.push_back("VK_KHR_xcb_surface");		// or xlib_surface, depending on your Qt build
