@@ -11,6 +11,11 @@
 struct SwapChainSupportDetails;
 struct QueueFamilyIndices;
 
+namespace gea
+{
+    class Engine;
+}
+
 class Renderer : public QWindow
 {
     Q_OBJECT
@@ -92,6 +97,8 @@ private:
     size_t currentFrame = 0;
 
     bool framebufferResized = false;
+
+    gea::Engine* mEngine{nullptr};
 
     // void initWindow();
 
