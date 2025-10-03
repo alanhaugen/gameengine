@@ -57,7 +57,10 @@ VulkanRenderer::~VulkanRenderer()
 {
     for (int i = 0; i < drawablesQuantity; i++)
     {
-        vkDestroyPipeline(device, drawables[i].graphicsPipeline, nullptr);
+        if (drawables[i].isTextured)
+        {
+            vkDestroyPipeline(device, drawables[i].graphicsPipeline, nullptr);
+        }
 
         vkDestroyBuffer(device, drawables[i].indexBuffer, nullptr);
         vkFreeMemory(device, drawables[i].indexBufferMemory, nullptr);
@@ -121,7 +124,7 @@ Renderer::Drawable& VulkanRenderer::CreateDrawable(std::vector<Vertex> vertices,
     if (textures.empty() == false)
     {
         drawable.isTextured = true;
-        //drawable.textureDescriptor = createTextureDescriptor(textures[0], texturesQuantity);
+        drawable.textureDescriptor = createTextureDescriptor(textures[0], texturesQuantity);
         texturesQuantity++;
     }
 
@@ -629,7 +632,7 @@ VkDescriptorSet VulkanRenderer::createTextureDescriptor(std::string filePath, in
     allocInfo.descriptorSetCount = 1;
     allocInfo.pSetLayouts = &textureSetLayout;
 
-    VkDescriptorSet textureDescriptor;
+    VkDescriptorSet textureDescriptor{};
 
     if (vkAllocateDescriptorSets(device, &allocInfo, &textureDescriptor) != VK_SUCCESS) {
         throw std::runtime_error("failed to allocate texture descriptor set!");
@@ -640,7 +643,7 @@ VkDescriptorSet VulkanRenderer::createTextureDescriptor(std::string filePath, in
     imageInfo.imageView = textures[textureID].textureImageView;
     imageInfo.sampler = textures[textureID].textureSampler;
 
-    VkWriteDescriptorSet descriptorWrites;
+    VkWriteDescriptorSet descriptorWrites = {};
 
     descriptorWrites.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
     descriptorWrites.dstSet = textureDescriptor;
@@ -769,9 +772,9 @@ VkPipeline VulkanRenderer::createGraphicsPipeline(const char* vertexShaderPath,
 
     VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
     pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
-    pipelineLayoutInfo.setLayoutCount = 2;
-    VkDescriptorSetLayout layouts[2] = { uniformSetLayout, textureSetLayout };
-    pipelineLayoutInfo.pSetLayouts = layouts;
+    std::array<VkDescriptorSetLayout, 2> setLayouts = {uniformSetLayout, textureSetLayout};
+    pipelineLayoutInfo.setLayoutCount = setLayouts.size();
+    pipelineLayoutInfo.pSetLayouts = setLayouts.data();
 
     if (vkCreatePipelineLayout(device, &pipelineLayoutInfo, nullptr, &pipelineLayout) != VK_SUCCESS) {
         throw std::runtime_error("failed to create pipeline layout!");
@@ -1457,7 +1460,7 @@ void VulkanRenderer::updateUniformBuffer(uint32_t currentImage, Drawable::Unifor
     ubo.cameraPosition = cameraPos;
     ubo.lightPosition  = lightPos;
     ubo.view = cameraView;
-    ubo.proj = glm::perspective(glm::radians(45.0f), swapChainExtent.width / (float) swapChainExtent.height, 0.1f, 10.0f);
+    ubo.proj = glm::perspective(glm::radians(70.0f), swapChainExtent.width / (float) swapChainExtent.height, 0.1f, 10.0f);
     ubo.proj[1][1] *= -1;
 
     char* data;
@@ -1551,6 +1554,20 @@ void VulkanRenderer::Render() {
         {
             vkCmdBindDescriptorSets(commandBuffers[imageIndex], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 1, 1, &drawable.textureDescriptor, 0, nullptr);
         }
+
+        VkDescriptorSet sets[2] = { descriptorSets[0], drawable.textureDescriptor };
+        uint32_t dynamicOffsets[1] = { uniformOffset }; // only set 0 has dynamic offset
+
+        vkCmdBindDescriptorSets(
+            commandBuffers[imageIndex],
+            VK_PIPELINE_BIND_POINT_GRAPHICS,
+            pipelineLayout,
+            0,          // firstSet = 0
+            2,          // number of sets
+            sets,
+            1,          // number of dynamic offsets
+            dynamicOffsets
+            );
 
         if (drawable.indicesQuantity == 0)
         {

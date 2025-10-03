@@ -27,7 +27,7 @@ public:
         VkDeviceMemory vertexBufferMemory;
         VkBuffer indexBuffer;
         VkDeviceMemory indexBufferMemory;
-        VkDescriptorSet textureDescriptor;
+        VkDescriptorSet textureDescriptor{};
 
         int indicesQuantity  = 0;
         int verticesQuantity = 0;
