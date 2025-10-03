@@ -1421,9 +1421,6 @@ size_t VulkanRenderer::PadUniformBufferSize(size_t originalSize)
 }
 
 void VulkanRenderer::Render() {
-#ifdef Q_OS_MAC
-    recreateSwapChain();
-#endif
     vkWaitForFences(device, 1, &inFlightFences[currentFrame], VK_TRUE, UINT64_MAX);
 
     uint32_t imageIndex;
