@@ -20,7 +20,6 @@ add_executable(QtVulkan
     Engine.h Engine.cpp
     System.h
     Entity.h Entity.cpp
-    oktaederclass.h oktaederclass.cpp
     PhysicsSystem.h PhysicsSystem.cpp
 
 )

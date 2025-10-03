@@ -17,4 +17,14 @@ namespace gea
         ApplyGravity(deltaTime);
         CollisionDetection();
     }
+
+    void PhysicsSystem::ApplyGravity(float deltaTime)
+    {
+
+    }
+
+    void PhysicsSystem::CollisionDetection()
+    {
+
+    }
 }
