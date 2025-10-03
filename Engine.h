@@ -5,7 +5,9 @@
 #include <memory>
 #include "Entity.h"
 #include "Components.h"
+#include "System.h"
 
+//fd
 class Renderer;
 
 namespace gea
@@ -22,10 +24,21 @@ namespace gea
         void Update(float deltaTime);
         void Quit();
 
-        Entity& CreateEntity();
+        Entity* CreateEntity();
         void DestroyEntity(size_t entityID);
-        Entity& GetEntity(size_t entityID);
+        Entity* GetEntity(size_t entityID);
 
+        std::vector<Transform>& GetTransforms() { return mTransforms; }
+        std::vector<Mesh>& GetMeshes() { return mMeshes; }
+        std::vector<Texture>& GetTextures() { return mTextures; }
+        std::vector<Movement>& GetMovements() { return mMovements; }
+        std::vector<Health>& GetHealths() { return mHealths; }
+        std::vector<Tower>& GetTowers() { return mTowers; }
+        std::vector<Enemy>& GetEnemies() { return mEnemies; }
+        std::vector<Projectile>& GetProjectiles() { return mProjectiles; }
+        std::vector<AI>& GetAIs() { return mAIs; }
+
+        void InitializeSystems();
         void RegisterSystem(std::unique_ptr<System> system);
 
     private:

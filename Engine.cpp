@@ -15,6 +15,11 @@ namespace gea
         InitializeSystems();
     }
 
+    void Engine::InitializeSystems()
+    {
+        qDebug() << "Initializing all systems."
+    }
+
     void Engine::Update(float deltaTime)
     {
         for (auto& system : mSystems)
