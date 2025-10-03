@@ -5,14 +5,13 @@
 #include <memory>
 #include "Entity.h"
 #include "Components.h"
+#include "System.h"
 
 //fd
 class Renderer;
 
 namespace gea
 {
-    class System;
-
     class Engine
     {
     public:

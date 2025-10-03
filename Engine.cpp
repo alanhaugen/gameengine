@@ -3,6 +3,7 @@
 #include "Renderer.h"
 #include "System.h"
 #include <qdebug.h>
+#include "PhysicsSystem.h"
 
 namespace gea
 {
@@ -18,6 +19,7 @@ namespace gea
     void Engine::InitializeSystems()
     {
         qDebug() << "Initializing all systems." ;
+        mSystems.push_back(std::make_unique<PhysicsSystem>(this));
     }
 
     void Engine::Update(float deltaTime)
