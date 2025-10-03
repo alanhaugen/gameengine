@@ -12,7 +12,7 @@ namespace gea
         virtual void update(float deltaTime) = 0;
         virtual ~System() = default;
 
-        // Optional: Enable/disable systems
+        // Enable/disable systems
         bool mEnabled{true};
     };
 }
