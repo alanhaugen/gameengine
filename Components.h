@@ -20,7 +20,7 @@ namespace gea {
         Projectile,
         AI,
         RigidBody,
-        Collider
+        ColliderSphere
     };
 
     //Below are examples of actual components
@@ -98,6 +98,27 @@ namespace gea {
         short mTargetEntityID{ -1 };  // Usually player at center
         enum AIState { IDLE, MOVING_TO_PLAYER, ATTACKING_PLAYER } mState{ MOVING_TO_PLAYER };
         short mEntityID{ -1 };
+    };
+
+    struct RigidBody
+    {
+        glm::vec3 mVelocity {0.0f, 0.0f, 0.0f};
+        glm::vec3 mAccelleration {0.0f, 0.0f, 0.0f};
+        glm::vec3 mForce {0.0f, 0.0f, 0.0f};
+
+        float mMass {1.0f};
+        float mFriction {0.1f};
+        float mBouncyness {0.1f};
+
+        short mEntityID {-1};
+    };
+
+    struct CollisionSphere
+    {
+        glm::vec3 mRadius {1.0f};
+        bool isTriggered {false};
+
+        short mEntityID {-1};
     };
 
 //struct Indecies?
