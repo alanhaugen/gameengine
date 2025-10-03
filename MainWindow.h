@@ -2,6 +2,8 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QMediaPlayer>
+#include <QAudioOutput>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -25,7 +27,13 @@ private:
     //QWidget* mRenderWindowContainer{nullptr};   //Qt container for the RenderWindow
     class Renderer* mVulkanWindow{nullptr};
 
+    QMediaPlayer *player;
+    QAudioOutput *audioOutput;
+
+    void playSound();
+
 protected:
     void keyPressEvent(QKeyEvent* event) override;
 };
+
 #endif // MAINWINDOW_H

@@ -33,7 +33,7 @@ if(MSVC)
         Qt::Core
         Qt::Widgets
         Qt6::Widgets
-        Qt::Multimedia
+        Qt6::Multimedia
         "C:/VulkanSDK/vulkan/Lib/vulkan-1.lib"
     )
 elseif(APPLE)

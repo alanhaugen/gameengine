@@ -1,6 +1,62 @@
-#include "Sound.h"
-#include <QMediaPlayer>
+/*#include "MainWindow.h"
+#include <QUrl>
+#include <QFileInfo>
+#include <QDebug>
+
+MainWindow::MainWindow(QWidget *parent)
+    : QMainWindow(parent)
+{
+    audioOutput = new QAudioOutput(this);
+    audioOutput->setVolume(1.0);
+
+    player = new QMediaPlayer(this);
+    player->setAudioOutput(audioOutput);
+
+    playSound();
+}
+
+MainWindow::~MainWindow()
+{
+
+}
+
+void MainWindow::playSound()
+{
+    QString filePath = "C:/GitHub/GEA2025/Assets/Sounds/Test Drive.wav";
+
+    if(!QFileInfo::exists(filePath))
+    {
+        qDebug() << "File does not exist:" << filePath;
+        return;
+    }
+
+    player->setSource(QUrl::fromLocalFile(filePath));
+    player->play();
+}
+*/
+
+/*#include <QMediaPlayer>
 #include <QAudioOutput>
+#include <qdebug.h>
+
+QMediaPlayer *music;
+QAudioOutput *output;
+
+void sound()
+{
+
+output = new QAudioOutput;
+output->setVolume(1.0);
+
+music = new QMediaPlayer;
+music->setAudioOutput(output);
+
+music->setSource(QUrl("qcr:/sounds/Test Drive.mp3"));
+music->play();
+
+}
+*/
+
 
 /*#include <iostream>
 #include <sstream>
