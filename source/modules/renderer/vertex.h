@@ -16,10 +16,14 @@ struct Vertex {
 
     Vertex(float x, float y, float z) {
         pos = glm::vec3(x, y, z);
+        color = glm::vec3(1.0f, 1.0f, 1.0f);
+        normal = glm::vec3(1.0f, 1.0f, 1.0f);
     }
 
     Vertex()
     {
+        color = glm::vec3(1.0f, 1.0f, 1.0f);
+        normal = glm::vec3(1.0f, 1.0f, 1.0f);
     }
 
     static VkVertexInputBindingDescription getBindingDescription() {

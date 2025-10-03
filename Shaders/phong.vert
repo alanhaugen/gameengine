@@ -71,7 +71,7 @@ void main(void)
     vec4 worldPosition = u_modelMat * vec4(inPosition, 1);
 
     // normal in world space
-    o_normal = normalize(u_normalMat * inColor); // change to inNormal
+    o_normal = normalize(u_normalMat * inNormal);
 
     // direction to light
     o_toLight = normalize(u_lightPosition - worldPosition.xyz);

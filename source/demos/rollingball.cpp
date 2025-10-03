@@ -22,6 +22,8 @@ void RollingBall::Init()
     ball->AddComponent(new Terrain("Assets/terrain.png"));
     ball->AddComponent(new TriangleCollider());
 
+    renderer->SetCameraPosition(glm::vec3(0,10.0f,0));
+
     gameObjects.push_back(ball);
     gameObjects.push_back(terrain);
 }
