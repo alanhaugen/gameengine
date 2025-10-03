@@ -118,6 +118,11 @@ void MainWindow::MainGameLoop()
     {
         scene->camera.Update();
         scene->Update();
+
+        for (auto* obj : scene->gameObjects)
+        {
+            obj->Update();
+        }
     }
 
     if (Locator::audio)
@@ -145,11 +150,6 @@ void MainWindow::MainGameLoop()
         Locator::renderer->Update();
 
         vulkanWidget->repaint();
-    }
-
-    for (auto* obj : scene->gameObjects)
-    {
-        obj->Update();
     }
 }
 
