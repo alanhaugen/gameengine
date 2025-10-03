@@ -33,6 +33,9 @@
 #define NOMINMAX		// Prevent Windows.h from defining min/max macros
 #include <windows.h>	// For HWND and GetModuleHandle
 #include <vulkan/vulkan_win32.h>
+#elif defined(__APPLE__)
+#include <vulkan/vulkan_macos.h>
+class NSView;
 #endif
 
 Renderer::Renderer(QWindow* parent) : QWindow(parent)
@@ -279,6 +282,23 @@ void Renderer::createSurface() {
     createInfo.hinstance = GetModuleHandle(nullptr);
 
     if (vkCreateWin32SurfaceKHR(instance, &createInfo, nullptr, &surface) != VK_SUCCESS) {
+        throw std::runtime_error("Failed to create a surface!");
+    }
+    else
+    {
+        qDebug("\nSuccessfully created a surface!");
+    }
+#else
+    NSView* nsview = reinterpret_cast<NSView*>(this->winId());
+
+    VkMacOSSurfaceCreateInfoMVK createInfo = {};
+    createInfo.sType = VK_STRUCTURE_TYPE_MACOS_SURFACE_CREATE_INFO_MVK;
+    createInfo.pNext = NULL;
+    createInfo.flags = 0;
+    createInfo.pView = nsview;
+
+    if (vkCreateMacOSSurfaceMVK(instance, &createInfo, nullptr, &surface) != VK_SUCCESS)
+    {
         throw std::runtime_error("Failed to create a surface!");
     }
     else
@@ -1777,7 +1797,7 @@ std::vector<const char *> Renderer::getRequiredExtensions() {
         extensions.push_back("VK_KHR_win32_surface");	// Only on Windows
     #elif defined(__linux__)
         extensions.push_back("VK_KHR_xcb_surface");		// or xlib_surface, depending on your Qt build
-    #elif defined(__APPLE__)
+    #elif defined(Q_OS_APPLE)
         extensions.push_back("VK_MVK_macos_surface");
     #endif
 
