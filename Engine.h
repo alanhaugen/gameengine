@@ -36,7 +36,7 @@ namespace gea
         std::vector<Enemy>& GetEnemies() { return mEnemies; }
         std::vector<Projectile>& GetProjectiles() { return mProjectiles; }
         std::vector<AI>& GetAIs() { return mAIs; }
-        std::vector<RigidBody>& GetRigidBodys() { return mRigidbodies; }
+        std::vector<RigidBody>& GetRigidBodies() { return mRigidbodies; }
         std::vector<CollisionSphere>& GetCollisionSpheres() { return mCollisionSpheres; }
         //void RegisterSystem(std::unique_ptr<System> system);
 
@@ -101,6 +101,12 @@ namespace gea
         }
         else if constexpr (std::is_same_v<T, AI>) {
             return &mEngine->GetAIs()[index];
+        }
+        else if constexpr (std::is_same_v<T, RigidBody>) {
+            return &mEngine->GetRigidBodies()[index];
+        }
+        else if constexpr (std::is_same_v<T, CollisionSphere>) {
+            return &mEngine->GetCollisionSpheres()[index];
         }
 
         return nullptr;
@@ -246,6 +252,35 @@ namespace gea
             EntityComponents ec;
             ec.mComponentType = type;
             ec.mComponentIndex = mEngine->GetAIs().size() - 1;
+            mComponents.push_back(ec);
+        }
+        else if constexpr (std::is_same_v<T, RigidBody>)
+        {
+            type = ComponentTypes::RigidBody;
+
+            if (HasComponent(type)) { return; }
+
+            RigidBody newComp = component;
+            newComp.mEntityID = mEntityID;
+            mEngine->GetRigidBodies().push_back(newComp);
+
+            EntityComponents ec;
+            ec.mComponentType = type;
+            ec.mComponentIndex = mEngine->GetRigidBodies().size() - 1;
+            mComponents.push_back(ec);
+        }
+        else if constexpr (std::is_same_v<T, CollisionSphere>) {
+            type = ComponentTypes::CollisionSphere;
+
+            if (HasComponent(type)) { return; }
+
+            CollisionSphere newComp = component;
+            newComp.mEntityID = mEntityID;
+            mEngine->GetCollisionSpheres().push_back(newComp);
+
+            EntityComponents ec;
+            ec.mComponentType = type;
+            ec.mComponentIndex = mEngine->GetCollisionSpheres().size() - 1;
             mComponents.push_back(ec);
         }
     }

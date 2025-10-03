@@ -20,7 +20,7 @@ namespace gea {
         Projectile,
         AI,
         RigidBody,
-        ColliderSphere
+        CollisionSphere
     };
 
     //Below are examples of actual components
