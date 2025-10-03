@@ -16,9 +16,10 @@ add_executable(QtVulkan
     MainWindow.h MainWindow.cpp
     MainWindow.ui
     Components.h
-    Entities.h Entities.cpp
+
     Engine.h Engine.cpp
     System.h
+    Entity.h Entity.cpp
 
 )
 
