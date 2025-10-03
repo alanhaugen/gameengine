@@ -32,8 +32,7 @@ set(SOURCES
     System.h
 )
 
-add_executable(QtVulkan ${SOURCES}
-    Components.h Entity.h)
+add_executable(QtVulkan ${SOURCES})
 
 
 # MSVC-specific compile options (if building with MSVC)
@@ -41,14 +40,13 @@ if (MSVC)
     target_compile_options(QtVulkan PRIVATE /EHsc)
     # Include Vulkan headers (as requested)
     target_include_directories(QtVulkan PRIVATE
-        "C:/VulkanSDK/1.4.321.1/Include"
+        $ENV{VULKAN_HOME}/Include
     )
 
-    # Link the exact Vulkan library you specified
-    # (Use the full path to the .lib that you requested.)
+    # Link the exact Vulkan library. Use the full path to the .lib
     # Also Link Qt libraries
     target_link_libraries(QtVulkan PRIVATE
-        "C:/VulkanSDK/1.4.321.1/Lib/vulkan-1.lib"
+        $ENV{VULKAN_HOME}/Lib/vulkan-1.lib
         Qt6::Widgets
         Qt6::Core
     )
@@ -76,10 +74,3 @@ elseif(APPLE)
     )
 endif()
 
-
-# Install rules (optional)
-include(GNUInstallDirs)
-install(TARGETS QtVulkan
-    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-)
