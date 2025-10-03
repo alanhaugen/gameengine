@@ -7,6 +7,7 @@
 #include <qinputdialog.h>
 #include "../../x-platform/locator.h"
 #include "../../modules/audio/openal/openalaudio.h"
+#include "../../modules/physics/aaphysics/aaphysics.h"
 
 MainWindow::MainWindow(QWidget *parent, const char* windowTitle, int windowWidth, int windowHeight)
     : QMainWindow(parent)
@@ -64,8 +65,10 @@ MainWindow::MainWindow(QWidget *parent, const char* windowTitle, int windowWidth
     lastTime = std::chrono::high_resolution_clock::now();
 
     OpenALAudio* openAL = new OpenALAudio();
+    AAPhysics* aaphysics = new AAPhysics();
 
     Locator::SetAudio(openAL);
+    Locator::SetPhysics(aaphysics);
     Locator::SetRenderer(renderer);
 
     Locator::audio->Init();
