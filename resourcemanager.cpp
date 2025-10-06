@@ -1,6 +1,8 @@
 #include "resourcemanager.h"
 #include <iostream>
 #include <fstream>
+#include <qdebug.h>
+#include <qlogging.h>
 #include <vector>
 
 //Helper to read little-endian ints
@@ -25,13 +27,13 @@ ResourceManager::ResourceManager()
     //Open the default audio device
     device = alcOpenDevice(nullptr);
     if (!device) {
-        std::cerr << "Failed to open audio device" << std::endl;
+        qDebug("Failed to open audio device");
         return;
     }
 
     context = alcCreateContext(device, nullptr);
     if (!context || !alcMakeContextCurrent(context)) {
-        std::cerr << "Failed to set OpenAL context" << std::endl;
+        qDebug("Failed to set OpenAL context");
         return;
     }
 
