@@ -3,7 +3,7 @@
 #include <fstream>
 #include <vector>
 
-// Tiny helper to read little-endian ints
+//Helper to read little-endian ints
 static int readInt(std::ifstream& file) {
     char data[4];
     file.read(data, 4);
@@ -22,7 +22,7 @@ ResourceManager::ResourceManager()
     clickBuffer(0), clickSource(0),
     backgroundBuffer(0), backgroundSource(0)
 {
-    // Open default audio device
+    //Open the default audio device
     device = alcOpenDevice(nullptr);
     if (!device) {
         std::cerr << "Failed to open audio device" << std::endl;
@@ -35,14 +35,13 @@ ResourceManager::ResourceManager()
         return;
     }
 
-    // Generate buffers and sources
+    //Click and BG sounds
     alGenBuffers(1, &clickBuffer);
     alGenSources(1, &clickSource);
 
     alGenBuffers(1, &backgroundBuffer);
     alGenSources(1, &backgroundSource);
 
-    // Load sounds
     loadWavFile("../../Assets/Sounds/click.wav", &clickBuffer);
     alSourcei(clickSource, AL_BUFFER, clickBuffer);
 
@@ -53,7 +52,7 @@ ResourceManager::ResourceManager()
 
 ResourceManager::~ResourceManager()
 {
-    // Cleanup OpenAL
+    //Cleanup
     alDeleteSources(1, &clickSource);
     alDeleteBuffers(1, &clickBuffer);
 
