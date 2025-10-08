@@ -1,5 +1,6 @@
 #include "Renderer.h"
 #include "Utilities.h"
+#include "Vertex.h"
 
 #define GLM_FORCE_RADIANS
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
@@ -83,9 +84,9 @@ void Renderer::initVulkan() {
     createColorResources();
     createDepthResources();
     createFramebuffers();
-    createTextureImage();
-    createTextureImageView();
-    createTextureSampler();
+    //createTextureImage();
+    //createTextureImageView();
+    //createTextureSampler();
     importObjects();
     filesImported=true;
     //loadModel();

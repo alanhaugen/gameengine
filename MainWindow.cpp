@@ -6,7 +6,7 @@
 #include <QFileSystemModel>
 #include <QTreeView>
 #include "displayWidget.cpp"
-MainWindow::MainWindow(QWidget *parent)
+
 
 MainWindow::MainWindow(QWidget* parent,
     std::vector<gea::RenderComponent> staticComponents, std::vector<gea::TransformComponent> staticTransformComponents,

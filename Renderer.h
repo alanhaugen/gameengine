@@ -5,7 +5,6 @@
 #include <vulkan/vulkan_core.h>
 #include <string>
 #include <vector>
-#include "Vertex.h"
 #include "QDirIterator"
 #include "assetmanager.h"
 #include "Texture.h"
@@ -100,6 +99,13 @@ private:
 
     bool framebufferResized = false;
 
+    //Bias version
+    std::vector<Vertex> vertices;
+    std::vector<uint32_t> indices;
+    VkBuffer vertexBuffer;
+    VkDeviceMemory vertexBufferMemory;
+    VkBuffer indexBuffer;
+    VkDeviceMemory indexBufferMemory;
     //QSet<QString> filesSet=objManager->filesNamesSet;
     std::vector<gea::Mesh> mMeshes;
     std::vector<gea::Texture> mTextures;

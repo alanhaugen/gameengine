@@ -34,10 +34,24 @@ set(SOURCES
     MainWindow.cpp
     MainWindow.h
     MainWindow.ui
-    assetmanager.h assetmanager.cpp
-    fileswindow.h fileswindow.cpp
-    displayWidget.cpp
-    draggablebutton.h draggablebutton.cpp
+    AssetManager.h AssetManager.cpp
+    FilesWindow.h FilesWindow.cpp
+    DisplayWidget.cpp
+    DraggableButton.h DraggableButton.cpp
+    Shaders/Shader.frag
+    Shaders/Shader.vert
+    Shaders/Phong.frag
+    Shaders/Phong.vert
+    Mesh.h Mesh.cpp
+    RenderComponent.h RenderComponent.cpp
+    Texture.cpp Texture.h
+    TransformComponent.cpp TransformComponent.h
+    Components.h
+    Entity.cpp
+    Entity.h
+    System.h
+    TransformComponent.cpp TransformComponent.h
+    RenderSystem.cpp RenderSystem.h
 )
 
 add_executable(QtVulkan ${SOURCES})

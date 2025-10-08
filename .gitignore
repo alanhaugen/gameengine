@@ -84,3 +84,13 @@ CMakeLists.txt.user*
 CMakePresets.json
 CMakeUserPresets.json
 /out
+
+#Assets - should be held separately
+*.obj
+*.wav
+*.mp3
+*.fbx
+*.jpg
+*.jpeg
+*.png
+*.bmp
