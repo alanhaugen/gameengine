@@ -1,15 +1,15 @@
 #ifndef SYSTEMS_H
 #define SYSTEMS_H
 
-#include "Engine.h"
-#include <iostream>
-
 namespace gea {
 
 class SystemBase {
 public:
+    SystemBase(class Engine* engineInstance) : mEngine{engineInstance} {};
     virtual ~SystemBase() = default;
     virtual void Update(float deltaTime) = 0;
+
+    class Engine* mEngine{nullptr};
 };
 
 // enemy movement up the hill, towards the player

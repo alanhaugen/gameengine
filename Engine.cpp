@@ -1,19 +1,7 @@
 #include "Engine.h"
 #include <algorithm>
-#include "Mesh.h"
-#include "Texture.h"
 
 namespace gea {
-
-    std::vector<Entity> EntityVector;
-    std::vector<Transform> TransformVector;
-    std::vector<Mesh> MeshVector;
-    std::vector<Texture> TextureVector;
-    std::vector<Movement> MovementVector;
-    std::vector<Health> HealthVector;
-    std::vector<Tower> TowerVector;
-    std::vector<Enemy> EnemyVector;
-    std::vector<Projectile> ProjectileVector;
 
     Entity* Engine::CreateEntity()
     {

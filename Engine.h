@@ -3,10 +3,13 @@
 
 #include "Entity.h"
 #include "Components.h"
+#include "Mesh.h"
+#include "Texture.h"
 
 namespace gea {
 
-    class Engine {
+    class Engine
+    {
     public:
         // to Add/Remove entity
         Entity* CreateEntity();
@@ -25,6 +28,17 @@ namespace gea {
 
         // It is game loop
         void Update(float deltaTime); // Calls all system update functions
+
+        //Vectors that holds items in our engine:
+        std::vector<Entity> EntityVector;
+        std::vector<Transform> TransformVector;
+        std::vector<Mesh> MeshVector;
+        std::vector<Texture> TextureVector;
+        std::vector<Movement> MovementVector;
+        std::vector<Health> HealthVector;
+        std::vector<Tower> TowerVector;
+        std::vector<Enemy> EnemyVector;
+        std::vector<Projectile> ProjectileVector;
     };
 }
 

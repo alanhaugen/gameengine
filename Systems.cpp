@@ -1,4 +1,5 @@
 #include "Systems.h"
+#include "Engine.h"
 #include <algorithm>
 #include <cmath>
 #include <iostream>
@@ -11,10 +12,10 @@ glm::vec3 getPlayerPosition() {
 
 // movement 
 void MovementSystem::Update(float deltaTime) {
-    for (auto& movement : MovementVector) {
-        auto transIt = std::find_if(TransformVector.begin(), TransformVector.end(),
+    for (auto& movement : mEngine->MovementVector) {
+        auto transIt = std::find_if(mEngine->TransformVector.begin(), mEngine->TransformVector.end(),
             [&movement](const Transform& t){ return t.mEntityID == movement.mEntityID;});
-        if (transIt != TransformVector.end()) {
+        if (transIt != mEngine->TransformVector.end()) {
             glm::vec3 direction = getPlayerPosition() - transIt->mPosition;
             float dist = glm::length(direction);
             if (dist > 1.5f) { // Not at center yet
@@ -27,21 +28,21 @@ void MovementSystem::Update(float deltaTime) {
 
 // for towersystem
 void TowerSystem::Update(float deltaTime) {
-    for (auto& tower : TowerVector) {
+    for (auto& tower : mEngine->TowerVector) {
         tower.mLastFireTime += deltaTime;
         if (tower.mLastFireTime >= 1.0f / tower.mFireRate && tower.mCanFire) {
-            auto towerTrans = std::find_if(TransformVector.begin(), TransformVector.end(),
+            auto towerTrans = std::find_if(mEngine->TransformVector.begin(), mEngine->TransformVector.end(),
                 [&tower](const Transform& t){ return t.mEntityID == tower.mEntityID; });
-            if (towerTrans == TransformVector.end()) continue;
+            if (towerTrans == mEngine->TransformVector.end()) continue;
             glm::vec3 pos = towerTrans->mPosition;
 
             // search nearest enemy
             short nearestEnemyID = -1;
             float nearestDist = tower.mRange + 1.0f;
-            for (const auto& enemy : EnemyVector) {
-                auto enemyTr = std::find_if(TransformVector.begin(), TransformVector.end(),
+            for (const auto& enemy : mEngine->EnemyVector) {
+                auto enemyTr = std::find_if(mEngine->TransformVector.begin(), mEngine->TransformVector.end(),
                     [&enemy](const Transform& t){ return t.mEntityID == enemy.mEntityID; });
-                if (enemyTr == TransformVector.end()) continue;
+                if (enemyTr == mEngine->TransformVector.end()) continue;
                 float dist = glm::length(pos - enemyTr->mPosition);
                 if (dist < tower.mRange && dist < nearestDist) {
                     nearestDist = dist;
@@ -53,9 +54,9 @@ void TowerSystem::Update(float deltaTime) {
                 auto* projTrans = Engine().AddTransform(projEntity);
                 auto* projectile = Engine().AddProjectile(projEntity);
                 projTrans->mPosition = pos;
-                auto targetTrans = std::find_if(TransformVector.begin(), TransformVector.end(),
+                auto targetTrans = std::find_if(mEngine->TransformVector.begin(), mEngine->TransformVector.end(),
                     [nearestEnemyID](const Transform& t){ return t.mEntityID == nearestEnemyID;});
-                if (targetTrans != TransformVector.end()) {
+                if (targetTrans != mEngine->TransformVector.end()) {
                     projectile->mVelocity = glm::normalize(targetTrans->mPosition - pos) * 10.0f;
                 }
                 projectile->mEntityID = projEntity->mEntityID;
@@ -67,28 +68,28 @@ void TowerSystem::Update(float deltaTime) {
 
 //  checks collision and lifetime
 void ProjectileSystem::Update(float deltaTime) {
-    for (auto it = ProjectileVector.begin(); it != ProjectileVector.end();) {
+    for (auto it = mEngine->ProjectileVector.begin(); it != mEngine->ProjectileVector.end();) {
         auto& projectile = *it;
-        auto transIt = std::find_if(TransformVector.begin(), TransformVector.end(),
+        auto transIt = std::find_if(mEngine->TransformVector.begin(), mEngine->TransformVector.end(),
             [&projectile](const Transform& t){ return t.mEntityID == projectile.mEntityID;});
-        if (transIt == TransformVector.end()) { ++it; continue; }
+        if (transIt == mEngine->TransformVector.end()) { ++it; continue; }
         projectile.mLifetime -= deltaTime;
         transIt->mPosition += projectile.mVelocity * deltaTime;
         bool destroyed = false;
         // Check for hits on all enemies
-        for (auto& enemy : EnemyVector) {
-            auto enemyTransIt = std::find_if(TransformVector.begin(), TransformVector.end(),
+        for (auto& enemy : mEngine->EnemyVector) {
+            auto enemyTransIt = std::find_if(mEngine->TransformVector.begin(), mEngine->TransformVector.end(),
                 [&enemy](const Transform& t){ return t.mEntityID == enemy.mEntityID; });
-            if (enemyTransIt == TransformVector.end()) continue;
+            if (enemyTransIt == mEngine->TransformVector.end()) continue;
             if (glm::length(enemyTransIt->mPosition - transIt->mPosition) < 1.0f) {
-                auto enemyHealthIt = std::find_if(HealthVector.begin(), HealthVector.end(),
+                auto enemyHealthIt = std::find_if(mEngine->HealthVector.begin(), mEngine->HealthVector.end(),
                     [&enemy](const Health& h){ return h.mEntityID == enemy.mEntityID; });
-                if (enemyHealthIt != HealthVector.end()) {
+                if (enemyHealthIt != mEngine->HealthVector.end()) {
                     enemyHealthIt->mCurrentHealth -= projectile.mDamage;
                     std::cout << "Enemy " << enemy.mEntityID << " hit, health: " << enemyHealthIt->mCurrentHealth << "\n";
                 }
                 Engine().DestroyEntity(projectile.mEntityID);
-                it = ProjectileVector.erase(it);
+                it = mEngine->ProjectileVector.erase(it);
                 destroyed = true;
                 break;
             }
@@ -96,7 +97,7 @@ void ProjectileSystem::Update(float deltaTime) {
         if (destroyed) continue;
         if (projectile.mLifetime <= 0.0f) {
             Engine().DestroyEntity(projectile.mEntityID);
-            it = ProjectileVector.erase(it);
+            it = mEngine->ProjectileVector.erase(it);
         } else {
             ++it;
         }
@@ -104,11 +105,11 @@ void ProjectileSystem::Update(float deltaTime) {
 }
 
 void HealthSystem::Update(float /*deltaTime*/) {
-    for (auto it = HealthVector.begin(); it != HealthVector.end();) {
+    for (auto it = mEngine->HealthVector.begin(); it != mEngine->HealthVector.end();) {
         if (it->mCurrentHealth <= 0) {
             std::cout << "Entity " << it->mEntityID << " dies.\n";
             Engine().DestroyEntity(it->mEntityID);
-            it = HealthVector.erase(it);
+            it = mEngine->HealthVector.erase(it);
         } else {
             ++it;
         }
@@ -136,7 +137,7 @@ void AISystem::Update(float) {}
 
 // to print position
 void RenderSystem::Update(float) {
-    for (const auto& tr : TransformVector)
+    for (const auto& tr : mEngine->TransformVector)
         std::cout << "Entity " << tr.mEntityID << " Position:("
                   << tr.mPosition.x << ", " << tr.mPosition.y << ", " << tr.mPosition.z << ")\n";
 }
