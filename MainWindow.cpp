@@ -54,6 +54,9 @@ MainWindow::MainWindow(QWidget* parent,
     mEntityContainer = new gea::EntityContainer(this);
     mEntityModel = new gea::EntityModel(mEntityContainer, this);
 
+    //Testing the layout - showing only number for now
+    mEntityContainer->appendItem(gea::Entity());
+
     ui->entityList->setModel(mEntityModel);
 
     //sets the keyboard input focus to the MainWindow when program starts
