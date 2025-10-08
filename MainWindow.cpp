@@ -9,6 +9,11 @@
 #include <QUrl>
 #include <QFileInfo>
 #include <QDebug>
+#include <QPointer>
+#include <QPlainTextEdit>
+
+//Extern declaration of logger variable from main
+extern QPointer<QPlainTextEdit> messageLogWidget;
 
 MainWindow::MainWindow(QWidget* parent,
     std::vector<gea::RenderComponent> staticComponents, std::vector<gea::Transform> staticTransformComponents,
@@ -17,6 +22,10 @@ MainWindow::MainWindow(QWidget* parent,
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    //Assign logView widget
+    messageLogWidget = ui->logView;
+    messageLogWidget->setReadOnly(true);
+
     //MainWindow size:
     resize(1300, 850);
 
