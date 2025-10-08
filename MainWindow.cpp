@@ -2,6 +2,11 @@
 #include "ui_MainWindow.h"
 #include "Renderer.h"
 #include <QKeyEvent>
+#include <QHBoxLayout>
+#include <QFileSystemModel>
+#include <QTreeView>
+#include "displayWidget.cpp"
+MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::MainWindow(QWidget* parent,
     std::vector<gea::RenderComponent> staticComponents, std::vector<gea::TransformComponent> staticTransformComponents,
@@ -36,7 +41,45 @@ MainWindow::MainWindow(QWidget* parent,
     this->setFocus();
 
     statusBar()->showMessage(" put something cool here! ");
+    //-------------------------------------------file system widget-------------------------------------------------------
+    // need to get asset manager from renderer itself, since manager that holds assets is created there
+    //AssetManager<ObjAsset>* objManager=new AssetManager<ObjAsset>();
+
+    if (mVulkanWindow->filesImported==true){
+        //FilesWindow<ObjAsset> filesWidget(mVulkanWindow->objManager);
+        filesWidget= new FilesWindow(mVulkanWindow->objManager);
+    }
+
+    //////////////model view test/////////
+    // QWidget window;
+    // QHBoxLayout* layout=new QHBoxLayout(&*vulkanWidget);
+
+    // QFileSystemModel* model= new QFileSystemModel;
+    // model->setRootPath(QDir::homePath());
+    // model ->setNameFilters({"*.obj","*.png","*.jpg"});
+    // model->setNameFilterDisables(false);
+    // QModelIndex tree_root= model->index(QDir::homePath());
+
+    // QTreeView* tree=new QTreeView;
+    // tree->setModel(model);
+    // tree->setRootIndex(tree_root);
+
+    // //preview
+
+    // displayWidget* displayIcons= new displayWidget;
+    // //
+
+    // layout->addWidget(tree);
+    // layout->addWidget(displayIcons);
+
+    // QObject::connect(tree,&QTreeView::clicked,[&](const QModelIndex &index) {
+    //     QString path=model->filePath(index);
+    //     displayIcons->previewFile(path);
+    // });
+    // window.resize(1000,200);
+    // window.show();
 }
+
 
 MainWindow::~MainWindow()
 {

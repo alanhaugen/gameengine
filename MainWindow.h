@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include "fileswindow.h"
 #include <QKeyEvent>
 #include "RenderSystem.h"
 
@@ -32,6 +33,9 @@ private:
     gea::RenderSystem* mRenderSystem{nullptr};
 
     void SetupRenderSystem(std::vector<gea::RenderComponent> staticComponents, std::vector<gea::TransformComponent> staticTransformComponents, std::vector<gea::Mesh> meshes, std::vector<gea::Texture> textures);
+
+    FilesWindow* filesWidget{nullptr};
+    //FilesWindow<mVulkanWindow->objManager>(mVulkanWindow->objManager)* filesWidget{nullptr};
 
 protected:
     void keyPressEvent(QKeyEvent* event) override;

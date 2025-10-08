@@ -6,6 +6,8 @@
 #include <string>
 #include <vector>
 #include "Vertex.h"
+#include "QDirIterator"
+#include "assetmanager.h"
 #include "Texture.h"
 #include "Mesh.h"
 #include "RenderComponent.h"
@@ -23,6 +25,9 @@ public:
     ~Renderer();
 
     void initVulkan();
+    ObjAsset* obj_asset{nullptr};
+    AssetManager<ObjAsset>* objManager=new AssetManager<ObjAsset>();
+    bool filesImported=false;
     void drawFrame();
 	void initComponents(std::vector<gea::RenderComponent> staticComponents, std::vector<gea::TransformComponent> staticTransformComponents, std::vector<gea::Mesh> meshes, std::vector<gea::Texture> textures) {
         mStaticRenderComponents = staticComponents;
@@ -95,6 +100,7 @@ private:
 
     bool framebufferResized = false;
 
+    //QSet<QString> filesSet=objManager->filesNamesSet;
     std::vector<gea::Mesh> mMeshes;
     std::vector<gea::Texture> mTextures;
     //this is done for testing sake. in the real ecs there would only be one vector of transform components
@@ -141,6 +147,24 @@ private:
                      VkImage& image, VkDeviceMemory& imageMemory);
     void transitionImageLayout(VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout, uint32_t mipLevels);
     void copyBufferToImage(VkBuffer buffer, VkImage image, uint32_t width, uint32_t height);
+    void loadModel(QString MODEL_PATH);
+    void importObjects(){
+        QDirIterator it("../../Assets/Models/",QStringList()<<"*.obj", QDir::NoFilter,QDirIterator::Subdirectories );
+        while(it.hasNext()) {
+            QString path=it.next();
+            QFileInfo fileInfo(path);
+            QString name=fileInfo.baseName();
+            //qDebug()<<fileInfo.filePath()<<" "<<fileInfo.absoluteFilePath()<<"\n";
+            objManager->filesNamesSet.insert(name);
+            objManager->filesNamesStack.push_back(path);
+            //objManager->filesNamesSet.insert(name);
+        }
+        for(auto it1: objManager->filesNamesStack){
+            loadModel(it1);
+        }
+    };
+    void createVertexBuffer();
+    void createIndexBuffer();
     void createVertexBuffer(gea::Mesh* mesh);
     void createIndexBuffer(gea::Mesh* mesh);
     void createUniformBuffers();
