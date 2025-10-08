@@ -6,11 +6,11 @@
 #include <QObject>
 
 
-class displayWidget : public QWidget {
+class DisplayWidget : public QWidget {
     //Q_OBJECT
 
 public:
-    displayWidget(QWidget *parent = nullptr) : QWidget(parent) {
+    DisplayWidget(QWidget *parent = nullptr) : QWidget(parent) {
         stackedWidget = new QStackedWidget(this);
 
         imageLabel = new QLabel("Image Preview");
