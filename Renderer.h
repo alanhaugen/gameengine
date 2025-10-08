@@ -9,9 +9,7 @@
 #include "assetmanager.h"
 #include "Texture.h"
 #include "Mesh.h"
-#include "RenderComponent.h"
-#include "TransformComponent.h"
-
+#include "Components.h"
 
 //Forward declarations
 struct SwapChainSupportDetails;
@@ -28,13 +26,13 @@ public:
     AssetManager<ObjAsset>* objManager=new AssetManager<ObjAsset>();
     bool filesImported=false;
     void drawFrame();
-	void initComponents(std::vector<gea::RenderComponent> staticComponents, std::vector<gea::TransformComponent> staticTransformComponents, std::vector<gea::Mesh> meshes, std::vector<gea::Texture> textures) {
+    void initComponents(std::vector<gea::RenderComponent> staticComponents, std::vector<gea::Transform> staticTransformComponents, std::vector<gea::Mesh> meshes, std::vector<gea::Texture> textures) {
         mStaticRenderComponents = staticComponents;
 		mStaticTransformComponents = staticTransformComponents;
         mMeshes = meshes;
 		mTextures = textures;
     }
-	void UpdateCompoments(std::vector<gea::RenderComponent> renderComponents, std::vector<gea::TransformComponent> transformComponents) {
+    void UpdateCompoments(std::vector<gea::RenderComponent> renderComponents, std::vector<gea::Transform> transformComponents) {
         mDynamicRenderComponents = renderComponents;
 		mDynamicTransformComponents = transformComponents;
 	}
@@ -110,8 +108,8 @@ private:
     std::vector<gea::Mesh> mMeshes;
     std::vector<gea::Texture> mTextures;
     //this is done for testing sake. in the real ecs there would only be one vector of transform components
-    std::vector<gea::TransformComponent> mDynamicTransformComponents;
-    std::vector<gea::TransformComponent> mStaticTransformComponents;
+    std::vector<gea::Transform> mDynamicTransformComponents;
+    std::vector<gea::Transform> mStaticTransformComponents;
     std::vector<gea::RenderComponent> mDynamicRenderComponents;
     std::vector<gea::RenderComponent> mStaticRenderComponents;
 

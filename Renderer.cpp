@@ -1474,11 +1474,11 @@ void Renderer::createCommandBuffers()
 			VkDeviceSize offsets[] = { 0 };
 
 			glm::mat4 model = glm::mat4(1.0f);
-			model = glm::translate(model, mStaticTransformComponents[j].position);
-			model = glm::rotate(model, glm::radians(mStaticTransformComponents[j].rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
-			model = glm::rotate(model, glm::radians(mStaticTransformComponents[j].rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
-			model = glm::rotate(model, glm::radians(mStaticTransformComponents[j].rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
-			model = glm::scale(model, mStaticTransformComponents[j].scale);
+            model = glm::translate(model, mStaticTransformComponents[j].mPosition);
+            model = glm::rotate(model, glm::radians(mStaticTransformComponents[j].mRotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
+            model = glm::rotate(model, glm::radians(mStaticTransformComponents[j].mRotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
+            model = glm::rotate(model, glm::radians(mStaticTransformComponents[j].mRotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
+            model = glm::scale(model, mStaticTransformComponents[j].mScale);
 
             vkCmdPushConstants(staticCommandBuffers[i], pipelineLayout, VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(glm::mat4), &model);
 
@@ -1608,11 +1608,11 @@ void Renderer::drawFrame() {
         VkDeviceSize offsets[] = { 0 };
 
         glm::mat4 model = glm::mat4(1.0f);
-        model = glm::translate(model, mDynamicTransformComponents[j].position);
-        model = glm::rotate(model, glm::radians(mDynamicTransformComponents[j].rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
-        model = glm::rotate(model, glm::radians(mDynamicTransformComponents[j].rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
-        model = glm::rotate(model, glm::radians(mDynamicTransformComponents[j].rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
-        model = glm::scale(model, mDynamicTransformComponents[j].scale);
+        model = glm::translate(model, mDynamicTransformComponents[j].mPosition);
+        model = glm::rotate(model, glm::radians(mDynamicTransformComponents[j].mRotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
+        model = glm::rotate(model, glm::radians(mDynamicTransformComponents[j].mRotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
+        model = glm::rotate(model, glm::radians(mDynamicTransformComponents[j].mRotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
+        model = glm::scale(model, mDynamicTransformComponents[j].mScale);
 
         vkCmdPushConstants(dynamicCommandBuffer, pipelineLayout, VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(glm::mat4), &model);
 

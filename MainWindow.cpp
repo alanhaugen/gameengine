@@ -7,9 +7,8 @@
 #include <QTreeView>
 #include "displayWidget.cpp"
 
-
 MainWindow::MainWindow(QWidget* parent,
-    std::vector<gea::RenderComponent> staticComponents, std::vector<gea::TransformComponent> staticTransformComponents,
+    std::vector<gea::RenderComponent> staticComponents, std::vector<gea::Transform> staticTransformComponents,
     std::vector<gea::Mesh> meshes, std::vector<gea::Texture> textures)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -91,13 +90,13 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::SetupRenderSystem(std::vector<gea::RenderComponent> staticComponents, std::vector<gea::TransformComponent> staticTransformComponents, std::vector<gea::Mesh> meshes, std::vector<gea::Texture> textures)
+void MainWindow::SetupRenderSystem(std::vector<gea::RenderComponent> staticComponents, std::vector<gea::Transform> staticTransformComponents, std::vector<gea::Mesh> meshes, std::vector<gea::Texture> textures)
 {
     mRenderSystem = new gea::RenderSystem(mVulkanWindow);
     mRenderSystem->Initialize(staticComponents, staticTransformComponents, meshes, textures);
 }
 
-void MainWindow::UpdateRenderSystem(std::vector<gea::RenderComponent> dynamicComponents, std::vector<gea::TransformComponent> dynamicTransformComponents)
+void MainWindow::UpdateRenderSystem(std::vector<gea::RenderComponent> dynamicComponents, std::vector<gea::Transform> dynamicTransformComponents)
 {
 	mRenderSystem->Update(dynamicComponents, dynamicTransformComponents);
 }
