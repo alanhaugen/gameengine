@@ -1,4 +1,5 @@
 #include "Renderer.h"
+#include "MainWindow.h"
 #include "Utilities.h"
 #include "Vertex.h"
 
@@ -1612,6 +1613,10 @@ void Renderer::updateUniformBuffer(uint32_t currentImage)
 void Renderer::drawFrame()
 {
     vkWaitForFences(device, 1, &inFlightFences[currentFrame], VK_TRUE, UINT64_MAX);
+
+    //mMainWindow->handleInput();
+    mCamera.update();
+    mCamera.pitch(10.f);
 
     uint32_t imageIndex;
     VkResult result = vkAcquireNextImageKHR(device, swapChain, UINT64_MAX, imageAvailableSemaphores[currentFrame], VK_NULL_HANDLE, &imageIndex);

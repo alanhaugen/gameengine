@@ -10,6 +10,8 @@
 #include "Texture.h"
 #include "Mesh.h"
 #include "Components.h"
+#include "Vertex.h"
+#include "Camera.h"
 
 //Forward declarations
 struct SwapChainSupportDetails;
@@ -37,6 +39,8 @@ public:
 		mDynamicTransformComponents = transformComponents;
 	}
 
+    camera getCamera() {return mCamera;}
+
 protected:
     //Qt event handlers - called when requestUpdate(); is called
     void exposeEvent(QExposeEvent* event) override;
@@ -44,6 +48,8 @@ protected:
     bool event(QEvent* event) override;
 
 private:
+
+    friend class MainWindow;
     // class GLFWwindow* window;
     //GLFWwindow* window{nullptr};
     //QWindow* window{ nullptr }; //this object IS a QWindow
@@ -112,6 +118,8 @@ private:
     std::vector<gea::Transform> mStaticTransformComponents;
     std::vector<gea::RenderComponent> mDynamicRenderComponents;
     std::vector<gea::RenderComponent> mStaticRenderComponents;
+    Camera mCamera;
+    class MainWindow* mMainWindow{nullptr};
 
     // void initWindow();
 

@@ -18,6 +18,7 @@ set(CMAKE_AUTORCC ON)
 # Source files (include the .ui so AUTOUIC processes it)
 set(SOURCES
     AssetManager.h AssetManager.cpp
+    Camera.h Camera.cpp
     Components.h
     DisplayWidget.cpp
     DraggableButton.h DraggableButton.cpp
@@ -26,6 +27,7 @@ set(SOURCES
     EntityContainer.h EntityContainer.cpp
     EntityModel.h EntityModel.cpp
     FilesWindow.h FilesWindow.cpp
+    Input.h
     main.cpp
     MainWindow.h MainWindow.cpp
     MainWindow.ui

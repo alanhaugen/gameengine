@@ -9,6 +9,7 @@
 
 #include <QMediaPlayer>
 #include <QAudioOutput>
+#include "Input.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -34,6 +35,7 @@ public:
 
     void start();
     void UpdateRenderSystem(std::vector<gea::RenderComponent> dynamicComponents, std::vector<gea::Transform> dynamicTransformComponents);
+    void handleInput();
 
 private:
     Ui::MainWindow *ui;
@@ -54,9 +56,18 @@ private:
     //GUI for Entities
     class gea::EntityContainer* mEntityContainer{nullptr};
     class gea::EntityModel* mEntityModel{nullptr};
+    class camera* mCamera{ nullptr };
+
+    void setCameraSpeed(float value);
+
+    float mCameraSpeed{0.005f};
+    Input mInput;
 
 protected:
     void keyPressEvent(QKeyEvent* event) override;
+
+    void mousePressEvent(QMouseEvent *event) override;
+    void mouseReleaseEvent(QMouseEvent *event) override;
 };
 
 #endif // MAINWINDOW_H
