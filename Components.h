@@ -1,9 +1,21 @@
 #ifndef COMPONENTS_H
 #define COMPONENTS_H
 
+//Sound
+#ifdef _WIN32
+#include <AL/al.h>
+#include <AL/alc.h>
+#endif
+#ifdef __APPLE__
+#include <OpenAL/al.h>
+#include <OpenAL/alc.h>
+#endif
+//
+
 #include <glm/glm.hpp>
 #include <glm/ext/matrix_transform.hpp> //for tranlate, rotate, scale
 #include <vector>
+
 
 //Need namespace, since we start to get naming collisions with other code
 namespace gea {
@@ -20,7 +32,8 @@ namespace gea {
         Enemy,
         Projectile,
         RenderComponent,
-        AI
+        AI,
+        Sound
     };
 
 //Below are examples of actual components
@@ -91,6 +104,14 @@ struct Projectile
         short entityID;
     };
 
+    struct Sound
+    {
+        ALuint mSoundSource{0};
+        ALuint mSoundBuffer{0};
+        short mEntityID{-1};
+
+    };
+
     struct Tower
     {
         float mRange{ 15.0f };
@@ -122,6 +143,7 @@ struct Projectile
         }
     };
 
+
     //The plan is that the systems can use these vectors containing all components of the different types
     //The components should be sorted by EntityID when added to the vectors.
     //A Render system then might need many vectors, but a Move system might only need one or two.
@@ -136,6 +158,7 @@ struct Projectile
     extern std::vector<gea::Model> ComponentModelVector;
     extern std::vector<gea::Movement> ComponentMovementVector;
     extern std::vector<gea::Projectile> ComponentProjectileVector;
+    extern std::vector<gea::Sound> ComponentSoundVector;
     extern std::vector<gea::Tower> ComponentTowerVector;
     extern std::vector<gea::Transform> ComponentTransformVector;
 
