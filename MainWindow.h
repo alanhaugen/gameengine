@@ -7,6 +7,8 @@
 #include "RenderSystem.h"
 #include "Components.h"
 
+#include <QMediaPlayer>
+#include <QAudioOutput>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -38,7 +40,13 @@ private:
     FilesWindow* filesWidget{nullptr};
     //FilesWindow<mVulkanWindow->objManager>(mVulkanWindow->objManager)* filesWidget{nullptr};
 
+    QMediaPlayer *player;
+    QAudioOutput *audioOutput;
+
+    void playSound();
+
 protected:
     void keyPressEvent(QKeyEvent* event) override;
 };
+
 #endif // MAINWINDOW_H

@@ -5,7 +5,10 @@
 #include <QHBoxLayout>
 #include <QFileSystemModel>
 #include <QTreeView>
-#include "displayWidget.cpp"
+#include "DisplayWidget.cpp"
+#include <QUrl>
+#include <QFileInfo>
+#include <QDebug>
 
 MainWindow::MainWindow(QWidget* parent,
     std::vector<gea::RenderComponent> staticComponents, std::vector<gea::Transform> staticTransformComponents,
@@ -77,6 +80,14 @@ MainWindow::MainWindow(QWidget* parent,
     // });
     // window.resize(1000,200);
     // window.show();
+
+    audioOutput = new QAudioOutput(this);
+    audioOutput->setVolume(0.5);
+
+    player = new QMediaPlayer(this);
+    player->setAudioOutput(audioOutput);
+
+    playSound();
 }
 
 
@@ -119,3 +130,18 @@ void MainWindow::keyPressEvent(QKeyEvent* event)
     }
 
 }
+
+void MainWindow::playSound()
+{
+    QString filePath = "C:/GitHub/GEA2025/Assets/Sounds/Test Drive.wav";
+
+    if(!QFileInfo::exists(filePath))
+    {
+        qDebug() << "File does not exist:" << filePath;
+        return;
+    }
+
+    player->setSource(QUrl::fromLocalFile(filePath));
+    player->play();
+}
+

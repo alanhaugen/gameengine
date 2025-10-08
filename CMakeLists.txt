@@ -1,8 +1,10 @@
+set(Qt6_DIR C:\Qt\6.9.3\msvc2022_64\lib\cmake\Qt6)
 cmake_minimum_required(VERSION 3.19)
 project(QtVulkan LANGUAGES CXX)
 
-find_package(Qt6 6.5 REQUIRED COMPONENTS Core Widgets)
+find_package(Qt6 6.5 REQUIRED COMPONENTS Core Gui Widgets Multimedia)
 find_package(Vulkan REQUIRED )
+
 qt_standard_project_setup()
 
 set(CMAKE_CXX_STANDARD 17)
@@ -48,6 +50,10 @@ set(SOURCES
     Shaders/Shader.vert
     Shaders/Phong.frag
     Shaders/Phong.vert
+    SoundComponent.h
+    resource.qrc
+    Sound.cpp
+    Sound.h
 )
 
 add_executable(QtVulkan ${SOURCES})
@@ -67,6 +73,7 @@ if (MSVC)
         $ENV{VULKAN_HOME}/Lib/vulkan-1.lib
         Qt6::Widgets
         Qt6::Core
+        Qt6::Multimedia
     )
 elseif(APPLE)
     # This will set NDEBUG for both debug and release build
