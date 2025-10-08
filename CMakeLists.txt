@@ -35,12 +35,12 @@ set(SOURCES
     Texture.h Texture.cpp
     Utilities.h
     Vertex.h
+    WavfileReader.h WavfileReader.cpp
 
     Shaders/Shader.frag
     Shaders/Shader.vert
     Shaders/Phong.frag
     Shaders/Phong.vert
-    SoundComponent.h
 )
 
 add_executable(QtVulkan ${SOURCES})

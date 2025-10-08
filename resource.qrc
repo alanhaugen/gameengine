@@ -1,6 +1,0 @@
-<RCC>
-    <qresource prefix="/sounds">
-        <file>Test Drive.mp3</file>
-        <file>Assets/Sounds/Test Drive.wav</file>
-    </qresource>
-</RCC>
