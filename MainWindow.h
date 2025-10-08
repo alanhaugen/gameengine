@@ -24,6 +24,7 @@ public:
     MainWindow(QWidget* parent = nullptr,
         std::vector<gea::RenderComponent> staticComponents = std::vector<gea::RenderComponent>(), std::vector<gea::Transform> staticTransformComponents = std::vector<gea::Transform>(),
         std::vector<gea::Mesh> meshes = std::vector<gea::Mesh>(), std::vector<gea::Texture> textures = std::vector<gea::Texture>());
+
     ~MainWindow();
 
     void start();

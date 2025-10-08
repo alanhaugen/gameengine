@@ -8,7 +8,6 @@
 #include <QLoggingCategory>
 #include <QPointer>
 
-
 Q_LOGGING_CATEGORY(lcVk, "qt.vulkan")
 
 QPointer<QPlainTextEdit> messageLogWidget;
@@ -27,11 +26,17 @@ static void messageHandler(QtMsgType msgType, const QMessageLogContext &logConte
 int main(int argc, char *argv[])
 {
 
-    QApplication a(argc, argv);
+    QApplication app(argc, argv);
 
     QSplashScreen *mSplash = new QSplashScreen;
     mSplash->setPixmap(QPixmap(QString::fromStdString(PATH) + "Assets/Engine/INNgine_splash.png")); // splash picture
     mSplash->show();
+
+    //Logger setup
+    messageLogWidget = new QPlainTextEdit(QLatin1String(QLibraryInfo::build()) + QLatin1Char('\n'));
+    messageLogWidget->setReadOnly(true);
+    oldMessageHandler = qInstallMessageHandler(messageHandler);
+    QLoggingCategory::setFilterRules(QStringLiteral("qt.vulkan=true"));
 
     std::vector<gea::Mesh> mMeshes;
     std::vector<gea::Texture> mTextures;
@@ -54,21 +59,15 @@ int main(int argc, char *argv[])
     t2.mPosition = glm::vec3(-1.0f, 0.0f, 0.0f);
     mStaticTransformComponents.push_back(t2);
 
-    MainWindow w = MainWindow(nullptr, mStaticRenderComponents, mStaticTransformComponents, mMeshes, mTextures);
-    //Logger setup
-    //messageLogWidget = new QPlainTextEdit(QLatin1String(QLibraryInfo::build()) + QLatin1Char('\n'));
-    //messageLogWidget->setReadOnly(true);
-    oldMessageHandler = qInstallMessageHandler(messageHandler);
-    QLoggingCategory::setFilterRules(QStringLiteral("qt.vulkan=true"));
+    MainWindow mainWindow = MainWindow(nullptr, mStaticRenderComponents, mStaticTransformComponents, mMeshes, mTextures);
 
-
-    MainWindow w;
-    w.move(200, 100);
-    w.show();
-    w.start();
+    mainWindow.move(200, 100);
+    mainWindow.show();
+    mainWindow.start();
+    mainWindow.UpdateRenderSystem(mRenderComponents, mTransformComponents);
 
     mSplash->hide();
 
-	w.UpdateRenderSystem(mRenderComponents, mTransformComponents);
-    return a.exec();
+    //app.exec() runs the rest of the program
+    return app.exec();
 }
