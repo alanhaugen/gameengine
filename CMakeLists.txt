@@ -32,6 +32,7 @@ set(SOURCES
     RenderSystem.h RenderSystem.cpp
     Sound.h Sound.cpp
     System.h
+    Systems.h Systems.cpp
     Texture.h Texture.cpp
     Utilities.h
     Vertex.h

@@ -69,7 +69,7 @@ int sound()
 
 bool WavFileReader::loadWave(std::string filePath, wave_t* wavePtr)
 {
-    std::cout << "Loading "+ filePath + " from disk\n";
+    qDebug() << "Loading "+ filePath + " from disk\n";
     FILE* fp = NULL;
     fp = std::fopen(filePath.c_str(), "rb");
     if (fp == NULL)    {
@@ -132,13 +132,13 @@ bool WavFileReader::loadWave(std::string filePath, wave_t* wavePtr)
     }
 
     std::fclose(fp);
-    std::cout << "Loading complete!\n";
+    qDebug() << "Loading complete!\n";
     return true;
 }
 
 bool WavFileReader::endOnError(std::string errmsg)
 {
-    std::cout << errmsg;
+    qDebug() << errmsg;
     return false;
 }
 
@@ -159,7 +159,7 @@ SoundSource::SoundSource(std::string name, bool loop, float gain) :
 }
 SoundSource::~SoundSource()
 {
-    std::cout << "Destroying SoundSource " + mName;
+    qDebug() << "Destroying SoundSource " + mName;
     stop();
     alGetError();
     alSourcei(mSource, AL_BUFFER, 0);
@@ -172,13 +172,13 @@ SoundSource::~SoundSource()
 
 bool SoundSource::loadWave(std::string filePath)
 {
-    std::cout << "Loading wave file!\n";
+    qDebug() << "Loading wave file!\n";
     ALuint frequency{};
     ALenum format{};
     wave_t* waveData = new wave_t();
     if (!WavFileReader::loadWave(filePath, waveData))
     {
-        std::cout << "Error loading wave file!\n";
+        qDebug() << "Error loading wave file!\n";
         return false;
     }
 
@@ -190,10 +190,10 @@ bool SoundSource::loadWave(std::string filePath)
         switch (waveData->channels)
         {
         case 1: format = AL_FORMAT_MONO8;
-            std::cout << "Format: 8bit Mono\n";
+            qDebug() << "Format: 8bit Mono\n";
             break;
         case 2: format = AL_FORMAT_STEREO8;
-            std::cout << "Format: 8bit Stereo\n";
+            qDebug() << "Format: 8bit Stereo\n";
             break;
         default: break;
         }
@@ -202,10 +202,10 @@ bool SoundSource::loadWave(std::string filePath)
         switch (waveData->channels)
         {
         case 1: format = AL_FORMAT_MONO16;
-            std::cout << "Format: 16bit Mono\n";
+            qDebug() << "Format: 16bit Mono\n";
             break;
         case 2: format = AL_FORMAT_STEREO16;
-            std::cout << "Format: 16bit Stereo\n";
+            qDebug() << "Format: 16bit Stereo\n";
             break;
         default: break;
         }
@@ -215,12 +215,12 @@ bool SoundSource::loadWave(std::string filePath)
 
     if (waveData->buffer == NULL)
     {
-        std::cout << "NO WAVE DATA!\n";
+        qDebug() << "NO WAVE DATA!\n";
     }
 
     std::ostringstream i2s;
     i2s << waveData->dataSize;
-    std::cout << "DataSize: " << i2s.str() << " bytes\n";
+    qDebug() << "DataSize: " << i2s.str() << " bytes\n";
 
     alGetError();
     alBufferData(mBuffer, format, waveData->buffer, waveData->dataSize, frequency);
@@ -228,7 +228,7 @@ bool SoundSource::loadWave(std::string filePath)
     alSourcei(mSource, AL_BUFFER, mBuffer);
     checkError("alSourcei (loadWave)");
 
-    std::cout << "Loading complete!\n";
+    qDebug() << "Loading complete!\n";
     if (waveData->buffer) delete waveData->buffer;
     if (waveData) delete waveData;
     return true;
@@ -256,19 +256,19 @@ bool SoundSource::checkError(std::string name)
     case AL_NO_ERROR:
         break;
     case AL_INVALID_NAME:
-        std::cout << "OpenAL Error: "+name+": Invalid name!\n";
+        qDebug() << "OpenAL Error: "+name+": Invalid name!\n";
         return false;
     case AL_INVALID_ENUM:
-        std::cout << "OpenAL Error: "+name+": Invalid enum!\n";
+        qDebug() << "OpenAL Error: "+name+": Invalid enum!\n";
         return false;
     case AL_INVALID_VALUE:
-        std::cout << "OpenAL Error: "+name+": Invalid value!\n";
+        qDebug() << "OpenAL Error: "+name+": Invalid value!\n";
         return false;
     case AL_INVALID_OPERATION:
-        std::cout << "OpenAL Error: "+name+": Invalid operation!\n";
+        qDebug() << "OpenAL Error: "+name+": Invalid operation!\n";
         return false;
     case AL_OUT_OF_MEMORY:
-        std::cout << "OpenAL Error: "+name+": Out of memory!\n";
+        qDebug() << "OpenAL Error: "+name+": Out of memory!\n";
         return false;
     default: break;
     }

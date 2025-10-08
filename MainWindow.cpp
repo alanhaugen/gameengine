@@ -58,7 +58,8 @@ MainWindow::MainWindow(QWidget* parent,
     // need to get asset manager from renderer itself, since manager that holds assets is created there
     //AssetManager<ObjAsset>* objManager=new AssetManager<ObjAsset>();
 
-    if (mVulkanWindow->filesImported==true){
+    if (mVulkanWindow->filesImported==true)
+    {
         //FilesWindow<ObjAsset> filesWidget(mVulkanWindow->objManager);
         filesWidget= new FilesWindow(mVulkanWindow->objManager);
     }
@@ -132,15 +133,14 @@ void MainWindow::start()
 
 void MainWindow::keyPressEvent(QKeyEvent* event)
 {
-    if (event->key() == Qt::Key_Escape) {
+    if (event->key() == Qt::Key_Escape)
+    {
         delete mVulkanWindow;
         mVulkanWindow = nullptr;
         close(); // Example: close window on ESC
     }
-    if (event->key() == Qt::Key_Space) {
+    if (event->key() == Qt::Key_Space)
         start();
-    }
-
 }
 
 void MainWindow::playSound()

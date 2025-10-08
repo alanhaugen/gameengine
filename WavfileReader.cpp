@@ -1,14 +1,19 @@
 //Based off Ole Flatens code from: https://github.com/oleflaten/3D-Sound-OpenAL
 
 #include "wavfilereader.h"
-#include <iostream>
+#include <QDebug>
 
 bool WavFileReader::loadWave(std::string filePath, wave_t* wavePtr)
 {
-    std::cout << "Loading "+ filePath + " from disk\n";
-    FILE* fp = NULL;
-    fp = std::fopen(filePath.c_str(), "rb");
-    if (fp == NULL)    {
+    qDebug() << "Loading " + filePath + " from disk\n";
+    FILE* fp{nullptr};
+
+    errno_t testOpenFile = fopen_s(&fp, filePath.c_str(), "rb");
+    if (testOpenFile != 0 || fp == nullptr)
+    {
+        // Handle error - fopen_s sets fp to nullptr on failure
+        qDebug() << "Failed to open file:" << filePath.c_str();
+
         return endOnError("FileHandler error: File not found.\n");
     }
 
@@ -68,12 +73,12 @@ bool WavFileReader::loadWave(std::string filePath, wave_t* wavePtr)
     }
 
     std::fclose(fp);
-    std::cout << "Loading complete!\n";
+    qDebug("Loading complete!\n");
     return true;
 }
 
 bool WavFileReader::endOnError(std::string errmsg)
 {
-    std::cout << errmsg;
+    qDebug() << errmsg;
     return false;
 }
