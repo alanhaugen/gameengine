@@ -19,6 +19,7 @@ namespace gea
         VkDeviceMemory indexBufferMemory;
     protected:
     };
-}
+
+}   // namespace gea
 
 #endif // MESH_H

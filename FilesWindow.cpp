@@ -3,7 +3,8 @@
 #include <QString>
 #include <QDebug>
 
-FilesWindow::FilesWindow(AssetManager<ObjAsset>* manager) {
+FilesWindow::FilesWindow(AssetManager<ObjAsset>* manager)
+{
     setWindowTitle("Files");
     setMinimumHeight(100);
     setMinimumWidth(500);
@@ -30,8 +31,7 @@ FilesWindow::FilesWindow(AssetManager<ObjAsset>* manager) {
     show();
 }
 
-
-void FilesWindow::handleButton(int index) //
+void FilesWindow::handleButton(int index)
 {
     //QString new_text=QString::number(assets_ptr->int_assets[index]);
     QString new_text="test";
@@ -74,7 +74,6 @@ void FilesWindow::dropEvent(QDropEvent *event)
             status->showMessage(" File is already imported. ");
         }
     }
-
 }
 
 // void FilesWindow::dragMoveEvent(QDragMoveEvent *event)
@@ -89,8 +88,6 @@ void FilesWindow::dropEvent(QDropEvent *event)
 
 void FilesWindow::createButtons(AssetManager<ObjAsset> *assets_)
 {
-
-
     for(int i=0; i<assets_->assets.size(); i++){
         //create button
         //should never run this, but in case we have more paths than objects
@@ -112,5 +109,4 @@ void FilesWindow::createButtons(AssetManager<ObjAsset> *assets_)
             handleButton(i);
         });
     }
-
 }

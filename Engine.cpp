@@ -1,5 +1,7 @@
 #include "Engine.h"
 #include <algorithm>
+#include "Mesh.h"
+#include "Texture.h"
 
 namespace gea {
 
@@ -13,14 +15,14 @@ namespace gea {
     std::vector<Enemy> EnemyVector;
     std::vector<Projectile> ProjectileVector;
 
-    std::size_t Entity::nextID{0};
-
-    Entity* Engine::CreateEntity() {
+    Entity* Engine::CreateEntity()
+    {
         EntityVector.emplace_back();
         return &EntityVector.back();
     }
 
-    void Engine::DestroyEntity(std::size_t entityID) {
+    void Engine::DestroyEntity(std::size_t entityID)
+    {
  
         EntityVector.erase(std::remove_if(EntityVector.begin(), EntityVector.end(),
                           [entityID](const Entity& e){ return e.mEntityID == entityID; }), EntityVector.end());
@@ -40,16 +42,17 @@ namespace gea {
         
     }
 
-    Transform* Engine::AddTransform(Entity* entity) {
-        Transform t;
-        t.mEntityID = entity->mEntityID;
+    Transform* Engine::AddTransform(Entity* entity)
+    {
+        Transform t(entity->mEntityID);
         TransformVector.push_back(t);
         entity->mComponents.push_back({ComponentTypes::Transform, (short)(TransformVector.size()-1)});
         SortComponents();
         return &TransformVector.back();
     }
    
-    Movement* Engine::AddMovement(Entity* entity) {
+    Movement* Engine::AddMovement(Entity* entity)
+    {
         Movement m;
         m.mEntityID = entity->mEntityID;
         MovementVector.push_back(m);
@@ -58,7 +61,8 @@ namespace gea {
         return &MovementVector.back();
     }
 
-    Health* Engine::AddHealth(Entity* entity) {
+    Health* Engine::AddHealth(Entity* entity)
+    {
         Health h;
         h.mEntityID = entity->mEntityID;
         HealthVector.push_back(h);
@@ -67,7 +71,8 @@ namespace gea {
         return &HealthVector.back();
     }
 
-    Tower* Engine::AddTower(Entity* entity) {
+    Tower* Engine::AddTower(Entity* entity)
+    {
         Tower t;
         t.mEntityID = entity->mEntityID;
         TowerVector.push_back(t);
@@ -76,7 +81,8 @@ namespace gea {
         return &TowerVector.back();
     }
 
-    Enemy* Engine::AddEnemy(Entity* entity) {
+    Enemy* Engine::AddEnemy(Entity* entity)
+    {
         Enemy e;
         e.mEntityID = entity->mEntityID;
         EnemyVector.push_back(e);
@@ -85,7 +91,8 @@ namespace gea {
         return &EnemyVector.back();
     }
 
-    Projectile* Engine::AddProjectile(Entity* entity) {
+    Projectile* Engine::AddProjectile(Entity* entity)
+    {
         Projectile p;
         p.mEntityID = entity->mEntityID;
         ProjectileVector.push_back(p);
@@ -94,7 +101,8 @@ namespace gea {
         return &ProjectileVector.back();
     }
 
-    void Engine::SortComponents() {
+    void Engine::SortComponents()
+    {
         std::sort(TransformVector.begin(), TransformVector.end(),
                   [](const Transform& a, const Transform& b){ return a.mEntityID < b.mEntityID; });
         std::sort(MovementVector.begin(), MovementVector.end(),
@@ -102,7 +110,8 @@ namespace gea {
    
     }
 
-    void Engine::Update(float deltaTime) {
+    void Engine::Update(float deltaTime)
+    {
         // to call all systems 
         // i am listing Example:
         //   MovementSystem::Update()

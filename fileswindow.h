@@ -11,6 +11,7 @@
 #include <QVBoxLayout>
 #include <QScrollArea>
 #include <QStatusBar>
+
  //template <typename T>
 class FilesWindow: public QFrame //for drag and drop
 {

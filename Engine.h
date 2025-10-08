@@ -12,8 +12,8 @@ namespace gea {
         Entity* CreateEntity();
         void DestroyEntity(std::size_t entityID);
 
-        // to add component 
-        Transform* AddTransform(Entity* entity);
+        // to add component
+        Transform *AddTransform(Entity* entity);
         Movement* AddMovement(Entity* entity);
         Health* AddHealth(Entity* entity);
         Tower* AddTower(Entity* entity);

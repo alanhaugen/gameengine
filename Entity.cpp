@@ -15,11 +15,22 @@ namespace gea {
 
     bool Entity::HasComponent(ComponentTypes type) const
     {
-        for (const auto& comp : mComponents) {
+        for (const auto& comp : mComponents)
+        {
             if (comp.mComponentType == type)
                 return true;
         }
         return false;
+    }
+
+    short Entity::GetComponentIndex(ComponentTypes type) const
+    {
+        for (const auto& comp : mComponents)
+        {
+            if (comp.mComponentType == type)
+                return comp.mComponentIndex;
+        }
+        return -1;
     }
 
 } // namespace gea

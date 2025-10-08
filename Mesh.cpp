@@ -2,7 +2,8 @@
 #include "External/tiny_obj_loader.h"
 #include <stdexcept>
 
-gea::Mesh::Mesh() {
+gea::Mesh::Mesh()
+{
 	vertexBuffer = VK_NULL_HANDLE;
 	indexBuffer = VK_NULL_HANDLE;
 	vertexBufferMemory = VK_NULL_HANDLE;
@@ -10,20 +11,22 @@ gea::Mesh::Mesh() {
     loadModel();
 }
 
-void gea::Mesh::loadModel() {
+void gea::Mesh::loadModel()
+{
     tinyobj::attrib_t attrib;
     std::vector<tinyobj::shape_t> shapes;
     std::vector<tinyobj::material_t> materials;
     std::string warn, err;
 
-    if (!tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, modelPath.c_str())) {
+    if (!tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, modelPath.c_str()))
         throw std::runtime_error(warn + err);
-    }
 
     std::unordered_map<Vertex, uint32_t> uniqueVertices{};
 
-    for (const auto& shape : shapes) {
-        for (const auto& index : shape.mesh.indices) {
+    for (const auto& shape : shapes)
+    {
+        for (const auto& index : shape.mesh.indices)
+        {
             Vertex vertex{};
 
             vertex.pos = {
@@ -39,7 +42,8 @@ void gea::Mesh::loadModel() {
 
             vertex.color = { 1.0f, 1.0f, 1.0f };
 
-            if (uniqueVertices.count(vertex) == 0) {
+            if (uniqueVertices.count(vertex) == 0)
+            {
                 uniqueVertices[vertex] = static_cast<uint32_t>(vertices.size());
                 vertices.push_back(vertex);
             }

@@ -30,6 +30,7 @@ set(SOURCES
     Components.h
     DisplayWidget.cpp
     DraggableButton.h DraggableButton.cpp
+    Engine.h Engine.cpp
     Entity.h Entity.cpp
     FilesWindow.h FilesWindow.cpp
     main.cpp

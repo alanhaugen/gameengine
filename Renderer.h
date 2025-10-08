@@ -152,21 +152,7 @@ private:
     void transitionImageLayout(VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout, uint32_t mipLevels);
     void copyBufferToImage(VkBuffer buffer, VkImage image, uint32_t width, uint32_t height);
     void loadModel(QString MODEL_PATH);
-    void importObjects(){
-        QDirIterator it("../../Assets/Models/",QStringList()<<"*.obj", QDir::NoFilter,QDirIterator::Subdirectories );
-        while(it.hasNext()) {
-            QString path=it.next();
-            QFileInfo fileInfo(path);
-            QString name=fileInfo.baseName();
-            //qDebug()<<fileInfo.filePath()<<" "<<fileInfo.absoluteFilePath()<<"\n";
-            objManager->filesNamesSet.insert(name);
-            objManager->filesNamesStack.push_back(path);
-            //objManager->filesNamesSet.insert(name);
-        }
-        for(auto it1: objManager->filesNamesStack){
-            loadModel(it1);
-        }
-    };
+    void importObjects();;
     void createVertexBuffer();
     void createIndexBuffer();
     void createVertexBuffer(gea::Mesh* mesh);
