@@ -1,47 +1,47 @@
-#include "camera.h"
+#include "Camera.h"
 
-camera::camera()
+Camera::Camera()
 {
     init();
 }
 
-void camera::init()
+void Camera::init()
 {
     mProjectionMatrix.setToIdentity();
     mViewMatrix.setToIdentity();
 }
 
-void camera::translate(float x, float y, float z)
+void Camera::translate(float x, float y, float z)
 {
     mViewMatrix.translate(x, y, z);
 }
 
-void camera::rotate(float t, float x, float y, float z)
+void Camera::rotate(float t, float x, float y, float z)
 {
     mViewMatrix.rotate(t, x, y, z);
 }
 
-void camera::pitch(float deg)
+void Camera::pitch(float deg)
 {
     mPitch += deg;
 }
 
-void camera::yaw(float deg)
+void Camera::yaw(float deg)
 {
     mYaw += deg;
 }
 
-void camera::moveRight(float delta)
+void Camera::moveRight(float delta)
 {
     mPosition.setX( mPosition.x() + delta);
 }
 
-void camera::moveUp(float delta)
+void Camera::moveUp(float delta)
 {
     mPosition.setY(mPosition.y() + delta);
 }
 
-void camera::update()
+void Camera::update()
 {
     mViewMatrix.setToIdentity();
     mPosition.setZ(mPosition.z() + mSpeed);
@@ -50,24 +50,24 @@ void camera::update()
     mViewMatrix.translate(mPosition);
 }
 
-void camera::setSpeed(float speed)
+void Camera::setSpeed(float speed)
 {
     mSpeed = speed;
 }
 
-void camera::setPosition(const QVector3D &newPos)
+void Camera::setPosition(const QVector3D &newPos)
 {
     mPosition = newPos;
     update();
 }
 
-void camera::setPerspective(float fovy, float screenWidth, float near, float far)
+void Camera::setPerspective(float fovy, float screenWidth, float near, float far)
 {
     mProjectionMatrix.setToIdentity();
     mProjectionMatrix.perspective(fovy, screenWidth, near, far);
 }
 
-void camera::lookAt(QVector3D position, QVector3D forward, QVector3D up)
+void Camera::lookAt(QVector3D position, QVector3D forward, QVector3D up)
 {
     mPosition = position;
     mForward = forward;

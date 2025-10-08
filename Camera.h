@@ -4,11 +4,11 @@
 #include <glm/glm.hpp>
 #include <glm/trigonometric.hpp>
 
-class camera
+class Camera
 {
 public:
-    camera();
-    ~camera() {}
+    Camera();
+    ~Camera() {}
 
     void init();
 

@@ -56,7 +56,7 @@ private:
     //GUI for Entities
     class gea::EntityContainer* mEntityContainer{nullptr};
     class gea::EntityModel* mEntityModel{nullptr};
-    class camera* mCamera{ nullptr };
+    class Camera* mCamera{ nullptr };
 
     void setCameraSpeed(float value);
 

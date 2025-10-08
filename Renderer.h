@@ -39,7 +39,7 @@ public:
 		mDynamicTransformComponents = transformComponents;
 	}
 
-    camera getCamera() {return mCamera;}
+    Camera getCamera() {return mCamera;}
 
 protected:
     //Qt event handlers - called when requestUpdate(); is called
