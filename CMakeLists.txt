@@ -23,6 +23,8 @@ set(SOURCES
     DraggableButton.h DraggableButton.cpp
     Engine.h Engine.cpp
     Entity.h Entity.cpp
+    EntityContainer.h EntityContainer.cpp
+    EntityModel.h EntityModel.cpp
     FilesWindow.h FilesWindow.cpp
     main.cpp
     MainWindow.h MainWindow.cpp

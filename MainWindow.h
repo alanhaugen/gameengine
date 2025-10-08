@@ -16,6 +16,11 @@ class MainWindow;
 }
 QT_END_NAMESPACE
 
+namespace gea {
+class EntityContainer;
+class EntityModel;
+}
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -45,6 +50,10 @@ private:
     QAudioOutput *mAudioOutput{nullptr};
 
     void playSound();
+
+    //GUI for Entities
+    class gea::EntityContainer* mEntityContainer{nullptr};
+    class gea::EntityModel* mEntityModel{nullptr};
 
 protected:
     void keyPressEvent(QKeyEvent* event) override;
