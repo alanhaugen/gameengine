@@ -1,30 +1,19 @@
-set(Qt6_DIR C:\Qt\6.9.3\msvc2022_64\lib\cmake\Qt6)
 cmake_minimum_required(VERSION 3.19)
 project(QtVulkan LANGUAGES CXX)
 
+# Find Qt (Widgets implies Core)
 find_package(Qt6 6.5 REQUIRED COMPONENTS Core Gui Widgets Multimedia)
-find_package(Vulkan REQUIRED )
 
+# Keep qt helper (optional but useful)
 qt_standard_project_setup()
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-# Adding External library:
-# ----------------
-# Using Windows environment variable:
-# Add include directory
-
 
 # Enable Qt's automoc/autouic/autorcc
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
-
-# Find Qt (Widgets implies Core)
-find_package(Qt6 REQUIRED COMPONENTS Core Widgets)
-
-# Keep qt helper (optional but useful)
-qt_standard_project_setup()
 
 # Source files (include the .ui so AUTOUIC processes it)
 set(SOURCES
@@ -41,6 +30,7 @@ set(SOURCES
     Mesh.h Mesh.cpp
     Renderer.h Renderer.cpp
     RenderSystem.h RenderSystem.cpp
+    Sound.h Sound.cpp
     System.h
     Texture.h Texture.cpp
     Utilities.h
@@ -51,13 +41,9 @@ set(SOURCES
     Shaders/Phong.frag
     Shaders/Phong.vert
     SoundComponent.h
-    resource.qrc
-    Sound.cpp
-    Sound.h
 )
 
 add_executable(QtVulkan ${SOURCES})
-
 
 # MSVC-specific compile options (if building with MSVC)
 if (MSVC)

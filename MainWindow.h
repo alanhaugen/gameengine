@@ -40,8 +40,8 @@ private:
     FilesWindow* filesWidget{nullptr};
     //FilesWindow<mVulkanWindow->objManager>(mVulkanWindow->objManager)* filesWidget{nullptr};
 
-    QMediaPlayer *player;
-    QAudioOutput *audioOutput;
+    QMediaPlayer *mMediaPlayer{nullptr};
+    QAudioOutput *mAudioOutput{nullptr};
 
     void playSound();
 

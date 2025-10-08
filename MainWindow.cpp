@@ -43,6 +43,7 @@ MainWindow::MainWindow(QWidget* parent,
     this->setFocus();
 
     statusBar()->showMessage(" put something cool here! ");
+
     //-------------------------------------------file system widget-------------------------------------------------------
     // need to get asset manager from renderer itself, since manager that holds assets is created there
     //AssetManager<ObjAsset>* objManager=new AssetManager<ObjAsset>();
@@ -81,11 +82,12 @@ MainWindow::MainWindow(QWidget* parent,
     // window.resize(1000,200);
     // window.show();
 
-    audioOutput = new QAudioOutput(this);
-    audioOutput->setVolume(0.5);
+    //Sound - using Qts Multimedia system
+    mAudioOutput = new QAudioOutput(this);
+    mAudioOutput->setVolume(0.5);
 
-    player = new QMediaPlayer(this);
-    player->setAudioOutput(audioOutput);
+    mMediaPlayer = new QMediaPlayer(this);
+    mMediaPlayer->setAudioOutput(mAudioOutput);
 
     playSound();
 }
@@ -133,7 +135,7 @@ void MainWindow::keyPressEvent(QKeyEvent* event)
 
 void MainWindow::playSound()
 {
-    QString filePath = "C:/GitHub/GEA2025/Assets/Sounds/Test Drive.wav";
+    QString filePath = QString(PATH.c_str()) + "Assets/Sounds/Test Drive.mp3";
 
     if(!QFileInfo::exists(filePath))
     {
@@ -141,7 +143,7 @@ void MainWindow::playSound()
         return;
     }
 
-    player->setSource(QUrl::fromLocalFile(filePath));
-    player->play();
+    mMediaPlayer->setSource(QUrl::fromLocalFile(filePath));
+    mMediaPlayer->play();
 }
 
