@@ -8,10 +8,15 @@
 #include "Vertex.h"
 #include "QDirIterator"
 #include "assetmanager.h"
+#include "Texture.h"
+#include "Mesh.h"
+#include "RenderComponent.h"
+#include "TransformComponent.h"
+
+
 //Forward declarations
 struct SwapChainSupportDetails;
 struct QueueFamilyIndices;
-
 class Renderer : public QWindow
 {
     Q_OBJECT
@@ -23,6 +28,17 @@ public:
     ObjAsset* obj_asset{nullptr};
     AssetManager<ObjAsset>* objManager=new AssetManager<ObjAsset>();
     bool filesImported=false;
+    void drawFrame();
+	void initComponents(std::vector<gea::RenderComponent> staticComponents, std::vector<gea::TransformComponent> staticTransformComponents, std::vector<gea::Mesh> meshes, std::vector<gea::Texture> textures) {
+        mStaticRenderComponents = staticComponents;
+		mStaticTransformComponents = staticTransformComponents;
+        mMeshes = meshes;
+		mTextures = textures;
+    }
+	void UpdateCompoments(std::vector<gea::RenderComponent> renderComponents, std::vector<gea::TransformComponent> transformComponents) {
+        mDynamicRenderComponents = renderComponents;
+		mDynamicTransformComponents = transformComponents;
+	}
 
 protected:
     //Qt event handlers - called when requestUpdate(); is called
@@ -68,26 +84,13 @@ private:
     VkDeviceMemory depthImageMemory;
     VkImageView depthImageView;
 
-    uint32_t mipLevels;
-    VkImage textureImage;
-    VkDeviceMemory textureImageMemory;
-    VkImageView textureImageView;
-    VkSampler textureSampler;
-
-    std::vector<Vertex> vertices;
-    std::vector<uint32_t> indices;
-    VkBuffer vertexBuffer;
-    VkDeviceMemory vertexBufferMemory;
-    VkBuffer indexBuffer;
-    VkDeviceMemory indexBufferMemory;
-
     std::vector<VkBuffer> uniformBuffers;
     std::vector<VkDeviceMemory> uniformBuffersMemory;
 
     VkDescriptorPool descriptorPool;
     std::vector<VkDescriptorSet> descriptorSets;
 
-    std::vector<VkCommandBuffer> commandBuffers;
+    std::vector<VkCommandBuffer> staticCommandBuffers;
 
     std::vector<VkSemaphore> imageAvailableSemaphores;
     std::vector<VkSemaphore> renderFinishedSemaphores;
@@ -97,18 +100,20 @@ private:
 
     bool framebufferResized = false;
 
-
-
-
-
     //QSet<QString> filesSet=objManager->filesNamesSet;
+    std::vector<gea::Mesh> mMeshes;
+    std::vector<gea::Texture> mTextures;
+    //this is done for testing sake. in the real ecs there would only be one vector of transform components
+    std::vector<gea::TransformComponent> mDynamicTransformComponents;
+    std::vector<gea::TransformComponent> mStaticTransformComponents;
+    std::vector<gea::RenderComponent> mDynamicRenderComponents;
+    std::vector<gea::RenderComponent> mStaticRenderComponents;
+
     // void initWindow();
 
     // static void framebufferResizeCallback(GLFWwindow* window, int width, int height);
 
     // ---- Functions ----
-
-    void drawFrame();
 
     void cleanupSwapChain();
     void cleanup();
@@ -131,11 +136,11 @@ private:
     VkFormat findSupportedFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features);
     VkFormat findDepthFormat();
     bool hasStencilComponent(VkFormat format);
-    void createTextureImage();
+    void createTextureImage(gea::Texture* texture);
     void generateMipmaps(VkImage image, VkFormat imageFormat, int32_t texWidth, int32_t texHeight, uint32_t mipLevels);
     VkSampleCountFlagBits getMaxUsableSampleCount();
-    void createTextureImageView();
-    void createTextureSampler();
+    void createTextureImageView(gea::Texture* texture);
+    void createTextureSampler(gea::Texture* texture);
     VkImageView createImageView(VkImage image, VkFormat format, VkImageAspectFlags aspectFlags, uint32_t mipLevels);
     void createImage(uint32_t width, uint32_t height, uint32_t mipLevels, VkSampleCountFlagBits numSamples,
                      VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties,
@@ -160,9 +165,11 @@ private:
     };
     void createVertexBuffer();
     void createIndexBuffer();
+    void createVertexBuffer(gea::Mesh* mesh);
+    void createIndexBuffer(gea::Mesh* mesh);
     void createUniformBuffers();
     void createDescriptorPool();
-    void createDescriptorSets();
+    void createDescriptorSets(gea::Texture texture);
     void createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory);
     VkCommandBuffer beginSingleTimeCommands();
     void endSingleTimeCommands(VkCommandBuffer commandBuffer);

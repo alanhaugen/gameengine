@@ -33,6 +33,9 @@
 #define NOMINMAX		// Prevent Windows.h from defining min/max macros
 #include <windows.h>	// For HWND and GetModuleHandle
 #include <vulkan/vulkan_win32.h>
+#elif defined(__APPLE__)
+#include <vulkan/vulkan_macos.h>
+class NSView;
 #endif
 
 Renderer::Renderer(QWindow* parent) : QWindow(parent)
@@ -88,9 +91,20 @@ void Renderer::initVulkan() {
     //loadModel();
     createVertexBuffer();
     createIndexBuffer();
+    for (size_t i = 0; i < mTextures.size(); i++) {
+        createTextureImage(&mTextures[i]);
+    }
+	for (size_t i = 0; i < mMeshes.size(); i++) {
+        createVertexBuffer(&mMeshes[i]);
+	}
+    for (size_t i = 0; i < mMeshes.size(); i++) {
+        createIndexBuffer(&mMeshes[i]);
+    }
     createUniformBuffers();
     createDescriptorPool();
-    createDescriptorSets();
+    for (size_t i = 0; i < mTextures.size(); i++) {
+        createDescriptorSets(mTextures[i]);
+    }
     createCommandBuffers();
     createSyncObjects();
 }
@@ -108,7 +122,7 @@ void Renderer::cleanupSwapChain() {
         vkDestroyFramebuffer(device, framebuffer, nullptr);
     }
 
-    vkFreeCommandBuffers(device, commandPool, static_cast<uint32_t>(commandBuffers.size()), commandBuffers.data());
+    vkFreeCommandBuffers(device, commandPool, static_cast<uint32_t>(staticCommandBuffers.size()), staticCommandBuffers.data());
 
     vkDestroyPipeline(device, graphicsPipeline, nullptr);
     vkDestroyPipelineLayout(device, pipelineLayout, nullptr);
@@ -131,24 +145,29 @@ void Renderer::cleanupSwapChain() {
 void Renderer::cleanup() {
     cleanupSwapChain();
 
-    vkDestroySampler(device, textureSampler, nullptr);
-    vkDestroyImageView(device, textureImageView, nullptr);
-
-    vkDestroyImage(device, textureImage, nullptr);
-    vkFreeMemory(device, textureImageMemory, nullptr);
+	for (gea::Texture texture : mTextures) {
+		vkDestroySampler(device, texture.textureSampler, nullptr);
+		vkDestroyImageView(device, texture.textureImageView, nullptr);
+		vkDestroyImage(device, texture.textureImage, nullptr);
+		vkFreeMemory(device, texture.textureImageMemory, nullptr);
+	}
 
     vkDestroyDescriptorSetLayout(device, descriptorSetLayout, nullptr);
 
-    vkDestroyBuffer(device, indexBuffer, nullptr);
-    vkFreeMemory(device, indexBufferMemory, nullptr);
-
-    vkDestroyBuffer(device, vertexBuffer, nullptr);
-    vkFreeMemory(device, vertexBufferMemory, nullptr);
+	for (gea::Mesh mesh : mMeshes) {
+		vkDestroyBuffer(device, mesh.indexBuffer, nullptr);
+		vkFreeMemory(device, mesh.indexBufferMemory, nullptr);
+		vkDestroyBuffer(device, mesh.vertexBuffer, nullptr);
+		vkFreeMemory(device, mesh.vertexBufferMemory, nullptr);
+	}
 
     for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
-        vkDestroySemaphore(device, renderFinishedSemaphores[i], nullptr);
         vkDestroySemaphore(device, imageAvailableSemaphores[i], nullptr);
         vkDestroyFence(device, inFlightFences[i], nullptr);
+    }
+
+    for (size_t i = 0; i < swapChainImages.size(); i++) {
+        vkDestroySemaphore(device, renderFinishedSemaphores[i], nullptr);
     }
 
     vkDestroyCommandPool(device, commandPool, nullptr);
@@ -188,7 +207,9 @@ void Renderer::recreateSwapChain() {
     createFramebuffers();
     createUniformBuffers();
     createDescriptorPool();
-    createDescriptorSets();
+	for (size_t i = 0; i < mTextures.size(); i++) {
+        createDescriptorSets(mTextures[i]);
+	}
     createCommandBuffers();
 
     imagesInFlight.resize(swapChainImages.size(), VK_NULL_HANDLE);
@@ -262,13 +283,30 @@ void Renderer::createSurface() {
     //Create a surface (create info struct runs the create surface function)
     //Pure Vulkan code, but Qt handles the windowing system for us
     //If using GLFW, this is hidden in a GLFW function
-#ifdef Q_OS_WIN
+#ifdef _WIN32
     VkWin32SurfaceCreateInfoKHR createInfo{};
     createInfo.sType = VK_STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR;
     createInfo.hwnd = reinterpret_cast<HWND>(this->winId());
     createInfo.hinstance = GetModuleHandle(nullptr);
 
     if (vkCreateWin32SurfaceKHR(instance, &createInfo, nullptr, &surface) != VK_SUCCESS) {
+        throw std::runtime_error("Failed to create a surface!");
+    }
+    else
+    {
+        qDebug("\nSuccessfully created a surface!");
+    }
+#else
+    NSView* nsview = reinterpret_cast<NSView*>(this->winId());
+
+    VkMacOSSurfaceCreateInfoMVK createInfo = {};
+    createInfo.sType = VK_STRUCTURE_TYPE_MACOS_SURFACE_CREATE_INFO_MVK;
+    createInfo.pNext = NULL;
+    createInfo.flags = 0;
+    createInfo.pView = nsview;
+
+    if (vkCreateMacOSSurfaceMVK(instance, &createInfo, nullptr, &surface) != VK_SUCCESS)
+    {
         throw std::runtime_error("Failed to create a surface!");
     }
     else
@@ -559,8 +597,8 @@ void Renderer::createDescriptorSetLayout() {
 }
 
 void Renderer::createGraphicsPipeline() {
-    auto vertShaderCode = readFile(PATH + "Shaders/vert.spv");
-    auto fragShaderCode = readFile(PATH + "Shaders/frag.spv");
+    auto vertShaderCode = readFile(PATH + "Shaders/Phong.vert.spv");
+    auto fragShaderCode = readFile(PATH + "Shaders/Phong.frag.spv");
 
     VkShaderModule vertShaderModule = createShaderModule(vertShaderCode);
     VkShaderModule fragShaderModule = createShaderModule(fragShaderCode);
@@ -668,20 +706,22 @@ void Renderer::createGraphicsPipeline() {
     colorBlending.blendConstants[2] = 0.0f;
     colorBlending.blendConstants[3] = 0.0f;
 
+    //Here we can adding a push constat for e.g. model matrix
+    VkPushConstantRange pushConstantRange{};
+    pushConstantRange.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
+    pushConstantRange.offset = 0;
+    pushConstantRange.size = sizeof(glm::mat4);
+
     VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
     pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
     pipelineLayoutInfo.setLayoutCount = 1;
     pipelineLayoutInfo.pSetLayouts = &descriptorSetLayout;
+    pipelineLayoutInfo.pushConstantRangeCount = 1;
+    pipelineLayoutInfo.pPushConstantRanges = &pushConstantRange;
 
     if (vkCreatePipelineLayout(device, &pipelineLayoutInfo, nullptr, &pipelineLayout) != VK_SUCCESS) {
         throw std::runtime_error("failed to create pipeline layout!");
     }
-
-    //Here we can adding a push constat for e.g. model matrix
-    // VkPushConstantRange pushConstantRange{};
-    // pushConstantRange.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
-    // pushConstantRange.offset = 0;
-    // pushConstantRange.size = sizeof(glm::mat4);
 
     //9. Create the pipeline
     //Overall information to create a graphics pipeline
@@ -808,12 +848,12 @@ bool Renderer::hasStencilComponent(VkFormat format) {
     return format == VK_FORMAT_D32_SFLOAT_S8_UINT || format == VK_FORMAT_D24_UNORM_S8_UINT;
 }
 
-void Renderer::createTextureImage()
+void Renderer::createTextureImage(gea::Texture* texture)
 {
     int texWidth, texHeight, texChannels;
-    stbi_uc* pixels = stbi_load(TEXTURE_PATH.c_str(), &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
+    stbi_uc* pixels = stbi_load(texture->texturePath.c_str(), &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
     VkDeviceSize imageSize = texWidth * texHeight * 4;
-    mipLevels = static_cast<uint32_t>(std::floor(std::log2(std::max(texWidth, texHeight)))) + 1;
+    texture->mipLevels = static_cast<uint32_t>(std::floor(std::log2(std::max(texWidth, texHeight)))) + 1;
 
     if (!pixels) {
         throw std::runtime_error("failed to load texture image!");
@@ -830,16 +870,19 @@ void Renderer::createTextureImage()
 
     stbi_image_free(pixels);
 
-    createImage(texWidth, texHeight, mipLevels, VK_SAMPLE_COUNT_1_BIT, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, textureImage, textureImageMemory);
+    createImage(texWidth, texHeight, texture->mipLevels, VK_SAMPLE_COUNT_1_BIT, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, texture->textureImage, texture->textureImageMemory);
 
-    transitionImageLayout(textureImage, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, mipLevels);
-    copyBufferToImage(stagingBuffer, textureImage, static_cast<uint32_t>(texWidth), static_cast<uint32_t>(texHeight));
+    transitionImageLayout(texture->textureImage, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, texture->mipLevels);
+    copyBufferToImage(stagingBuffer, texture->textureImage, static_cast<uint32_t>(texWidth), static_cast<uint32_t>(texHeight));
     //transitioned to VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL while generating mipmaps
 
     vkDestroyBuffer(device, stagingBuffer, nullptr);
     vkFreeMemory(device, stagingBufferMemory, nullptr);
 
-    generateMipmaps(textureImage, VK_FORMAT_R8G8B8A8_SRGB, texWidth, texHeight, mipLevels);
+    generateMipmaps(texture->textureImage, VK_FORMAT_R8G8B8A8_SRGB, texWidth, texHeight, texture->mipLevels);
+
+    createTextureImageView(texture);
+    createTextureSampler(texture);
 }
 
 void Renderer::generateMipmaps(VkImage image, VkFormat imageFormat, int32_t texWidth, int32_t texHeight, uint32_t mipLevels) {
@@ -944,12 +987,12 @@ VkSampleCountFlagBits Renderer::getMaxUsableSampleCount() {
     return VK_SAMPLE_COUNT_1_BIT;
 }
 
-void Renderer::createTextureImageView() {
-    textureImageView = createImageView(textureImage, VK_FORMAT_R8G8B8A8_SRGB,
-                                       VK_IMAGE_ASPECT_COLOR_BIT, mipLevels);
+void Renderer::createTextureImageView(gea::Texture* texture) {
+    texture->textureImageView = createImageView(texture->textureImage, VK_FORMAT_R8G8B8A8_SRGB,
+                                       VK_IMAGE_ASPECT_COLOR_BIT, texture->mipLevels);
 }
 
-void Renderer::createTextureSampler() {
+void Renderer::createTextureSampler(gea::Texture* texture) {
     VkPhysicalDeviceProperties properties{};
     vkGetPhysicalDeviceProperties(physicalDevice, &properties);
 
@@ -968,10 +1011,10 @@ void Renderer::createTextureSampler() {
     samplerInfo.compareOp = VK_COMPARE_OP_ALWAYS;
     samplerInfo.mipmapMode = VK_SAMPLER_MIPMAP_MODE_LINEAR;
     samplerInfo.minLod = 0.0f;
-    samplerInfo.maxLod = static_cast<float>(mipLevels);
+    samplerInfo.maxLod = static_cast<float>(texture->mipLevels);
     samplerInfo.mipLodBias = 0.0f;
 
-    if (vkCreateSampler(device, &samplerInfo, nullptr, &textureSampler) != VK_SUCCESS) {
+    if (vkCreateSampler(device, &samplerInfo, nullptr, &texture->textureSampler) != VK_SUCCESS) {
         throw std::runtime_error("failed to create texture sampler!");
     }
 }
@@ -1217,7 +1260,7 @@ void Renderer::createDescriptorPool() {
     }
 }
 
-void Renderer::createDescriptorSets() {
+void Renderer::createDescriptorSets(gea::Texture texture) {
     std::vector<VkDescriptorSetLayout> layouts(swapChainImages.size(), descriptorSetLayout);
     VkDescriptorSetAllocateInfo allocInfo{};
     allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
@@ -1238,8 +1281,8 @@ void Renderer::createDescriptorSets() {
 
         VkDescriptorImageInfo imageInfo{};
         imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-        imageInfo.imageView = textureImageView;
-        imageInfo.sampler = textureSampler;
+        imageInfo.imageView = texture.textureImageView;
+        imageInfo.sampler = texture.textureSampler;
 
         std::array<VkWriteDescriptorSet, 2> descriptorWrites{};
 
@@ -1345,63 +1388,106 @@ uint32_t Renderer::findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags pro
     throw std::runtime_error("failed to find suitable memory type!");
 }
 
+void Renderer::createVertexBuffer(gea::Mesh* mesh) {
+    VkDeviceSize bufferSize = sizeof(mesh->vertices[0]) * mesh->vertices.size();
+
+    VkBuffer stagingBuffer;
+    VkDeviceMemory stagingBufferMemory;
+    createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory);
+
+    void* data;
+    vkMapMemory(device, stagingBufferMemory, 0, bufferSize, 0, &data);
+    memcpy(data, mesh->vertices.data(), (size_t)bufferSize);
+    vkUnmapMemory(device, stagingBufferMemory);
+
+    createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, mesh->vertexBuffer, mesh->vertexBufferMemory);
+
+    copyBuffer(stagingBuffer, mesh->vertexBuffer, bufferSize);
+
+    vkDestroyBuffer(device, stagingBuffer, nullptr);
+    vkFreeMemory(device, stagingBufferMemory, nullptr);
+}
+
+void Renderer::createIndexBuffer(gea::Mesh* mesh) {
+    VkDeviceSize bufferSize = sizeof(mesh->indices[0]) * mesh->indices.size();
+
+    VkBuffer stagingBuffer;
+    VkDeviceMemory stagingBufferMemory;
+    createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory);
+
+    void* data;
+    vkMapMemory(device, stagingBufferMemory, 0, bufferSize, 0, &data);
+    memcpy(data, mesh->indices.data(), (size_t)bufferSize);
+    vkUnmapMemory(device, stagingBufferMemory);
+
+    createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_INDEX_BUFFER_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, mesh->indexBuffer, mesh->indexBufferMemory);
+
+    copyBuffer(stagingBuffer, mesh->indexBuffer, bufferSize);
+
+    vkDestroyBuffer(device, stagingBuffer, nullptr);
+    vkFreeMemory(device, stagingBufferMemory, nullptr);
+}
+
+//create static command buffer for non moving objects
 void Renderer::createCommandBuffers()
 {
     //Resize command buffer count to have one for each framebuffer
-    commandBuffers.resize(swapChainFramebuffers.size());
+    staticCommandBuffers.resize(swapChainFramebuffers.size());
 
     //Alloc and not create, because we are allocating memory for the command buffers
     VkCommandBufferAllocateInfo allocInfo{};
     allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
     allocInfo.commandPool = commandPool;
-    allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-    allocInfo.commandBufferCount = (uint32_t) commandBuffers.size();
+    allocInfo.level = VK_COMMAND_BUFFER_LEVEL_SECONDARY;
+    allocInfo.commandBufferCount = (uint32_t) staticCommandBuffers.size();
 
-    if (vkAllocateCommandBuffers(device, &allocInfo, commandBuffers.data()) != VK_SUCCESS) {
+    if (vkAllocateCommandBuffers(device, &allocInfo, staticCommandBuffers.data()) != VK_SUCCESS) {
         throw std::runtime_error("failed to allocate command buffers!");
-    } 	else {
-        qDebug("Successfully created Command Buffers!");
     }
 
-    for (size_t i = 0; i < commandBuffers.size(); i++) {
+    for (size_t i = 0; i < staticCommandBuffers.size(); i++) {
+        VkCommandBufferInheritanceInfo inheritanceInfo{};
+        inheritanceInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_INFO;
+        inheritanceInfo.renderPass = renderPass;
+        inheritanceInfo.subpass = 0;
+        inheritanceInfo.framebuffer = swapChainFramebuffers[i];
+
         VkCommandBufferBeginInfo beginInfo{};
         beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+        beginInfo.flags = VK_COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT;
+        beginInfo.pInheritanceInfo = &inheritanceInfo;
 
-        if (vkBeginCommandBuffer(commandBuffers[i], &beginInfo) != VK_SUCCESS) {
+        if (vkBeginCommandBuffer(staticCommandBuffers[i], &beginInfo) != VK_SUCCESS) {
             throw std::runtime_error("failed to begin recording command buffer!");
         }
 
-        VkRenderPassBeginInfo renderPassInfo{};
-        renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-        renderPassInfo.renderPass = renderPass;
-        renderPassInfo.framebuffer = swapChainFramebuffers[i];
-        renderPassInfo.renderArea.offset = {0, 0};
-        renderPassInfo.renderArea.extent = swapChainExtent;
+        vkCmdBindPipeline(staticCommandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline);
 
-        std::array<VkClearValue, 2> clearValues{};
-        clearValues[0].color = {0.0f, 0.3f, 0.5f, 1.0f};
-        clearValues[1].depthStencil = {1.0f, 0};
+		for (size_t j = 0; j < mStaticRenderComponents.size(); j++)
+		{
+			gea::RenderComponent renderComponent = mStaticRenderComponents[j];
+			gea::Mesh mesh = mMeshes[renderComponent.meshIndex];
+			VkBuffer vertexBuffer = mesh.vertexBuffer;
+			VkBuffer indexBuffer = mesh.indexBuffer;
+			std::vector<uint32_t> indices = mesh.indices;
+			VkDeviceSize offsets[] = { 0 };
 
-        renderPassInfo.clearValueCount = static_cast<uint32_t>(clearValues.size());
-        renderPassInfo.pClearValues = clearValues.data();
+			glm::mat4 model = glm::mat4(1.0f);
+			model = glm::translate(model, mStaticTransformComponents[j].position);
+			model = glm::rotate(model, glm::radians(mStaticTransformComponents[j].rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
+			model = glm::rotate(model, glm::radians(mStaticTransformComponents[j].rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
+			model = glm::rotate(model, glm::radians(mStaticTransformComponents[j].rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
+			model = glm::scale(model, mStaticTransformComponents[j].scale);
 
-        vkCmdBeginRenderPass(commandBuffers[i], &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
+            vkCmdPushConstants(staticCommandBuffers[i], pipelineLayout, VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(glm::mat4), &model);
 
-        vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline);
+			vkCmdBindVertexBuffers(staticCommandBuffers[i], 0, 1, &vertexBuffer, offsets);
+			vkCmdBindIndexBuffer(staticCommandBuffers[i], indexBuffer, 0, VK_INDEX_TYPE_UINT32);
+			vkCmdBindDescriptorSets(staticCommandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, &descriptorSets[i], 0, nullptr);
+			vkCmdDrawIndexed(staticCommandBuffers[i], static_cast<uint32_t>(indices.size()), 1, 0, 0, 0);
+		}
 
-        VkBuffer vertexBuffers[] = {vertexBuffer};
-        VkDeviceSize offsets[] = {0};
-        vkCmdBindVertexBuffers(commandBuffers[i], 0, 1, vertexBuffers, offsets);
-
-        vkCmdBindIndexBuffer(commandBuffers[i], indexBuffer, 0, VK_INDEX_TYPE_UINT32);
-
-        vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, &descriptorSets[i], 0, nullptr);
-
-        vkCmdDrawIndexed(commandBuffers[i], static_cast<uint32_t>(indices.size()), 1, 0, 0, 0);
-
-        vkCmdEndRenderPass(commandBuffers[i]);
-
-        if (vkEndCommandBuffer(commandBuffers[i]) != VK_SUCCESS) {
+        if (vkEndCommandBuffer(staticCommandBuffers[i]) != VK_SUCCESS) {
             throw std::runtime_error("failed to record command buffer!");
         }
     }
@@ -1411,7 +1497,7 @@ void Renderer::createSyncObjects()
 {
     //Resize the semaphores to hold the correct number of semaphores - since we use vectors
     imageAvailableSemaphores.resize(MAX_FRAMES_IN_FLIGHT);
-    renderFinishedSemaphores.resize(MAX_FRAMES_IN_FLIGHT);
+    renderFinishedSemaphores.resize(swapChainImages.size());
     inFlightFences.resize(MAX_FRAMES_IN_FLIGHT);
     imagesInFlight.resize(swapChainImages.size(), VK_NULL_HANDLE);
 
@@ -1425,10 +1511,18 @@ void Renderer::createSyncObjects()
     //Create semaphores and fences
     for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
         if (vkCreateSemaphore(device, &semaphoreInfo, nullptr, &imageAvailableSemaphores[i]) != VK_SUCCESS ||
-            vkCreateSemaphore(device, &semaphoreInfo, nullptr, &renderFinishedSemaphores[i]) != VK_SUCCESS ||
             vkCreateFence(device, &fenceInfo, nullptr, &inFlightFences[i]) != VK_SUCCESS) {
             throw std::runtime_error("failed to create synchronization objects for a frame!");
-        }else{
+        }
+        else {
+            qDebug("Successfully created Semaphore / Fence %d!", (int)i);
+        }
+    }
+    for (size_t i = 0; i < swapChainImages.size(); i++) {
+        if (vkCreateSemaphore(device, &semaphoreInfo, nullptr, &renderFinishedSemaphores[i]) != VK_SUCCESS) {
+            throw std::runtime_error("failed to create synchronization objects for a frame!");
+        }
+        else {
             qDebug("Successfully created Semaphore / Fence %d!", (int)i);
         }
     }
@@ -1441,6 +1535,7 @@ void Renderer::updateUniformBuffer(uint32_t currentImage) {
     float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
 
     UniformBufferObject ubo{};
+    ubo.lightPos = glm::vec3{(cos(time)), abs(sin(time)), 0};
     ubo.model = glm::rotate(glm::mat4(1.0f), time * glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
     ubo.view = glm::lookAt(glm::vec3(2.0f, 2.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
     ubo.proj = glm::perspective(glm::radians(45.0f), swapChainExtent.width / (float) swapChainExtent.height, 0.1f, 10.0f);
@@ -1465,13 +1560,115 @@ void Renderer::drawFrame() {
         throw std::runtime_error("failed to acquire swap chain image!");
     }
 
-    updateUniformBuffer(imageIndex);
-
     if (imagesInFlight[imageIndex] != VK_NULL_HANDLE) {
         vkWaitForFences(device, 1, &imagesInFlight[imageIndex], VK_TRUE, UINT64_MAX);
     }
     imagesInFlight[imageIndex] = inFlightFences[currentFrame];
 
+    updateUniformBuffer(imageIndex);
+	        
+	//record dynamic secondary command buffer
+    VkCommandBuffer dynamicCommandBuffer;
+
+    VkCommandBufferAllocateInfo allocInfo{};
+    allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+    allocInfo.commandPool = commandPool;
+    allocInfo.level = VK_COMMAND_BUFFER_LEVEL_SECONDARY;
+    allocInfo.commandBufferCount = 1;
+
+    if (vkAllocateCommandBuffers(device, &allocInfo, &dynamicCommandBuffer) != VK_SUCCESS) {
+        throw std::runtime_error("failed to allocate command buffers!");
+    }
+
+    VkCommandBufferInheritanceInfo inheritanceInfo{};
+    inheritanceInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_INFO;
+    inheritanceInfo.renderPass = renderPass;
+    inheritanceInfo.subpass = 0;
+    inheritanceInfo.framebuffer = swapChainFramebuffers[imageIndex];
+
+    VkCommandBufferBeginInfo beginInfo{};
+    beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+    beginInfo.flags = VK_COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT;
+    beginInfo.pInheritanceInfo = &inheritanceInfo;
+
+    if (vkBeginCommandBuffer(dynamicCommandBuffer, &beginInfo) != VK_SUCCESS) {
+        throw std::runtime_error("failed to begin recording command buffer!");
+    }
+
+    vkCmdBindPipeline(dynamicCommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline);
+
+    for (size_t j = 0; j < mDynamicRenderComponents.size(); j++)
+    {
+        gea::RenderComponent renderComponent = mDynamicRenderComponents[j];
+        gea::Mesh mesh = mMeshes[renderComponent.meshIndex];
+        VkBuffer vertexBuffer = mesh.vertexBuffer;
+        VkBuffer indexBuffer = mesh.indexBuffer;
+        std::vector<uint32_t> indices = mesh.indices;
+        VkDeviceSize offsets[] = { 0 };
+
+        glm::mat4 model = glm::mat4(1.0f);
+        model = glm::translate(model, mDynamicTransformComponents[j].position);
+        model = glm::rotate(model, glm::radians(mDynamicTransformComponents[j].rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
+        model = glm::rotate(model, glm::radians(mDynamicTransformComponents[j].rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
+        model = glm::rotate(model, glm::radians(mDynamicTransformComponents[j].rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
+        model = glm::scale(model, mDynamicTransformComponents[j].scale);
+
+        vkCmdPushConstants(dynamicCommandBuffer, pipelineLayout, VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(glm::mat4), &model);
+
+        vkCmdBindVertexBuffers(dynamicCommandBuffer, 0, 1, &vertexBuffer, offsets);
+        vkCmdBindIndexBuffer(dynamicCommandBuffer, indexBuffer, 0, VK_INDEX_TYPE_UINT32);
+        vkCmdBindDescriptorSets(dynamicCommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, &descriptorSets[imageIndex], 0, nullptr);
+        vkCmdDrawIndexed(dynamicCommandBuffer, static_cast<uint32_t>(indices.size()), 1, 0, 0, 0);
+    }
+
+    if (vkEndCommandBuffer(dynamicCommandBuffer) != VK_SUCCESS) {
+        throw std::runtime_error("failed to record command buffer!");
+    }
+
+    //record primary command buffer
+    VkCommandBuffer primaryCommandBuffer;
+    VkCommandBufferAllocateInfo primaryAllocInfo{};
+    primaryAllocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+    primaryAllocInfo.commandPool = commandPool;
+    primaryAllocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+    primaryAllocInfo.commandBufferCount = 1;
+
+    if (vkAllocateCommandBuffers(device, &primaryAllocInfo, &primaryCommandBuffer) != VK_SUCCESS) {
+        throw std::runtime_error("failed to allocate command buffers!");
+    }
+
+    VkCommandBufferBeginInfo primaryBeginInfo{};
+    primaryBeginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+
+    vkBeginCommandBuffer(primaryCommandBuffer, &primaryBeginInfo);
+
+    VkRenderPassBeginInfo primaryRenderPassInfo{};
+    primaryRenderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
+    primaryRenderPassInfo.renderPass = renderPass;
+    primaryRenderPassInfo.framebuffer = swapChainFramebuffers[imageIndex];
+    primaryRenderPassInfo.renderArea.offset = { 0, 0 };
+    primaryRenderPassInfo.renderArea.extent = swapChainExtent;
+
+    std::array<VkClearValue, 2> clearValues{};
+    clearValues[0].color = { 0.0f, 0.3f, 0.5f, 1.0f };
+    clearValues[1].depthStencil = { 1.0f, 0 };
+
+    primaryRenderPassInfo.clearValueCount = static_cast<uint32_t>(clearValues.size());
+    primaryRenderPassInfo.pClearValues = clearValues.data();
+    vkCmdBeginRenderPass(primaryCommandBuffer, &primaryRenderPassInfo, VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS);
+
+    std::array<VkCommandBuffer, 2> secondaries = {
+        staticCommandBuffers[imageIndex],
+        dynamicCommandBuffer
+    };
+    vkCmdExecuteCommands(primaryCommandBuffer,
+        static_cast<uint32_t>(secondaries.size()),
+        secondaries.data());
+
+    vkCmdEndRenderPass(primaryCommandBuffer);
+    vkEndCommandBuffer(primaryCommandBuffer);
+
+    //submit primary command buffer
     VkSubmitInfo submitInfo{};
     submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
 
@@ -1482,9 +1679,9 @@ void Renderer::drawFrame() {
     submitInfo.pWaitDstStageMask = waitStages;
 
     submitInfo.commandBufferCount = 1;
-    submitInfo.pCommandBuffers = &commandBuffers[imageIndex];
+    submitInfo.pCommandBuffers = &primaryCommandBuffer;
 
-    VkSemaphore signalSemaphores[] = {renderFinishedSemaphores[currentFrame]};
+    VkSemaphore signalSemaphores[] = {renderFinishedSemaphores[imageIndex]};
     submitInfo.signalSemaphoreCount = 1;
     submitInfo.pSignalSemaphores = signalSemaphores;
 
@@ -1693,10 +1890,10 @@ std::vector<const char *> Renderer::getRequiredExtensions() {
     extensions.push_back("VK_KHR_surface");
     #ifdef Q_OS_WIN
         extensions.push_back("VK_KHR_win32_surface");	// Only on Windows
-    #elif defined(Q_OS_LINUX)
-        instanceExtensions.push_back("VK_KHR_xcb_surface");		// or xlib_surface, depending on your Qt build
-    #elif defined(Q_OS_MAC)
-        instanceExtensions.push_back("VK_MVK_macos_surface");
+    #elif defined(__linux__)
+        extensions.push_back("VK_KHR_xcb_surface");		// or xlib_surface, depending on your Qt build
+    #elif defined(Q_OS_APPLE)
+        extensions.push_back("VK_MVK_macos_surface");
     #endif
 
     // If validation is enabled, add extension to report validation debug info
@@ -1758,10 +1955,14 @@ VkBool32 Renderer::debugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageS
 
 void Renderer::exposeEvent(QExposeEvent* event)
 {
+    #ifdef _WIN32   // These lines does not work on macOS so need this test
+
     qDebug("exposeEvent called");
     if (isExposed()) {
         drawFrame();			//actual drawing
     }
+
+    #endif
 }
 
 void Renderer::resizeEvent(QResizeEvent *event)

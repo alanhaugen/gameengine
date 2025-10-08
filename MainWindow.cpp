@@ -7,6 +7,10 @@
 #include <QTreeView>
 #include "displayWidget.cpp"
 MainWindow::MainWindow(QWidget *parent)
+
+MainWindow::MainWindow(QWidget* parent,
+    std::vector<gea::RenderComponent> staticComponents, std::vector<gea::TransformComponent> staticTransformComponents,
+    std::vector<gea::Mesh> meshes, std::vector<gea::Texture> textures)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
@@ -22,13 +26,16 @@ MainWindow::MainWindow(QWidget *parent)
     //Have to set the size of the Vulkan window here, otherwise it can not set up the swapchain correctly
     mVulkanWindow->setWidth(1100);
     mVulkanWindow->setHeight(700);
-    mVulkanWindow->initVulkan();
+
+	SetupRenderSystem(staticComponents, staticTransformComponents, meshes, textures);
+    //mVulkanWindow->initVulkan();
 
     // Wrap VulkanRenderer (QWindow) into a QWidget
-    QWidget* vulkanWidget = QWidget::createWindowContainer(mVulkanWindow, this);
-    vulkanWidget->setMinimumSize(1100, 700);
+    QWidget* mVulkanWidget = QWidget::createWindowContainer(mVulkanWindow, this);
+    mVulkanWidget->setMinimumSize(1100, 700);
 
-    ui->VulkanLayout->addWidget(vulkanWidget);
+    // Put the mVulkanWidget into the VulkanLayout spot, made in the MainWindow.ui file
+    ui->VulkanLayout->addWidget(mVulkanWidget);
 
     //sets the keyboard input focus to the MainWindow when program starts
     this->setFocus();
@@ -82,6 +89,17 @@ MainWindow::~MainWindow()
         mVulkanWindow = nullptr;
     }
     delete ui;
+}
+
+void MainWindow::SetupRenderSystem(std::vector<gea::RenderComponent> staticComponents, std::vector<gea::TransformComponent> staticTransformComponents, std::vector<gea::Mesh> meshes, std::vector<gea::Texture> textures)
+{
+    mRenderSystem = new gea::RenderSystem(mVulkanWindow);
+    mRenderSystem->Initialize(staticComponents, staticTransformComponents, meshes, textures);
+}
+
+void MainWindow::UpdateRenderSystem(std::vector<gea::RenderComponent> dynamicComponents, std::vector<gea::TransformComponent> dynamicTransformComponents)
+{
+	mRenderSystem->Update(dynamicComponents, dynamicTransformComponents);
 }
 
 void MainWindow::start()
