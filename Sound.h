@@ -1,5 +1,5 @@
-#ifndef SOUND_H
-#define SOUND_H
+//#ifndef SOUND_H
+//#define SOUND_H
 
 /*#ifdef _WIN32
 #include <AL/al.h>

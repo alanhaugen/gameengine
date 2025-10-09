@@ -48,12 +48,6 @@ public:
     void Update(float deltaTime) override;
 };
 
-// Rendering system for Qt/Vulkan
-class RenderSystem : public SystemBase {
-public:
-    void Update(float deltaTime) override;
-};
-
 }
 
 #endif // SYSTEMS_H

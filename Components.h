@@ -1,17 +1,6 @@
 #ifndef COMPONENTS_H
 #define COMPONENTS_H
 
-//Sound
-#ifdef _WIN32
-#include <AL/al.h>
-#include <AL/alc.h>
-#endif
-#ifdef __APPLE__
-#include <OpenAL/al.h>
-#include <OpenAL/alc.h>
-#endif
-//
-
 #include <glm/glm.hpp>
 #include <glm/ext/matrix_transform.hpp> //for tranlate, rotate, scale
 #include <vector>
@@ -98,18 +87,17 @@ namespace gea {
 
     struct RenderComponent
     {
-        RenderComponent(short m, short t, short id) : meshIndex(m), textureIndex(t), entityID(id){};
-        short meshIndex;
-        short textureIndex;
-        short entityID;
+        short meshIndex{-1};
+        short textureIndex{-1};
+        short mEntityID{-1};
     };
 
+    typedef unsigned int ALuint;    //also defined in AL/al.h
     struct Sound
     {
         ALuint mSoundSource{0};
         ALuint mSoundBuffer{0};
         short mEntityID{-1};
-
     };
 
     struct Tower

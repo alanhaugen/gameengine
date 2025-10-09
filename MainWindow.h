@@ -2,28 +2,26 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include "Engine.h"
 #include "Mesh.h"
 #include "Texture.h"
 #include "FilesWindow.h"
 #include <QKeyEvent>
 #include "Components.h"
 
-#include <QMediaPlayer>
-#include <QAudioOutput>
 #include "Input.h"
-#include "lua.hpp"  //lua include that has the extern "C" thingy internally
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
-class MainWindow;
+    class MainWindow;
 }
 QT_END_NAMESPACE
 
 namespace gea {
-//Forward declarations
-class EntityContainer;
-class EntityModel;
-class RenderSystem;
+    //Forward declarations
+    class EntityContainer;
+    class EntityModel;
+    class RenderSystem;
 }
 
 class MainWindow : public QMainWindow
@@ -37,8 +35,8 @@ public:
 
     ~MainWindow();
 
-    static void SetStatusBarMessage(const char* message);
-    static void AddToolbar(const char* name, const char* action);
+    void SetStatusBarMessage(const char* message);
+    // void AddToolbar(const char* name, const char* action);
 
     void start();
     void UpdateRenderSystem(std::vector<gea::RenderComponent> dynamicComponents, std::vector<gea::Transform> dynamicTransformComponents);
@@ -55,11 +53,6 @@ private:
     FilesWindow* mFilesWidget{nullptr};
     //FilesWindow<mVulkanWindow->objManager>(mVulkanWindow->objManager)* mFilesWidget{nullptr};
 
-    QMediaPlayer *mMediaPlayer{nullptr};
-    QAudioOutput *mAudioOutput{nullptr};
-
-    void playSound();
-
     //GUI for Entities
     class gea::EntityContainer* mEntityContainer{nullptr};
     class gea::EntityModel* mEntityModel{nullptr};
@@ -69,6 +62,8 @@ private:
 
     float mCameraSpeed{0.005f};
     Input mInput;
+
+    gea::Engine* mEngine{nullptr};
 
 protected:
     void keyPressEvent(QKeyEvent *event) override;

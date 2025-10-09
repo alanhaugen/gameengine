@@ -46,8 +46,9 @@ set(SOURCES
     Mesh.h Mesh.cpp
     Renderer.h Renderer.cpp
     RenderSystem.h RenderSystem.cpp
+    ScriptingSystem.h ScriptingSystem.cpp
     Sound.h Sound.cpp
-    System.h
+    SoundSystem.h SoundSystem.cpp
     Systems.h Systems.cpp
     Texture.h Texture.cpp
     Utilities.h

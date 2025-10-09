@@ -49,12 +49,12 @@ int main(int argc, char *argv[])
     mMeshes.push_back(gea::Mesh());
     mTextures.push_back(gea::Texture());
 
-    mRenderComponents.push_back(gea::RenderComponent(0, 0, 0));
+    mRenderComponents.push_back(gea::RenderComponent{0, 0, 0});
     gea::Transform t1 = gea::Transform(0);
     t1.mPosition = glm::vec3(1.0f, 0.0f, 0.0f);
     mTransformComponents.push_back(t1);
 
-    mStaticRenderComponents.push_back(gea::RenderComponent(0, 0, 1));
+    mStaticRenderComponents.push_back(gea::RenderComponent{0, 0, 1});
     gea::Transform t2 = gea::Transform(1);
     t2.mPosition = glm::vec3(-1.0f, 0.0f, 0.0f);
     mStaticTransformComponents.push_back(t2);

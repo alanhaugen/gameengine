@@ -1,7 +1,6 @@
 #include "Systems.h"
 #include "Engine.h"
 #include <algorithm>
-#include <cmath>
 #include <iostream>
 
 namespace gea {
@@ -134,12 +133,5 @@ void WaveSystem::Update(float deltaTime) {
 
 // work in progress, not completed yet?Akash?
 void AISystem::Update(float) {}
-
-// to print position
-void RenderSystem::Update(float) {
-    for (const auto& tr : mEngine->TransformVector)
-        std::cout << "Entity " << tr.mEntityID << " Position:("
-                  << tr.mPosition.x << ", " << tr.mPosition.y << ", " << tr.mPosition.z << ")\n";
-}
 
 } // namespace gea

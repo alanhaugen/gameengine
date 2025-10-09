@@ -1,4 +1,5 @@
 #include "RenderSystem.h"
+#include "Engine.h"
 #include "Renderer.h"
 
 void gea::RenderSystem::Initialize(std::vector<gea::RenderComponent> staticComponents, std::vector<gea::Transform> staticTransformComponents,
@@ -12,4 +13,10 @@ void gea::RenderSystem::Update(std::vector<gea::RenderComponent> dynamicComponen
 {
 	mRenderer->UpdateCompoments(dynamicComponents, dynamicTransformComponents);
 	mRenderer->requestUpdate();
+}
+
+void gea::RenderSystem::Update(float) {
+    for (const auto& tr : mEngine->TransformVector)
+        qDebug() << "Entity " << tr.mEntityID << " Position:("
+                  << tr.mPosition.x << ", " << tr.mPosition.y << ", " << tr.mPosition.z << ")\n";
 }
