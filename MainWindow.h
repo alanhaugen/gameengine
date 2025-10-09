@@ -55,6 +55,9 @@ private:
     void setCameraSpeed(float value);
 
     float mCameraSpeed{0.005f};
+    float mCameraRotateSpeed{ -0.001f };
+    int mMouseXlast{0}; //for mouse rotate input
+    int mMouseYlast{0};
     Input mInput;
 
     gea::Engine* mEngine{nullptr};

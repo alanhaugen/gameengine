@@ -105,7 +105,7 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
     // window.resize(1000,200);
     // window.show();
 
-    mCamera = &dynamic_cast<Renderer*>(mVulkanWindow)->mCamera;
+    mCamera = &(mVulkanWindow->mCamera);
 
     //Should eventually be run from the Engine
     gea::SoundSystem* testSound = new gea::SoundSystem(mEngine);
@@ -166,11 +166,37 @@ void MainWindow::keyPressEvent(QKeyEvent* event)
 
     if (event->key() == Qt::Key_Space)
         start();
+
+    // For editor camera
+    if(event->key() == Qt::Key_W)
+        mInput.W = true;
+    if(event->key() == Qt::Key_S)
+        mInput.S = true;
+    if(event->key() == Qt::Key_D)
+        mInput.D = true;
+    if(event->key() == Qt::Key_A)
+        mInput.A = true;
+    if(event->key() == Qt::Key_Q)
+        mInput.D = true;
+    if(event->key() == Qt::Key_E)
+        mInput.A = true;
 }
 
 void MainWindow::keyReleaseEvent(QKeyEvent *event)
 {
-
+    // For editor camera
+    if(event->key() == Qt::Key_W)
+        mInput.W = false;
+    if(event->key() == Qt::Key_S)
+        mInput.S = false;
+    if(event->key() == Qt::Key_D)
+        mInput.D = false;
+    if(event->key() == Qt::Key_A)
+        mInput.A = false;
+    if(event->key() == Qt::Key_Q)
+        mInput.D = false;
+    if(event->key() == Qt::Key_E)
+        mInput.A = false;
 }
 
 void MainWindow::mousePressEvent(QMouseEvent *event)
@@ -195,6 +221,18 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *event)
 
 void MainWindow::mouseMoveEvent(QMouseEvent *event)
 {
+    if (mInput.RMB)
+    {
+        //Using mMouseXYlast as deltaXY so we don't need extra variables
+        mMouseXlast = event->pos().x() - mMouseXlast;
+        mMouseYlast = event->pos().y() - mMouseYlast;
+
+        mCamera->mTarget.x += mMouseXlast * mCameraRotateSpeed;
+        mCamera->mTarget.y += mMouseYlast * mCameraRotateSpeed;
+
+    }
+    mMouseXlast = event->pos().x();
+    mMouseYlast = event->pos().y();
 
 }
 
@@ -205,27 +243,29 @@ void MainWindow::wheelEvent(QWheelEvent *event)
 
 void MainWindow::handleInput()
 {
-    //Camera
-    //mCamera->setSpeed(0.f);  //cancel last frame movement
+    //If camera is not set, don't try to update it!
+    if (!mCamera)
+        return;
+    mCamera->setSpeeds(0.f);  //cancel last frame movement
 
     //setCameraSpeed(100.0f);
 
-    //if(mInput.RMB)
-        qDebug() << "RMB held down";
+    // if(mInput.RMB)
+        // qDebug() << "RMB held down";
 
-    //if (mInput.RMB)
-    //{
-    //    if (mInput.W)
-    //        mCamera->setSpeed(mCameraSpeed);
-    //    if (mInput.S)
-    //        mCamera->setSpeed(-mCameraSpeed);
-    //    if (mInput.D)
-    //        mCamera->moveRight(-mCameraSpeed);
-    //    if (mInput.A)
-    //        mCamera->moveRight(mCameraSpeed);
-    //    if (mInput.Q)
-    //        mCamera->moveUp(mCameraSpeed);
-    //    if (mInput.E)
-    //        mCamera->moveUp(-mCameraSpeed);
-    //}
+    if (mInput.RMB)
+    {
+        if (mInput.W)
+            mCamera->mYSpeed -= mCameraSpeed;
+        if (mInput.S)
+            mCamera->mYSpeed += mCameraSpeed;
+        if (mInput.D)
+            mCamera->mXSpeed -= mCameraSpeed;
+        if (mInput.A)
+            mCamera->mXSpeed += mCameraSpeed;
+        if (mInput.Q)
+            mCamera->mZSpeed += mCameraSpeed;
+        if (mInput.E)
+            mCamera->mZSpeed -= mCameraSpeed;
+    }
 }

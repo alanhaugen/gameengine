@@ -1,7 +1,6 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
-#include <QMatrix4x4>
 #include <glm/glm.hpp>
 #include <glm/trigonometric.hpp>
 
@@ -22,36 +21,38 @@ public:
 
     void setPerspective(float fovy, float screenWidth, float near, float far);
     //void setPerspective(glm::radians(float fovy), float screenWidth, float near, float far);
-    void lookAt(QVector3D position, QVector3D forward, QVector3D up);
+    void lookAt(glm::vec3 position, glm::vec3 forward, glm::vec3 up);
 
-    inline QMatrix4x4 getViewMatrix() const {return mViewMatrix; }
-    inline QMatrix4x4 getProjectionMatrix() const {return mProjectionMatrix; }
+    inline glm::mat4 getViewMatrix() const {return mViewMatrix; }
+    inline glm::mat4 getProjectionMatrix() const {return mProjectionMatrix; }
 
-    inline void setViewMatrix(const QMatrix4x4 &newViewMatrix) { mViewMatrix = newViewMatrix; }
-    inline void setProjectionMatrix(const QMatrix4x4 &newProjectionMatrix) {mProjectionMatrix = newProjectionMatrix; }
-    void setPosition(const QVector3D &newPos);
-    void setSpeed(float speed);
+    inline void setViewMatrix(const glm::mat4 &newViewMatrix) { mViewMatrix = newViewMatrix; }
+    inline void setProjectionMatrix(const glm::mat4 &newProjectionMatrix) {mProjectionMatrix = newProjectionMatrix; }
+    void setPosition(const glm::vec3 &newPos);
+    void setSpeeds(float speed);
 
     void update();
 
-
     //glm::mat4 perspective = (glm::radians(45.0f),( double aspect, double near, double far));
 
-private:
+    glm::mat4 mProjectionMatrix{};
+    glm::mat4 mViewMatrix{};
 
-    QMatrix4x4 mProjectionMatrix{};
-    QMatrix4x4 mViewMatrix{};
-
-    QVector3D mPosition = {0, 0, 0};
-    QVector3D mForward = {0, 0, -1.0};
-    QVector3D mUp = {0, 1, 0};
-    QVector3D mTarget = {};
+    glm::vec3 mPosition = {2.0f, 2.0f, 2.0f};
+    glm::vec3 mForward = {0, 0, -1.0};
+    glm::vec3 mUp = {0, 0, 1};
+    glm::vec3 mTarget = {0.0f, 0.0f, 0.0f};
 
     float mPitch = 0.f;
     float mYaw = 0.f;
 
-    float mSpeed = 100.f;
-    float *ptr = &mSpeed;
+    //Quick hack, since I don't have time anymore:
+    float mXSpeed = 0.f;
+    float mYSpeed = 0.f;
+    float mZSpeed = 0.f;
+
+
+    // float *ptr = &mSpeed;
 };
 
 #endif // CAMERA_H
