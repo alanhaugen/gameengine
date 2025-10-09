@@ -2050,9 +2050,16 @@ void Renderer::resizeEvent(QResizeEvent *event)
 
 bool Renderer::event(QEvent* ev)
 {
-    //qDebug("event(QEvent* ev) called");
-    if (ev->type() == QEvent::UpdateRequest && isExposed())
+    // static int count{0};
+    // qDebug("event %d called", count);
+    if (ev->type() == QEvent::UpdateRequest)
+        // qDebug("Update Requested");
+    //Seems if I check for both UpdateRequested && isExposed() it hangs.
+    //If I test for one of them it works, but seemingly best with only UpdateRequest()
+    //if ( isExposed())
     {
+        // qDebug("Exposed true");
+        // count++;
         drawFrame();			//actual drawing
         requestUpdate();        // schedule the next UpdateRequest == render loop
         return true;

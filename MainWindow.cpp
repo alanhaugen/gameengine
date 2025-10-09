@@ -142,7 +142,7 @@ void MainWindow::start()
     qDebug("Start is called");
     mVulkanWindow->requestUpdate();
     // mEngine->mIsRunning = true;
-    // mEngine->GameLoop();
+    // mEngine->GameLoop(); //not correct yet
 }
 
 void MainWindow::setCameraSpeed(float value)

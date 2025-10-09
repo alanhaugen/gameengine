@@ -134,8 +134,8 @@ Entity* Engine::CreateEntity()
 
     void Engine::Update(float deltaTime)
     {
-        //qDebug("Update called %.6f", deltaTime);
-        UpdateRenderSystem();
+        qDebug("Update called %.6f", deltaTime);
+        // UpdateRenderSystem(); //Done through Qts RequestUpdate() in bool Renderer::event(QEvent* ev)
         // to call all systems 
         // i am listing Example:
         //   MovementSystem::Update()
@@ -145,6 +145,8 @@ Entity* Engine::CreateEntity()
     }
 
     //Simple loop that should call Update 100Hz
+    //Something funky with it.
+    //It loops but blocks Qt rendering
     void Engine::GameLoop()
     {
         qDebug("GameLoop started");
