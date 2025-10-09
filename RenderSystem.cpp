@@ -1,6 +1,8 @@
 #include "RenderSystem.h"
+#include "Renderer.h"
 
-void gea::RenderSystem::Initialize(std::vector<gea::RenderComponent> staticComponents, std::vector<gea::Transform> staticTransformComponents, std::vector<gea::Mesh> meshes, std::vector<gea::Texture> textures)
+void gea::RenderSystem::Initialize(std::vector<gea::RenderComponent> staticComponents, std::vector<gea::Transform> staticTransformComponents,
+                                   std::vector<gea::Mesh> meshes, std::vector<gea::Texture> textures)
 {
 	mRenderer->initComponents(staticComponents, staticTransformComponents, meshes, textures);
 	mRenderer->initVulkan();

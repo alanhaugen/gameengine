@@ -5,6 +5,7 @@
 #include <vulkan/vulkan_core.h>
 #include <string>
 #include <vector>
+#include "MainWindow.h"
 #include "QDirIterator"
 #include "assetmanager.h"
 #include "Texture.h"
@@ -16,6 +17,9 @@
 //Forward declarations
 struct SwapChainSupportDetails;
 struct QueueFamilyIndices;
+
+
+
 class Renderer : public QWindow
 {
     Q_OBJECT
@@ -46,6 +50,14 @@ protected:
     void exposeEvent(QExposeEvent* event) override;
     void resizeEvent(QResizeEvent* event) override;
     bool event(QEvent* event) override;
+
+    //Qts input functions - just forward it to MainWindow for now
+    void keyPressEvent(QKeyEvent *event) override           {mMainWindow->keyPressEvent(event);};
+    void keyReleaseEvent(QKeyEvent *event) override         {mMainWindow->keyReleaseEvent(event);};
+    void mousePressEvent(QMouseEvent *event) override       {mMainWindow->mousePressEvent(event);};
+    void mouseReleaseEvent(QMouseEvent *event) override     {mMainWindow->mouseReleaseEvent(event);};
+    void mouseMoveEvent(QMouseEvent *event) override        {mMainWindow->mouseMoveEvent(event);};
+    void wheelEvent(QWheelEvent *event) override            {mMainWindow->wheelEvent(event);};
 
 private:
 
@@ -118,6 +130,7 @@ private:
     std::vector<gea::Transform> mStaticTransformComponents;
     std::vector<gea::RenderComponent> mDynamicRenderComponents;
     std::vector<gea::RenderComponent> mStaticRenderComponents;
+
     Camera mCamera;
     class MainWindow* mMainWindow{nullptr};
 

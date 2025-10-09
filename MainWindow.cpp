@@ -18,6 +18,7 @@
 
 #include "ui_MainWindow.h"
 #include "Renderer.h"
+#include "RenderSystem.h"
 #include <QKeyEvent>
 #include <thread>
 
@@ -139,6 +140,7 @@ MainWindow::MainWindow(QWidget* parent,
 
     mVulkanWindow = new Renderer();
     mVulkanWindow->setTitle("Renderer");    //Render window title
+    mVulkanWindow->mMainWindow = this;      //VulkanWindow can now refer to this instance
 
     //Have to set the size of the Vulkan window here, otherwise it can not set up the swapchain correctly
     mVulkanWindow->setWidth(1100);
@@ -172,7 +174,7 @@ MainWindow::MainWindow(QWidget* parent,
     if (mVulkanWindow->filesImported==true)
     {
         //FilesWindow<ObjAsset> filesWidget(mVulkanWindow->objManager);
-        filesWidget= new FilesWindow(mVulkanWindow->objManager);
+        mFilesWidget= new FilesWindow(mVulkanWindow->objManager);
     }
 
     //////////////model view test/////////
@@ -258,18 +260,6 @@ void MainWindow::setCameraSpeed(float value)
         mCameraSpeed = 0.3f;
 }
 
-void MainWindow::keyPressEvent(QKeyEvent* event)
-{
-    if (event->key() == Qt::Key_Escape)
-    {
-        delete mVulkanWindow;
-        mVulkanWindow = nullptr;
-        close(); // Example: close window on ESC
-    }
-    if (event->key() == Qt::Key_Space)
-        start();
-}
-
 void MainWindow::playSound()
 {
     QString filePath = QString(PATH.c_str()) + "Assets/Sounds/Test Drive.mp3";
@@ -282,6 +272,27 @@ void MainWindow::playSound()
 
     mMediaPlayer->setSource(QUrl::fromLocalFile(filePath));
     mMediaPlayer->play();
+}
+
+void MainWindow::keyPressEvent(QKeyEvent* event)
+{
+    if (event->key() == Qt::Key_Escape)
+    {
+        delete mVulkanWindow;
+        mVulkanWindow = nullptr;
+        delete mFilesWidget;
+        mFilesWidget = nullptr;
+
+        close(); // Example: close window on ESC
+    }
+
+    if (event->key() == Qt::Key_Space)
+        start();
+}
+
+void MainWindow::keyReleaseEvent(QKeyEvent *event)
+{
+
 }
 
 void MainWindow::mousePressEvent(QMouseEvent *event)
@@ -302,6 +313,16 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *event)
         mInput.LMB = false;
     if (event->button() == Qt::MiddleButton)
         mInput.MMB = false;
+}
+
+void MainWindow::mouseMoveEvent(QMouseEvent *event)
+{
+
+}
+
+void MainWindow::wheelEvent(QWheelEvent *event)
+{
+
 }
 
 void MainWindow::handleInput()

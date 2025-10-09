@@ -1,6 +1,7 @@
-#include "Utilities.h"
 #ifndef TEXTURE_H
 #define TEXTURE_H
+
+#include "Utilities.h"
 
 namespace gea
 {

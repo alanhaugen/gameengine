@@ -1,6 +1,7 @@
-#include "Utilities.h"
 #ifndef MESH_H
 #define MESH_H
+
+#include "Utilities.h"
 
 namespace gea
 {

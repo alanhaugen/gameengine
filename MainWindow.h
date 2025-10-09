@@ -2,9 +2,10 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include "fileswindow.h"
+#include "Mesh.h"
+#include "Texture.h"
+#include "FilesWindow.h"
 #include <QKeyEvent>
-#include "RenderSystem.h"
 #include "Components.h"
 
 #include <QMediaPlayer>
@@ -19,8 +20,10 @@ class MainWindow;
 QT_END_NAMESPACE
 
 namespace gea {
+//Forward declarations
 class EntityContainer;
 class EntityModel;
+class RenderSystem;
 }
 
 class MainWindow : public QMainWindow
@@ -49,8 +52,8 @@ private:
 
     void SetupRenderSystem(std::vector<gea::RenderComponent> staticComponents, std::vector<gea::Transform> staticTransformComponents, std::vector<gea::Mesh> meshes, std::vector<gea::Texture> textures);
 
-    FilesWindow* filesWidget{nullptr};
-    //FilesWindow<mVulkanWindow->objManager>(mVulkanWindow->objManager)* filesWidget{nullptr};
+    FilesWindow* mFilesWidget{nullptr};
+    //FilesWindow<mVulkanWindow->objManager>(mVulkanWindow->objManager)* mFilesWidget{nullptr};
 
     QMediaPlayer *mMediaPlayer{nullptr};
     QAudioOutput *mAudioOutput{nullptr};
@@ -68,10 +71,16 @@ private:
     Input mInput;
 
 protected:
-    void keyPressEvent(QKeyEvent* event) override;
-
+    void keyPressEvent(QKeyEvent *event) override;
+    void keyReleaseEvent(QKeyEvent *event) override;
     void mousePressEvent(QMouseEvent *event) override;
     void mouseReleaseEvent(QMouseEvent *event) override;
+    void mouseMoveEvent(QMouseEvent *event) override;
+    void wheelEvent(QWheelEvent *event) override;
+
+
+    friend class Renderer;    //so renderer can access protected methods
+
 };
 
 #endif // MAINWINDOW_H

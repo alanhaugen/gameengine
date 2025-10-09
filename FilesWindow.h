@@ -1,8 +1,9 @@
 #ifndef FILESWINDOW_H
 #define FILESWINDOW_H
+
 #include <QWidget>
 #include <QPushButton>
-#include "assetmanager.h"
+#include "AssetManager.h"
 #include <QFileDialog>
 #include <QDragEnterEvent>
 #include <QMimeData>

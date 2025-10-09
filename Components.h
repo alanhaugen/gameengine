@@ -36,8 +36,8 @@ namespace gea {
         Sound
     };
 
-//Below are examples of actual components
-//Systems need each component to know what entity it belongs to
+    //Below are examples of actual components
+    //Systems need each component to know what entity it belongs to
 
     struct AI
     {
@@ -55,13 +55,13 @@ namespace gea {
         short mEntityID{ -1 };
     };
 
-struct Health
-{
-    float mCurrentHealth{ 100.0f };
-    float mMaxHealth{ 100.0f };
-    bool mIsAlive{ true };
-    short mEntityID{ -1 };
-};
+    struct Health
+    {
+        float mCurrentHealth{ 100.0f };
+        float mMaxHealth{ 100.0f };
+        bool mIsAlive{ true };
+        short mEntityID{ -1 };
+    };
 
     struct Material
     {
@@ -85,16 +85,16 @@ struct Health
         short mEntityID{ -1 };
     };
 
-struct Projectile
-{
-    float mDamage{ 25.0f };
-    float mLifetime{ 5.0f };
-    bool mIsAirborne{ true };
-    glm::vec3 mGravity{ 0.0f, -9.8f, 0.0f };
-    glm::vec3 mVelocity{ 0.0f, 0.0f, 0.0f }; // <-- added velocity member
-    short mTargetEntityID{ -1 };
-    short mEntityID{ -1 };
-};
+    struct Projectile
+    {
+        float mDamage{ 25.0f };
+        float mLifetime{ 5.0f };
+        bool mIsAirborne{ true };
+        glm::vec3 mGravity{ 0.0f, -9.8f, 0.0f };
+        glm::vec3 mVelocity{ 0.0f, 0.0f, 0.0f }; // <-- added velocity member
+        short mTargetEntityID{ -1 };
+        short mEntityID{ -1 };
+    };
 
     struct RenderComponent
     {
