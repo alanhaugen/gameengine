@@ -13,6 +13,7 @@
 #include <QDebug>
 #include <QPointer>
 #include <QPlainTextEdit>
+#include "ScriptingSystem.h"
 #include "SoundSystem.h"
 #include "ui_MainWindow.h"
 #include "Renderer.h"
@@ -111,6 +112,8 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
     gea::SoundSystem* testSound = new gea::SoundSystem(mEngine);
     testSound->SetMainWindow(this);
     testSound->playSound("Test Drive.mp3");
+
+    gea::ScriptingSystem* testScript = new gea::ScriptingSystem(this, mEngine);
 
     //statusBar()->showMessage(" put something cool here! ");
 }

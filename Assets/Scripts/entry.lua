@@ -1,5 +1,7 @@
 print("Hello from Lua!")
 
+luaText = "Hello from Lua!"
+
 local hasSetToolbar = false
 
 function OnUpdate(_, currentTime)
