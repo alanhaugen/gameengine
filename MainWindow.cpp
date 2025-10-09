@@ -117,11 +117,11 @@ MainWindow::MainWindow(QWidget* parent,
     lua_register(lua_vm, "AddToolbar", lua_AddToolbar);
 
     //Run the entry.lua script, which sets up the engine and calls user scripts
-
-    int status = luaL_dofile(lua_vm, "../../../Scripts/entry.lua");
-    if (status != LUA_OK) {
+    int status = luaL_dofile(lua_vm, std::string(PATH + "Assets/Scripts/entry.lua").c_str());
+    if (status != LUA_OK)
+    {
         const char* error_msg = lua_tostring(lua_vm, -1);
-        std::cout << "Error running entry.lua: " << (error_msg ? error_msg : "Unknown error") << std::endl;
+        qDebug() << "Error running entry.lua: " << (error_msg ? error_msg : "Unknown error");
         lua_pop(lua_vm, 1); // remove error message from stack
         return; // exit with error code
     }

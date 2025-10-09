@@ -51,12 +51,6 @@ set(SOURCES
 add_executable(QtVulkan ${SOURCES})
 
 # MSVC-specific compile options (if building with MSVC)
-if (MSVC)
-# Add include directory
-target_include_directories(QtVulkan PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/External/Lua/include)
-# Add lib directory
-target_link_libraries(QtVulkan PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/External/Lua/lib/lua5.4.3-static.lib)
-
 if(MSVC)
     # Required for proper C++ exception handling with MSVC
     target_compile_options(QtVulkan PRIVATE /EHsc)
@@ -64,6 +58,7 @@ if(MSVC)
     target_include_directories(QtVulkan PRIVATE
         $ENV{VULKAN_HOME}/Include
         $ENV{OPENAL_HOME}/include
+        ${CMAKE_CURRENT_SOURCE_DIR}/External/Lua/include
     )
 
     # Link the exact Vulkan library. Use the full path to the .lib
@@ -71,6 +66,7 @@ if(MSVC)
     target_link_libraries(QtVulkan PRIVATE
         $ENV{VULKAN_HOME}/Lib/vulkan-1.lib
         $ENV{OPENAL_HOME}/libs/Win64/libOpenAL32.dll.a  # could be OpenAL32.lib
+        ${CMAKE_CURRENT_SOURCE_DIR}/External/Lua/lib/lua5.4.3-static.lib
         Qt6::Widgets
         Qt6::Core
         Qt6::Multimedia
