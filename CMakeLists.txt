@@ -53,14 +53,20 @@ set(SOURCES
     Utilities.h
     Vertex.h
     WavfileReader.h WavfileReader.cpp
-
-    Shaders/Shader.frag
-    Shaders/Shader.vert
-    Shaders/Phong.frag
-    Shaders/Phong.vert
 )
 
-add_executable(QtVulkan ${SOURCES})
+# all Lua files shown in IDE
+file(GLOB LUA_FILES
+    "Assets/Scripts/*.lua"
+)
+
+# all shader files shown in IDE
+file(GLOB SHADER_FILES
+    "Shaders/*.frag"
+    "Shaders/*.vert"
+)
+
+add_executable(QtVulkan ${SOURCES} ${LUA_FILES} ${SHADER_FILES})
 
 # MSVC-specific compile options (if building with MSVC)
 if(MSVC)
