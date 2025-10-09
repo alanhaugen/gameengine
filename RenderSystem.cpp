@@ -13,10 +13,11 @@ void gea::RenderSystem::Update(std::vector<gea::RenderComponent> dynamicComponen
 {
 	mRenderer->UpdateCompoments(dynamicComponents, dynamicTransformComponents);
 	mRenderer->requestUpdate();
+	mRenderer->drawFrame();
 }
 
 void gea::RenderSystem::Update(float) {
-    for (const auto& tr : mEngine->TransformVector)
+    for (const auto& tr : mEngine->mTransformComponents)
         qDebug() << "Entity " << tr.mEntityID << " Position:("
                   << tr.mPosition.x << ", " << tr.mPosition.y << ", " << tr.mPosition.z << ")\n";
 }

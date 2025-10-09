@@ -131,25 +131,6 @@ namespace gea {
         }
     };
 
-
-    //The plan is that the systems can use these vectors containing all components of the different types
-    //The components should be sorted by EntityID when added to the vectors.
-    //A Render system then might need many vectors, but a Move system might only need one or two.
-    //Each system just access the ones they need, and iterates through them and do their job.
-    //Since the components are sorted by EntityID, the iteration should go well and we should get DOD benefits.
-
-    // Component vectors - sorted by EntityID for DOD performance
-    extern std::vector<gea::AI> ComponentAIVector;
-    extern std::vector<gea::Enemy> ComponentEnemyVector;
-    extern std::vector<gea::Health> ComponentHealthVector;
-    extern std::vector<gea::Material> ComponentMaterialVector;
-    extern std::vector<gea::Model> ComponentModelVector;
-    extern std::vector<gea::Movement> ComponentMovementVector;
-    extern std::vector<gea::Projectile> ComponentProjectileVector;
-    extern std::vector<gea::Sound> ComponentSoundVector;
-    extern std::vector<gea::Tower> ComponentTowerVector;
-    extern std::vector<gea::Transform> ComponentTransformVector;
-
 }   //namespace gea
 
 #endif // COMPONENTS_H

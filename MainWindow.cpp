@@ -23,10 +23,7 @@
 //Extern declaration of logger variable from main
 extern QPointer<QPlainTextEdit> messageLogWidget;
 
-MainWindow::MainWindow(QWidget* parent,
-    std::vector<gea::RenderComponent> staticComponents, std::vector<gea::Transform> staticTransformComponents,
-    std::vector<gea::Mesh> meshes, std::vector<gea::Texture> textures)
-    : QMainWindow(parent)
+MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
@@ -48,8 +45,8 @@ MainWindow::MainWindow(QWidget* parent,
     mVulkanWindow->setWidth(1100);
     mVulkanWindow->setHeight(700);
 
-	SetupRenderSystem(staticComponents, staticTransformComponents, meshes, textures);
-    //mVulkanWindow->initVulkan();
+    //Do we have to make the Engine here to let that make the RenderSystem - to make the VulkanRenderer ?
+    mEngine = new gea::Engine(mVulkanWindow);
 
     // Wrap VulkanRenderer (QWindow) into a QWidget
     QWidget* mVulkanWidget = QWidget::createWindowContainer(mVulkanWindow, this);
@@ -110,8 +107,7 @@ MainWindow::MainWindow(QWidget* parent,
 
     mCamera = &dynamic_cast<Renderer*>(mVulkanWindow)->mCamera;
 
-    mEngine = new gea::Engine();
-
+    //Should eventually be run from the Engine
     gea::SoundSystem* testSound = new gea::SoundSystem(mEngine);
     testSound->SetMainWindow(this);
     testSound->playSound("Test Drive.mp3");
@@ -130,17 +126,6 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::SetupRenderSystem(std::vector<gea::RenderComponent> staticComponents, std::vector<gea::Transform> staticTransformComponents, std::vector<gea::Mesh> meshes, std::vector<gea::Texture> textures)
-{
-    mRenderSystem = new gea::RenderSystem(mEngine, mVulkanWindow);
-    mRenderSystem->Initialize(staticComponents, staticTransformComponents, meshes, textures);
-}
-
-void MainWindow::UpdateRenderSystem(std::vector<gea::RenderComponent> dynamicComponents, std::vector<gea::Transform> dynamicTransformComponents)
-{
-	mRenderSystem->Update(dynamicComponents, dynamicTransformComponents);
-}
-
 void MainWindow::SetStatusBarMessage(const char* message)
 {
     statusBar()->showMessage(message);
@@ -156,6 +141,8 @@ void MainWindow::start()
 {
     qDebug("Start is called");
     mVulkanWindow->requestUpdate();
+    // mEngine->mIsRunning = true;
+    // mEngine->GameLoop();
 }
 
 void MainWindow::setCameraSpeed(float value)

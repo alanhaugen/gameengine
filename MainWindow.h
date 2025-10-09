@@ -29,9 +29,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    MainWindow(QWidget* parent = nullptr,
-        std::vector<gea::RenderComponent> staticComponents = std::vector<gea::RenderComponent>(), std::vector<gea::Transform> staticTransformComponents = std::vector<gea::Transform>(),
-        std::vector<gea::Mesh> meshes = std::vector<gea::Mesh>(), std::vector<gea::Texture> textures = std::vector<gea::Texture>());
+    MainWindow(QWidget* parent = nullptr);
 
     ~MainWindow();
 
@@ -39,16 +37,12 @@ public:
     // void AddToolbar(const char* name, const char* action);
 
     void start();
-    void UpdateRenderSystem(std::vector<gea::RenderComponent> dynamicComponents, std::vector<gea::Transform> dynamicTransformComponents);
     void handleInput();
 
 private:
     Ui::MainWindow *ui;
 
     class Renderer* mVulkanWindow{nullptr};
-    gea::RenderSystem* mRenderSystem{nullptr};
-
-    void SetupRenderSystem(std::vector<gea::RenderComponent> staticComponents, std::vector<gea::Transform> staticTransformComponents, std::vector<gea::Mesh> meshes, std::vector<gea::Texture> textures);
 
     FilesWindow* mFilesWidget{nullptr};
     //FilesWindow<mVulkanWindow->objManager>(mVulkanWindow->objManager)* mFilesWidget{nullptr};

@@ -25,11 +25,11 @@ static void messageHandler(QtMsgType msgType, const QMessageLogContext &logConte
 
 int main(int argc, char *argv[])
 {
-
     QApplication app(argc, argv);
 
+    //Splash screen
     QSplashScreen *mSplash = new QSplashScreen;
-    mSplash->setPixmap(QPixmap(QString::fromStdString(PATH) + "Assets/Engine/INNgine_splash.png")); // splash picture
+    mSplash->setPixmap(QPixmap(QString::fromStdString(PATH) + "Assets/Engine/INNgine_splash.png"));
     mSplash->show();
 
     //Logger setup
@@ -38,33 +38,10 @@ int main(int argc, char *argv[])
     oldMessageHandler = qInstallMessageHandler(messageHandler);
     QLoggingCategory::setFilterRules(QStringLiteral("qt.vulkan=true"));
 
-    std::vector<gea::Mesh> mMeshes;
-    std::vector<gea::Texture> mTextures;
-    std::vector<gea::RenderComponent> mRenderComponents;
-    std::vector<gea::RenderComponent> mStaticRenderComponents;
-    //this is done for testing sake. in the real ecs there would only be one vector of transform components
-    std::vector<gea::Transform> mTransformComponents;
-    std::vector<gea::Transform> mStaticTransformComponents;
-
-    mMeshes.push_back(gea::Mesh());
-    mTextures.push_back(gea::Texture());
-
-    mRenderComponents.push_back(gea::RenderComponent{0, 0, 0});
-    gea::Transform t1 = gea::Transform(0);
-    t1.mPosition = glm::vec3(1.0f, 0.0f, 0.0f);
-    mTransformComponents.push_back(t1);
-
-    mStaticRenderComponents.push_back(gea::RenderComponent{0, 0, 1});
-    gea::Transform t2 = gea::Transform(1);
-    t2.mPosition = glm::vec3(-1.0f, 0.0f, 0.0f);
-    mStaticTransformComponents.push_back(t2);
-
-    MainWindow mainWindow = MainWindow(nullptr, mStaticRenderComponents, mStaticTransformComponents, mMeshes, mTextures);
-
+    MainWindow mainWindow = MainWindow(nullptr);
     mainWindow.move(200, 100);
     mainWindow.show();
     mainWindow.start();
-    mainWindow.UpdateRenderSystem(mRenderComponents, mTransformComponents);
 
     mSplash->hide();
 

@@ -27,14 +27,8 @@ namespace gea
 
         // Helper methods for component management
         bool HasComponent(ComponentTypes type) const;
-
         short GetComponentIndex(ComponentTypes type) const;
     };
-
-    // Global entity storage - should be stored in an Engine class!
-    extern std::vector<Entity> AllEntities;
-    // Global entity storage
-    extern std::vector<Entity> EntityVector;
 
 } // namespace gea
 

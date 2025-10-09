@@ -11,10 +11,10 @@ glm::vec3 getPlayerPosition() {
 
 // movement 
 void MovementSystem::Update(float deltaTime) {
-    for (auto& movement : mEngine->MovementVector) {
-        auto transIt = std::find_if(mEngine->TransformVector.begin(), mEngine->TransformVector.end(),
+    for (auto& movement : mEngine->mMovementComponents) {
+        auto transIt = std::find_if(mEngine->mTransformComponents.begin(), mEngine->mTransformComponents.end(),
             [&movement](const Transform& t){ return t.mEntityID == movement.mEntityID;});
-        if (transIt != mEngine->TransformVector.end()) {
+        if (transIt != mEngine->mTransformComponents.end()) {
             glm::vec3 direction = getPlayerPosition() - transIt->mPosition;
             float dist = glm::length(direction);
             if (dist > 1.5f) { // Not at center yet
@@ -27,21 +27,21 @@ void MovementSystem::Update(float deltaTime) {
 
 // for towersystem
 void TowerSystem::Update(float deltaTime) {
-    for (auto& tower : mEngine->TowerVector) {
+    for (auto& tower : mEngine->mTowerComponents) {
         tower.mLastFireTime += deltaTime;
         if (tower.mLastFireTime >= 1.0f / tower.mFireRate && tower.mCanFire) {
-            auto towerTrans = std::find_if(mEngine->TransformVector.begin(), mEngine->TransformVector.end(),
+            auto towerTrans = std::find_if(mEngine->mTransformComponents.begin(), mEngine->mTransformComponents.end(),
                 [&tower](const Transform& t){ return t.mEntityID == tower.mEntityID; });
-            if (towerTrans == mEngine->TransformVector.end()) continue;
+            if (towerTrans == mEngine->mTransformComponents.end()) continue;
             glm::vec3 pos = towerTrans->mPosition;
 
             // search nearest enemy
             short nearestEnemyID = -1;
             float nearestDist = tower.mRange + 1.0f;
-            for (const auto& enemy : mEngine->EnemyVector) {
-                auto enemyTr = std::find_if(mEngine->TransformVector.begin(), mEngine->TransformVector.end(),
+            for (const auto& enemy : mEngine->mEnemyComponents) {
+                auto enemyTr = std::find_if(mEngine->mTransformComponents.begin(), mEngine->mTransformComponents.end(),
                     [&enemy](const Transform& t){ return t.mEntityID == enemy.mEntityID; });
-                if (enemyTr == mEngine->TransformVector.end()) continue;
+                if (enemyTr == mEngine->mTransformComponents.end()) continue;
                 float dist = glm::length(pos - enemyTr->mPosition);
                 if (dist < tower.mRange && dist < nearestDist) {
                     nearestDist = dist;
@@ -49,13 +49,13 @@ void TowerSystem::Update(float deltaTime) {
                 }
             }
             if (nearestEnemyID != -1) {
-                Entity* projEntity = Engine().CreateEntity();
-                auto* projTrans = Engine().AddTransform(projEntity);
-                auto* projectile = Engine().AddProjectile(projEntity);
+                Entity* projEntity = mEngine->CreateEntity();
+                auto* projTrans = mEngine->AddTransform(projEntity);
+                auto* projectile = mEngine->AddProjectile(projEntity);
                 projTrans->mPosition = pos;
-                auto targetTrans = std::find_if(mEngine->TransformVector.begin(), mEngine->TransformVector.end(),
+                auto targetTrans = std::find_if(mEngine->mTransformComponents.begin(), mEngine->mTransformComponents.end(),
                     [nearestEnemyID](const Transform& t){ return t.mEntityID == nearestEnemyID;});
-                if (targetTrans != mEngine->TransformVector.end()) {
+                if (targetTrans != mEngine->mTransformComponents.end()) {
                     projectile->mVelocity = glm::normalize(targetTrans->mPosition - pos) * 10.0f;
                 }
                 projectile->mEntityID = projEntity->mEntityID;
@@ -67,36 +67,36 @@ void TowerSystem::Update(float deltaTime) {
 
 //  checks collision and lifetime
 void ProjectileSystem::Update(float deltaTime) {
-    for (auto it = mEngine->ProjectileVector.begin(); it != mEngine->ProjectileVector.end();) {
+    for (auto it = mEngine->mProjectileComponents.begin(); it != mEngine->mProjectileComponents.end();) {
         auto& projectile = *it;
-        auto transIt = std::find_if(mEngine->TransformVector.begin(), mEngine->TransformVector.end(),
+        auto transIt = std::find_if(mEngine->mTransformComponents.begin(), mEngine->mTransformComponents.end(),
             [&projectile](const Transform& t){ return t.mEntityID == projectile.mEntityID;});
-        if (transIt == mEngine->TransformVector.end()) { ++it; continue; }
+        if (transIt == mEngine->mTransformComponents.end()) { ++it; continue; }
         projectile.mLifetime -= deltaTime;
         transIt->mPosition += projectile.mVelocity * deltaTime;
         bool destroyed = false;
         // Check for hits on all enemies
-        for (auto& enemy : mEngine->EnemyVector) {
-            auto enemyTransIt = std::find_if(mEngine->TransformVector.begin(), mEngine->TransformVector.end(),
+        for (auto& enemy : mEngine->mEnemyComponents) {
+            auto enemyTransIt = std::find_if(mEngine->mTransformComponents.begin(), mEngine->mTransformComponents.end(),
                 [&enemy](const Transform& t){ return t.mEntityID == enemy.mEntityID; });
-            if (enemyTransIt == mEngine->TransformVector.end()) continue;
+            if (enemyTransIt == mEngine->mTransformComponents.end()) continue;
             if (glm::length(enemyTransIt->mPosition - transIt->mPosition) < 1.0f) {
-                auto enemyHealthIt = std::find_if(mEngine->HealthVector.begin(), mEngine->HealthVector.end(),
+                auto enemyHealthIt = std::find_if(mEngine->mHealthComponents.begin(), mEngine->mHealthComponents.end(),
                     [&enemy](const Health& h){ return h.mEntityID == enemy.mEntityID; });
-                if (enemyHealthIt != mEngine->HealthVector.end()) {
+                if (enemyHealthIt != mEngine->mHealthComponents.end()) {
                     enemyHealthIt->mCurrentHealth -= projectile.mDamage;
                     std::cout << "Enemy " << enemy.mEntityID << " hit, health: " << enemyHealthIt->mCurrentHealth << "\n";
                 }
-                Engine().DestroyEntity(projectile.mEntityID);
-                it = mEngine->ProjectileVector.erase(it);
+                mEngine->DestroyEntity(projectile.mEntityID);
+                it = mEngine->mProjectileComponents.erase(it);
                 destroyed = true;
                 break;
             }
         }
         if (destroyed) continue;
         if (projectile.mLifetime <= 0.0f) {
-            Engine().DestroyEntity(projectile.mEntityID);
-            it = mEngine->ProjectileVector.erase(it);
+            mEngine->DestroyEntity(projectile.mEntityID);
+            it = mEngine->mProjectileComponents.erase(it);
         } else {
             ++it;
         }
@@ -104,11 +104,11 @@ void ProjectileSystem::Update(float deltaTime) {
 }
 
 void HealthSystem::Update(float /*deltaTime*/) {
-    for (auto it = mEngine->HealthVector.begin(); it != mEngine->HealthVector.end();) {
+    for (auto it = mEngine->mHealthComponents.begin(); it != mEngine->mHealthComponents.end();) {
         if (it->mCurrentHealth <= 0) {
             std::cout << "Entity " << it->mEntityID << " dies.\n";
-            Engine().DestroyEntity(it->mEntityID);
-            it = mEngine->HealthVector.erase(it);
+            mEngine->DestroyEntity(it->mEntityID);
+            it = mEngine->mHealthComponents.erase(it);
         } else {
             ++it;
         }
@@ -120,12 +120,12 @@ void WaveSystem::Update(float deltaTime) {
     static float timer = 0.0f;
     timer += deltaTime;
     if (timer >= 4.0f) { // New wave every 4 seconds (for demo)
-        Entity* enemy = Engine().CreateEntity();
-        auto* transform = Engine().AddTransform(enemy);
+        Entity* enemy = mEngine->CreateEntity();
+        auto* transform = mEngine->AddTransform(enemy);
         transform->mPosition = glm::vec3(10.0f - 20.0f * (rand()/(float)RAND_MAX), 0.0f, 0.0f);
-        Engine().AddMovement(enemy)->mSpeed = 2.0f + rand() % 3;
-        Engine().AddEnemy(enemy);
-        Engine().AddHealth(enemy)->mCurrentHealth = 30.0f + rand() % 30;
+        mEngine->AddMovement(enemy)->mSpeed = 2.0f + rand() % 3;
+        mEngine->AddEnemy(enemy);
+        mEngine->AddHealth(enemy)->mCurrentHealth = 30.0f + rand() % 30;
         std::cout << "New enemy wave!\n";
         timer = 0.0f;
     }
