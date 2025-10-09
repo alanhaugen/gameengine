@@ -52,6 +52,13 @@ add_executable(QtVulkan ${SOURCES})
 
 # MSVC-specific compile options (if building with MSVC)
 if (MSVC)
+# Add include directory
+target_include_directories(QtVulkan PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/External/Lua/include)
+# Add lib directory
+target_link_libraries(QtVulkan PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/External/Lua/lib/lua5.4.3-static.lib)
+
+if(MSVC)
+    # Required for proper C++ exception handling with MSVC
     target_compile_options(QtVulkan PRIVATE /EHsc)
     # Include Vulkan headers (as requested)
     target_include_directories(QtVulkan PRIVATE

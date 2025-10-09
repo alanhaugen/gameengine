@@ -10,6 +10,7 @@
 #include <QMediaPlayer>
 #include <QAudioOutput>
 #include "Input.h"
+#include "lua.hpp"  //lua include that has the extern "C" thingy internally
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -32,6 +33,9 @@ public:
         std::vector<gea::Mesh> meshes = std::vector<gea::Mesh>(), std::vector<gea::Texture> textures = std::vector<gea::Texture>());
 
     ~MainWindow();
+
+    static void SetStatusBarMessage(const char* message);
+    static void AddToolbar(const char* name, const char* action);
 
     void start();
     void UpdateRenderSystem(std::vector<gea::RenderComponent> dynamicComponents, std::vector<gea::Transform> dynamicTransformComponents);
