@@ -15,6 +15,18 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
 
+
+# Detect build environment based on CMAKE_BINARY_DIR
+# Used to set correct PATH
+if(${CMAKE_BINARY_DIR} MATCHES ".*out/.*")
+    add_compile_definitions(BUILD_ENV_VISUAL_STUDIO)
+    message(STATUS "=== Visual Studio detected ===")
+elseif(${CMAKE_BINARY_DIR} MATCHES ".*build/.*")
+    add_compile_definitions(BUILD_ENV_QTCREATOR)
+    message(STATUS "=== Qt Creator detected ===")
+endif()
+
+
 # Source files (include the .ui so AUTOUIC processes it)
 set(SOURCES
     AssetManager.h AssetManager.cpp

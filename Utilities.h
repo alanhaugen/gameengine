@@ -17,7 +17,16 @@
 const uint32_t WIDTH = 800;
 const uint32_t HEIGHT = 600;
 
+//Checks what build system is used and sets the path accordingly
+//Build system test is done in CMake
+#if defined(BUILD_ENV_VISUAL_STUDIO)
+const std::string PATH = "../../../";
+#elif defined(BUILD_ENV_QTCREATOR)
 const std::string PATH = "../../";
+#else
+const std::string PATH = "../../"; // fallback
+#endif
+
 const std::string MODEL_PATH = PATH + "Assets/Models/viking_room.obj";
 const std::string TEXTURE_PATH = PATH + "Assets/Textures/viking_room.png";
 
