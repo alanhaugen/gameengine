@@ -17,7 +17,16 @@
 const uint32_t WIDTH = 800;
 const uint32_t HEIGHT = 600;
 
+//Checks what build system is used and sets the path accordingly
+//Build system test is done in CMake
+#if defined(BUILD_ENV_VISUAL_STUDIO)
+const std::string PATH = "../../../";
+#elif defined(BUILD_ENV_QTCREATOR)
 const std::string PATH = "../../";
+#else
+const std::string PATH = "../../"; // fallback
+#endif
+
 const std::string MODEL_PATH = PATH + "Assets/Models/viking_room.obj";
 const std::string TEXTURE_PATH = PATH + "Assets/Textures/viking_room.png";
 
@@ -33,7 +42,7 @@ const bool enableValidationLayers = false;
 const bool enableValidationLayers = true;
 #endif
 
-VkResult CreateDebugUtilsMessengerEXT(VkInstance instance, const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDebugUtilsMessengerEXT* pDebugMessenger) {
+inline VkResult CreateDebugUtilsMessengerEXT(VkInstance instance, const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDebugUtilsMessengerEXT* pDebugMessenger) {
     auto func = (PFN_vkCreateDebugUtilsMessengerEXT) vkGetInstanceProcAddr(instance, "vkCreateDebugUtilsMessengerEXT");
     if (func != nullptr) {
         return func(instance, pCreateInfo, pAllocator, pDebugMessenger);
@@ -42,7 +51,7 @@ VkResult CreateDebugUtilsMessengerEXT(VkInstance instance, const VkDebugUtilsMes
     }
 }
 
-void DestroyDebugUtilsMessengerEXT(VkInstance instance, VkDebugUtilsMessengerEXT debugMessenger, const VkAllocationCallbacks* pAllocator) {
+inline void DestroyDebugUtilsMessengerEXT(VkInstance instance, VkDebugUtilsMessengerEXT debugMessenger, const VkAllocationCallbacks* pAllocator) {
     auto func = (PFN_vkDestroyDebugUtilsMessengerEXT) vkGetInstanceProcAddr(instance, "vkDestroyDebugUtilsMessengerEXT");
     if (func != nullptr) {
         func(instance, debugMessenger, pAllocator);
@@ -76,6 +85,8 @@ struct UniformBufferObject {
     alignas(16) glm::mat4 model;
     alignas(16) glm::mat4 view;
     alignas(16) glm::mat4 proj;
+    alignas(16) glm::vec3 lightPos;
+    alignas(16) glm::vec3 viewPos;
 };
 
 #endif // UTILITIES_H

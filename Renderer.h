@@ -5,11 +5,20 @@
 #include <vulkan/vulkan_core.h>
 #include <string>
 #include <vector>
+#include "MainWindow.h"
+#include "QDirIterator"
+#include "assetmanager.h"
+#include "Texture.h"
+#include "Mesh.h"
+#include "Components.h"
 #include "Vertex.h"
+#include "Camera.h"
 
 //Forward declarations
 struct SwapChainSupportDetails;
 struct QueueFamilyIndices;
+
+
 
 class Renderer : public QWindow
 {
@@ -19,6 +28,22 @@ public:
     ~Renderer();
 
     void initVulkan();
+    ObjAsset* obj_asset{nullptr};
+    AssetManager<ObjAsset>* objManager=new AssetManager<ObjAsset>();
+    bool filesImported=false;
+    void drawFrame();
+    void initComponents(std::vector<gea::RenderComponent> staticComponents, std::vector<gea::Transform> staticTransformComponents, std::vector<gea::Mesh> meshes, std::vector<gea::Texture> textures) {
+        mStaticRenderComponents = staticComponents;
+		mStaticTransformComponents = staticTransformComponents;
+        mMeshes = meshes;
+		mTextures = textures;
+    }
+    void UpdateCompoments(std::vector<gea::RenderComponent> renderComponents, std::vector<gea::Transform> transformComponents) {
+        mDynamicRenderComponents = renderComponents;
+		mDynamicTransformComponents = transformComponents;
+	}
+
+    Camera getCamera() {return mCamera;}
 
 protected:
     //Qt event handlers - called when requestUpdate(); is called
@@ -26,7 +51,17 @@ protected:
     void resizeEvent(QResizeEvent* event) override;
     bool event(QEvent* event) override;
 
+    //Qts input functions - just forward it to MainWindow for now
+    void keyPressEvent(QKeyEvent *event) override           {mMainWindow->keyPressEvent(event);};
+    void keyReleaseEvent(QKeyEvent *event) override         {mMainWindow->keyReleaseEvent(event);};
+    void mousePressEvent(QMouseEvent *event) override       {mMainWindow->mousePressEvent(event);};
+    void mouseReleaseEvent(QMouseEvent *event) override     {mMainWindow->mouseReleaseEvent(event);};
+    void mouseMoveEvent(QMouseEvent *event) override        {mMainWindow->mouseMoveEvent(event);};
+    void wheelEvent(QWheelEvent *event) override            {mMainWindow->wheelEvent(event);};
+
 private:
+
+    friend class MainWindow;
     // class GLFWwindow* window;
     //GLFWwindow* window{nullptr};
     //QWindow* window{ nullptr }; //this object IS a QWindow
@@ -64,26 +99,13 @@ private:
     VkDeviceMemory depthImageMemory;
     VkImageView depthImageView;
 
-    uint32_t mipLevels;
-    VkImage textureImage;
-    VkDeviceMemory textureImageMemory;
-    VkImageView textureImageView;
-    VkSampler textureSampler;
-
-    std::vector<Vertex> vertices;
-    std::vector<uint32_t> indices;
-    VkBuffer vertexBuffer;
-    VkDeviceMemory vertexBufferMemory;
-    VkBuffer indexBuffer;
-    VkDeviceMemory indexBufferMemory;
-
     std::vector<VkBuffer> uniformBuffers;
     std::vector<VkDeviceMemory> uniformBuffersMemory;
 
     VkDescriptorPool descriptorPool;
     std::vector<VkDescriptorSet> descriptorSets;
 
-    std::vector<VkCommandBuffer> commandBuffers;
+    std::vector<VkCommandBuffer> staticCommandBuffers;
 
     std::vector<VkSemaphore> imageAvailableSemaphores;
     std::vector<VkSemaphore> renderFinishedSemaphores;
@@ -93,13 +115,30 @@ private:
 
     bool framebufferResized = false;
 
+    //Bias version
+    std::vector<Vertex> vertices;
+    std::vector<uint32_t> indices;
+    VkBuffer vertexBuffer;
+    VkDeviceMemory vertexBufferMemory;
+    VkBuffer indexBuffer;
+    VkDeviceMemory indexBufferMemory;
+    //QSet<QString> filesSet=objManager->filesNamesSet;
+    std::vector<gea::Mesh> mMeshes;
+    std::vector<gea::Texture> mTextures;
+    //this is done for testing sake. in the real ecs there would only be one vector of transform components
+    std::vector<gea::Transform> mDynamicTransformComponents;
+    std::vector<gea::Transform> mStaticTransformComponents;
+    std::vector<gea::RenderComponent> mDynamicRenderComponents;
+    std::vector<gea::RenderComponent> mStaticRenderComponents;
+
+    Camera mCamera;
+    class MainWindow* mMainWindow{nullptr};
+
     // void initWindow();
 
     // static void framebufferResizeCallback(GLFWwindow* window, int width, int height);
 
     // ---- Functions ----
-
-    void drawFrame();
 
     void cleanupSwapChain();
     void cleanup();
@@ -122,23 +161,26 @@ private:
     VkFormat findSupportedFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features);
     VkFormat findDepthFormat();
     bool hasStencilComponent(VkFormat format);
-    void createTextureImage();
+    void createTextureImage(gea::Texture* texture);
     void generateMipmaps(VkImage image, VkFormat imageFormat, int32_t texWidth, int32_t texHeight, uint32_t mipLevels);
     VkSampleCountFlagBits getMaxUsableSampleCount();
-    void createTextureImageView();
-    void createTextureSampler();
+    void createTextureImageView(gea::Texture* texture);
+    void createTextureSampler(gea::Texture* texture);
     VkImageView createImageView(VkImage image, VkFormat format, VkImageAspectFlags aspectFlags, uint32_t mipLevels);
     void createImage(uint32_t width, uint32_t height, uint32_t mipLevels, VkSampleCountFlagBits numSamples,
                      VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties,
                      VkImage& image, VkDeviceMemory& imageMemory);
     void transitionImageLayout(VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout, uint32_t mipLevels);
     void copyBufferToImage(VkBuffer buffer, VkImage image, uint32_t width, uint32_t height);
-    void loadModel();
+    void loadModel(QString MODEL_PATH);
+    void importObjects();;
     void createVertexBuffer();
     void createIndexBuffer();
+    void createVertexBuffer(gea::Mesh* mesh);
+    void createIndexBuffer(gea::Mesh* mesh);
     void createUniformBuffers();
     void createDescriptorPool();
-    void createDescriptorSets();
+    void createDescriptorSets(gea::Texture texture);
     void createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory);
     VkCommandBuffer beginSingleTimeCommands();
     void endSingleTimeCommands(VkCommandBuffer commandBuffer);
