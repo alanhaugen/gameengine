@@ -1836,4 +1836,10 @@ void VulkanRenderer::mouseMoveEvent(QMouseEvent *eventMove)
 {
     Locator::input.mouse.x = eventMove->pos().x();
     Locator::input.mouse.y = eventMove->pos().y();
+
+    // Doesn't seem to work consistantly
+    /*if (Locator::input.mouse.Down)
+    {
+        QCursor::setPos(windowWidth / 2, windowHeight / 2);
+    }*/
 }
