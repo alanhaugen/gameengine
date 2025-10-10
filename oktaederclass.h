@@ -1,5 +1,6 @@
 #ifndef OKTAEDERCLASS_H
 #define OKTAEDERCLASS_H
+/*
 #include "VisualObject.h"
 class oktaederClass: public VisualObject
 {
@@ -12,3 +13,4 @@ public:
 };
 
 #endif // OKTAEDERCLASS_H
+*/
