@@ -1,0 +1,54 @@
+#include "fpscamera.h"
+
+FPSCamera::FPSCamera(Camera* innCamera)
+{
+    camera = innCamera;
+}
+
+void FPSCamera::Update()
+{
+    if (input.mouse.Down)
+    {
+        if (input.Held(input.Key.W))
+        {
+            camera->position += camera->forward * speed;
+        }
+        if (input.Held(input.Key.S))
+        {
+            camera->position -= camera->forward * speed;
+        }
+        if (input.Held(input.Key.D))
+        {
+            camera->position += camera->right * speed;
+        }
+        if (input.Held(input.Key.A))
+        {
+            camera->position -= camera->right * speed;
+        }
+
+        camera->yaw   += input.mouse.dx;
+        camera->pitch -= input.mouse.dy;
+
+        UpdateCamera();
+    }
+}
+
+void FPSCamera::UpdateCamera()
+{
+    if (camera->pitch > 89.0f)
+    {
+        camera->pitch = 89.0f;
+    }
+    else if (camera->pitch < -89.0f)
+    {
+        camera->pitch = -89.0f;
+    }
+
+    camera->forward.x = cos(glm::radians(camera->yaw)) * cos(glm::radians(camera->pitch));
+    camera->forward.y = sin(glm::radians(camera->pitch));
+    camera->forward.z = sin(glm::radians(camera->yaw)) * cos(glm::radians(camera->pitch));
+    camera->forward = glm::normalize(camera->forward);
+
+    camera->right = glm::normalize(glm::cross(camera->forward, camera->worldUp));
+    camera->up = glm::normalize(glm::cross(camera->right, camera->forward));
+}
