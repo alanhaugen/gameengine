@@ -3,7 +3,6 @@
 #include "../components/terrain.h"
 #include "../components/spherecollider.h"
 #include "../components/trianglecollider.h"
-#include "../components/fpscamera.h"
 #include <glm/gtc/matrix_transform.hpp>
 
 RollingBall::RollingBall()
@@ -28,7 +27,6 @@ void RollingBall::Init()
     ballMesh = new Mesh("Assets/Models/ball.obj");
     ball->AddComponent(ballMesh);
     ball->AddComponent(new SphereCollider());
-    ball->AddComponent(new FPSCamera(&camera));
 
     GameObject* terrain = new GameObject;
     ball->AddComponent(new Terrain("Assets/terrain.png"));
