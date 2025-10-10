@@ -74,8 +74,6 @@ public:
 
     BSplineCurve curve;
 
-    float force = 0.0f;
-
     Mesh* ballMesh;
 };
 

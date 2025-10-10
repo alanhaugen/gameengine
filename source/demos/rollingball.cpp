@@ -13,9 +13,9 @@ RollingBall::RollingBall()
 void RollingBall::Init()
 {
     curve.controlPoints.push_back(glm::vec3(0,0,0));
-    curve.controlPoints.push_back(glm::vec3(0,0,0));
-    curve.controlPoints.push_back(glm::vec3(0,0,0));
-    curve.controlPoints.push_back(glm::vec3(0,0,0));
+    curve.controlPoints.push_back(glm::vec3(0.1,0.2,0));
+    curve.controlPoints.push_back(glm::vec3(0.3,0.3,0));
+    curve.controlPoints.push_back(glm::vec3(0.4,0,0));
     curve.controlPoints.push_back(glm::vec3(0,0,0));
 
     curve.t = {
@@ -44,7 +44,12 @@ void RollingBall::Update()
 {
     static float time = 0.0f;
 
-    time += 0.0001f;
+    time += 0.01f;
+
+    if (time > 1.0f)
+    {
+        time = 0.0f;
+    }
 
     glm::mat4& matrix = ballMesh->drawable->ubo.model;
     matrix[3] = glm::vec4(curve.EvaluateBSplineSimple(time), 1.0f);
