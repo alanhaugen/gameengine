@@ -26,7 +26,7 @@ public:
         return my;
     }
 
-    glm::vec3 EvaluateBSplineSimple(float x)
+    glm::vec3 EvaluateBSplineSimple(float x) //Cox-deBoor Algoritme
     {
         int my = findKnotInterval(x);
         std::vector<glm::vec3> a;
