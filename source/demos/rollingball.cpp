@@ -27,12 +27,15 @@ void RollingBall::Init()
     ballMesh = new Mesh("Assets/Models/ball.obj");
     ball->AddComponent(ballMesh);
     ball->AddComponent(new SphereCollider());
+    ballMesh->drawable->ubo.model = glm::scale(ballMesh->drawable->ubo.model, glm::vec3(0.1f,0.1f,0.1f));
 
     GameObject* terrain = new GameObject;
     ball->AddComponent(new Terrain("Assets/terrain.png"));
     ball->AddComponent(new TriangleCollider());
 
     camera.position = glm::vec3(0.0f, 0.0f, 4.0f);
+
+    renderer->SetLightPos(glm::vec3(0,0,1));
 
     gameObjects.push_back(ball);
     gameObjects.push_back(terrain);

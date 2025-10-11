@@ -82,6 +82,9 @@ void main(void)
     // texture coordinates to fragment shader
     o_texcoords = inTexcoord;
 
+    // color from vertex attribute
+    o_colour = vec4(inColor, 1.0f);
+
     // screen space coordinates of the vertex
     gl_Position = MVP * worldPosition;
 }
