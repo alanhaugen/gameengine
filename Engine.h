@@ -31,12 +31,12 @@ public:
     void destroyEntity(std::size_t entityID);
 
     // to add component
-    Transform* addTransform(Entity* entity);
-    Movement* addMovement(Entity* entity);
-    Health* addHealth(Entity* entity);
-    Tower* addTower(Entity* entity);
-    Enemy* addEnemy(Entity* entity);
-    Projectile* addProjectile(Entity* entity);
+    TransformComponent* addTransform(Entity* entity);
+    MovementComponent* addMovement(Entity* entity);
+    HealthComponent* addHealth(Entity* entity);
+    TowerComponent* addTower(Entity* entity);
+    EnemyComponent* addEnemy(Entity* entity);
+    ProjectileComponent* addProjectile(Entity* entity);
 
     // It sort all component vectors by EntityID
     void sortComponents();
@@ -49,24 +49,27 @@ public:
 
     //Vectors that holds all the Components
     //should sorted by EntityID for DOD performance
-    std::vector<Transform> mTransformComponents;
-    std::vector<Mesh> mMeshComponents;
-    std::vector<Texture> mTextureComponents;
-    std::vector<Movement> mMovementComponents;
-    std::vector<Health> mHealthComponents;
-    std::vector<Tower> mTowerComponents;
-    std::vector<Enemy> mEnemyComponents;
-    std::vector<Projectile> mProjectileComponents;
-    std::vector<AI> mAIComponents;
-    std::vector<Material> mMaterialComponents;
-    std::vector<Model> mModelComponents;
-    std::vector<Sound> mSoundComponents;
+    std::vector<TransformComponent> mTransformComponents;
+    std::vector<MovementComponent> mMovementComponents;
+    std::vector<HealthComponent> mHealthComponents;
+    std::vector<TowerComponent> mTowerComponents;
+    std::vector<EnemyComponent> mEnemyComponents;
+    std::vector<ProjectileComponent> mProjectileComponents;
+    std::vector<AIComponent> mAIComponents;
+    std::vector<MaterialComponent> mMaterialComponents;
+    std::vector<ModelComponent> mModelComponents;
+    std::vector<SoundComponent> mSoundComponents;
 
     //RenderTesting
     std::vector<gea::RenderComponent> mRenderComponents;
     std::vector<gea::RenderComponent> mStaticRenderComponents;
     //this is done for testing sake. in the real ecs there would only be one vector of transform components
-    std::vector<gea::Transform> mStaticTransformComponents;
+    std::vector<gea::TransformComponent> mStaticTransformComponents;
+
+    //These are the ACTUAL meshes and Textures, and is used by Entities from a
+    //RenderComponent
+    std::vector<Mesh> mMeshs;
+    std::vector<Texture> mTextures;
 
     //The plan is that the systems can use these vectors containing all components of the different types
     //The components should be sorted by EntityID when added to the vectors.

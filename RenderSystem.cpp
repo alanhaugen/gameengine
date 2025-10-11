@@ -2,14 +2,14 @@
 #include "Engine.h"
 #include "Renderer.h"
 
-void gea::RenderSystem::initialize(std::vector<gea::RenderComponent> staticComponents, std::vector<gea::Transform> staticTransformComponents,
+void gea::RenderSystem::initialize(std::vector<gea::RenderComponent> staticComponents, std::vector<gea::TransformComponent> staticTransformComponents,
                                    std::vector<gea::Mesh> meshes, std::vector<gea::Texture> textures)
 {
 	mRenderer->initComponents(staticComponents, staticTransformComponents, meshes, textures);
 	mRenderer->initVulkan();
 }
 
-void gea::RenderSystem::update(std::vector<gea::RenderComponent> dynamicComponents, std::vector<gea::Transform> dynamicTransformComponents)
+void gea::RenderSystem::update(std::vector<gea::RenderComponent> dynamicComponents, std::vector<gea::TransformComponent> dynamicTransformComponents)
 {
 	mRenderer->updateCompoments(dynamicComponents, dynamicTransformComponents);
 	mRenderer->drawFrame();

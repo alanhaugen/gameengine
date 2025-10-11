@@ -31,9 +31,9 @@ public:
     AssetManager<ObjAsset>* objManager=new AssetManager<ObjAsset>();
     bool filesImported=false;
     void drawFrame();
-    void initComponents(std::vector<gea::RenderComponent> staticComponents, std::vector<gea::Transform> staticTransformComponents,
+    void initComponents(std::vector<gea::RenderComponent> staticComponents, std::vector<gea::TransformComponent> staticTransformComponents,
                         std::vector<gea::Mesh> meshes, std::vector<gea::Texture> textures);
-    void updateCompoments(std::vector<gea::RenderComponent> renderComponents, std::vector<gea::Transform> transformComponents);
+    void updateCompoments(std::vector<gea::RenderComponent> renderComponents, std::vector<gea::TransformComponent> transformComponents);
 
     Camera getCamera() {return mCamera;}
 
@@ -121,8 +121,8 @@ private:
     std::vector<gea::Mesh> mMeshes;
     std::vector<gea::Texture> mTextures;
     //this is done for testing sake. in the real ecs there would only be one vector of transform components
-    std::vector<gea::Transform> mDynamicTransformComponents;
-    std::vector<gea::Transform> mStaticTransformComponents;
+    std::vector<gea::TransformComponent> mDynamicTransformComponents;
+    std::vector<gea::TransformComponent> mStaticTransformComponents;
     std::vector<gea::RenderComponent> mDynamicRenderComponents;
     std::vector<gea::RenderComponent> mStaticRenderComponents;
 

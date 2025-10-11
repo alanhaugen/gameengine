@@ -8,16 +8,16 @@ namespace gea {
 
 Engine::Engine(Renderer* renderer) : mVulkanRenderer{renderer}
 {
-    mMeshComponents.push_back(gea::Mesh());
-    mTextureComponents.push_back(gea::Texture());
+    mMeshs.push_back(gea::Mesh());
+    mTextures.push_back(gea::Texture());
 
     mRenderComponents.push_back(gea::RenderComponent{0, 0, 0});
-    gea::Transform t1 = gea::Transform(0);
+    gea::TransformComponent t1 = gea::TransformComponent(0);
     t1.mPosition = glm::vec3(1.0f, 0.0f, 0.0f);
     mTransformComponents.push_back(t1);
 
     mStaticRenderComponents.push_back(gea::RenderComponent{0, 0, 1});
-    gea::Transform t2 = gea::Transform(1);
+    gea::TransformComponent t2 = gea::TransformComponent(1);
     t2.mPosition = glm::vec3(-1.0f, 0.0f, 0.0f);
     mStaticTransformComponents.push_back(t2);
 
@@ -29,7 +29,7 @@ Engine::Engine(Renderer* renderer) : mVulkanRenderer{renderer}
 void Engine::setupRenderSystem()
 {
     mRenderSystem = new gea::RenderSystem(this, mVulkanRenderer);
-    mRenderSystem->initialize(mStaticRenderComponents, mStaticTransformComponents, mMeshComponents, mTextureComponents);
+    mRenderSystem->initialize(mStaticRenderComponents, mStaticTransformComponents, mMeshs, mTextures);
 }
 
 void Engine::updateRenderSystem()
@@ -50,31 +50,31 @@ Entity* Engine::createEntity()
                           [entityID](const Entity& e){ return e.mEntityID == entityID; }), mEntityVector.end());
        
         mTransformComponents.erase(std::remove_if(mTransformComponents.begin(), mTransformComponents.end(),
-                          [entityID](const Transform& c){ return c.mEntityID == entityID; }), mTransformComponents.end());
+                          [entityID](const TransformComponent& c){ return c.mEntityID == entityID; }), mTransformComponents.end());
         mMovementComponents.erase(std::remove_if(mMovementComponents.begin(), mMovementComponents.end(),
-                          [entityID](const Movement& c){ return c.mEntityID == entityID; }), mMovementComponents.end());
+                          [entityID](const MovementComponent& c){ return c.mEntityID == entityID; }), mMovementComponents.end());
         mHealthComponents.erase(std::remove_if(mHealthComponents.begin(), mHealthComponents.end(),
-                          [entityID](const Health& c){ return c.mEntityID == entityID; }), mHealthComponents.end());
+                          [entityID](const HealthComponent& c){ return c.mEntityID == entityID; }), mHealthComponents.end());
         mTowerComponents.erase(std::remove_if(mTowerComponents.begin(), mTowerComponents.end(),
-                          [entityID](const Tower& c){ return c.mEntityID == entityID; }), mTowerComponents.end());
+                          [entityID](const TowerComponent& c){ return c.mEntityID == entityID; }), mTowerComponents.end());
         mEnemyComponents.erase(std::remove_if(mEnemyComponents.begin(), mEnemyComponents.end(),
-                          [entityID](const Enemy& c){ return c.mEntityID == entityID; }), mEnemyComponents.end());
+                          [entityID](const EnemyComponent& c){ return c.mEntityID == entityID; }), mEnemyComponents.end());
         mProjectileComponents.erase(std::remove_if(mProjectileComponents.begin(), mProjectileComponents.end(),
-                          [entityID](const Projectile& c){ return c.mEntityID == entityID; }), mProjectileComponents.end());
+                          [entityID](const ProjectileComponent& c){ return c.mEntityID == entityID; }), mProjectileComponents.end());
     }
 
-    Transform* Engine::addTransform(Entity* entity)
+    TransformComponent* Engine::addTransform(Entity* entity)
     {
-        Transform t(entity->mEntityID);
+        TransformComponent t(entity->mEntityID);
         mTransformComponents.push_back(t);
         entity->mComponents.push_back({ComponentTypes::Transform, (short)(mTransformComponents.size()-1)});
         sortComponents();
         return &mTransformComponents.back();
     }
    
-    Movement* Engine::addMovement(Entity* entity)
+    MovementComponent* Engine::addMovement(Entity* entity)
     {
-        Movement m;
+        MovementComponent m;
         m.mEntityID = entity->mEntityID;
         mMovementComponents.push_back(m);
         entity->mComponents.push_back({ComponentTypes::Movement, (short)(mMovementComponents.size()-1)});
@@ -82,9 +82,9 @@ Entity* Engine::createEntity()
         return &mMovementComponents.back();
     }
 
-    Health* Engine::addHealth(Entity* entity)
+    HealthComponent* Engine::addHealth(Entity* entity)
     {
-        Health h;
+        HealthComponent h;
         h.mEntityID = entity->mEntityID;
         mHealthComponents.push_back(h);
         entity->mComponents.push_back({ComponentTypes::Health, (short)(mHealthComponents.size()-1)});
@@ -92,9 +92,9 @@ Entity* Engine::createEntity()
         return &mHealthComponents.back();
     }
 
-    Tower* Engine::addTower(Entity* entity)
+    TowerComponent* Engine::addTower(Entity* entity)
     {
-        Tower t;
+        TowerComponent t;
         t.mEntityID = entity->mEntityID;
         mTowerComponents.push_back(t);
         entity->mComponents.push_back({ComponentTypes::Tower, (short)(mTowerComponents.size()-1)});
@@ -102,9 +102,9 @@ Entity* Engine::createEntity()
         return &mTowerComponents.back();
     }
 
-    Enemy* Engine::addEnemy(Entity* entity)
+    EnemyComponent* Engine::addEnemy(Entity* entity)
     {
-        Enemy e;
+        EnemyComponent e;
         e.mEntityID = entity->mEntityID;
         mEnemyComponents.push_back(e);
         entity->mComponents.push_back({ComponentTypes::Enemy, (short)(mEnemyComponents.size()-1)});
@@ -112,9 +112,9 @@ Entity* Engine::createEntity()
         return &mEnemyComponents.back();
     }
 
-    Projectile* Engine::addProjectile(Entity* entity)
+    ProjectileComponent* Engine::addProjectile(Entity* entity)
     {
-        Projectile p;
+        ProjectileComponent p;
         p.mEntityID = entity->mEntityID;
         mProjectileComponents.push_back(p);
         entity->mComponents.push_back({ComponentTypes::Projectile, (short)(mProjectileComponents.size()-1)});
@@ -125,9 +125,9 @@ Entity* Engine::createEntity()
     void Engine::sortComponents()
     {
         std::sort(mTransformComponents.begin(), mTransformComponents.end(),
-                  [](const Transform& a, const Transform& b){ return a.mEntityID < b.mEntityID; });
+                  [](const TransformComponent& a, const TransformComponent& b){ return a.mEntityID < b.mEntityID; });
         std::sort(mMovementComponents.begin(), mMovementComponents.end(),
-                  [](const Movement& a, const Movement& b){ return a.mEntityID < b.mEntityID; });
+                  [](const MovementComponent& a, const MovementComponent& b){ return a.mEntityID < b.mEntityID; });
     }
 
     void Engine::update(float deltaTime)

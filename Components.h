@@ -25,7 +25,7 @@ enum class ComponentTypes
 
 //Below are examples of actual components
 //Systems need each component to know what entity it belongs to
-struct AI
+struct AIComponent
 {
     float mDetectionRange{ 12.0f };
     short mTargetEntityID{ -1 };  // Usually player at center
@@ -33,7 +33,7 @@ struct AI
     short mEntityID{ -1 };
 };
 
-struct Enemy
+struct EnemyComponent
 {
     float mDamageToPlayer{ 10.0f };
     bool mReachedPlayer{ false };
@@ -41,7 +41,7 @@ struct Enemy
     short mEntityID{ -1 };
 };
 
-struct Health
+struct HealthComponent
 {
     float mCurrentHealth{ 100.0f };
     float mMaxHealth{ 100.0f };
@@ -49,20 +49,20 @@ struct Health
     short mEntityID{ -1 };
 };
 
-struct Material
+struct MaterialComponent
 {
     short mTexture{-1};        //index into array of all textures loaded
     short mEntityID{-1};
 };
 
-struct Model
+struct ModelComponent
 {
     short mModel{-1};        //index into array of all meshes loaded
     short mEntityID{-1};
 };
 
 // Added more components for tower Defense specific components - from AkashECS
-struct Movement
+struct MovementComponent
 {
     glm::vec3 mVelocity{ 0.0f, 0.0f, 0.0f };
     float mSpeed{ 3.0f };
@@ -71,7 +71,7 @@ struct Movement
     short mEntityID{ -1 };
 };
 
-struct Projectile
+struct ProjectileComponent
 {
     float mDamage{ 25.0f };
     float mLifetime{ 5.0f };
@@ -90,14 +90,14 @@ struct RenderComponent
 };
 
 typedef unsigned int ALuint;    //also defined in AL/al.h but did not want to include it here
-struct Sound
+struct SoundComponent
 {
     ALuint mSoundSource{0};
     ALuint mSoundBuffer{0};
     short mEntityID{-1};
 };
 
-struct Tower
+struct TowerComponent
 {
     float mRange{ 15.0f };
     float mFireRate{ 2.0f };  // shots per second
@@ -107,14 +107,14 @@ struct Tower
     short mEntityID{ -1 };
 };
 
-struct Transform
+struct TransformComponent
 {
     glm::vec3 mPosition{ 0.0f, 0.0f, 0.0f };
     glm::vec3 mRotation{ 0.0f, 0.0f, 0.0f };
     glm::vec3 mScale{ 1.0f, 1.0f, 1.0f };
     short mEntityID{ -1 };
 
-    Transform(short id) : mEntityID{id}{};
+    TransformComponent(short id) : mEntityID{id}{};
     glm::mat4 GetModelMatrix()
     {
         glm::mat4 model = glm::mat4(1.0f);

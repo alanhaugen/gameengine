@@ -1790,14 +1790,17 @@ void Renderer::drawFrame()
     currentFrame = (currentFrame + 1) % MAX_FRAMES_IN_FLIGHT;
 }
 
-void Renderer::initComponents(std::vector<gea::RenderComponent> staticComponents, std::vector<gea::Transform> staticTransformComponents, std::vector<gea::Mesh> meshes, std::vector<gea::Texture> textures) {
+void Renderer::initComponents(std::vector<gea::RenderComponent> staticComponents, std::vector<gea::TransformComponent> staticTransformComponents,
+                              std::vector<gea::Mesh> meshes, std::vector<gea::Texture> textures)
+{
     mStaticRenderComponents = staticComponents;
     mStaticTransformComponents = staticTransformComponents;
     mMeshes = meshes;
     mTextures = textures;
 }
 
-void Renderer::updateCompoments(std::vector<gea::RenderComponent> renderComponents, std::vector<gea::Transform> transformComponents) {
+void Renderer::updateCompoments(std::vector<gea::RenderComponent> renderComponents, std::vector<gea::TransformComponent> transformComponents)
+{
     mDynamicRenderComponents = renderComponents;
     mDynamicTransformComponents = transformComponents;
 }
