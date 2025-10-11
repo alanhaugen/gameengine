@@ -34,7 +34,8 @@ void RollingBall::Init()
     ballMesh->drawable->ubo.model = glm::scale(ballMesh->drawable->ubo.model, glm::vec3(0.1f,0.1f,0.1f));
 
     GameObject* terrain = new GameObject;
-    ball->AddComponent(new Terrain("Assets/terrain.png"));
+    terrainMesh = new Terrain("Assets/terrain.png");
+    ball->AddComponent(terrainMesh);
     ball->AddComponent(new TriangleCollider());
 
     camera.position = glm::vec3(0.0f, 0.0f, 4.0f);
@@ -56,6 +57,9 @@ void RollingBall::Update()
         time = 0.0f;
     }
 
+    glm::vec3 pos = curve.EvaluateBSplineSimple(time);
+    pos.y = terrainMesh->GetHeightAt(pos);
+
     glm::mat4& matrix = ballMesh->drawable->ubo.model;
-    matrix[3] = glm::vec4(curve.EvaluateBSplineSimple(time), 1.0f);
+    matrix[3] = glm::vec4(pos, 1.0f);
 }

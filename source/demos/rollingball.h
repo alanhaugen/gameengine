@@ -4,6 +4,7 @@
 #include "../x-platform/scene.h"
 
 class Mesh;
+class Terrain;
 
 class BSplineCurve
 {
@@ -68,6 +69,7 @@ public:
 
     BSplineCurve curve;
 
+    Terrain* terrainMesh;
     Mesh* ballMesh;
 };
 
