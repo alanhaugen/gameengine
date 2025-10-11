@@ -12,16 +12,16 @@ RollingBall::RollingBall()
 void RollingBall::Init()
 {
     curve.controlPoints.push_back(glm::vec3(0,0,0));
-    curve.controlPoints.push_back(glm::vec3(0.5,1,0));
-    curve.controlPoints.push_back(glm::vec3(0,1.5,0));
+    curve.controlPoints.push_back(glm::vec3(0.5,1,1));
+    curve.controlPoints.push_back(glm::vec3(0,1.5,0.5));
     curve.controlPoints.push_back(glm::vec3(1.5,1,0));
-    curve.controlPoints.push_back(glm::vec3(0,1,0));
-    curve.controlPoints.push_back(glm::vec3(1,0,0));
+    curve.controlPoints.push_back(glm::vec3(0,1,1));
+    curve.controlPoints.push_back(glm::vec3(0.5,0,1));
 
     curve.degree = 3;
 
     curve.t = {
-        0, 0, 0, 0, 0.25, 0.5, 0.75, 1, 1, 1, 1
+        0, 0, 0, 0, 0.25, 0.5, 0.75, 1, 1, 1, 1 //should match time-range/ interval in Update
         /*0, 0, 0, 0,       // first d+1 knots
         0.1, 0.2, 0.3,          // internal knots
         1, 1, 1*/          // last d+1 knots
