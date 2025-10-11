@@ -11,12 +11,14 @@ RollingBall::RollingBall()
 
 void RollingBall::Init()
 {
-    curve.controlPoints.push_back(glm::vec3(0,0,0));
-    curve.controlPoints.push_back(glm::vec3(0.5,1,1));
-    curve.controlPoints.push_back(glm::vec3(0,1.5,0.5));
-    curve.controlPoints.push_back(glm::vec3(1.5,1,0));
-    curve.controlPoints.push_back(glm::vec3(0,1,1));
-    curve.controlPoints.push_back(glm::vec3(0.5,0,1));
+    terrainMesh = new Terrain();//("Assets/terrain.png");
+
+    curve.controlPoints.push_back(glm::vec3(0,terrainMesh->GetHeightAt(0.0f,0.0f) + 0.15,0));
+    curve.controlPoints.push_back(glm::vec3(0.5,terrainMesh->GetHeightAt(0.5f,1.0f) + 0.15,1));
+    curve.controlPoints.push_back(glm::vec3(0,terrainMesh->GetHeightAt(0.0f,0.5f) + 0.15,0.5));
+    curve.controlPoints.push_back(glm::vec3(1.5,terrainMesh->GetHeightAt(1.0f,0.0f) + 0.15,0));
+    curve.controlPoints.push_back(glm::vec3(0,terrainMesh->GetHeightAt(0.0f,1.0f) + 0.15,1));
+    curve.controlPoints.push_back(glm::vec3(0.5,terrainMesh->GetHeightAt(0.5f,1.0f) + 0.15,1));
 
     curve.degree = 3;
 
@@ -34,7 +36,6 @@ void RollingBall::Init()
     ballMesh->drawable->ubo.model = glm::scale(ballMesh->drawable->ubo.model, glm::vec3(0.1f,0.1f,0.1f));
 
     GameObject* terrain = new GameObject;
-    terrainMesh = new Terrain("Assets/terrain.png");
     ball->AddComponent(terrainMesh);
     ball->AddComponent(new TriangleCollider());
 

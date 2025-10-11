@@ -1,8 +1,6 @@
 #include "terrain.h"
 
-Terrain::Terrain(const char *filePath,
-           const char* vertexShaderPath,
-           const char* fragmentShaderPath)
+void Terrain::Init()
 {
     vertices.push_back(Vertex(0, 0, 0, glm::vec3(1,0.5,0))); // 0  bottom left
     vertices.push_back(Vertex(0, -0.2,  1, glm::vec3(0.5,1,0))); // 1  bottom left
@@ -27,15 +25,32 @@ Terrain::Terrain(const char *filePath,
     indices.push_back(2);
     indices.push_back(4);
     indices.push_back(5);
+}
 
+Terrain::Terrain()
+{
+    Init();
+
+    drawable = &renderer->CreateDrawable(vertices, indices, "shaders/color.vert.spv", "shaders/color.frag.spv");
+}
+
+Terrain::Terrain(const char *filePath,
+           const char* vertexShaderPath,
+           const char* fragmentShaderPath)
+{
+    Init(); // todo: change into reading data from file
 
     drawable = &renderer->CreateDrawable(vertices, indices, vertexShaderPath, fragmentShaderPath);
-    drawable->ubo.lightPosition = glm::vec3(0,0,0);
 }
 
 void Terrain::Update()
 {
 
+}
+
+float Terrain::GetHeightAt(float x, float z) const
+{
+    return GetHeightAt(glm::vec3(x, 0, z));
 }
 
 float Terrain::GetHeightAt(const glm::vec3 positionXZ) const
