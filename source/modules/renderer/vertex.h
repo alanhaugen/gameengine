@@ -26,6 +26,13 @@ struct Vertex {
         normal = glm::vec3(1.0f, 1.0f, 1.0f);
     }
 
+    Vertex(glm::vec3 pos_)
+    {
+        pos = pos_;
+        color = glm::vec3(1.0f, 1.0f, 1.0f);
+        normal = glm::vec3(1.0f, 1.0f, 1.0f);
+    }
+
     static VkVertexInputBindingDescription getBindingDescription() {
         VkVertexInputBindingDescription bindingDescription{};
         bindingDescription.binding = 0;

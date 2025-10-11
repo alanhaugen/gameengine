@@ -15,7 +15,8 @@ public:
     Drawable& CreateDrawable(std::vector<Vertex> vertices,
                              std::vector<uint32_t> indices,
                              const char* vertexShader = "shaders/vert.spv",
-                             const char* fragmentShader = "shaders/frag.spv");
+                             const char* fragmentShader = "shaders/frag.spv",
+                             const int topology = TRIANGLES);
 
     void SetViewMatrix(glm::mat4 view);
     void SetCameraPosition(glm::vec3 pos);

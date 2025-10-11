@@ -69,6 +69,8 @@ public:
 
     BSplineCurve curve;
 
+    Renderer::Drawable* splineDrawable;
+
     Terrain* terrainMesh;
     Mesh* ballMesh;
 };
