@@ -36,7 +36,7 @@ public:
         int my = findKnotInterval(x);
         std::vector<glm::vec3> a;
 
-        a.reserve(degree+1);
+        a.resize(degree+1);
 
         for (int j=0; j <= degree; j++)
         {
