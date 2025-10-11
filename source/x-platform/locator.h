@@ -47,4 +47,4 @@ private:
 #define LogWarning(string) if(Locator::debug) Locator::debug->Warning(std::string(__FILE__) + "(" + std::string(__LINE__) + "): " + string )
 
 //! Macro to easily access the debug singleton and Log an error
-#define LogError(string) if(Locator::debug) Locator::debug->Error( (std::string("Error ") + std::string(__FILE__) + "(" + std::string(__LINE__) + "): " + string )
+#define LogError(string) if(Locator::debug) Locator::debug->Error(string) //(std::string("Error ") + std::string(__FILE__) + "(" + std::string(__LINE__) + "): " + string )
