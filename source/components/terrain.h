@@ -5,6 +5,8 @@
 class Terrain : public Component
 {
 private:
+    std::vector<Vertex> vertices;
+    std::vector<uint32_t> indices;
 
 public:
     Terrain(const char* filePath,
@@ -13,4 +15,5 @@ public:
     void Update();
 
     Renderer::Drawable* drawable;
+    float GetHeightAt(const glm::vec3 positionXZ) const;
 };

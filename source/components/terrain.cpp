@@ -4,9 +4,6 @@ Terrain::Terrain(const char *filePath,
            const char* vertexShaderPath,
            const char* fragmentShaderPath)
 {
-    std::vector<Vertex> vertices;
-    std::vector<uint32_t> indices;
-
     vertices.push_back(Vertex(0, 0, 0, glm::vec3(1,0.5,0))); // 0  bottom left
     vertices.push_back(Vertex( 0, -1,  0, glm::vec3(0.5,1,0))); // 1  top right
     vertices.push_back(Vertex( 1, 0, 0, glm::vec3(0,0.5,1))); // 2  bottom right
@@ -39,6 +36,44 @@ Terrain::Terrain(const char *filePath,
 void Terrain::Update()
 {
 
+}
+
+float Terrain::GetHeightAt(const glm::vec3 positionXZ) const
+{
+    glm::vec2 point(positionXZ.x, positionXZ.z);
+
+    for (size_t i = 0; i < indices.size(); i += 3) {
+        const Vertex& v0 = vertices[indices[i]];
+        const Vertex& v1 = vertices[indices[i + 1]];
+        const Vertex& v2 = vertices[indices[i + 2]];
+
+        glm::vec2 a(v0.pos.x, v0.pos.z);
+        glm::vec2 b(v1.pos.x, v1.pos.z);
+        glm::vec2 c(v2.pos.x, v2.pos.z);
+
+        glm::vec2 v0v2 = c - a;
+        glm::vec2 v0v1 = b - a;
+        glm::vec2 v0p = point - a;
+
+        float d00 = glm::dot(v0v1, v0v1);
+        float d01 = glm::dot(v0v1, v0v2);
+        float d11 = glm::dot(v0v2, v0v2);
+        float d20 = glm::dot(v0p, v0v1);
+        float d21 = glm::dot(v0p, v0v2);
+
+        float denom = d00 * d11 - d01 * d01;
+        if (denom == 0.0f) continue;
+
+        float v = (d11 * d20 - d01 * d21) / denom;
+        float w = (d00 * d21 - d01 * d20) / denom;
+        float u = 1.0f - v - w;
+
+        if (u >= 0.0f && v >= 0.0f && w >= 0.0f) {
+            return v0.pos.y * u + v1.pos.y * v + v2.pos.y * w;
+        }
+    }
+
+    return 0.0f;  // Default flat
 }
 
 /*
@@ -143,41 +178,4 @@ void HeightMap::makeTerrain(unsigned char* textureData, int widthIn, int heightI
     //calculateHeighMapNormals();
 }
 
-float HeightMap::getHeightAt(const QVector3D& positionXZ) const
-{
-    QVector2D point(positionXZ.x(), positionXZ.z());
-
-    for (size_t i = 0; i < mIndices.size(); i += 3) {
-        const Vertex& v0 = mVertices[mIndices[i]];
-        const Vertex& v1 = mVertices[mIndices[i + 1]];
-        const Vertex& v2 = mVertices[mIndices[i + 2]];
-
-        QVector2D a(v0.x, v0.z);
-        QVector2D b(v1.x, v1.z);
-        QVector2D c(v2.x, v2.z);
-
-        QVector2D v0v2 = c - a;
-        QVector2D v0v1 = b - a;
-        QVector2D v0p = point - a;
-
-        float d00 = QVector2D::dotProduct(v0v1, v0v1);
-        float d01 = QVector2D::dotProduct(v0v1, v0v2);
-        float d11 = QVector2D::dotProduct(v0v2, v0v2);
-        float d20 = QVector2D::dotProduct(v0p, v0v1);
-        float d21 = QVector2D::dotProduct(v0p, v0v2);
-
-        float denom = d00 * d11 - d01 * d01;
-        if (denom == 0.0f) continue;
-
-        float v = (d11 * d20 - d01 * d21) / denom;
-        float w = (d00 * d21 - d01 * d20) / denom;
-        float u = 1.0f - v - w;
-
-        if (u >= 0.0f && v >= 0.0f && w >= 0.0f) {
-            return v0.y * u + v1.y * v + v2.y * w;
-        }
-    }
-
-    return 0.0f;  // Default flat
-}
 */
