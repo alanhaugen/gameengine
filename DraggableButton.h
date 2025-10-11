@@ -10,6 +10,7 @@ class DraggableButton: public QPushButton
 {
 public:
     DraggableButton();
+
     void mousePressEvent(QMouseEvent *event);
 };
 

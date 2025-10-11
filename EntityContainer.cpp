@@ -1,6 +1,7 @@
 #include "EntityContainer.h"
 
-gea::EntityContainer::EntityContainer(QObject *parent) : QObject(parent) {}
+gea::EntityContainer::EntityContainer(QObject *parent) : QObject(parent)
+{}
 
 void gea::EntityContainer::appendItem(const gea::Entity &addition)
 {

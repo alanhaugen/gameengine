@@ -2,9 +2,9 @@
 
 gea::Texture::Texture()
 {
-	mipLevels = 1;
-	textureImage = VK_NULL_HANDLE;
-	textureImageMemory = VK_NULL_HANDLE;
-	textureImageView = VK_NULL_HANDLE;
-	textureSampler = VK_NULL_HANDLE;
+	mMipLevels = 1;
+	mTextureImage = VK_NULL_HANDLE;
+	mTextureImageMemory = VK_NULL_HANDLE;
+	mTextureImageView = VK_NULL_HANDLE;
+	mTextureSampler = VK_NULL_HANDLE;
 }

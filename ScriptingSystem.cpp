@@ -40,7 +40,7 @@ gea::ScriptingSystem::ScriptingSystem(MainWindow *mainwindow, Engine *engineInst
     int i = lua_gettop(mLuaVm);			//fetches the index of the top element on the stack
     const char* message = lua_tostring(mLuaVm, i);	//gets the string value of the top element on the stack
 
-    mActiveWindow->SetStatusBarMessage(message);
+    mActiveWindow->setStatusBarMessage(message);
 
     qDebug() << message;
 
@@ -48,7 +48,7 @@ gea::ScriptingSystem::ScriptingSystem(MainWindow *mainwindow, Engine *engineInst
     // t.detach();
 }
 
-void gea::ScriptingSystem::OuterLoop()
+void gea::ScriptingSystem::outerLoop()
 {
     int FPS = 60;
     std::chrono::milliseconds frameDuration(1000 / FPS);

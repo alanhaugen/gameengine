@@ -1,6 +1,6 @@
 //Based off Ole Flatens code from: https://github.com/oleflaten/3D-Sound-OpenAL
 
-#include "wavfilereader.h"
+#include "WavfileReader.h"
 #include <QDebug>
 
 bool WavFileReader::loadWave(std::string filePath, wave_t* wavePtr)

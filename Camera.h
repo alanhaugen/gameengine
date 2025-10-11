@@ -23,9 +23,6 @@ public:
     //void setPerspective(glm::radians(float fovy), float screenWidth, float near, float far);
     void lookAt(glm::vec3 position, glm::vec3 forward, glm::vec3 up);
 
-    inline glm::mat4 getViewMatrix() const {return mViewMatrix; }
-    inline glm::mat4 getProjectionMatrix() const {return mProjectionMatrix; }
-
     inline void setViewMatrix(const glm::mat4 &newViewMatrix) { mViewMatrix = newViewMatrix; }
     inline void setProjectionMatrix(const glm::mat4 &newProjectionMatrix) {mProjectionMatrix = newProjectionMatrix; }
     void setPosition(const glm::vec3 &newPos);

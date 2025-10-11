@@ -1,6 +1,8 @@
 #ifndef INPUT_H
 #define INPUT_H
 
+//Breaking naming convention here!
+//Just felt wrong to put an m before all of these...
 struct Input
 {
     bool W{false};

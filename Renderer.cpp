@@ -158,19 +158,19 @@ void Renderer::cleanup()
     cleanupSwapChain();
 
 	for (gea::Texture texture : mTextures) {
-		vkDestroySampler(device, texture.textureSampler, nullptr);
-		vkDestroyImageView(device, texture.textureImageView, nullptr);
-		vkDestroyImage(device, texture.textureImage, nullptr);
-		vkFreeMemory(device, texture.textureImageMemory, nullptr);
+        vkDestroySampler(device, texture.mTextureSampler, nullptr);
+        vkDestroyImageView(device, texture.mTextureImageView, nullptr);
+        vkDestroyImage(device, texture.mTextureImage, nullptr);
+        vkFreeMemory(device, texture.mTextureImageMemory, nullptr);
 	}
 
     vkDestroyDescriptorSetLayout(device, descriptorSetLayout, nullptr);
 
 	for (gea::Mesh mesh : mMeshes) {
-		vkDestroyBuffer(device, mesh.indexBuffer, nullptr);
-		vkFreeMemory(device, mesh.indexBufferMemory, nullptr);
-		vkDestroyBuffer(device, mesh.vertexBuffer, nullptr);
-		vkFreeMemory(device, mesh.vertexBufferMemory, nullptr);
+		vkDestroyBuffer(device, mesh.mIndexBuffer, nullptr);
+		vkFreeMemory(device, mesh.mIndexBufferMemory, nullptr);
+		vkDestroyBuffer(device, mesh.mVertexBuffer, nullptr);
+		vkFreeMemory(device, mesh.mVertexBufferMemory, nullptr);
 	}
 
     for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
@@ -879,9 +879,9 @@ bool Renderer::hasStencilComponent(VkFormat format) {
 void Renderer::createTextureImage(gea::Texture* texture)
 {
     int texWidth, texHeight, texChannels;
-    stbi_uc* pixels = stbi_load(texture->texturePath.c_str(), &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
+    stbi_uc* pixels = stbi_load(texture->mTexturePath.c_str(), &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
     VkDeviceSize imageSize = texWidth * texHeight * 4;
-    texture->mipLevels = static_cast<uint32_t>(std::floor(std::log2(std::max(texWidth, texHeight)))) + 1;
+    texture->mMipLevels = static_cast<uint32_t>(std::floor(std::log2(std::max(texWidth, texHeight)))) + 1;
 
     if (!pixels) {
         throw std::runtime_error("failed to load texture image!");
@@ -898,16 +898,16 @@ void Renderer::createTextureImage(gea::Texture* texture)
 
     stbi_image_free(pixels);
 
-    createImage(texWidth, texHeight, texture->mipLevels, VK_SAMPLE_COUNT_1_BIT, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, texture->textureImage, texture->textureImageMemory);
+    createImage(texWidth, texHeight, texture->mMipLevels, VK_SAMPLE_COUNT_1_BIT, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, texture->mTextureImage, texture->mTextureImageMemory);
 
-    transitionImageLayout(texture->textureImage, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, texture->mipLevels);
-    copyBufferToImage(stagingBuffer, texture->textureImage, static_cast<uint32_t>(texWidth), static_cast<uint32_t>(texHeight));
+    transitionImageLayout(texture->mTextureImage, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, texture->mMipLevels);
+    copyBufferToImage(stagingBuffer, texture->mTextureImage, static_cast<uint32_t>(texWidth), static_cast<uint32_t>(texHeight));
     //transitioned to VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL while generating mipmaps
 
     vkDestroyBuffer(device, stagingBuffer, nullptr);
     vkFreeMemory(device, stagingBufferMemory, nullptr);
 
-    generateMipmaps(texture->textureImage, VK_FORMAT_R8G8B8A8_SRGB, texWidth, texHeight, texture->mipLevels);
+    generateMipmaps(texture->mTextureImage, VK_FORMAT_R8G8B8A8_SRGB, texWidth, texHeight, texture->mMipLevels);
 
     createTextureImageView(texture);
     createTextureSampler(texture);
@@ -1019,8 +1019,8 @@ VkSampleCountFlagBits Renderer::getMaxUsableSampleCount()
 }
 
 void Renderer::createTextureImageView(gea::Texture* texture) {
-    texture->textureImageView = createImageView(texture->textureImage, VK_FORMAT_R8G8B8A8_SRGB,
-                                       VK_IMAGE_ASPECT_COLOR_BIT, texture->mipLevels);
+    texture->mTextureImageView = createImageView(texture->mTextureImage, VK_FORMAT_R8G8B8A8_SRGB,
+                                       VK_IMAGE_ASPECT_COLOR_BIT, texture->mMipLevels);
 }
 
 void Renderer::createTextureSampler(gea::Texture* texture)
@@ -1043,10 +1043,10 @@ void Renderer::createTextureSampler(gea::Texture* texture)
     samplerInfo.compareOp = VK_COMPARE_OP_ALWAYS;
     samplerInfo.mipmapMode = VK_SAMPLER_MIPMAP_MODE_LINEAR;
     samplerInfo.minLod = 0.0f;
-    samplerInfo.maxLod = static_cast<float>(texture->mipLevels);
+    samplerInfo.maxLod = static_cast<float>(texture->mMipLevels);
     samplerInfo.mipLodBias = 0.0f;
 
-    if (vkCreateSampler(device, &samplerInfo, nullptr, &texture->textureSampler) != VK_SUCCESS) {
+    if (vkCreateSampler(device, &samplerInfo, nullptr, &texture->mTextureSampler) != VK_SUCCESS) {
         throw std::runtime_error("failed to create texture sampler!");
     }
 }
@@ -1214,18 +1214,18 @@ void Renderer::loadModel(QString MODEL_PATH)
 
             if (uniqueVertices.count(vertex) == 0) {
                 uniqueVertices[vertex] = static_cast<uint32_t>(vertices.size());
-                obj_asset->vertices.push_back(vertex);
+                obj_asset->mVertices.push_back(vertex);
                 vertices.push_back(vertex);
             }
 
-            obj_asset->indices.push_back(uniqueVertices[vertex]);
+            obj_asset->mIndices.push_back(uniqueVertices[vertex]);
             indices.push_back(uniqueVertices[vertex]);
 
 
         }
     }
 
-    objManager->assets.push_back(obj_asset);
+    objManager->mAssets.push_back(obj_asset);
 }
 
 void Renderer::importObjects()
@@ -1237,12 +1237,12 @@ void Renderer::importObjects()
         QFileInfo fileInfo(path);
         QString name=fileInfo.baseName();
         //qDebug()<<fileInfo.filePath()<<" "<<fileInfo.absoluteFilePath()<<"\n";
-        objManager->filesNamesSet.insert(name);
-        objManager->filesNamesStack.push_back(path);
+        objManager->mFilesNamesSet.insert(name);
+        objManager->mFilesNamesStack.push_back(path);
         //objManager->filesNamesSet.insert(name);
     }
 
-    for(auto it: objManager->filesNamesStack)
+    for(auto it: objManager->mFilesNamesStack)
     {
         loadModel(it);
     }
@@ -1345,8 +1345,8 @@ void Renderer::createDescriptorSets(gea::Texture texture)
 
         VkDescriptorImageInfo imageInfo{};
         imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-        imageInfo.imageView = texture.textureImageView;
-        imageInfo.sampler = texture.textureSampler;
+        imageInfo.imageView = texture.mTextureImageView;
+        imageInfo.sampler = texture.mTextureSampler;
 
         std::array<VkWriteDescriptorSet, 2> descriptorWrites{};
 
@@ -1459,7 +1459,7 @@ uint32_t Renderer::findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags pro
 
 void Renderer::createVertexBuffer(gea::Mesh* mesh)
 {
-    VkDeviceSize bufferSize = sizeof(mesh->vertices[0]) * mesh->vertices.size();
+    VkDeviceSize bufferSize = sizeof(mesh->mVertices[0]) * mesh->mVertices.size();
 
     VkBuffer stagingBuffer;
     VkDeviceMemory stagingBufferMemory;
@@ -1467,12 +1467,12 @@ void Renderer::createVertexBuffer(gea::Mesh* mesh)
 
     void* data;
     vkMapMemory(device, stagingBufferMemory, 0, bufferSize, 0, &data);
-    memcpy(data, mesh->vertices.data(), (size_t)bufferSize);
+    memcpy(data, mesh->mVertices.data(), (size_t)bufferSize);
     vkUnmapMemory(device, stagingBufferMemory);
 
-    createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, mesh->vertexBuffer, mesh->vertexBufferMemory);
+    createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, mesh->mVertexBuffer, mesh->mVertexBufferMemory);
 
-    copyBuffer(stagingBuffer, mesh->vertexBuffer, bufferSize);
+    copyBuffer(stagingBuffer, mesh->mVertexBuffer, bufferSize);
 
     vkDestroyBuffer(device, stagingBuffer, nullptr);
     vkFreeMemory(device, stagingBufferMemory, nullptr);
@@ -1480,7 +1480,7 @@ void Renderer::createVertexBuffer(gea::Mesh* mesh)
 
 void Renderer::createIndexBuffer(gea::Mesh* mesh)
 {
-    VkDeviceSize bufferSize = sizeof(mesh->indices[0]) * mesh->indices.size();
+    VkDeviceSize bufferSize = sizeof(mesh->mIndices[0]) * mesh->mIndices.size();
 
     VkBuffer stagingBuffer;
     VkDeviceMemory stagingBufferMemory;
@@ -1488,12 +1488,12 @@ void Renderer::createIndexBuffer(gea::Mesh* mesh)
 
     void* data;
     vkMapMemory(device, stagingBufferMemory, 0, bufferSize, 0, &data);
-    memcpy(data, mesh->indices.data(), (size_t)bufferSize);
+    memcpy(data, mesh->mIndices.data(), (size_t)bufferSize);
     vkUnmapMemory(device, stagingBufferMemory);
 
-    createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_INDEX_BUFFER_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, mesh->indexBuffer, mesh->indexBufferMemory);
+    createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_INDEX_BUFFER_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, mesh->mIndexBuffer, mesh->mIndexBufferMemory);
 
-    copyBuffer(stagingBuffer, mesh->indexBuffer, bufferSize);
+    copyBuffer(stagingBuffer, mesh->mIndexBuffer, bufferSize);
 
     vkDestroyBuffer(device, stagingBuffer, nullptr);
     vkFreeMemory(device, stagingBufferMemory, nullptr);
@@ -1539,9 +1539,9 @@ void Renderer::createCommandBuffers()
 		{
 			gea::RenderComponent renderComponent = mStaticRenderComponents[j];
 			gea::Mesh mesh = mMeshes[renderComponent.meshIndex];
-			VkBuffer vertexBuffer = mesh.vertexBuffer;
-			VkBuffer indexBuffer = mesh.indexBuffer;
-			std::vector<uint32_t> indices = mesh.indices;
+			VkBuffer vertexBuffer = mesh.mVertexBuffer;
+			VkBuffer indexBuffer = mesh.mIndexBuffer;
+			std::vector<uint32_t> indices = mesh.mIndices;
 			VkDeviceSize offsets[] = { 0 };
 
 			glm::mat4 model = glm::mat4(1.0f);
@@ -1678,9 +1678,9 @@ void Renderer::drawFrame()
     {
         gea::RenderComponent renderComponent = mDynamicRenderComponents[j];
         gea::Mesh mesh = mMeshes[renderComponent.meshIndex];
-        VkBuffer vertexBuffer = mesh.vertexBuffer;
-        VkBuffer indexBuffer = mesh.indexBuffer;
-        std::vector<uint32_t> indices = mesh.indices;
+        VkBuffer vertexBuffer = mesh.mVertexBuffer;
+        VkBuffer indexBuffer = mesh.mIndexBuffer;
+        std::vector<uint32_t> indices = mesh.mIndices;
         VkDeviceSize offsets[] = { 0 };
 
         glm::mat4 model = glm::mat4(1.0f);
@@ -1788,6 +1788,18 @@ void Renderer::drawFrame()
         throw std::runtime_error("failed to present swap chain image!");
 
     currentFrame = (currentFrame + 1) % MAX_FRAMES_IN_FLIGHT;
+}
+
+void Renderer::initComponents(std::vector<gea::RenderComponent> staticComponents, std::vector<gea::Transform> staticTransformComponents, std::vector<gea::Mesh> meshes, std::vector<gea::Texture> textures) {
+    mStaticRenderComponents = staticComponents;
+    mStaticTransformComponents = staticTransformComponents;
+    mMeshes = meshes;
+    mTextures = textures;
+}
+
+void Renderer::updateCompoments(std::vector<gea::RenderComponent> renderComponents, std::vector<gea::Transform> transformComponents) {
+    mDynamicRenderComponents = renderComponents;
+    mDynamicTransformComponents = transformComponents;
 }
 
 VkShaderModule Renderer::createShaderModule(const std::vector<char> &code)

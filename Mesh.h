@@ -5,22 +5,22 @@
 
 namespace gea
 {
-    class Mesh
-    {
-    public:
-        Mesh();
-        void loadModel();
+class Mesh
+{
+public:
+    Mesh();
+    void loadModel();
 
-        std::string modelPath = PATH + "Assets/Models/viking_room.obj";
-        std::vector<Vertex> vertices;
-        std::vector<uint32_t> indices;
-        VkBuffer vertexBuffer;
-        VkBuffer indexBuffer;
-        VkDeviceMemory vertexBufferMemory;
-        VkDeviceMemory indexBufferMemory;
-    protected:
-    };
+    std::string mModelPath = PATH + "Assets/Models/viking_room.obj";
+    std::vector<Vertex> mVertices;
+    std::vector<uint32_t> mIndices;
+    VkBuffer mVertexBuffer;
+    VkBuffer mIndexBuffer;
+    VkDeviceMemory mVertexBufferMemory;
+    VkDeviceMemory mIndexBufferMemory;
+protected:
+};
 
-}   // namespace gea
+} // namespace gea
 
 #endif // MESH_H

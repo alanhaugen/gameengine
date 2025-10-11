@@ -10,35 +10,35 @@ FilesWindow::FilesWindow(AssetManager<ObjAsset>* manager)
     setMinimumWidth(500);
     setAcceptDrops(true);
 
-    assets_ptr= manager;
+    mAssetsPtr= manager;
 
-    mainLayout=new QVBoxLayout(this);
+    mMainLayout=new QVBoxLayout(this);
 
     //window has 2 children: a status bar and a scroller
-    scrolling=new QScrollArea(this);
-    scrollingLayout=new QVBoxLayout(scrollingWidget);
-    scrollingWidget->setLayout(scrollingLayout);
-    scrolling->setWidget(scrollingWidget);
-    scrolling->setWidgetResizable(true);
+    mScrolling=new QScrollArea(this);
+    mScrollingLayout=new QVBoxLayout(mScrollingWidget);
+    mScrollingWidget->setLayout(mScrollingLayout);
+    mScrolling->setWidget(mScrollingWidget);
+    mScrolling->setWidgetResizable(true);
     //scrolling->setGeometry(0,0,width(), height());
-    mainLayout->addWidget(scrolling);
+    mMainLayout->addWidget(mScrolling);
 
-    status=new QStatusBar(this);
-    status->showMessage(" Drop new files in this window ");
-    mainLayout->addWidget(status);
+    mStatus=new QStatusBar(this);
+    mStatus->showMessage(" Drop new files in this window ");
+    mMainLayout->addWidget(mStatus);
     //mainLayout->setGeometry(0,0,width(), height());
-    createButtons(assets_ptr);
+    createButtons(mAssetsPtr);
     show();
 }
 
-void FilesWindow::handleButton(int index)
+void FilesWindow::mHandleButton(int index)
 {
     //QString new_text=QString::number(assets_ptr->int_assets[index]);
     QString new_text="test";
     // change the text
-    displayAssets[index]->setText(new_text);
+    mDisplayAssets[index]->setText(new_text);
     // resize button
-    displayAssets[index]->resize(100,100);
+    mDisplayAssets[index]->resize(100,100);
 }
 
 void FilesWindow::dragEnterEvent(QDragEnterEvent *event)
@@ -55,24 +55,22 @@ void FilesWindow::dropEvent(QDropEvent *event)
         QString path=it.toLocalFile();
         QString name=QFileInfo(path).baseName();
         //looking up an element in QSet is faster than iterating over a stack
-        if(path.endsWith(".obj")&& !assets_ptr->filesNamesSet.contains(name)){ //file has not been imported allready
-            assets_ptr->filesNamesSet.insert(name);
-            int i=assets_ptr->filesNamesSet.size();
+        if(path.endsWith(".obj")&& !mAssetsPtr->mFilesNamesSet.contains(name)) //file has not been imported allready
+        {
+            mAssetsPtr->mFilesNamesSet.insert(name);
+            int i=mAssetsPtr->mFilesNamesSet.size();
             //importObjects(path);
-            QPushButton* new_button=new QPushButton(name, scrollingWidget);
-            displayAssets.push_back(new_button);
-            scrollingLayout->addWidget(new_button);
+            QPushButton* new_button=new QPushButton(name, mScrollingWidget);
+            mDisplayAssets.push_back(new_button);
+            mScrollingLayout->addWidget(new_button);
             //displayAssets.back()->setGeometry(QRect(QPoint(200*i, 100), QSize(200, 50)));
 
             //connect buttons to the objects
-            connect(displayAssets.back(), &QPushButton::released, this,[this, i]{
-                handleButton(i-1);
-            });
-            status->showMessage(" Drop new files in this window ");
+            connect(mDisplayAssets.back(), &QPushButton::released, this,[this, i]{ mHandleButton(i-1); });
+            mStatus->showMessage(" Drop new files in this window ");
         }
-        else{
-            status->showMessage(" File is already imported. ");
-        }
+        else
+            mStatus->showMessage(" File is already imported. ");
     }
 }
 
@@ -88,25 +86,23 @@ void FilesWindow::dropEvent(QDropEvent *event)
 
 void FilesWindow::createButtons(AssetManager<ObjAsset> *assets_)
 {
-    for(int i=0; i<assets_->assets.size(); i++){
+    for(int i=0; i<assets_->mAssets.size(); i++){
         //create button
         //should never run this, but in case we have more paths than objects
-        if(assets_->filesNamesSet.size()!=assets_->assets.size() || assets_->filesNamesSet.size()<1){
+        if(assets_->mFilesNamesSet.size()!=assets_->mAssets.size() || assets_->mFilesNamesSet.size()<1){
             //assets_ptr->filesNamesSet.resize(assets_ptr->assets.size());
-            qDebug()<<"names "<<assets_->filesNamesSet.size()
-                     <<" assets: "<<assets_->assets.size();
+            qDebug()<<"names "<<assets_->mFilesNamesSet.size()
+                     <<" assets: "<<assets_->mAssets.size();
             break;
         }
 
-        QString name_=QFileInfo(assets_->filesNamesStack[i]).baseName();
-        QPushButton* new_button=new QPushButton(name_, scrollingWidget);
-        displayAssets.push_back(new_button);
-        scrollingLayout->addWidget(new_button);
+        QString name_=QFileInfo(assets_->mFilesNamesStack[i]).baseName();
+        QPushButton* new_button=new QPushButton(name_, mScrollingWidget);
+        mDisplayAssets.push_back(new_button);
+        mScrollingLayout->addWidget(new_button);
         //set size
         //displayAssets[i]->setGeometry(QRect(QPoint(200*i, 100), QSize(200, 50)));
         //connect buttons to the objects
-        connect(displayAssets[i], &QPushButton::released, this,[this, i]{
-            handleButton(i);
-        });
+        connect(mDisplayAssets[i], &QPushButton::released, this,[this, i]{ mHandleButton(i); });
     }
 }

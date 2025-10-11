@@ -7,7 +7,9 @@
 #include <string>
 #include <cstdio>
 
-/// Structure to contain WAVE file data.
+// Structure to contain WAVE file data.
+// This is usually found deep inside a Microsoft header, so just
+// repeated here to not be dependent on that MS header
 struct wave_t
 {
     uint32_t size;              ///< Size of the WAVE file.
@@ -35,6 +37,7 @@ public:
         \param Pointer to a wave_t structure to contain the wave data.
     **/
     static bool loadWave(std::string filePath, wave_t* wavePtr);
+
 private:
     /// Error handling function.
     /**

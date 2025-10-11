@@ -7,7 +7,7 @@
 #include <vector>
 #include "MainWindow.h"
 #include "QDirIterator"
-#include "assetmanager.h"
+#include "AssetManager.h"
 #include "Texture.h"
 #include "Mesh.h"
 #include "Components.h"
@@ -17,7 +17,6 @@
 //Forward declarations
 struct SwapChainSupportDetails;
 struct QueueFamilyIndices;
-
 
 
 class Renderer : public QWindow
@@ -32,16 +31,9 @@ public:
     AssetManager<ObjAsset>* objManager=new AssetManager<ObjAsset>();
     bool filesImported=false;
     void drawFrame();
-    void initComponents(std::vector<gea::RenderComponent> staticComponents, std::vector<gea::Transform> staticTransformComponents, std::vector<gea::Mesh> meshes, std::vector<gea::Texture> textures) {
-        mStaticRenderComponents = staticComponents;
-		mStaticTransformComponents = staticTransformComponents;
-        mMeshes = meshes;
-		mTextures = textures;
-    }
-    void UpdateCompoments(std::vector<gea::RenderComponent> renderComponents, std::vector<gea::Transform> transformComponents) {
-        mDynamicRenderComponents = renderComponents;
-		mDynamicTransformComponents = transformComponents;
-	}
+    void initComponents(std::vector<gea::RenderComponent> staticComponents, std::vector<gea::Transform> staticTransformComponents,
+                        std::vector<gea::Mesh> meshes, std::vector<gea::Texture> textures);
+    void updateCompoments(std::vector<gea::RenderComponent> renderComponents, std::vector<gea::Transform> transformComponents);
 
     Camera getCamera() {return mCamera;}
 
@@ -52,6 +44,7 @@ protected:
     bool event(QEvent* event) override;
 
     //Qts input functions - just forward it to MainWindow for now
+    //This way the samt thing will happen if the focus is in the Renderer or MainWindow widgets
     void keyPressEvent(QKeyEvent *event) override           {mMainWindow->keyPressEvent(event);};
     void keyReleaseEvent(QKeyEvent *event) override         {mMainWindow->keyReleaseEvent(event);};
     void mousePressEvent(QMouseEvent *event) override       {mMainWindow->mousePressEvent(event);};
@@ -66,6 +59,8 @@ private:
     //GLFWwindow* window{nullptr};
     //QWindow* window{ nullptr }; //this object IS a QWindow
 
+    //These variables are not renamed to mInstance etc, to be similar to
+    //https://vulkan-tutorial.com/ where they came from
     VkInstance instance;
     VkDebugUtilsMessengerEXT debugMessenger;
     VkSurfaceKHR surface;
@@ -131,7 +126,7 @@ private:
     std::vector<gea::RenderComponent> mDynamicRenderComponents;
     std::vector<gea::RenderComponent> mStaticRenderComponents;
 
-    Camera mCamera;
+    Camera mCamera; //probably should be a pointer to this
     class MainWindow* mMainWindow{nullptr};
 
     // void initWindow();

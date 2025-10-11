@@ -10,15 +10,16 @@
 #include <QMediaPlayer>
 #include <QAudioOutput>
 
-namespace gea {
+namespace gea
+{
 
 class SoundSystem : public SystemBase
 {
 public:
     SoundSystem(class Engine* engineInstance);
 
-    void SetMainWindow(MainWindow* mainWindow);
-    void Update(float deltaTime) override {};
+    void setMainWindow(MainWindow* mainWindow);
+    void update(float deltaTime) override {};
 
     //Waiting for system.cpp to be made in Main
     void play(int component_ID);;
@@ -34,6 +35,7 @@ public:
     QMediaPlayer *mMediaPlayer{nullptr};
     QAudioOutput *mAudioOutput{nullptr};
 
+    //This function uses the Qt Media Framework, not OpenAL
     void playSound(std::string soundFile);
 };
 

@@ -18,14 +18,15 @@ class FilesWindow: public QFrame //for drag and drop
 {
 public:
     FilesWindow(AssetManager<ObjAsset>* manager); // T
-    std::vector<QPushButton*> displayAssets; //based on assets input vector size
-    AssetManager<ObjAsset>* assets_ptr{nullptr};
-    QScrollArea* scrolling;
-    QWidget* scrollingWidget=new QWidget();
-    QVBoxLayout* scrollingLayout;
-    QVBoxLayout* mainLayout;
-    QStatusBar* status;
-    void handleButton(int index);
+
+    std::vector<QPushButton*> mDisplayAssets; //based on assets input vector size
+    AssetManager<ObjAsset>* mAssetsPtr{nullptr};
+    QScrollArea* mScrolling{nullptr};
+    QWidget* mScrollingWidget = new QWidget();
+    QVBoxLayout* mScrollingLayout{nullptr};
+    QVBoxLayout* mMainLayout{nullptr};
+    QStatusBar* mStatus{nullptr};
+    void mHandleButton(int index);
 
     void dragEnterEvent(QDragEnterEvent* event) override;
     void dropEvent(QDropEvent* event) override;
@@ -33,7 +34,6 @@ public:
     // void mousePressEvent(QMouseEvent *event) override;
 
     void createButtons(AssetManager<ObjAsset>* assets_);
-
 };
 
 #endif // FILESWINDOW_H

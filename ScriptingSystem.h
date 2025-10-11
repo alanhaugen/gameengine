@@ -20,26 +20,25 @@ extern "C"
 // So this needs to be somehow changed to be possible
 
 
-
-
 namespace gea
 {
+
 class ScriptingSystem : public SystemBase
 {
 public:
     ScriptingSystem(class MainWindow *mainwindow, class Engine* engineInstance);
-    void Update(float deltaTime) override {};
+    void update(float deltaTime) override {};
 
-    void OuterLoop();
+    void outerLoop();
 
     MainWindow* mActiveWindow{nullptr};
 
     lua_State* mLuaVm{nullptr};
 
-    int lua_SetStatusBarMessage(lua_State * L)
+    int luaSetStatusBarMessage(lua_State * L)
     {
         const char* msg = luaL_checkstring(L, 1);
-        mActiveWindow->SetStatusBarMessage(msg);
+        mActiveWindow->setStatusBarMessage(msg);
         return 0; // No return values to Lua
     }
 
@@ -52,6 +51,7 @@ public:
     // }
 
 };
-}
+
+} //namespace gea
 
 #endif // SCRIPTINGSYSTEM_H

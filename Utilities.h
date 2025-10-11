@@ -42,6 +42,9 @@ const bool enableValidationLayers = false;
 const bool enableValidationLayers = true;
 #endif
 
+
+//Naming convention not used on the following, since it is based on
+//https://vulkan-tutorial.com/
 inline VkResult CreateDebugUtilsMessengerEXT(VkInstance instance, const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDebugUtilsMessengerEXT* pDebugMessenger) {
     auto func = (PFN_vkCreateDebugUtilsMessengerEXT) vkGetInstanceProcAddr(instance, "vkCreateDebugUtilsMessengerEXT");
     if (func != nullptr) {

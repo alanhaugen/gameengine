@@ -3,11 +3,8 @@
 
 #include <QMainWindow>
 #include "Engine.h"
-#include "Mesh.h"
-#include "Texture.h"
 #include "FilesWindow.h"
 #include <QKeyEvent>
-#include "Components.h"
 
 #include "Input.h"
 
@@ -17,7 +14,8 @@ namespace Ui {
 }
 QT_END_NAMESPACE
 
-namespace gea {
+namespace gea
+{
     //Forward declarations
     class EntityContainer;
     class EntityModel;
@@ -33,14 +31,14 @@ public:
 
     ~MainWindow();
 
-    void SetStatusBarMessage(const char* message);
+    void setStatusBarMessage(const char* message);
     // void AddToolbar(const char* name, const char* action);
 
     void start();
     void handleInput();
 
 private:
-    Ui::MainWindow *ui;
+    Ui::MainWindow *mUi{nullptr};
 
     class Renderer* mVulkanWindow{nullptr};
 
@@ -69,7 +67,6 @@ protected:
     void mouseReleaseEvent(QMouseEvent *event) override;
     void mouseMoveEvent(QMouseEvent *event) override;
     void wheelEvent(QWheelEvent *event) override;
-
 
     friend class Renderer;    //so renderer can access protected methods
 

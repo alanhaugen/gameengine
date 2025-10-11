@@ -25,12 +25,12 @@
 extern QPointer<QPlainTextEdit> messageLogWidget;
 
 MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
-    , ui(new Ui::MainWindow)
+    , mUi(new Ui::MainWindow)
 {
-    ui->setupUi(this);
+    mUi->setupUi(this);
 
     //Assign logView widget
-    messageLogWidget = ui->logView;
+    messageLogWidget = mUi->logView;
     messageLogWidget->setReadOnly(true);
 
     //MainWindow size:
@@ -54,7 +54,7 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
     mVulkanWidget->setMinimumSize(1100, 700);
 
     // Put the mVulkanWidget into the VulkanLayout spot, made in the MainWindow.ui file
-    ui->VulkanLayout->addWidget(mVulkanWidget);
+    mUi->VulkanLayout->addWidget(mVulkanWidget);
 
     mEntityContainer = new gea::EntityContainer(this);
     mEntityModel = new gea::EntityModel(mEntityContainer, this);
@@ -62,7 +62,7 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
     //Testing the layout - showing only number for now
     mEntityContainer->appendItem(gea::Entity());
 
-    ui->entityList->setModel(mEntityModel);
+    mUi->entityList->setModel(mEntityModel);
 
     //sets the keyboard input focus to the MainWindow when program starts
     this->setFocus();
@@ -110,7 +110,7 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
 
     //Should eventually be run from the Engine
     gea::SoundSystem* testSound = new gea::SoundSystem(mEngine);
-    testSound->SetMainWindow(this);
+    testSound->setMainWindow(this);
     testSound->playSound("Test Drive.mp3");
 
     gea::ScriptingSystem* testScript = new gea::ScriptingSystem(this, mEngine);
@@ -126,10 +126,10 @@ MainWindow::~MainWindow()
         delete mEngine;
     if (mFilesWidget)
         delete mFilesWidget;
-    delete ui;
+    delete mUi;
 }
 
-void MainWindow::SetStatusBarMessage(const char* message)
+void MainWindow::setStatusBarMessage(const char* message)
 {
     statusBar()->showMessage(message);
 }

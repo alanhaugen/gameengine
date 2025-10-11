@@ -5,19 +5,20 @@
 
 namespace gea
 {
-    class Texture
-    {
-    public:
-        Texture();
 
-        std::string texturePath = PATH + "Assets/Textures/viking_room.png";
-        uint32_t mipLevels;
-        VkImage textureImage;
-        VkDeviceMemory textureImageMemory;
-        VkImageView textureImageView;
-        VkSampler textureSampler;
-    protected:
-    };
-}
+class Texture
+{
+public:
+    Texture();
+
+    std::string mTexturePath = PATH + "Assets/Textures/viking_room.png";
+    uint32_t mMipLevels;
+    VkImage mTextureImage;
+    VkDeviceMemory mTextureImageMemory;
+    VkImageView mTextureImageView;
+    VkSampler mTextureSampler;
+};
+
+} //namespace gea
 
 #endif // TEXTURE_H

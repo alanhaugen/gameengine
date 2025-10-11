@@ -4,10 +4,10 @@
 
 gea::Mesh::Mesh()
 {
-	vertexBuffer = VK_NULL_HANDLE;
-	indexBuffer = VK_NULL_HANDLE;
-	vertexBufferMemory = VK_NULL_HANDLE;
-	indexBufferMemory = VK_NULL_HANDLE;
+	mVertexBuffer = VK_NULL_HANDLE;
+	mIndexBuffer = VK_NULL_HANDLE;
+	mVertexBufferMemory = VK_NULL_HANDLE;
+	mIndexBufferMemory = VK_NULL_HANDLE;
     loadModel();
 }
 
@@ -18,7 +18,7 @@ void gea::Mesh::loadModel()
     std::vector<tinyobj::material_t> materials;
     std::string warn, err;
 
-    if (!tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, modelPath.c_str()))
+    if (!tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, mModelPath.c_str()))
         throw std::runtime_error(warn + err);
 
     std::unordered_map<Vertex, uint32_t> uniqueVertices{};
@@ -44,11 +44,11 @@ void gea::Mesh::loadModel()
 
             if (uniqueVertices.count(vertex) == 0)
             {
-                uniqueVertices[vertex] = static_cast<uint32_t>(vertices.size());
-                vertices.push_back(vertex);
+                uniqueVertices[vertex] = static_cast<uint32_t>(mVertices.size());
+                mVertices.push_back(vertex);
             }
 
-            indices.push_back(uniqueVertices[vertex]);
+            mIndices.push_back(uniqueVertices[vertex]);
         }
     }
 }

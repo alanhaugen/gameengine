@@ -21,29 +21,29 @@ Engine::Engine(Renderer* renderer) : mVulkanRenderer{renderer}
     t2.mPosition = glm::vec3(-1.0f, 0.0f, 0.0f);
     mStaticTransformComponents.push_back(t2);
 
-    SetupRenderSystem();
+    setupRenderSystem();
     //mVulkanWindow->initVulkan();
-    UpdateRenderSystem();
+    updateRenderSystem();
 }
 
-void Engine::SetupRenderSystem()
+void Engine::setupRenderSystem()
 {
     mRenderSystem = new gea::RenderSystem(this, mVulkanRenderer);
-    mRenderSystem->Initialize(mStaticRenderComponents, mStaticTransformComponents, mMeshComponents, mTextureComponents);
+    mRenderSystem->initialize(mStaticRenderComponents, mStaticTransformComponents, mMeshComponents, mTextureComponents);
 }
 
-void Engine::UpdateRenderSystem()
+void Engine::updateRenderSystem()
 {
-    mRenderSystem->Update(mRenderComponents, mTransformComponents);
+    mRenderSystem->update(mRenderComponents, mTransformComponents);
 }
 
-Entity* Engine::CreateEntity()
+Entity* Engine::createEntity()
     {
         mEntityVector.emplace_back();
         return &mEntityVector.back();
     }
 
-    void Engine::DestroyEntity(std::size_t entityID)
+    void Engine::destroyEntity(std::size_t entityID)
     {
  
         mEntityVector.erase(std::remove_if(mEntityVector.begin(), mEntityVector.end(),
@@ -61,80 +61,79 @@ Entity* Engine::CreateEntity()
                           [entityID](const Enemy& c){ return c.mEntityID == entityID; }), mEnemyComponents.end());
         mProjectileComponents.erase(std::remove_if(mProjectileComponents.begin(), mProjectileComponents.end(),
                           [entityID](const Projectile& c){ return c.mEntityID == entityID; }), mProjectileComponents.end());
-        
     }
 
-    Transform* Engine::AddTransform(Entity* entity)
+    Transform* Engine::addTransform(Entity* entity)
     {
         Transform t(entity->mEntityID);
         mTransformComponents.push_back(t);
         entity->mComponents.push_back({ComponentTypes::Transform, (short)(mTransformComponents.size()-1)});
-        SortComponents();
+        sortComponents();
         return &mTransformComponents.back();
     }
    
-    Movement* Engine::AddMovement(Entity* entity)
+    Movement* Engine::addMovement(Entity* entity)
     {
         Movement m;
         m.mEntityID = entity->mEntityID;
         mMovementComponents.push_back(m);
         entity->mComponents.push_back({ComponentTypes::Movement, (short)(mMovementComponents.size()-1)});
-        SortComponents();
+        sortComponents();
         return &mMovementComponents.back();
     }
 
-    Health* Engine::AddHealth(Entity* entity)
+    Health* Engine::addHealth(Entity* entity)
     {
         Health h;
         h.mEntityID = entity->mEntityID;
         mHealthComponents.push_back(h);
         entity->mComponents.push_back({ComponentTypes::Health, (short)(mHealthComponents.size()-1)});
-        SortComponents();
+        sortComponents();
         return &mHealthComponents.back();
     }
 
-    Tower* Engine::AddTower(Entity* entity)
+    Tower* Engine::addTower(Entity* entity)
     {
         Tower t;
         t.mEntityID = entity->mEntityID;
         mTowerComponents.push_back(t);
         entity->mComponents.push_back({ComponentTypes::Tower, (short)(mTowerComponents.size()-1)});
-        SortComponents();
+        sortComponents();
         return &mTowerComponents.back();
     }
 
-    Enemy* Engine::AddEnemy(Entity* entity)
+    Enemy* Engine::addEnemy(Entity* entity)
     {
         Enemy e;
         e.mEntityID = entity->mEntityID;
         mEnemyComponents.push_back(e);
         entity->mComponents.push_back({ComponentTypes::Enemy, (short)(mEnemyComponents.size()-1)});
-        SortComponents();
+        sortComponents();
         return &mEnemyComponents.back();
     }
 
-    Projectile* Engine::AddProjectile(Entity* entity)
+    Projectile* Engine::addProjectile(Entity* entity)
     {
         Projectile p;
         p.mEntityID = entity->mEntityID;
         mProjectileComponents.push_back(p);
         entity->mComponents.push_back({ComponentTypes::Projectile, (short)(mProjectileComponents.size()-1)});
-        SortComponents();
+        sortComponents();
         return &mProjectileComponents.back();
     }
 
-    void Engine::SortComponents()
+    void Engine::sortComponents()
     {
         std::sort(mTransformComponents.begin(), mTransformComponents.end(),
                   [](const Transform& a, const Transform& b){ return a.mEntityID < b.mEntityID; });
         std::sort(mMovementComponents.begin(), mMovementComponents.end(),
                   [](const Movement& a, const Movement& b){ return a.mEntityID < b.mEntityID; });
-   
     }
 
-    void Engine::Update(float deltaTime)
+    void Engine::update(float deltaTime)
     {
-        qDebug("Update called %.6f", deltaTime);
+        qDebug("Update called %.6f", deltaTime);    //prints float with 6 decimal places
+
         // UpdateRenderSystem(); //Done through Qts RequestUpdate() in bool Renderer::event(QEvent* ev)
         // to call all systems 
         // i am listing Example:
@@ -147,7 +146,8 @@ Entity* Engine::CreateEntity()
     //Simple loop that should call Update 100Hz
     //Something funky with it.
     //It loops but blocks Qt rendering
-    void Engine::GameLoop()
+    //Should be propperly looked at and done correctly
+    void Engine::gameLoop()
     {
         qDebug("GameLoop started");
         auto lastUpdateTime = std::chrono::high_resolution_clock::now();
@@ -167,7 +167,7 @@ Entity* Engine::CreateEntity()
             {
                 // Convert to seconds for physics calculations
                 double deltaTimeSeconds = mUpdateInterval / 1000000000.0;
-                Update(deltaTimeSeconds);  // Your 100Hz logic here
+                update(deltaTimeSeconds);  // Your 100Hz logic here
                 accumulatedTime -= mUpdateInterval;
             }
 

@@ -1,11 +1,11 @@
 #include "Entity.h"
 
 //crude way to make unique IDs
-std::size_t gea::Entity::nextID{0};  //initializing the static class value
+std::size_t gea::Entity::mStaticNextID{0};  //initializing the static class value
 
 namespace gea {
 
-    Entity::Entity() : mEntityID(++nextID)      //pre-increment - start at 1
+    Entity::Entity() : mEntityID(++mStaticNextID)      //pre-increment - start at 1
     {}
 
     Entity::~Entity()
@@ -13,7 +13,7 @@ namespace gea {
         //should probably clean up the components this entity has.
     }
 
-    bool Entity::HasComponent(ComponentTypes type) const
+    bool Entity::hasComponent(ComponentTypes type) const
     {
         for (const auto& comp : mComponents)
         {
@@ -23,7 +23,7 @@ namespace gea {
         return false;
     }
 
-    short Entity::GetComponentIndex(ComponentTypes type) const
+    short Entity::getComponentIndex(ComponentTypes type) const
     {
         for (const auto& comp : mComponents)
         {

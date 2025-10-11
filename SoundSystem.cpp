@@ -29,7 +29,7 @@ SoundSystem::SoundSystem(Engine* engineInstance) : SystemBase(engineInstance)
 
 }
 
-void SoundSystem::SetMainWindow(MainWindow *mainWindow)
+void SoundSystem::setMainWindow(MainWindow *mainWindow)
 {
     //Sound - using Qts Multimedia system
     mAudioOutput = new QAudioOutput(mainWindow);
