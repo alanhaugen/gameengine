@@ -38,12 +38,12 @@ public:
 
         a.resize(degree+1);
 
-        for (int j=0; j <= degree; j++)
+        for (int i = 0; i <= degree; i++)
         {
-            a[degree-j] = controlPoints[my-j];
+            a[degree-i] = controlPoints[my-i];
         }
 
-        for (int k=degree; k>0; k--)
+        for (int k = degree; k > 0; k--)
         {
             int j = my - k;
 
