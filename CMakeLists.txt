@@ -17,13 +17,17 @@ set(CMAKE_AUTORCC ON)
 
 
 # Detect build environment based on CMAKE_BINARY_DIR
-# Used to set correct PATH
+# Used to set correct PATH and some clean up
 if(${CMAKE_BINARY_DIR} MATCHES ".*out/.*")
     add_compile_definitions(BUILD_ENV_VISUAL_STUDIO)
     message(STATUS "=== Visual Studio detected ===")
 elseif(${CMAKE_BINARY_DIR} MATCHES ".*build/.*")
     add_compile_definitions(BUILD_ENV_QTCREATOR)
     message(STATUS "=== Qt Creator detected ===")
+    #Deleting preset files not used in Qt - generated in VS 2022
+    #This should not fail even if the files are not present
+    file(REMOVE "${CMAKE_CURRENT_SOURCE_DIR}/CMakePresets.json")
+    file(REMOVE "${CMAKE_CURRENT_SOURCE_DIR}/CMakeUserPresets.json")
 endif()
 
 
