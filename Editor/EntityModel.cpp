@@ -18,7 +18,8 @@ QVariant gea::EntityModel::data(const QModelIndex &index, int role) const
         return QVariant();
 
     if (role == Qt::DisplayRole) {
-        return mContainer->getItem(index.row()).mEntityID;
+        //had to explicitly return a QVariant on Mac - mEntityID is size_t
+        return QVariant::fromValue(mContainer->getItem(index.row()).mEntityID);
     }
 
     return QVariant();

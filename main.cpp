@@ -3,7 +3,6 @@
 #include <QApplication>
 #include <QSplashScreen>
 #include <QPlainTextEdit>
-#include <QVulkanInstance>
 #include <QLibraryInfo>
 #include <QLoggingCategory>
 #include <QPointer>

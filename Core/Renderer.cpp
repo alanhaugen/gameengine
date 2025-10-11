@@ -313,8 +313,12 @@ void Renderer::createSurface()
     {
         qDebug("\nSuccessfully created a surface!");
     }
-#else
+#elif __APPLE__
     NSView* nsview = reinterpret_cast<NSView*>(this->winId());
+
+    // Make sure the `nsview` is properly set up and is compatible with Metal
+    if (!nsview)
+        throw std::runtime_error("NSView is null. Cannot create surface.");
 
     VkMacOSSurfaceCreateInfoMVK createInfo = {};
     createInfo.sType = VK_STRUCTURE_TYPE_MACOS_SURFACE_CREATE_INFO_MVK;
@@ -322,14 +326,11 @@ void Renderer::createSurface()
     createInfo.flags = 0;
     createInfo.pView = nsview;
 
-    if (vkCreateMacOSSurfaceMVK(instance, &createInfo, nullptr, &surface) != VK_SUCCESS)
-    {
-        throw std::runtime_error("Failed to create a surface!");
-    }
+    VkResult result = vkCreateMacOSSurfaceMVK(instance, &createInfo, nullptr, &surface);
+    if (result != VK_SUCCESS)
+        throw std::runtime_error("Failed to create a surface! Error code: " + std::to_string(result));
     else
-    {
         qDebug("\nSuccessfully created a surface!");
-    }
 #endif
 }
 

@@ -102,11 +102,14 @@ elseif(APPLE)
 
     target_include_directories(QtVulkan PRIVATE
         #Hardcoded path for Oles Macs for now:
-        "/Users/ole/VulkanSDK/1.4.321.0/macOS/include"
+        "/Users/ole/VulkanSDK/1.4.328.1/macOS/include"
+        ${CMAKE_CURRENT_SOURCE_DIR}
+        ${CMAKE_CURRENT_SOURCE_DIR}/External/Lua/include
     )
     target_link_libraries(QtVulkan PRIVATE
         Qt::Core
         Qt::Widgets
+        Qt6::Multimedia
         "-framework QuartzCore"
         "-framework Metal"
         "-framework Foundation"
@@ -114,13 +117,14 @@ elseif(APPLE)
         "-framework CoreGraphics"
         "-framework IOKit"
         "-framework AppKit"
+        ${CMAKE_CURRENT_SOURCE_DIR}/External/Lua/lib/liblua.a
         #Hardcoded path for Oles Macs for now:
-        "/Users/ole/VulkanSDK/1.4.321.0/macOS/lib/MoltenVK.xcframework/macos-arm64_x86_64/libMoltenVK.a"
+        "/Users/ole/VulkanSDK/1.4.328.1/macOS/lib/MoltenVK.xcframework/macos-arm64_x86_64/libMoltenVK.a"
     )
-target_link_libraries(QtVulkan PRIVATE Qt6::Widgets)
 endif()
 
 
+if(MSVC)
 # Copy the DLL after build
 # This makes the .exe use the correct .dll from the library we compile to
 # (the "COMMAND echo" only works on Windows)
@@ -130,3 +134,5 @@ add_custom_command(TARGET QtVulkan POST_BUILD
         $ENV{OPENAL_HOME}/bin/Win64/OpenAL32.dll           #Windows environment variable version
         $<TARGET_FILE_DIR:QtVulkan>
     )
+
+endif()

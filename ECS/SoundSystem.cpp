@@ -114,7 +114,7 @@ bool SoundSystem::assignBuffer(wave_t *waveData, int component_ID)
     i2s << waveData->dataSize;
     qDebug() << "DataSize: " << i2s.str() << " bytes\n";
 
-
+#ifdef _WIN32
     // for (gea::Sound component : ComponentSoundVector){
         // if (component.mEntityID == component_ID)
         {
@@ -129,12 +129,15 @@ bool SoundSystem::assignBuffer(wave_t *waveData, int component_ID)
             //if (waveData) delete waveData;
             return true;
         }
+#endif
     // }
     return false;
 }
 
-bool SoundSystem::checkError(std::string name){
-
+bool SoundSystem::checkError(std::string name)
+{
+    //OpenAL seems to be deprecated on MacOS - OEF has to find a solution to this
+#ifdef _WIN32
     switch (alGetError())
     {
     case AL_NO_ERROR:
@@ -156,6 +159,7 @@ bool SoundSystem::checkError(std::string name){
         return false;
     default: break;
     }
+#endif
     return true;
 }
 

@@ -8,8 +8,13 @@ bool WavFileReader::loadWave(std::string filePath, wave_t* wavePtr)
     qDebug() << "Loading " + filePath + " from disk\n";
     FILE* fp{nullptr};
 
+#ifdef _WIN32
     errno_t testOpenFile = fopen_s(&fp, filePath.c_str(), "rb");
     if (testOpenFile != 0 || fp == nullptr)
+#else
+    fp = fopen(filePath.c_str(), "rb");
+    if (fp == nullptr)
+#endif
     {
         // Handle error - fopen_s sets fp to nullptr on failure
         qDebug() << "Failed to open file:" << filePath.c_str();

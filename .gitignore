@@ -3,6 +3,8 @@
 *~
 *.autosave
 *.a
+# But don't ignore liblua.a for MacOS
+!External/Lua/lib/liblua.a
 *.core
 *.moc
 *.o
