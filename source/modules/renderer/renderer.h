@@ -36,6 +36,8 @@ public:
         int offset = 0;
     };
 
+    float windowWidth, windowHeight;
+
     virtual Drawable& CreateDrawable(std::vector<Vertex> vertices,
                                      std::vector<uint32_t> indices = std::vector<uint32_t>(),
                                      const char* vertexShader = "shaders/vert.spv",

@@ -3,59 +3,7 @@
 #include "../components/terrain.h"
 #include "../components/spherecollider.h"
 #include "../components/trianglecollider.h"
-#include "../components/fpscamera.h"
 #include <glm/gtc/matrix_transform.hpp>
-
-class BSplineCurve
-{
-public:
-    float d;
-    float n;
-    std::vector<float> t;
-    std::vector<glm::vec3> c;
-
-    float findKnotInterval(float x)
-    {
-        int my = n = 1; // indekstilsistekontrollpunkt
-
-        while (x < t[my])
-        {
-            my--;
-        }
-
-        return my;
-    }
-
-    glm::vec3 EvaluateBSplineSimple(float x) //Cox-deBoor Algoritme
-    {
-        int my = findKnotInterval(x);
-        std::vector<glm::vec3> a;
-
-        a.reserve(d+1);
-
-        for (int j=0; j<=d; j++)
-        {
-            a[d-j] = c[my-j];
-        }
-
-        for (int k=d; k>0; k--)
-        {
-            int j = my-k;
-
-            for (int i=0; i<k; i++) {
-                j++;
-
-                float w = (x-t[j])/(t[j+k]-t[j]);
-
-                a[i] = a[i] * (1-w) + a[i+1] * w;
-            }
-
-            return a[0];
-        }
-
-        return glm::vec3();
-    }
-};
 
 RollingBall::RollingBall()
 {
@@ -63,11 +11,22 @@ RollingBall::RollingBall()
 
 void RollingBall::Init()
 {
+    curve.controlPoints.push_back(glm::vec3(0,0,0));
+    curve.controlPoints.push_back(glm::vec3(0.1,0.2,0));
+    curve.controlPoints.push_back(glm::vec3(0.3,0.3,0));
+    curve.controlPoints.push_back(glm::vec3(0.4,0,0));
+    curve.controlPoints.push_back(glm::vec3(0,0,0));
+
+    curve.t = {
+        0, 0, 0, 0,      // first d+1 knots
+        1, 2, 3,         // internal knots
+        4, 4, 4          // last d+1 knots
+    };
+
     GameObject* ball = new GameObject;
-    ballMesh = new Mesh("Assets/Models/ball.obj", "shaders/phong.vert.spv", "shaders/phong.frag.spv");
+    ballMesh = new Mesh("Assets/Models/ball.obj");
     ball->AddComponent(ballMesh);
     ball->AddComponent(new SphereCollider());
-    ball->AddComponent(new FPSCamera(&camera));
 
     GameObject* terrain = new GameObject;
     ball->AddComponent(new Terrain("Assets/terrain.png"));
@@ -81,13 +40,15 @@ void RollingBall::Init()
 
 void RollingBall::Update()
 {
-    glm::mat4& matrix = ballMesh->drawable->ubo.model;
-    matrix = glm::translate(matrix, glm::vec3(0,force,0));
+    static float time = 0.0f;
 
-    force -= 0.000098f;
+    time += 0.01f;
 
-    if (matrix[3].y < -1.0f)
+    if (time > 1.0f)
     {
-        force = 0.01f;
+        time = 0.0f;
     }
+
+    glm::mat4& matrix = ballMesh->drawable->ubo.model;
+    matrix[3] = glm::vec4(curve.EvaluateBSplineSimple(time), 1.0f);
 }
