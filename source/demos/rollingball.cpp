@@ -40,7 +40,7 @@ void RollingBall::Init()
 
     camera.position = glm::vec3(0.0f, 0.0f, 4.0f);
 
-    renderer->SetLightPos(glm::vec3(0,1,0));
+    renderer->SetLightPos(glm::vec3(0,2,0));
 
     gameObjects.push_back(ball);
     gameObjects.push_back(terrain);
@@ -50,7 +50,7 @@ void RollingBall::Update()
 {
     static float time = 0.0f;
 
-    time += 0.01f;
+    time += 0.001f;
 
     if (time > 1.0f)
     {
@@ -58,7 +58,7 @@ void RollingBall::Update()
     }
 
     glm::vec3 pos = curve.EvaluateBSplineSimple(time);
-    pos.y = terrainMesh->GetHeightAt(pos);
+    pos.y = terrainMesh->GetHeightAt(pos) + 0.1f;
 
     glm::mat4& matrix = ballMesh->drawable->ubo.model;
     matrix[3] = glm::vec4(pos, 1.0f);
