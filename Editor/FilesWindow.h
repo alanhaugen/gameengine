@@ -3,7 +3,7 @@
 
 #include <QWidget>
 #include <QPushButton>
-#include "AssetManager.h"
+#include "AssetManager/AssetManager.h"
 #include <QFileDialog>
 #include <QDragEnterEvent>
 #include <QMimeData>

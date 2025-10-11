@@ -3,7 +3,7 @@
 
 #include <qabstractitemmodel.h>
 #include <qobject.h>
-#include "EntityContainer.h"
+#include "Editor/EntityContainer.h"
 namespace gea
 {
 

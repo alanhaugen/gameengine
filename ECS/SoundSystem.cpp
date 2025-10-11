@@ -1,5 +1,5 @@
 #include "SoundSystem.h"
-#include "MainWindow.h"
+#include "Editor/MainWindow.h"
 
 #ifdef _WIN32
 #include <AL/al.h>
@@ -11,8 +11,8 @@
 #endif
 
 #include "Components.h"
-#include "Utilities.h"
-#include "MainWindow.h"
+#include "Core/Utilities.h"
+#include "Editor/MainWindow.h"
 #include <sstream>
 #include <string>
 #include <QDebug>

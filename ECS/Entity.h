@@ -2,7 +2,7 @@
 #define ENTITY_H
 
 #include <vector>
-#include "Components.h"
+#include "ECS/Components.h"
 
 //Need namespace, since we start to get naming collisions with other code
 namespace gea

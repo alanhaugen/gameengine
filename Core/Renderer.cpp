@@ -1,5 +1,5 @@
 #include "Renderer.h"
-#include "MainWindow.h"
+#include "Editor/MainWindow.h"
 #include "Utilities.h"
 #include "Vertex.h"
 

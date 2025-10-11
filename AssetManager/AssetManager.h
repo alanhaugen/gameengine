@@ -2,7 +2,7 @@
 #define ASSETMANAGER_H
 
 #include <vector>
-#include "Vertex.h"
+#include "Core/Vertex.h"
 #include <QString>
 #include <QSet>
 #include <QStack>

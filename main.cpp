@@ -1,5 +1,5 @@
-#include "MainWindow.h"
-#include "Utilities.h"
+#include "Editor/MainWindow.h"
+#include "Core/Utilities.h"
 #include <QApplication>
 #include <QSplashScreen>
 #include <QPlainTextEdit>

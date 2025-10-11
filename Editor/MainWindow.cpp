@@ -1,23 +1,22 @@
 #include "MainWindow.h"
-#include "Engine.h"
+#include "Core/Engine.h"
 #include "EntityContainer.h"
 #include "EntityModel.h"
-#include "Renderer.h"
+#include "Core/Renderer.h"
 #include <QKeyEvent>
 #include <QHBoxLayout>
 #include <QFileSystemModel>
 #include <QTreeView>
-#include "DisplayWidget.cpp"
+#include "Editor/DisplayWidget.cpp"
 #include <QUrl>
 #include <QFileInfo>
 #include <QDebug>
 #include <QPointer>
 #include <QPlainTextEdit>
-#include "ScriptingSystem.h"
-#include "SoundSystem.h"
+#include "ECS/ScriptingSystem.h"
+#include "ECS/SoundSystem.h"
+#include "ECS/RenderSystem.h"
 #include "ui_MainWindow.h"
-#include "Renderer.h"
-#include "RenderSystem.h"
 #include <QKeyEvent>
 
 

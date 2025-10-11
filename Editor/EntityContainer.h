@@ -2,7 +2,7 @@
 #define ENTITYCONTAINER_H
 
 #include <qobject.h>
-#include "Entity.h"
+#include "ECS/Entity.h"
 namespace gea
 {
 

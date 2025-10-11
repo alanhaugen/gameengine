@@ -1,6 +1,6 @@
 #include "RenderSystem.h"
-#include "Engine.h"
-#include "Renderer.h"
+#include "Core/Engine.h"
+#include "Core/Renderer.h"
 
 void gea::RenderSystem::initialize(std::vector<gea::RenderComponent> staticComponents, std::vector<gea::TransformComponent> staticTransformComponents,
                                    std::vector<gea::Mesh> meshes, std::vector<gea::Texture> textures)

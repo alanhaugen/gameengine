@@ -1,11 +1,11 @@
 #ifndef ENGINE_H
 #define ENGINE_H
 
-#include "Entity.h"
-#include "Components.h"
-#include "Mesh.h"
-#include "RenderSystem.h"
-#include "Texture.h"
+#include "ECS/Entity.h"
+#include "ECS/Components.h"
+#include "ECS/RenderSystem.h"
+#include "AssetManager/Mesh.h"
+#include "AssetManager/Texture.h"
 
 namespace gea
 {

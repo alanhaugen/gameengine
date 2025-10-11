@@ -5,8 +5,8 @@
 //#include <chrono>
 //#include <thread>
 #include <QDebug>
-#include "Systems.h"
-#include "MainWindow.h"
+#include "ECS/Systems.h"
+#include "Editor/MainWindow.h"
 
 extern "C"
 {

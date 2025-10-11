@@ -2,9 +2,9 @@
 #define SOUNDSYSTEM_H
 
 #include <string>
-#include "MainWindow.h"
-#include "Systems.h"
-#include "WavfileReader.h"
+#include "Editor/MainWindow.h"
+#include "ECS/Systems.h"
+#include "AssetManager/WavfileReader.h"
 
 //For playing with Qts mediasystem
 #include <QMediaPlayer>

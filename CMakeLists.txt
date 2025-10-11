@@ -29,31 +29,31 @@ endif()
 
 # Source files (include the .ui so AUTOUIC processes it)
 set(SOURCES
-    AssetManager.h AssetManager.cpp
-    Camera.h Camera.cpp
-    Components.h
-    DisplayWidget.cpp
-    DraggableButton.h DraggableButton.cpp
-    Engine.h Engine.cpp
-    Entity.h Entity.cpp
-    EntityContainer.h EntityContainer.cpp
-    EntityModel.h EntityModel.cpp
-    FilesWindow.h FilesWindow.cpp
-    Input.h
+    AssetManager/AssetManager.h AssetManager/AssetManager.cpp
+    AssetManager/Mesh.h AssetManager/Mesh.cpp
+    AssetManager/Sound.h AssetManager/Sound.cpp
+    AssetManager/Texture.h AssetManager/Texture.cpp
+    AssetManager/WavfileReader.h AssetManager/WavfileReader.cpp
+    Core/Camera.h Core/Camera.cpp
+    Core/Engine.h Core/Engine.cpp
+    Core/Input.h
+    Core/Renderer.h Core/Renderer.cpp
+    Core/Utilities.h
+    Core/Vertex.h
+    ECS/Components.h
+    ECS/Entity.h ECS/Entity.cpp
+    ECS/RenderSystem.h ECS/RenderSystem.cpp
+    ECS/ScriptingSystem.h ECS/ScriptingSystem.cpp
+    ECS/SoundSystem.h ECS/SoundSystem.cpp
+    ECS/Systems.h ECS/Systems.cpp
+    Editor/DisplayWidget.cpp
+    Editor/DraggableButton.h Editor/DraggableButton.cpp
+    Editor/FilesWindow.h Editor/FilesWindow.cpp
+    Editor/EntityContainer.h Editor/EntityContainer.cpp
+    Editor/EntityModel.h Editor/EntityModel.cpp
+    Editor/MainWindow.h Editor/MainWindow.cpp
+    Editor/MainWindow.ui
     main.cpp
-    MainWindow.h MainWindow.cpp
-    MainWindow.ui
-    Mesh.h Mesh.cpp
-    Renderer.h Renderer.cpp
-    RenderSystem.h RenderSystem.cpp
-    ScriptingSystem.h ScriptingSystem.cpp
-    Sound.h Sound.cpp
-    SoundSystem.h SoundSystem.cpp
-    Systems.h Systems.cpp
-    Texture.h Texture.cpp
-    Utilities.h
-    Vertex.h
-    WavfileReader.h WavfileReader.cpp
 )
 
 # all Lua files shown in IDE
@@ -78,6 +78,7 @@ if(MSVC)
         $ENV{VULKAN_HOME}/Include
         $ENV{OPENAL_HOME}/include
         ${CMAKE_CURRENT_SOURCE_DIR}/External/Lua/include
+        ${CMAKE_CURRENT_SOURCE_DIR}
     )
 
     # Link the exact Vulkan library. Use the full path to the .lib

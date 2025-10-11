@@ -2,11 +2,11 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include "Engine.h"
-#include "FilesWindow.h"
+#include "Core/Engine.h"
+#include "Editor/FilesWindow.h"
 #include <QKeyEvent>
 
-#include "Input.h"
+#include "Core/Input.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {

@@ -5,12 +5,12 @@
 #include <vulkan/vulkan_core.h>
 #include <string>
 #include <vector>
-#include "MainWindow.h"
+#include "Editor/MainWindow.h"
 #include "QDirIterator"
-#include "AssetManager.h"
-#include "Texture.h"
-#include "Mesh.h"
-#include "Components.h"
+#include "AssetManager/AssetManager.h"
+#include "AssetManager/Texture.h"
+#include "AssetManager/Mesh.h"
+#include "ECS/Components.h"
 #include "Vertex.h"
 #include "Camera.h"
 

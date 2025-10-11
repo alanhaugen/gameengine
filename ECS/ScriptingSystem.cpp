@@ -2,7 +2,7 @@
 #include <QDebug>
 #include <chrono>
 #include <thread>
-#include "Utilities.h"
+#include "Core/Utilities.h"
 
 gea::ScriptingSystem::ScriptingSystem(MainWindow *mainwindow, Engine *engineInstance) : SystemBase(engineInstance)
 {
