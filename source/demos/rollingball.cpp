@@ -50,5 +50,5 @@ void RollingBall::Update()
     }
 
     glm::mat4& matrix = ballMesh->drawable->ubo.model;
-    matrix[3] = glm::vec4(curve.EvaluateBSplineSimple(time), 1.0f);
+    //matrix[3] = glm::vec4(curve.EvaluateBSplineSimple(time), 1.0f);
 }
