@@ -8,12 +8,12 @@ Terrain::Terrain(const char *filePath,
     std::vector<uint32_t> indices;
 
     vertices.push_back(Vertex(0, 0, 0, glm::vec3(1,0.5,0))); // 0  bottom left
-    vertices.push_back(Vertex( 0, -1,  0, glm::vec3(0.5,1,0))); // 1  top right
-    vertices.push_back(Vertex( 1, 0, 0, glm::vec3(0,0.5,1))); // 2  bottom right
-    vertices.push_back(Vertex(1, -1,  0, glm::vec3(0.7,0,0))); // 3  top left
+    vertices.push_back(Vertex( 0, 0,  -1, glm::vec3(0.5,1,0))); // 1  bottom right
+    vertices.push_back(Vertex( 1, 0, 0, glm::vec3(0,0.5,1))); // 2  top right
+    vertices.push_back(Vertex(1, -1,  -1, glm::vec3(0.7,0,0))); // 3  top left
 
-    vertices.push_back(Vertex(2, -1,  0, glm::vec3(1,0,0))); //4
-    vertices.push_back(Vertex(2, 0,  0, glm::vec3(0,1,0)));  //5
+    vertices.push_back(Vertex(2, 0,  -1, glm::vec3(1,0,0))); // 4 bottom right C
+    vertices.push_back(Vertex(2, 0,  0, glm::vec3(0,1,0)));  //5 C
 
     indices.push_back(0);
     indices.push_back(1);

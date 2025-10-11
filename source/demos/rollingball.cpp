@@ -12,9 +12,9 @@ RollingBall::RollingBall()
 void RollingBall::Init()
 {
     curve.controlPoints.push_back(glm::vec3(0,0,0));
-    curve.controlPoints.push_back(glm::vec3(1,0,0));
-    curve.controlPoints.push_back(glm::vec3(0,1,0));
-    curve.controlPoints.push_back(glm::vec3(1,0,0));
+    curve.controlPoints.push_back(glm::vec3(0.5,1,0));
+    curve.controlPoints.push_back(glm::vec3(0,1.5,0));
+    curve.controlPoints.push_back(glm::vec3(1.5,1,0));
     curve.controlPoints.push_back(glm::vec3(0,1,0));
     curve.controlPoints.push_back(glm::vec3(1,0,0));
 
