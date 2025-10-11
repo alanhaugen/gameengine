@@ -11,12 +11,12 @@ RollingBall::RollingBall()
 
 void RollingBall::Init()
 {
-    curve.controlPoints.push_back(glm::vec3(0,0,0));
-    curve.controlPoints.push_back(glm::vec3(0.5,1,0));
-    curve.controlPoints.push_back(glm::vec3(0,1.5,0));
-    curve.controlPoints.push_back(glm::vec3(1.5,1,0));
-    curve.controlPoints.push_back(glm::vec3(0,1,0));
-    curve.controlPoints.push_back(glm::vec3(1,0,0));
+    curve.controlPoints.push_back(glm::vec3(0,  0   ,0));
+    curve.controlPoints.push_back(glm::vec3(0.5 ,0  ,0.5));
+    curve.controlPoints.push_back(glm::vec3(0   ,0  ,1));
+    curve.controlPoints.push_back(glm::vec3(1   ,0  ,0.5));
+    curve.controlPoints.push_back(glm::vec3(1   ,0  ,1));
+    curve.controlPoints.push_back(glm::vec3(2   ,0  ,0));
 
     curve.degree = 3;
 
@@ -50,7 +50,7 @@ void RollingBall::Update()
 {
     static float time = 0.0f;
 
-    time += 0.01f;
+    time += 0.003f;
 
     if (time > 1.0f)
     {

@@ -5,8 +5,8 @@ Terrain::Terrain(const char *filePath,
            const char* fragmentShaderPath)
 {
     vertices.push_back(Vertex(0, 0, 0, glm::vec3(1,0.5,0))); // 0  bottom left
-    vertices.push_back(Vertex( 0, -0.2,  1, glm::vec3(0.5,1,0))); // 1  bottom left
-    vertices.push_back(Vertex( 1, -0.5, 0, glm::vec3(0,0.5,1))); // 2  top right
+    vertices.push_back(Vertex(0, -0.2,  1, glm::vec3(0.5,1,0))); // 1  bottom left
+    vertices.push_back(Vertex(1, -0.5, 0, glm::vec3(0,0.5,1))); // 2  top right
     vertices.push_back(Vertex(1, -0.4,  1, glm::vec3(0.7,0,0))); // 3  top left - B
 
     vertices.push_back(Vertex(2, -0.3,  1, glm::vec3(1,0,0))); // 4 bottom right
