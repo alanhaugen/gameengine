@@ -35,7 +35,7 @@ void RollingBall::Init()
 
     camera.position = glm::vec3(0.0f, 0.0f, 4.0f);
 
-    renderer->SetLightPos(glm::vec3(0,0,1));
+    renderer->SetLightPos(glm::vec3(1,1,0));
 
     gameObjects.push_back(ball);
     gameObjects.push_back(terrain);
