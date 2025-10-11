@@ -11,16 +11,20 @@ RollingBall::RollingBall()
 
 void RollingBall::Init()
 {
+    curve.controlPoints.push_back(glm::vec3(0,0,0));
+    curve.controlPoints.push_back(glm::vec3(1,0,0));
     curve.controlPoints.push_back(glm::vec3(0,1,0));
     curve.controlPoints.push_back(glm::vec3(1,0,0));
-    curve.controlPoints.push_back(glm::vec3(2,1,0));
-    curve.controlPoints.push_back(glm::vec3(3,0,0));
-    curve.controlPoints.push_back(glm::vec3(4,1,0));
+    curve.controlPoints.push_back(glm::vec3(0,1,0));
+    curve.controlPoints.push_back(glm::vec3(1,0,0));
+
+    curve.degree = 3;
 
     curve.t = {
-        0, 0, 0,       // first d+1 knots
-        1, 2,          // internal knots
-        3, 3, 3          // last d+1 knots
+        0, 0, 0, 0, 0.25, 0.5, 0.75, 1, 1, 1, 1
+        /*0, 0, 0, 0,       // first d+1 knots
+        0.1, 0.2, 0.3,          // internal knots
+        1, 1, 1*/          // last d+1 knots
     };
 
     GameObject* ball = new GameObject;
@@ -35,7 +39,7 @@ void RollingBall::Init()
 
     camera.position = glm::vec3(0.0f, 0.0f, 4.0f);
 
-    renderer->SetLightPos(glm::vec3(1,1,0));
+    renderer->SetLightPos(glm::vec3(0,1,0));
 
     gameObjects.push_back(ball);
     gameObjects.push_back(terrain);
@@ -47,11 +51,11 @@ void RollingBall::Update()
 
     time += 0.01f;
 
-    if (time > 3.0f)
+    if (time > 1.0f)
     {
         time = 0.0f;
     }
 
     glm::mat4& matrix = ballMesh->drawable->ubo.model;
-    //matrix[3] = glm::vec4(curve.EvaluateBSplineSimple(time), 1.0f);
+    matrix[3] = glm::vec4(curve.EvaluateBSplineSimple(time), 1.0f);
 }
