@@ -1564,22 +1564,11 @@ void VulkanRenderer::Render() {
         // Descriptor set 1 has the texture
         if (drawable.isTextured)
         {
-            vkCmdBindDescriptorSets(commandBuffers[imageIndex], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 1, 1, &drawable.textureDescriptor, 0, nullptr);
+            //vkCmdBindDescriptorSets(commandBuffers[imageIndex], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 1, 1, &drawable.textureDescriptor, 0, nullptr);
         }
 
         VkDescriptorSet sets[2] = { descriptorSets[0], drawable.textureDescriptor };
         uint32_t dynamicOffsets[1] = { uniformOffset }; // only set 0 has dynamic offset
-
-        vkCmdBindDescriptorSets(
-            commandBuffers[imageIndex],
-            VK_PIPELINE_BIND_POINT_GRAPHICS,
-            pipelineLayout,
-            0,          // firstSet = 0
-            2,          // number of sets
-            sets,
-            1,          // number of dynamic offsets
-            dynamicOffsets
-            );
 
         if (drawable.indicesQuantity == 0)
         {
