@@ -613,9 +613,12 @@ void VulkanRenderer::createDescriptorSetLayout() {
     samplerLayoutBinding.pImmutableSamplers = nullptr;
     samplerLayoutBinding.stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
 
-    layoutInfo.pBindings = &samplerLayoutBinding;
+    VkDescriptorSetLayoutCreateInfo layoutInfo2{};
+    layoutInfo2.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
+    layoutInfo2.bindingCount = 1;
+    layoutInfo2.pBindings = &samplerLayoutBinding;
 
-    if (vkCreateDescriptorSetLayout(device, &layoutInfo, nullptr, &textureSetLayout) != VK_SUCCESS) {
+    if (vkCreateDescriptorSetLayout(device, &layoutInfo2, nullptr, &textureSetLayout) != VK_SUCCESS) {
         throw std::runtime_error("failed to create descriptor set layout!");
     } else {
         qDebug("created DescriptorSetLayout");
@@ -1497,10 +1500,13 @@ size_t VulkanRenderer::PadUniformBufferSize(size_t originalSize)
 }
 
 void VulkanRenderer::Render() {
-    vkWaitForFences(device, 1, &inFlightFences[currentFrame], VK_TRUE, UINT64_MAX);
-
     uint32_t imageIndex;
-    VkResult result = vkAcquireNextImageKHR(device, swapChain, UINT64_MAX, imageAvailableSemaphores[currentFrame], VK_NULL_HANDLE, &imageIndex);
+    VkResult result = vkAcquireNextImageKHR(device,
+                                            swapChain,
+                                            UINT64_MAX, // Wait time (infinite)
+                                            imageAvailableSemaphores[currentFrame],
+                                            VK_NULL_HANDLE,
+                                            &imageIndex);
 
     if (result == VK_ERROR_OUT_OF_DATE_KHR) {
         recreateSwapChain();
@@ -1509,9 +1515,13 @@ void VulkanRenderer::Render() {
         throw std::runtime_error("failed to acquire swap chain image!");
     }
 
+    vkWaitForFences(device, 1, &inFlightFences[currentFrame], VK_TRUE, UINT64_MAX);
+    vkResetFences(device, 1, &inFlightFences[currentFrame]);
+
     VkCommandBufferBeginInfo beginInfo{};
     beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
 
+    vkResetCommandBuffer(commandBuffers[imageIndex], /*flags*/ 0);
     // Begin a new command buffer
     if (vkBeginCommandBuffer(commandBuffers[imageIndex], &beginInfo) != VK_SUCCESS) {
         throw std::runtime_error("failed to begin recording command buffer!");
@@ -1564,11 +1574,8 @@ void VulkanRenderer::Render() {
         // Descriptor set 1 has the texture
         if (drawable.isTextured)
         {
-            //vkCmdBindDescriptorSets(commandBuffers[imageIndex], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 1, 1, &drawable.textureDescriptor, 0, nullptr);
+            vkCmdBindDescriptorSets(commandBuffers[imageIndex], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 1, 1, &drawable.textureDescriptor, 0, nullptr);
         }
-
-        VkDescriptorSet sets[2] = { descriptorSets[0], drawable.textureDescriptor };
-        uint32_t dynamicOffsets[1] = { uniformOffset }; // only set 0 has dynamic offset
 
         if (drawable.indicesQuantity == 0)
         {
@@ -1591,9 +1598,9 @@ void VulkanRenderer::Render() {
         throw std::runtime_error("failed to record command buffer!");
     }
 
-    if (imagesInFlight[imageIndex] != VK_NULL_HANDLE) {
+    /*if (imagesInFlight[imageIndex] != VK_NULL_HANDLE) {
         vkWaitForFences(device, 1, &imagesInFlight[imageIndex], VK_TRUE, UINT64_MAX);
-    }
+    }*/
     imagesInFlight[imageIndex] = inFlightFences[currentFrame];
 
     VkSubmitInfo submitInfo{};
@@ -1611,8 +1618,6 @@ void VulkanRenderer::Render() {
     VkSemaphore signalSemaphores[] = {renderFinishedSemaphores[currentFrame]};
     submitInfo.signalSemaphoreCount = 1;
     submitInfo.pSignalSemaphores = signalSemaphores;
-
-    vkResetFences(device, 1, &inFlightFences[currentFrame]);
 
     // Submit command buffer commands. Note we are not using vkQueueSubmit2 since we are using Vulkan 1.0.
     if (vkQueueSubmit(graphicsQueue, 1, &submitInfo, inFlightFences[currentFrame]) != VK_SUCCESS) {
@@ -1640,6 +1645,8 @@ void VulkanRenderer::Render() {
     } else if (result != VK_SUCCESS) {
         throw std::runtime_error("failed to present swap chain image!");
     }
+
+    vkQueueWaitIdle(presentQueue);
 
     currentFrame = (currentFrame + 1) % MAX_FRAMES_IN_FLIGHT;
 }
