@@ -31,6 +31,7 @@ public:
                              std::vector<uint32_t> indices,
                              const char* vertexShader,
                              const char* fragmentShader,
+                             const int topology = TRIANGLES,
                              std::vector<std::string> textures) override;
 
     void Render();
@@ -125,7 +126,8 @@ private:
     void createDescriptorSetLayout();
     VkDescriptorSet createTextureDescriptor(std::string filePath, int textureID);
     VkPipeline createGraphicsPipeline(const char *vertexShaderPath,
-                                      const char *fragmentShaderPath);
+                                      const char *fragmentShaderPath,
+                                      const int topology = TRIANGLES);
     void createFramebuffers();
     void createCommandPool();
     void createColorResources();

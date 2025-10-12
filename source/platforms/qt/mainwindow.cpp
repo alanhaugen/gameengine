@@ -7,6 +7,7 @@
 #include <qinputdialog.h>
 #include "../../x-platform/locator.h"
 #include "../../modules/audio/openal/openalaudio.h"
+#include "../../modules/physics/aaphysics/aaphysics.h"
 
 MainWindow::MainWindow(QWidget *parent, const char* windowTitle, int windowWidth, int windowHeight)
     : QMainWindow(parent)
@@ -25,6 +26,8 @@ MainWindow::MainWindow(QWidget *parent, const char* windowTitle, int windowWidth
     //Have to set the size of the Vulkan window here, otherwise it can not set up the swapchain correctly
     renderer->setWidth(windowWidth);
     renderer->setHeight(windowHeight);
+    renderer->windowWidth = windowWidth;
+    renderer->windowHeight = windowHeight;
     renderer->initVulkan();
 
     // Wrap VulkanRenderer (QWindow) into a QWidget
@@ -64,8 +67,10 @@ MainWindow::MainWindow(QWidget *parent, const char* windowTitle, int windowWidth
     lastTime = std::chrono::high_resolution_clock::now();
 
     OpenALAudio* openAL = new OpenALAudio();
+    AAPhysics* aaphysics = new AAPhysics();
 
     Locator::SetAudio(openAL);
+    Locator::SetPhysics(aaphysics);
     Locator::SetRenderer(renderer);
 
     Locator::audio->Init();
@@ -118,6 +123,11 @@ void MainWindow::MainGameLoop()
     {
         scene->camera.Update();
         scene->Update();
+
+        for (auto* obj : scene->gameObjects)
+        {
+            obj->Update();
+        }
     }
 
     if (Locator::audio)
@@ -145,11 +155,6 @@ void MainWindow::MainGameLoop()
         Locator::renderer->Update();
 
         vulkanWidget->repaint();
-    }
-
-    for (auto* obj : scene->gameObjects)
-    {
-        obj->Update();
     }
 }
 

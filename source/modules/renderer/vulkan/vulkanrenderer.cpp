@@ -113,13 +113,14 @@ Renderer::Drawable& VulkanRenderer::CreateDrawable(std::vector<Vertex> vertices,
                                                    std::vector<uint32_t> indices,
                                                    const char* vertexShader,
                                                    const char* fragmentShader,
+                                                   const int topology,
                                                    std::vector<std::string> textures)
 {
     Drawable drawable;
     drawable.offset = drawablesQuantity;
     drawable.indicesQuantity = indices.size();
     drawable.verticesQuantity = vertices.size();
-    drawable.graphicsPipeline = createGraphicsPipeline(vertexShader, fragmentShader);
+    drawable.graphicsPipeline = createGraphicsPipeline(vertexShader, fragmentShader, topology);
 
     if (textures.empty() == false)
     {
@@ -241,9 +242,9 @@ void VulkanRenderer::createInstance() {
     //Needed in VkInstanceCreateInfo
     VkApplicationInfo appInfo{};
     appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
-    appInfo.pApplicationName = "Inn";
+    appInfo.pApplicationName = "Tower of Power";
     appInfo.applicationVersion = VK_MAKE_VERSION(1, 0, 0);
-    appInfo.pEngineName = "Inngine";
+    appInfo.pEngineName = "INNgine";
     appInfo.engineVersion = VK_MAKE_VERSION(1, 0, 0);
     appInfo.apiVersion = VK_API_VERSION_1_0;
 
@@ -659,7 +660,8 @@ VkDescriptorSet VulkanRenderer::createTextureDescriptor(std::string filePath, in
 }
 
 VkPipeline VulkanRenderer::createGraphicsPipeline(const char* vertexShaderPath,
-                                                  const char* fragmentShaderPath)
+                                                  const char* fragmentShaderPath,
+                                                  const int topology)
 {
     auto vertShaderCode = readFile(vertexShaderPath);
     auto fragShaderCode = readFile(fragmentShaderPath);
@@ -700,7 +702,19 @@ VkPipeline VulkanRenderer::createGraphicsPipeline(const char* vertexShaderPath,
     //How the vertices are assembed into primitives
     VkPipelineInputAssemblyStateCreateInfo inputAssembly{};
     inputAssembly.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
-    inputAssembly.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
+    if (topology == TRIANGLES)
+    {
+        inputAssembly.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
+    }
+    else if (topology == LINES)
+    {
+        inputAssembly.topology = VK_PRIMITIVE_TOPOLOGY_LINE_LIST;
+    }
+    else
+    {
+        LogError("Illegal topology");
+    }
+
     inputAssembly.primitiveRestartEnable = VK_FALSE;
 
     //3. Viewport & Scissor
@@ -1482,9 +1496,6 @@ size_t VulkanRenderer::PadUniformBufferSize(size_t originalSize)
 }
 
 void VulkanRenderer::Render() {
-#ifdef Q_OS_MAC
-    recreateSwapChain();
-#endif
     vkWaitForFences(device, 1, &inFlightFences[currentFrame], VK_TRUE, UINT64_MAX);
 
     uint32_t imageIndex;
@@ -1831,7 +1842,7 @@ std::vector<const char *> VulkanRenderer::getRequiredExtensions() {
     }
 
     extensions.push_back("VK_KHR_surface");
-    #ifdef Q_OS_WIN
+    #ifdef _WIN32
         extensions.push_back("VK_KHR_win32_surface");	// Only on Windows
     #elif defined(Q_OS_LINUX)
         instanceExtensions.push_back("VK_KHR_xcb_surface");		// or xlib_surface, depending on your Qt build
@@ -1920,4 +1931,10 @@ void VulkanRenderer::mouseMoveEvent(QMouseEvent *eventMove)
 {
     Locator::input.mouse.x = eventMove->pos().x();
     Locator::input.mouse.y = eventMove->pos().y();
+
+    // Doesn't seem to work consistantly
+    /*if (Locator::input.mouse.Down)
+    {
+        QCursor::setPos(windowWidth / 2, windowHeight / 2);
+    }*/
 }

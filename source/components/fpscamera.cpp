@@ -26,8 +26,8 @@ void FPSCamera::Update()
             camera->position -= camera->right * speed;
         }
 
-        camera->yaw   += input.mouse.dx;
-        camera->pitch -= input.mouse.dy;
+        camera->yaw   += (input.mouse.dx / 10.0f);
+        camera->pitch -= (input.mouse.dy / 10.0f);
 
         UpdateCamera();
     }
