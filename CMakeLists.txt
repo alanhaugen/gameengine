@@ -17,43 +17,47 @@ set(CMAKE_AUTORCC ON)
 
 
 # Detect build environment based on CMAKE_BINARY_DIR
-# Used to set correct PATH
+# Used to set correct PATH and some clean up
 if(${CMAKE_BINARY_DIR} MATCHES ".*out/.*")
     add_compile_definitions(BUILD_ENV_VISUAL_STUDIO)
     message(STATUS "=== Visual Studio detected ===")
 elseif(${CMAKE_BINARY_DIR} MATCHES ".*build/.*")
     add_compile_definitions(BUILD_ENV_QTCREATOR)
     message(STATUS "=== Qt Creator detected ===")
+    #Deleting preset files not used in Qt - generated in VS 2022
+    #This should not fail even if the files are not present
+    file(REMOVE "${CMAKE_CURRENT_SOURCE_DIR}/CMakePresets.json")
+    file(REMOVE "${CMAKE_CURRENT_SOURCE_DIR}/CMakeUserPresets.json")
 endif()
 
 
 # Source files (include the .ui so AUTOUIC processes it)
 set(SOURCES
-    AssetManager.h AssetManager.cpp
-    Camera.h Camera.cpp
-    Components.h
-    DisplayWidget.cpp
-    DraggableButton.h DraggableButton.cpp
-    Engine.h Engine.cpp
-    Entity.h Entity.cpp
-    EntityContainer.h EntityContainer.cpp
-    EntityModel.h EntityModel.cpp
-    FilesWindow.h FilesWindow.cpp
-    Input.h
+    AssetManager/AssetManager.h AssetManager/AssetManager.cpp
+    AssetManager/Mesh.h AssetManager/Mesh.cpp
+    AssetManager/Sound.h AssetManager/Sound.cpp
+    AssetManager/Texture.h AssetManager/Texture.cpp
+    AssetManager/WavfileReader.h AssetManager/WavfileReader.cpp
+    Core/Camera.h Core/Camera.cpp
+    Core/Engine.h Core/Engine.cpp
+    Core/Input.h
+    Core/Renderer.h Core/Renderer.cpp
+    Core/Utilities.h
+    Core/Vertex.h
+    ECS/Components.h
+    ECS/Entity.h ECS/Entity.cpp
+    ECS/RenderSystem.h ECS/RenderSystem.cpp
+    ECS/ScriptingSystem.h ECS/ScriptingSystem.cpp
+    ECS/SoundSystem.h ECS/SoundSystem.cpp
+    ECS/Systems.h ECS/Systems.cpp
+    Editor/DisplayWidget.cpp
+    Editor/DraggableButton.h Editor/DraggableButton.cpp
+    Editor/FilesWindow.h Editor/FilesWindow.cpp
+    Editor/EntityContainer.h Editor/EntityContainer.cpp
+    Editor/EntityModel.h Editor/EntityModel.cpp
+    Editor/MainWindow.h Editor/MainWindow.cpp
+    Editor/MainWindow.ui
     main.cpp
-    MainWindow.h MainWindow.cpp
-    MainWindow.ui
-    Mesh.h Mesh.cpp
-    Renderer.h Renderer.cpp
-    RenderSystem.h RenderSystem.cpp
-    ScriptingSystem.h ScriptingSystem.cpp
-    Sound.h Sound.cpp
-    SoundSystem.h SoundSystem.cpp
-    Systems.h Systems.cpp
-    Texture.h Texture.cpp
-    Utilities.h
-    Vertex.h
-    WavfileReader.h WavfileReader.cpp
 )
 
 # all Lua files shown in IDE
@@ -78,6 +82,7 @@ if(MSVC)
         $ENV{VULKAN_HOME}/Include
         $ENV{OPENAL_HOME}/include
         ${CMAKE_CURRENT_SOURCE_DIR}/External/Lua/include
+        ${CMAKE_CURRENT_SOURCE_DIR}
     )
 
     # Link the exact Vulkan library. Use the full path to the .lib
@@ -97,11 +102,14 @@ elseif(APPLE)
 
     target_include_directories(QtVulkan PRIVATE
         #Hardcoded path for Oles Macs for now:
-        "/Users/ole/VulkanSDK/1.4.321.0/macOS/include"
+        "/Users/ole/VulkanSDK/1.4.328.1/macOS/include"
+        ${CMAKE_CURRENT_SOURCE_DIR}
+        ${CMAKE_CURRENT_SOURCE_DIR}/External/Lua/include
     )
     target_link_libraries(QtVulkan PRIVATE
         Qt::Core
         Qt::Widgets
+        Qt6::Multimedia
         "-framework QuartzCore"
         "-framework Metal"
         "-framework Foundation"
@@ -109,13 +117,14 @@ elseif(APPLE)
         "-framework CoreGraphics"
         "-framework IOKit"
         "-framework AppKit"
+        ${CMAKE_CURRENT_SOURCE_DIR}/External/Lua/lib/liblua.a
         #Hardcoded path for Oles Macs for now:
-        "/Users/ole/VulkanSDK/1.4.321.0/macOS/lib/MoltenVK.xcframework/macos-arm64_x86_64/libMoltenVK.a"
+        "/Users/ole/VulkanSDK/1.4.328.1/macOS/lib/MoltenVK.xcframework/macos-arm64_x86_64/libMoltenVK.a"
     )
-target_link_libraries(QtVulkan PRIVATE Qt6::Widgets)
 endif()
 
 
+if(MSVC)
 # Copy the DLL after build
 # This makes the .exe use the correct .dll from the library we compile to
 # (the "COMMAND echo" only works on Windows)
@@ -125,3 +134,5 @@ add_custom_command(TARGET QtVulkan POST_BUILD
         $ENV{OPENAL_HOME}/bin/Win64/OpenAL32.dll           #Windows environment variable version
         $<TARGET_FILE_DIR:QtVulkan>
     )
+
+endif()

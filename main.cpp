@@ -1,9 +1,8 @@
-#include "MainWindow.h"
-#include "Utilities.h"
+#include "Editor/MainWindow.h"
+#include "Core/Utilities.h"
 #include <QApplication>
 #include <QSplashScreen>
 #include <QPlainTextEdit>
-#include <QVulkanInstance>
 #include <QLibraryInfo>
 #include <QLoggingCategory>
 #include <QPointer>
@@ -17,7 +16,10 @@ static QtMessageHandler oldMessageHandler{ nullptr };
 static void messageHandler(QtMsgType msgType, const QMessageLogContext &logContext, const QString &text)
 {
     if (!messageLogWidget.isNull())
+    {
         messageLogWidget->appendPlainText(text);
+        messageLogWidget->moveCursor(QTextCursor::End);
+    }
     if (oldMessageHandler)
         oldMessageHandler(msgType, logContext, text);
 }
