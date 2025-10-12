@@ -46,7 +46,8 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
     mVulkanWindow->setHeight(700);
 
     //Do we have to make the Engine here to let that make the RenderSystem - to make the VulkanRenderer ?
-    mEngine = new gea::Engine(mVulkanWindow);
+    mEngine = new gea::Engine(mVulkanWindow, this);
+    mVulkanWindow->mEngine = mEngine;   //tell the renderer of the engine
 
     // Wrap VulkanRenderer (QWindow) into a QWidget
     QWidget* mVulkanWidget = QWidget::createWindowContainer(mVulkanWindow, this);

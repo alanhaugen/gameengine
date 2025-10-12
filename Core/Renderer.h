@@ -35,7 +35,9 @@ public:
                         std::vector<gea::Mesh> meshes, std::vector<gea::Texture> textures);
     void updateCompoments(std::vector<gea::RenderComponent> renderComponents, std::vector<gea::TransformComponent> transformComponents);
 
-    Camera getCamera() {return mCamera;}
+    gea::Engine* mEngine{nullptr};
+    Camera mCamera; //probably should be a pointer to this
+    class MainWindow* mMainWindow{nullptr};
 
 protected:
     //Qt event handlers - called when requestUpdate(); is called
@@ -125,9 +127,6 @@ private:
     std::vector<gea::TransformComponent> mStaticTransformComponents;
     std::vector<gea::RenderComponent> mDynamicRenderComponents;
     std::vector<gea::RenderComponent> mStaticRenderComponents;
-
-    Camera mCamera; //probably should be a pointer to this
-    class MainWindow* mMainWindow{nullptr};
 
     // void initWindow();
 

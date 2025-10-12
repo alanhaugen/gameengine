@@ -2,6 +2,7 @@
 #include "Editor/MainWindow.h"
 #include "Utilities.h"
 #include "Vertex.h"
+#include "Core/Engine.h"
 
 #define GLM_FORCE_RADIANS
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
@@ -1624,8 +1625,9 @@ void Renderer::drawFrame()
 {
     vkWaitForFences(device, 1, &inFlightFences[currentFrame], VK_TRUE, UINT64_MAX);
 
-    mMainWindow->handleInput();
-    mCamera.update();
+    //moved to mEngine->update()
+    //mMainWindow->handleInput();
+    //mCamera.update();
     //mCamera.pitch(10.f);
 
     uint32_t imageIndex;
@@ -2061,8 +2063,10 @@ void Renderer::exposeEvent(QExposeEvent* event)
     #ifdef _WIN32   // These lines does not work on macOS so need this test
     qDebug("exposeEvent called");
     if (isExposed())
-        drawFrame();			//actual drawing
-
+    {
+        mEngine->update();      //call game loop that will in turn call drawFrame()
+        // drawFrame();			//actual drawing
+    }
     #endif
 
     //Hacking the camera:
@@ -2093,8 +2097,8 @@ bool Renderer::event(QEvent* ev)
     {
         // qDebug("Exposed true");
         // count++;
-        drawFrame();			//actual drawing
-        requestUpdate();        // schedule the next UpdateRequest == render loop
+        mEngine->update();		// call game loop
+        // requestUpdate();     // done inside the RenderSystem
         return true;
     }
 

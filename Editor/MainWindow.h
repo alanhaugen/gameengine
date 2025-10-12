@@ -2,7 +2,6 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include "Core/Engine.h"
 #include "Editor/FilesWindow.h"
 #include <QKeyEvent>
 
@@ -20,6 +19,7 @@ namespace gea
     class EntityContainer;
     class EntityModel;
     class RenderSystem;
+    class Engine;
 }
 
 class MainWindow : public QMainWindow

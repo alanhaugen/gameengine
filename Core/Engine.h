@@ -6,6 +6,8 @@
 #include "ECS/RenderSystem.h"
 #include "AssetManager/Mesh.h"
 #include "AssetManager/Texture.h"
+#include "Editor/MainWindow.h"
+#include <chrono>
 
 namespace gea
 {
@@ -13,18 +15,22 @@ namespace gea
 class Engine
 {
 public:
-    Engine(Renderer* renderer);
+    Engine(Renderer* renderer, MainWindow* mainWindow);
 
-    //Variables for the game loop - not used and not working yet
+    //Variables for the game loop
     bool mIsRunning{false};
-    const long long mUpdateInterval = 10000000; // 10ms in nanoseconds (10^7)
-    void gameLoop();
+    std::chrono::time_point<std::chrono::high_resolution_clock> mClockLastFrame{};
+
+    //This is the core game loop!
+    void update();
 
     void updateRenderSystem();
     void setupRenderSystem();
 
     gea::RenderSystem* mRenderSystem{nullptr};
     Renderer* mVulkanRenderer{nullptr};
+
+    MainWindow* mMainWindow{nullptr};
 
     // to Add/Remove entity
     Entity* createEntity();
@@ -40,9 +46,6 @@ public:
 
     // It sort all component vectors by EntityID
     void sortComponents();
-
-    // It is the game loop
-    void update(float deltaTime); // Calls all system update functions
 
     //Vector that holds all the Entities in our game:
     std::vector<Entity> mEntityVector;

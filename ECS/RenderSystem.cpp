@@ -12,8 +12,8 @@ void gea::RenderSystem::initialize(std::vector<gea::RenderComponent> staticCompo
 void gea::RenderSystem::update(std::vector<gea::RenderComponent> dynamicComponents, std::vector<gea::TransformComponent> dynamicTransformComponents)
 {
 	mRenderer->updateCompoments(dynamicComponents, dynamicTransformComponents);
-	mRenderer->drawFrame();
-    mRenderer->requestUpdate();
+    mRenderer->drawFrame();         //draw one frame
+    mRenderer->requestUpdate();     //ask for the next fram to be drawn - will call engine->update()
 }
 
 void gea::RenderSystem::update(float) {
