@@ -33,7 +33,7 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
     messageLogWidget->setReadOnly(true);
 
     //MainWindow size:
-    resize(1300, 850);
+    resize(1300, 940);
 
     setWindowTitle("INNgine");  //Main app title
 

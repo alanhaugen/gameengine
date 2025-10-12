@@ -16,7 +16,10 @@ static QtMessageHandler oldMessageHandler{ nullptr };
 static void messageHandler(QtMsgType msgType, const QMessageLogContext &logContext, const QString &text)
 {
     if (!messageLogWidget.isNull())
+    {
         messageLogWidget->appendPlainText(text);
+        messageLogWidget->moveCursor(QTextCursor::End);
+    }
     if (oldMessageHandler)
         oldMessageHandler(msgType, logContext, text);
 }
