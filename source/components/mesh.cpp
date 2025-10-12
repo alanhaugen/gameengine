@@ -29,7 +29,7 @@ Mesh::Mesh(const char *filePath,
         textures.push_back(materials[0].diffuse_texname);
     }
 
-    textures.push_back("Assets/Textures/viking_room.png");
+    //textures.push_back("Assets/Textures/viking_room.png");
 
     std::unordered_map<Vertex, uint32_t> uniqueVertices{};
 
@@ -65,7 +65,7 @@ Mesh::Mesh(const char *filePath,
         }
     }
 
-    drawable = &renderer->CreateDrawable(vertices, indices, vertexShaderPath, fragmentShaderPath, textures);
+    drawable = &renderer->CreateDrawable(vertices, indices, vertexShaderPath, fragmentShaderPath, Renderer::TRIANGLES, textures);
     editor->AddEntity(filePath);
 }
 

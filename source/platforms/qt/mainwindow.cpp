@@ -6,6 +6,7 @@
 #include "../../components/gameobject.h"
 #include <qinputdialog.h>
 #include "../../x-platform/locator.h"
+#include "../../x-platform/scene.h"
 #include "../../modules/audio/openal/openalaudio.h"
 #include "../../modules/physics/aaphysics/aaphysics.h"
 

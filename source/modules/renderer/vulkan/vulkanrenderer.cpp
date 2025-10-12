@@ -24,6 +24,7 @@
 #include <set>
 #include <QDebug>
 #include <QKeyEvent>
+#include "../../../x-platform/locator.h"
 
 #ifdef _WIN32			// Windows specific includes
 #define NOMINMAX		// Prevent Windows.h from defining min/max macros

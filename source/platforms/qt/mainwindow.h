@@ -4,6 +4,8 @@
 #include <QMainWindow>
 #include "../../modules/renderer/vulkan/vulkanrenderer.h"
 
+class Scene;
+
 QT_BEGIN_NAMESPACE
 namespace Ui {
 class MainWindow;

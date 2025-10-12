@@ -8,7 +8,6 @@
 #include "vulkantexture.h"
 #include "../vertex.h"
 #include "../renderer.h"
-#include "../../../x-platform/scene.h"
 
 //Forward declarations
 struct SwapChainSupportDetails;
@@ -32,7 +31,7 @@ public:
                              const char* vertexShader,
                              const char* fragmentShader,
                              const int topology = TRIANGLES,
-                             std::vector<std::string> textures) override;
+                             std::vector<std::string> textures = std::vector<std::string>()) override;
 
     void Render();
 
