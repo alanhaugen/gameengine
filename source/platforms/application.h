@@ -18,4 +18,3 @@ public:
     void AddScene(Scene* scene);
     int Run();
 };
-

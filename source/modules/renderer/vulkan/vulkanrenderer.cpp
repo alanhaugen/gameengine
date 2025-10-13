@@ -1500,6 +1500,8 @@ size_t VulkanRenderer::PadUniformBufferSize(size_t originalSize)
 }
 
 void VulkanRenderer::Render() {
+    vkWaitForFences(device, 1, &inFlightFences[currentFrame], VK_TRUE, UINT64_MAX);
+
     uint32_t imageIndex;
     VkResult result = vkAcquireNextImageKHR(device,
                                             swapChain,
@@ -1514,9 +1516,6 @@ void VulkanRenderer::Render() {
     } else if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR) {
         throw std::runtime_error("failed to acquire swap chain image!");
     }
-
-    vkWaitForFences(device, 1, &inFlightFences[currentFrame], VK_TRUE, UINT64_MAX);
-    vkResetFences(device, 1, &inFlightFences[currentFrame]);
 
     VkCommandBufferBeginInfo beginInfo{};
     beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
@@ -1598,10 +1597,13 @@ void VulkanRenderer::Render() {
         throw std::runtime_error("failed to record command buffer!");
     }
 
-    /*if (imagesInFlight[imageIndex] != VK_NULL_HANDLE) {
+    if (imagesInFlight[imageIndex] != VK_NULL_HANDLE) {
         vkWaitForFences(device, 1, &imagesInFlight[imageIndex], VK_TRUE, UINT64_MAX);
-    }*/
+    }
+
     imagesInFlight[imageIndex] = inFlightFences[currentFrame];
+
+    vkResetFences(device, 1, &inFlightFences[currentFrame]);
 
     VkSubmitInfo submitInfo{};
     submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
@@ -1646,7 +1648,7 @@ void VulkanRenderer::Render() {
         throw std::runtime_error("failed to present swap chain image!");
     }
 
-    vkQueueWaitIdle(presentQueue);
+    //vkQueueWaitIdle(presentQueue); // debugging only
 
     currentFrame = (currentFrame + 1) % MAX_FRAMES_IN_FLIGHT;
 }
