@@ -11,22 +11,6 @@ RollingBall::RollingBall()
 
 void RollingBall::Init()
 {
-    curve.controlPoints.push_back(glm::vec3(0,0,0));
-    curve.controlPoints.push_back(glm::vec3(0.5,0,1));
-    curve.controlPoints.push_back(glm::vec3(0,0,0.5));
-    curve.controlPoints.push_back(glm::vec3(1.5,0,0));
-    curve.controlPoints.push_back(glm::vec3(0,0,1));
-    curve.controlPoints.push_back(glm::vec3(0.5,0,1));
-
-    curve.degree = 3;
-
-    curve.t = {
-        0, 0, 0, 0, 0.25, 0.5, 0.75, 1, 1, 1, 1 //should match time-range/ interval in Update
-        /*0, 0, 0, 0,       // first d+1 knots
-        0.1, 0.2, 0.3,          // internal knots
-        1, 1, 1*/          // last d+1 knots
-    };
-
     GameObject* ball = new GameObject;
     ballMesh = new Mesh("Assets/Models/ball.obj");
     ball->AddComponent(ballMesh);
@@ -48,35 +32,24 @@ void RollingBall::Init()
     std::vector<Vertex> vertices;
     std::vector<uint32_t> indices;
 
-    int j = 0;
-    indices.push_back(j);
-    for (float i = 0.0f; i < 1.0f; i += 0.01f)
-    {
-        j++;
-        glm::vec3 pos = curve.EvaluateBSplineSimple(i);
-        pos.y = terrainMesh->GetHeightAt(pos) + 0.1f;
-        vertices.push_back(Vertex(pos));
-        indices.push_back(j);
-        indices.push_back(j);
-    }
-
-    splineDrawable = &renderer->CreateDrawable(vertices, indices, "shaders/color.vert.spv", "shaders/color.frag.spv", Renderer::LINES);
+    direction = glm::vec3(0,0,0);
 }
 
 void RollingBall::Update()
 {
-    static float time = 0.0f;
+    glm::mat4& matrix = ballMesh->drawable->ubo.model;
+    glm::vec3 pos = glm::vec3(matrix[3]);
 
-    time += 0.001f;
-
-    if (time > 1.0f)
+    if (input.Held(input.Key.SPACE))
     {
-        time = 0.0f;
+        pos = glm::vec3(0,0,0);
+        direction = glm::vec3(0,0,0);
     }
 
-    glm::vec3 pos = curve.EvaluateBSplineSimple(time);
+    direction += terrainMesh->GetNormal(pos) / 5000.0f;
+
+    pos += direction;
     pos.y = terrainMesh->GetHeightAt(pos) + 0.1f;
 
-    glm::mat4& matrix = ballMesh->drawable->ubo.model;
     matrix[3] = glm::vec4(pos, 1.0f);
 }

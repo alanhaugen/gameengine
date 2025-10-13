@@ -69,6 +69,10 @@ public:
 
     BSplineCurve curve;
 
+    float acceleration = 1.0f;
+    float mass = 1.0f;
+    glm::vec3 direction;
+
     Renderer::Drawable* splineDrawable;
 
     Terrain* terrainMesh;

@@ -20,4 +20,5 @@ public:
     Renderer::Drawable* drawable;
     float GetHeightAt(float x, float z) const;
     float GetHeightAt(const glm::vec3 positionXZ) const;
+    glm::vec3 GetNormal(const glm::vec3 position) const;
 };
