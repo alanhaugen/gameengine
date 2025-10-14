@@ -14,6 +14,7 @@ MainWindow::MainWindow(QWidget *parent, const char* windowTitle, int windowWidth
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
     ui->treeGameObjects->setContextMenuPolicy(Qt::CustomContextMenu);
     //MainWindow size:
     resize((1300 - 1100) + windowWidth, (850 - 700) + windowHeight);
@@ -30,20 +31,31 @@ MainWindow::MainWindow(QWidget *parent, const char* windowTitle, int windowWidth
 
     // Wrap VulkanRenderer (QWindow) into a QWidget
     vulkanWidget = QWidget::createWindowContainer(renderer, this);
+    vulkanWidget->setMinimumSize(0, 0);
     //vulkanWidget->setMinimumSize(windowWidth, windowHeight);
 
     vulkanWidget->sizePolicy().setHorizontalPolicy(QSizePolicy::Expanding);
     vulkanWidget->sizePolicy().setVerticalPolicy(QSizePolicy::Expanding);
-    vulkanWidget->setMinimumWidth(200.0f);
+    //vulkanWidget->setMinimumWidth(200.0f);
+
+    splitDockWidget(ui->dockGameObjects,ui->SceneDock,Qt::Horizontal);
+    splitDockWidget(ui->SceneDock,ui->DockInspector ,Qt::Horizontal);
+
+
+
 
     vulkanWidget->setFocusPolicy(Qt::NoFocus);
 
     ui->VulkanLayout->addWidget(vulkanWidget);
 
-    ui->splitter->setSizes(QList<int>()<<200<<900<<300);
 
-    //GameObject treewidget
-    ui->treeGameObjects->setMinimumWidth(100);
+
+
+    // ui->splitter->setSizes(QList<int>()<<200<<900<<300);
+
+
+    // //GameObject treewidget
+    // ui->treeGameObjects->setMinimumWidth(100);
 
     //sets the keyboard input focus to the MainWindow when program starts
     this->setFocus();
@@ -54,13 +66,24 @@ MainWindow::MainWindow(QWidget *parent, const char* windowTitle, int windowWidth
     timer->start(8); // 120 Hz
 
 
-    //Connections to functions
+     //Connections to functions
     connect(ui->actionViking_Room, &QAction::triggered, this, &MainWindow::AddVikingRoom);
     connect(ui->actionCube, &QAction::triggered, this, &MainWindow::AddCube);
     connect(ui->actionSphere, &QAction::triggered, this, &MainWindow::AddSphere);
 
-    //
+    //Treewidget for gameObjects
     connect(ui->treeGameObjects, &QTreeWidget::customContextMenuRequested, this, &MainWindow::OnRightClickGameObjectWidget);
+    connect(ui->treeGameObjects, &QTreeWidget::itemPressed, this, &::MainWindow::OnleftClickGameObjectWidget);
+
+    //
+    connect(ui->PosXSpin,QOverload<double>::of(&QDoubleSpinBox::valueChanged),this, &MainWindow::XposUpdate);
+
+
+
+
+    //console
+
+
 
     lastTime = std::chrono::high_resolution_clock::now();
 
@@ -128,6 +151,45 @@ void MainWindow::MainGameLoop()
         }
     }
 
+    
+
+    /*if (audio)
+    {
+        audio->Update();
+    }
+
+    if (filesystem)
+    {
+        filesystem->Update();
+    }
+
+    if (physics)
+    {
+        physics->Update();
+    }
+
+    if (script)
+    {
+        script->Update();
+    }*/
+
+
+    // for (auto* obj : scene->GameObjects)
+    // {
+    //     if (!obj){
+
+    //         qDebug()<<"Empty";
+    //         continue;
+    //     }
+
+    //     qDebug()<<"Empty";
+    //     if(obj->GetEntityId()==1)
+    //     {
+    //         qDebug()<<"Name" << obj->GetName();
+    //     }
+    // }
+
+
     if (Locator::audio)
     {
         Locator::audio->Update();
@@ -158,22 +220,30 @@ void MainWindow::MainGameLoop()
 
 void MainWindow::OnRightClickGameObjectWidget(const QPoint &ClickedOn)
 {
-    qDebug() << "Right-click detected at" << ClickedOn;
+
     QTreeWidgetItem * GameObjSelected = ui->treeGameObjects->itemAt(ClickedOn);
+
 
     if(!GameObjSelected)
     {
         return;
     }
 
+
+    qDebug() << "Right-click detected at" << ClickedOn;
+
     QMenu menu(this);
-    QAction* Rename = menu.addAction("Rename");
+    QAction* ActRename = menu.addAction("Rename");
 
-    QAction* Selected = menu.exec(ui->treeGameObjects->viewport()->mapToGlobal(ClickedOn));
+    QAction* ActAdd = menu.addAction("Add");
 
 
-    if(Selected == Rename)
+    QAction* ActSelected = menu.exec(ui->treeGameObjects->viewport()->mapToGlobal(ClickedOn));
+
+
+    if(ActSelected == ActRename)
     {
+
         QString newName = QInputDialog::getText(this,"Rename","NewName",QLineEdit::Normal,GameObjSelected->text(0));
 
         if(!newName.isEmpty())
@@ -188,18 +258,72 @@ void MainWindow::OnRightClickGameObjectWidget(const QPoint &ClickedOn)
                 obj->SetName(newName);
             }
         }
+
+        Rename(GameObjSelected);
+    }
+    if(ActSelected == ActAdd)
+    {
+        qDebug() <<"Add Something";
+
+    }
+}
+
+void MainWindow::Rename(QTreeWidgetItem *GameObjSelected)
+{
+    QString newName = QInputDialog::getText(this,"Rename","NewName",QLineEdit::Normal,GameObjSelected->text(0));
+
+    if(!newName.isEmpty())
+    {
+        GameObjSelected->setText(0,newName);
+
+        void* ptrToObj = GameObjSelected->data(0,Qt::UserRole).value<void*>();
+        GameObject* obj = reinterpret_cast<GameObject*>(ptrToObj);
+
+        if(obj)
+        {
+            obj->SetName(newName);
+        }
+
+
+
     }
 }
 
 void MainWindow::AddVikingRoom()
 {
+
     GameObject* gameobj = new GameObject("VikingRoom");
+
+    Entity EntityID = 1;
+    GameObject* gameobj = new GameObject("VikingRoom",EntityID);
+    ObjList.push_back(gameobj);
+
 
     Mesh* mesh = new Mesh("Assets/Models/viking_room.obj");
 
     gameobj->AddComponent(mesh);
+    gameobj->SetPosition(0,0,0);
+
 
     scene->gameObjects.push_back(gameobj);
+
+
+
+    QTreeWidgetItem * MainObj = new QTreeWidgetItem(ui->treeGameObjects);
+
+    MainObj->setText(0,gameobj->GetName());
+    MainObj->setData(0, Qt::UserRole, QVariant::fromValue((void*)gameobj));
+    MainObj->setExpanded(true);
+
+    QTreeWidgetItem * ObjItem = new QTreeWidgetItem(MainObj);
+   ObjItem->setText(0,"mesh");
+   ObjItem->setData(0, Qt::UserRole, QVariant::fromValue((void*)mesh));
+
+   MainObj->addChild(ObjItem);
+
+
+    qDebug() << "Viking room";
+
 }
 
 void MainWindow::AddCube()
@@ -212,6 +336,74 @@ void MainWindow::AddSphere()
 {
     //scene->components.push_back(new Mesh("Assets/Models/viking_room.obj", renderer, scene->editor));
     qDebug() << "Sphere";
+}
+
+
+void MainWindow::OnleftClickGameObjectWidget(QTreeWidgetItem *item, int colum)
+{
+    if(!item)
+    {
+        return;
+    }
+
+    void* ptrToObj = item->data(0,Qt::UserRole).value<void*>();
+    GameObject* obj = reinterpret_cast<GameObject*>(ptrToObj);
+    SelectedObj = obj;
+
+     ui->PosXSpin->setValue(obj->mTransform.mPosition.x);
+     ui->PosYSpin->setValue(obj->mTransform.mPosition.y);
+     ui->PosZSpin->setValue(obj->mTransform.mPosition.z);
+
+
+
+    qDebug() << "RightClicked";
+}
+
+void MainWindow::XposUpdate(double value)
+{
+    if(SelectedObj)
+    {
+        SelectedObj->mTransform.mPosition.x = value;
+    }
+
+
+
+    for(auto* SpinBox : ui->groupTransform->findChildren<QDoubleSpinBox*>())
+    {
+        if(SpinBox == ui->PosXSpin)
+        {
+            SpinBox->setValue(SelectedObj->mTransform.mPosition.x);
+        }
+        else if(SpinBox == ui->PosYSpin)
+        {
+            SpinBox->setValue(SelectedObj->mTransform.mPosition.y);
+        }
+        else
+        {
+            SpinBox->setValue(SelectedObj->mTransform.mPosition.z);
+        }
+    }
+
+
+}
+
+void MainWindow::Console(const QString &info)
+{
+
+}
+
+
+
+void MainWindow::keyPressEvent(QKeyEvent* event)
+{
+    if (event->key() == Qt::Key_Escape) {
+        delete renderer;
+        renderer = nullptr;
+        close(); // Example: close window on ESC
+    }
+    if (event->key() == Qt::Key_Space) {
+        start();
+    }
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)

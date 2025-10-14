@@ -1,20 +1,14 @@
-#include "gameobject.h"
+#include "GameObject.h"
 
-GameObject::GameObject(const QString name)
+GameObject::GameObject(const QString name, Entity id)
 {
     Name = name;
-    ID = ID_TOP;
-    ID_TOP++;
-
-    if (name == "empty")
-    {
-        Name = "GameObject" + QString::number(ID);
-    }
+    ID= id;
 }
 
 void GameObject::AddComponent(Component *newComponent)
 {
-    components.push_back(newComponent);
+    Components.push_back(newComponent);
 }
 
 void GameObject::SetName(const QString NewName)
@@ -27,15 +21,21 @@ const QString GameObject::GetName()
     return Name;
 }
 
-const uint32_t GameObject::GetEntityId()
+const Entity GameObject::GetEntityId()
 {
     return ID;
 }
 
-void GameObject::Update()
+void GameObject::SetPosition(double X, double Y, double Z)
 {
-    for (unsigned i = 0; i < components.size(); i++)
-    {
-        components[i]->Update();
-    }
+    mTransform.mPosition.x = X;
+    mTransform.mPosition.z = Y;
+    mTransform.mPosition.y = Z;
+
 }
+
+
+
+
+
+

@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <qtreewidget.h>
 #include "../../modules/renderer/vulkan/vulkanrenderer.h"
 
 QT_BEGIN_NAMESPACE
@@ -34,6 +35,10 @@ public:
 private:
     QWidget* vulkanWidget;
 
+    GameObject* SelectedObj = NULL;
+
+    std::vector<GameObject*> ObjList;
+
     std::chrono::time_point<std::chrono::steady_clock> lastTime;
 
     //QWidget* mRenderWindowContainer{nullptr};   //Qt container for the RenderWindow
@@ -41,11 +46,35 @@ private:
     //Right click the object in gameobjectWidget
    void OnRightClickGameObjectWidget(const QPoint& ClickedOn);
 
+
+   //Menu things for what happens when u right click and select a option
+   void Rename(QTreeWidgetItem * GameObjSelected);
+
+
+
     //for the Menuadd
     //add Objects to the scene and to the gameobject
     void AddVikingRoom();
     void AddCube();
     void AddSphere();
+
     QTimer* timer;
+
+
+
+    //Right click the object in gameobjectWidget
+    void OnleftClickGameObjectWidget(QTreeWidgetItem *item, int colum);
+
+    //Update values from transform
+    void XposUpdate(double value);
+
+
+    //Console for logger
+    void Console(const QString& info);
+
+
+protected:
+    void keyPressEvent(QKeyEvent* event) override;
+
 };
 #endif // MAINWINDOW_H
