@@ -43,7 +43,6 @@ add_executable(QtVulkan
     source/modules/physics/null/nullphysics.cpp source/modules/physics/null/nullphysics.h
     source/modules/renderer/null/nullrenderer.cpp source/modules/renderer/null/nullrenderer.h
     source/modules/script/null/nullscript.cpp source/modules/script/null/nullscript.h
-
     source/components/gameobject.h source/components/gameobject.cpp
     source/components/camera.h source/components/camera.cpp
     source/modules/audio/audio.h
@@ -62,12 +61,6 @@ add_executable(QtVulkan
     source/x-platform/input.h
     source/x-platform/input.cpp
     source/modules/physics/aaphysics/aaphysics.h source/modules/physics/aaphysics/aaphysics.cpp
-
-    source/components/GameObject.h source/components/GameObject.cpp
-    source/components/Camera.h source/components/Camera.cpp
-    source/platforms/qt/logger.h source/platforms/qt/logger.cpp
-
-
 )
 
 #OpenAL

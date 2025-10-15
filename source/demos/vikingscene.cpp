@@ -21,17 +21,10 @@ void VikingScene::Init()
     vikingCamp1->drawable->ubo.model = glm::translate(vikingCamp1->drawable->ubo.model, glm::vec3(-0.3, 0, 0));
     vikingCamp2->drawable->ubo.model = glm::translate(vikingCamp2->drawable->ubo.model, glm::vec3(1.7, 0, 0));
 
-
     first->AddComponent(vikingCamp1);
     second->AddComponent(vikingCamp2);
     gameObjects.push_back(first);
     gameObjects.push_back(second);
-
-
-
-    // components.push_back(vikingCamp1);
-    // components.push_back(vikingCamp2);
-
 }
 
 void VikingScene::Update()
