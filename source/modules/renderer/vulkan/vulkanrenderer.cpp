@@ -122,7 +122,11 @@ Renderer::Drawable& VulkanRenderer::CreateDrawable(std::vector<Vertex> vertices,
     drawable.graphicsPipeline = createGraphicsPipeline(vertexShader, fragmentShader, topology);
 
     createVertexBuffer(vertices, drawable);
-    createIndexBuffer(indices, drawable);
+
+    if (indices.empty() == false)
+    {
+        createIndexBuffer(indices, drawable);
+    }
 
     drawables[drawablesQuantity] = drawable;
     drawablesQuantity++;
