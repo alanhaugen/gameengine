@@ -14,6 +14,7 @@ public:
     QtEditor(Ui::MainWindow* inUi, QStatusBar* inStatusBar);
     void AddEntity(const char* name);
     void UpdateStatusBar(const char* text);
+    void AddLogMessage(const char* text);
 };
 
 #endif // QTEDITOR_H

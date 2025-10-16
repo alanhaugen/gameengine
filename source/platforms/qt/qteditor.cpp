@@ -28,3 +28,8 @@ void QtEditor::UpdateStatusBar(const char *text)
         statusBar->showMessage(text);
     }
 }
+
+void QtEditor::AddLogMessage(const char *text)
+{
+    ui->plainTextEdit->appendPlainText(text);
+}
