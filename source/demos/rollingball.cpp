@@ -28,11 +28,6 @@ void RollingBall::Init()
 
     gameObjects.push_back(ball);
     gameObjects.push_back(terrain);
-
-    std::vector<Vertex> vertices;
-    std::vector<uint32_t> indices;
-
-    direction = glm::vec3(0,0,0);
 }
 
 void RollingBall::Update()
