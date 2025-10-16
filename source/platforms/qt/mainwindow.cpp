@@ -34,13 +34,17 @@ MainWindow::MainWindow(QWidget *parent, const char* windowTitle, int windowWidth
 
     vulkanWidget->sizePolicy().setHorizontalPolicy(QSizePolicy::Expanding);
     vulkanWidget->sizePolicy().setVerticalPolicy(QSizePolicy::Expanding);
-    vulkanWidget->setMinimumWidth(200.0f);
 
     vulkanWidget->setFocusPolicy(Qt::NoFocus);
 
     ui->VulkanLayout->addWidget(vulkanWidget);
 
-    ui->splitter->setSizes(QList<int>()<<200<<900<<300);
+    //ui->splitter->setSizes(QList<int>()<<200<<900<<300);
+
+
+    splitDockWidget(ui->dockGameObjects,ui->SceneDock,Qt::Horizontal);
+    splitDockWidget(ui->SceneDock,ui->DockInspector ,Qt::Horizontal);
+
 
     //GameObject treewidget
     ui->treeGameObjects->setMinimumWidth(100);
