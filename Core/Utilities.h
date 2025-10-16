@@ -92,8 +92,4 @@ struct UniformBufferObject {
     alignas(16) glm::vec3 viewPos;
 };
 
-struct LightUniformBufferObject {
-	alignas(16) glm::mat4 lightViewProj;
-};
-
 #endif // UTILITIES_H

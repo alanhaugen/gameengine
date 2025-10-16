@@ -42,8 +42,6 @@ set(SOURCES
     Core/Engine.h Core/Engine.cpp
     Core/Input.h
     Core/Renderer.h Core/Renderer.cpp
-    Core/ShadowRenderer.h Core/ShadowRenderer.cpp
-    Core/VulkanHelper.h Core/VulkanHelper.cpp
     Core/Utilities.h
     Core/Vertex.h
     ECS/Components.h
