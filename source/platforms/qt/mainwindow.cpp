@@ -26,6 +26,8 @@ MainWindow::MainWindow(QWidget *parent, const char* windowTitle, int windowWidth
     //Have to set the size of the Vulkan window here, otherwise it can not set up the swapchain correctly
     renderer->setWidth(windowWidth);
     renderer->setHeight(windowHeight);
+    renderer->windowWidth = windowWidth;
+    renderer->windowHeight = windowHeight;
     renderer->initVulkan();
 
     // Wrap VulkanRenderer (QWindow) into a QWidget

@@ -20,7 +20,7 @@ void NullRenderer::SetLightPos(glm::vec3 pos)
 {
 }
 
-Renderer::Drawable &NullRenderer::CreateDrawable(std::vector<Vertex> vertices, std::vector<uint32_t> indices, const char *vertexShader, const char *fragmentShader)
+Renderer::Drawable &NullRenderer::CreateDrawable(std::vector<Vertex> vertices, std::vector<uint32_t> indices, const char *vertexShader, const char *fragmentShader, const int topology)
 {
     Drawable drawable;
     drawables.push_back(drawable);

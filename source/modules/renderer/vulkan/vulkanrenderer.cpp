@@ -110,15 +110,16 @@ void VulkanRenderer::initVulkan() {
 }
 
 Renderer::Drawable& VulkanRenderer::CreateDrawable(std::vector<Vertex> vertices,
-                                                  std::vector<uint32_t> indices,
-                                                  const char* vertexShader,
-                                                  const char* fragmentShader)
+                                                   std::vector<uint32_t> indices,
+                                                   const char* vertexShader,
+                                                   const char* fragmentShader,
+                                                   const int topology)
 {
     Drawable drawable;
     drawable.offset = drawablesQuantity;
     drawable.indicesQuantity = indices.size();
     drawable.verticesQuantity = vertices.size();
-    drawable.graphicsPipeline = createGraphicsPipeline(vertexShader, fragmentShader);
+    drawable.graphicsPipeline = createGraphicsPipeline(vertexShader, fragmentShader, topology);
 
     createVertexBuffer(vertices, drawable);
     createIndexBuffer(indices, drawable);
@@ -600,7 +601,8 @@ void VulkanRenderer::createDescriptorSetLayout() {
 }
 
 VkPipeline VulkanRenderer::createGraphicsPipeline(const char* vertexShaderPath,
-                                                  const char* fragmentShaderPath)
+                                                  const char* fragmentShaderPath,
+                                                  const int topology)
 {
     auto vertShaderCode = readFile(vertexShaderPath);
     auto fragShaderCode = readFile(fragmentShaderPath);
@@ -641,7 +643,19 @@ VkPipeline VulkanRenderer::createGraphicsPipeline(const char* vertexShaderPath,
     //How the vertices are assembed into primitives
     VkPipelineInputAssemblyStateCreateInfo inputAssembly{};
     inputAssembly.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
-    inputAssembly.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
+    if (topology == TRIANGLES)
+    {
+        inputAssembly.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
+    }
+    else if (topology == LINES)
+    {
+        inputAssembly.topology = VK_PRIMITIVE_TOPOLOGY_LINE_LIST;
+    }
+    else
+    {
+        LogError("Illegal topology");
+    }
+
     inputAssembly.primitiveRestartEnable = VK_FALSE;
 
     //3. Viewport & Scissor
@@ -1836,4 +1850,10 @@ void VulkanRenderer::mouseMoveEvent(QMouseEvent *eventMove)
 {
     Locator::input.mouse.x = eventMove->pos().x();
     Locator::input.mouse.y = eventMove->pos().y();
+
+    // Doesn't seem to work consistantly
+    /*if (Locator::input.mouse.Down)
+    {
+        QCursor::setPos(windowWidth / 2, windowHeight / 2);
+    }*/
 }
