@@ -99,8 +99,8 @@ void VulkanRenderer::initVulkan() {
     createColorResources();
     createDepthResources();
     createFramebuffers();
-    createTextureImage();
-    createTextureImageView();
+    //createTextureImage();
+    //createTextureImageView();
     createTextureSampler();
     createUniformBuffers();
     createDescriptorPool();
