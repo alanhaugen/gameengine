@@ -71,12 +71,17 @@ public:
 
     float acceleration = 1.0f;
     float mass = 1.0f;
-    glm::vec3 direction;
+
 
     Renderer::Drawable* splineDrawable;
 
+    std::vector<Mesh*> balls;
+    std::vector<glm::vec3> directions;
+
+    int index = 0;
+
     Terrain* terrainMesh;
-    Mesh* ballMesh;
+    //Mesh* ballMesh;
 };
 
 #endif // ROLLINGBALL_H
