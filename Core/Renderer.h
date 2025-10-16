@@ -13,6 +13,8 @@
 #include "ECS/Components.h"
 #include "Vertex.h"
 #include "Camera.h"
+#include "ShadowRenderer.h"
+#include "VulkanHelper.h"
 
 //Forward declarations
 struct SwapChainSupportDetails;
@@ -86,6 +88,14 @@ private:
     VkPipelineLayout pipelineLayout;
     VkPipeline graphicsPipeline;
 
+	ShadowRenderer* shadowRenderer;
+
+    VkDescriptorPool lightDescriptorPool;
+    VkDescriptorSetLayout lightDescriptorSetLayout;
+    VkDescriptorSet lightDescriptorSet;
+    VkDeviceMemory lightUniformBufferMemory;
+    VkBuffer lightUniformBuffer;
+
     VkCommandPool commandPool;
 
     VkImage colorImage;
@@ -136,6 +146,7 @@ private:
 
     void cleanupSwapChain();
     void cleanup();
+    void cleanupLightAndShadow();
     void recreateSwapChain();
     void createInstance();
     void populateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& createInfo);
@@ -147,6 +158,8 @@ private:
     void createImageViews();
     void createRenderPass();
     void createDescriptorSetLayout();
+    void createLightDescriptorSet();
+    void createLightDescriptorSetLayout();
     void createGraphicsPipeline();
     void createFramebuffers();
     void createCommandPool();
@@ -179,11 +192,10 @@ private:
     VkCommandBuffer beginSingleTimeCommands();
     void endSingleTimeCommands(VkCommandBuffer commandBuffer);
     void copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
-    uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
     void createCommandBuffers();
     void createSyncObjects();
     void updateUniformBuffer(uint32_t currentImage);
-    VkShaderModule createShaderModule(const std::vector<char>& code);
+    void updateLightUniformBuffer();
     VkSurfaceFormatKHR chooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats);
     VkPresentModeKHR chooseSwapPresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes);
     VkExtent2D chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities);
@@ -193,10 +205,7 @@ private:
     QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device);
     std::vector<const char*> getRequiredExtensions();
     bool checkValidationLayerSupport();
-    static std::vector<char> readFile(const std::string& filename);
     static VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity, VkDebugUtilsMessageTypeFlagsEXT messageType, const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData, void* pUserData);
 };
-
-
 
 #endif // RENDERER_H
