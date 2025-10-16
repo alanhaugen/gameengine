@@ -96,3 +96,5 @@ CMakeUserPresets.json
 *.jpeg
 *.png
 *.bmp
+
+glm/
