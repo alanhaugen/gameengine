@@ -28,7 +28,7 @@ public:
             alignas(16) glm::vec3 cameraPosition;
             alignas(16) glm::float32_t time;
             alignas(16) glm::float32_t index;
-            alignas(16) glm::float32_t pos;
+            alignas(16) glm::vec2 pos;
             alignas(16) glm::float32_t scaleX;
             alignas(16) glm::float32_t scaleY;
             alignas(16) glm::float32_t width;
@@ -37,8 +37,8 @@ public:
             alignas(16) glm::float32_t totalHeight;
             alignas(16) glm::float32_t screenWidth;
             alignas(16) glm::float32_t screenHeight;
-            alignas(16) glm::bvec1 flip;
-            alignas(16) glm::bvec1 flipVertical;
+            alignas(16) glm::float32_t flip;
+            alignas(16) glm::float32_t flipVertical;
         } ubo;
 
         VkPipeline graphicsPipeline;

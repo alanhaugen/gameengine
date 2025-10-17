@@ -23,8 +23,6 @@ layout(location = 6) in float vTotalwidth;
 layout(location = 7) in float vTotalheight;
 layout(location = 8) in float vFlip;
 layout(location = 9) in float vFlipVertical;
-layout(location = 10) in vec4 vColourTint;
-layout(location = 11) in float vTextureIndex;
 #else
 out vec4 vFragColor;	//fragment shader output
 

@@ -30,10 +30,10 @@ Sprite::Sprite(float x, float y, const char *glyphs)
 
     drawable = &renderer->CreateDrawable(vertices,
                                          indices,
-                                         "shaders/shader.vert.spv",
-                                         "shaders/shader.frag.spv",
+                                         "shaders/gui.vert.spv",
+                                         "shaders/gui.frag.spv",
                                          Renderer::TRIANGLES,
-                                         "Assets/Textures/orange.jpg");
+                                         "Assets/Textures/sheet.png");
 }
 
 void Sprite::Update()

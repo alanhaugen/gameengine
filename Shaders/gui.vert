@@ -9,6 +9,7 @@ layout(location = 0) in vec3 inPosition;        // object space vertex position
 layout(location = 1) in vec3 inColor;	        // per-vertex colour
 layout(location = 2) in vec3 inNormal;	        // per-vertex normals
 layout(location = 3) in vec2 inTexcoord;	// per-vertex texcoord
+layout(location = 4) in float inGlyph;	        // per-vertex letter
 
 #ifdef VULKAN
 layout(set = 0, binding = 0) uniform UniformBufferObject {
@@ -21,7 +22,7 @@ layout(set = 0, binding = 0) uniform UniformBufferObject {
     vec4 cameraPosition;
     float time;
     float index;
-    float pos;
+    vec2 pos;
     float scaleX;
     float scaleY;
     float width;
@@ -30,9 +31,9 @@ layout(set = 0, binding = 0) uniform UniformBufferObject {
     float totalHeight;
     float screenWidth;
     float screenHeight;
-    bool flip;
-    bool flipVertical;
-} ubo;
+    float flip;
+    float flipVertical;
+} uniformBuffer;
 
 layout(location = 0) out vec4 vSmoothColor;		//smooth colour to fragment shader
 layout(location = 1) out vec2 vSmoothTexcoord;
@@ -44,8 +45,6 @@ layout(location = 6) out float vTotalwidth;
 layout(location = 7) out float vTotalheight;
 layout(location = 8) out float vFlip;
 layout(location = 9) out float vFlipVertical;
-layout(location = 10) out vec4 vColourTint;
-layout(location = 11) out float vTextureIndex;
 #else
 smooth out vec2 vSmoothTexcoord;
 
@@ -96,25 +95,21 @@ void main()
     vec4 colourTint = i_colourTint;
 #endif
 
-    float y = vVertex.y;
+    float y = inPosition.y;
 #ifdef VULKAN
-    vec4 colour = uniformBuffer.colour;
-    mat4 MVP = uniformBuffer.MVP;
-    float time = uniformBuffer.time.x;
-    float index = uniformBuffer.index.x;
-    vec2 pos = uniformBuffer.pos.xy;
-    float scaleX = uniformBuffer.scaleX.x;
-    float scaleY = uniformBuffer.scaleY.x;
-    float width = uniformBuffer.width.x;
-    float height = uniformBuffer.height.x;
-    float totalWidth = uniformBuffer.totalWidth.x;
-    float totalHeight = uniformBuffer.totalHeight.x;
-    float screenWidth = uniformBuffer.screenWidth.x;
-    float screenHeight = uniformBuffer.screenHeight.x;
-    float flip = uniformBuffer.flip.x;
-    float flipVertical = uniformBuffer.flipVertical.x;
-    vec4 colourTint = uniformBuffer.colourTint;
-    float textureIndex = uniformBuffer.index.y;
+    float time = uniformBuffer.time;
+    float index = uniformBuffer.index;
+    vec2 pos = uniformBuffer.pos;
+    float scaleX = uniformBuffer.scaleX;
+    float scaleY = uniformBuffer.scaleY;
+    float width = uniformBuffer.width;
+    float height = uniformBuffer.height;
+    float totalWidth = uniformBuffer.totalWidth;
+    float totalHeight = uniformBuffer.totalHeight;
+    float screenWidth = uniformBuffer.screenWidth;
+    float screenHeight = uniformBuffer.screenHeight;
+    float flip = uniformBuffer.flip;
+    float flipVertical = uniformBuffer.flipVertical;
     // not sure if aspectRatio stuff makes any sense
     // Flip y-related variables because of Vulkan's inverted Y axis
     //y = -y;
@@ -126,8 +121,8 @@ void main()
     float w = float(width)  * float(scaleX);
     float h = float(height) * float(scaleY);
 
-    gl_Position = vec4((vVertex.x / float(screenWidth)) * w, (y / float(screenHeight)) * h, 0.0, 1.0);
-    vSmoothTexcoord = vTexcoord;
+    gl_Position = vec4((inPosition.x / float(screenWidth)) * w, (y / float(screenHeight)) * h, 0.0, 1.0);
+    vSmoothTexcoord = inTexcoord;
 
     float halfScreenWidth  = float(screenWidth)  / 2.0f;
     float halfScreenHeight = float(screenHeight) / 2.0f;
@@ -139,13 +134,13 @@ void main()
     //gl_Position.x = gl_Position.x * rotation.y + gl_Position.y * rotation.x;
     //gl_Position.y = gl_Position.y * rotation.x + gl_Position.x * rotation.y;
 
-    if (vGlyph == -1)
+    if (inGlyph == -1.0f)
     {
         vIndex = float(index);
     }
     else
     {
-        vIndex = float(vGlyph);
+        vIndex = float(inGlyph);
     }
 
     vWidth = float(width);
@@ -155,10 +150,4 @@ void main()
     vFlip = float(flip);
     vFlipVertical = float(flipVertical);
     vTime = float(time);
-    vColourTint = colourTint;
-
-#ifdef VULKAN
-    vTextureIndex = textureIndex;
-#endif
-    //o_rotation = rotation;
 }
