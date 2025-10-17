@@ -5,37 +5,34 @@
 precision highp float; // affects all floats (vec3, vec4 etc)
 
 // Thanks to Gerdelan, Anton. Anton's OpenGL 4 Tutorials (p. 364). Kindle Edition.
-
-layout(location = 0) in vec3 vVertex;	//object space vertex position
-layout(location = 1) in vec4 vColor;	//per-vertex colour
-layout(location = 2) in vec4 vNormal;	//per-vertex normals
-layout(location = 3) in vec2 vTexcoord;	//per-vertex texcoord
-layout(location = 6) in int  vGlyph;	//glyph per vertex
+layout(location = 0) in vec3 inPosition;        // object space vertex position
+layout(location = 1) in vec3 inColor;	        // per-vertex colour
+layout(location = 2) in vec3 inNormal;	        // per-vertex normals
+layout(location = 3) in vec2 inTexcoord;	// per-vertex texcoord
 
 #ifdef VULKAN
-layout(set = 0, binding = 0) uniform UniformBlock
-{
-  mat4 MVP;	// combined modelview projection matrix
-  vec4 colour;
-  vec4 time;
-  vec4 index;
-  vec4 pos;
-  vec4 scaleX;
-  vec4 scaleY;
-  vec4 width;
-  vec4 height;
-  vec4 totalWidth;
-  vec4 totalHeight;
-  vec4 screenWidth;
-  vec4 screenHeight;
-  vec4 flip;
-  vec4 flipVertical;
-  vec4 colourTint;
-  mat4 modelMat;
-  mat4 normalMat;
-  vec4 lightPosition;
-  vec4 cameraPosition;
-} uniformBuffer;
+layout(set = 0, binding = 0) uniform UniformBufferObject {
+    mat4 model;
+    mat4 view;
+    mat4 proj;
+    mat4 modelMat;
+    mat4 normalMat;
+    vec4 lightPosition;
+    vec4 cameraPosition;
+    float time;
+    float index;
+    float pos;
+    float scaleX;
+    float scaleY;
+    float width;
+    float height;
+    float totalWidth;
+    float totalHeight;
+    float screenWidth;
+    float screenHeight;
+    bool flip;
+    bool flipVertical;
+} ubo;
 
 layout(location = 0) out vec4 vSmoothColor;		//smooth colour to fragment shader
 layout(location = 1) out vec2 vSmoothTexcoord;

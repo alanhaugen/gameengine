@@ -22,11 +22,11 @@ Mesh::Mesh(const char *filePath,
         throw std::runtime_error(warn + err);
     }
 
-    std::vector<std::string> textures;
+    const char* texture = "";
 
     if (materials.size() > 0)
     {
-        textures.push_back(materials[0].diffuse_texname);
+        texture = materials[0].diffuse_texname.c_str();
     }
 
     std::unordered_map<Vertex, uint32_t> uniqueVertices{};
@@ -63,7 +63,7 @@ Mesh::Mesh(const char *filePath,
         }
     }
 
-    drawable = &renderer->CreateDrawable(vertices, indices, vertexShaderPath, fragmentShaderPath, Renderer::TRIANGLES, textures);
+    drawable = &renderer->CreateDrawable(vertices, indices, vertexShaderPath, fragmentShaderPath, Renderer::TRIANGLES, texture);
     editor->AddEntity(filePath);
 }
 

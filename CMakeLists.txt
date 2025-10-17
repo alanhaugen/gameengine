@@ -34,6 +34,10 @@ add_executable(QtVulkan
     shaders/phong.vert
     shaders/shader.frag
     shaders/shader.vert
+    shaders/color.frag
+    shaders/color.vert
+    shaders/gui.frag
+    shaders/gui.vert
     source/x-platform/editor.h
     source/platforms/qt/qteditor.h source/platforms/qt/qteditor.cpp
     source/demos/empty.h source/demos/empty.cpp

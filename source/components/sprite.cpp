@@ -14,14 +14,16 @@ Sprite::Sprite()
     indices.push_back(1);
     indices.push_back(2);
 
-    indices.push_back(1);
-    indices.push_back(3);
     indices.push_back(2);
+    indices.push_back(3);
+    indices.push_back(0);
 
     drawable = &renderer->CreateDrawable(vertices,
-                                        indices,
-                                        "shaders/color.vert.spv",
-                                        "shaders/color.frag.spv");
+                                         indices,
+                                         "shaders/color.vert.spv",
+                                         "shaders/color.frag.spv",
+                                         Renderer::TRIANGLES,
+                                         "Assets/Textures/sheet.png");
 }
 
 void Sprite::Update()

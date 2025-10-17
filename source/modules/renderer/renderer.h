@@ -1,13 +1,13 @@
 #pragma once
 
 #include "vertex.h" // TODO: Figure out if vulkan can be decoupled from vertex.h
-#include <string>
 
 class Renderer
 {
 public:
     virtual void Init() = 0;
     virtual void Update() = 0;
+
 public:
     enum Topology
     {
@@ -27,6 +27,18 @@ public:
             alignas(16) glm::vec3 lightPosition;
             alignas(16) glm::vec3 cameraPosition;
             alignas(16) glm::float32_t time;
+            alignas(16) glm::float32_t index;
+            alignas(16) glm::float32_t pos;
+            alignas(16) glm::float32_t scaleX;
+            alignas(16) glm::float32_t scaleY;
+            alignas(16) glm::float32_t width;
+            alignas(16) glm::float32_t height;
+            alignas(16) glm::float32_t totalWidth;
+            alignas(16) glm::float32_t totalHeight;
+            alignas(16) glm::float32_t screenWidth;
+            alignas(16) glm::float32_t screenHeight;
+            alignas(16) glm::bvec1 flip;
+            alignas(16) glm::bvec1 flipVertical;
         } ubo;
 
         VkPipeline graphicsPipeline;
@@ -52,7 +64,7 @@ public:
                                      const char* vertexShader = "shaders/vert.spv",
                                      const char* fragmentShader = "shaders/frag.spv",
                                      const int topology = TRIANGLES,
-                                     std::vector<std::string> textures = std::vector<std::string>()) = 0;
+                                     const char* texture = "") = 0;
 
     virtual void SetViewMatrix(glm::mat4 view) = 0;
     virtual void SetCameraPosition(glm::vec3 pos) = 0;

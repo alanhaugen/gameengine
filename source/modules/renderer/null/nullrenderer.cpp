@@ -25,7 +25,7 @@ Renderer::Drawable &NullRenderer::CreateDrawable(std::vector<Vertex> vertices,
                                                  const char *vertexShader,
                                                  const char *fragmentShader,
                                                  const int topology,
-                                                 std::vector<std::string> textures)
+                                                 const char* texture)
 {
     Drawable drawable;
     drawables.push_back(drawable);

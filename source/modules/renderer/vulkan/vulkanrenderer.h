@@ -31,7 +31,7 @@ public:
                              const char* vertexShader,
                              const char* fragmentShader,
                              const int topology = TRIANGLES,
-                             std::vector<std::string> textures = std::vector<std::string>()) override;
+                             const char* texture = "") override;
 
     void Render();
 

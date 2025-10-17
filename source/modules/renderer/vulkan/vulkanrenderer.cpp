@@ -115,7 +115,7 @@ Renderer::Drawable& VulkanRenderer::CreateDrawable(std::vector<Vertex> vertices,
                                                    const char* vertexShader,
                                                    const char* fragmentShader,
                                                    const int topology,
-                                                   std::vector<std::string> textures)
+                                                   const char* texture)
 {
     Drawable drawable;
     drawable.offset = drawablesQuantity;
@@ -123,10 +123,10 @@ Renderer::Drawable& VulkanRenderer::CreateDrawable(std::vector<Vertex> vertices,
     drawable.verticesQuantity = vertices.size();
     drawable.graphicsPipeline = createGraphicsPipeline(vertexShader, fragmentShader, topology);
 
-    if (textures.empty() == false)
+    if (texture[0] != '\0') // C string check if empty
     {
         drawable.isTextured = true;
-        drawable.textureDescriptor = createTextureDescriptor(textures[0], texturesQuantity);
+        drawable.textureDescriptor = createTextureDescriptor(texture, texturesQuantity);
         texturesQuantity++;
     }
 

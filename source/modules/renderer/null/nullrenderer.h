@@ -17,7 +17,7 @@ public:
                              const char* vertexShader = "shaders/vert.spv",
                              const char* fragmentShader = "shaders/frag.spv",
                              const int topology = TRIANGLES,
-                             std::vector<std::string> textures = std::vector<std::string>());
+                             const char* texture = "");
 
     void SetViewMatrix(glm::mat4 view);
     void SetCameraPosition(glm::vec3 pos);
