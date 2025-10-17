@@ -5,10 +5,20 @@ Sprite::Sprite()
     std::vector<Vertex> vertices;
     std::vector<uint32_t> indices;
 
-    vertices.push_back(Vertex(-1, -1, 0)); // 0  bottom left
-    vertices.push_back(Vertex(1, -1, 0));  // 1  bottom right
-    vertices.push_back(Vertex(1, 1, 0));   // 2  top right
-    vertices.push_back(Vertex(-1, 1, 0));  // 3  top left - B
+    Vertex bottomLeft(-1, -1, 0); // 0
+    Vertex bottomRight(1, -1, 0); // 1
+    Vertex topRight(1, 1, 0);     // 2
+    Vertex topLeft(-1, 1, 0);     // 3
+
+    bottomLeft.texCoord  = glm::vec2(1, 1);
+    bottomRight.texCoord = glm::vec2(1, 0);
+    topRight.texCoord    = glm::vec2(1, 1);
+    topLeft.texCoord     = glm::vec2(0, 1);
+
+    vertices.push_back(bottomLeft);
+    vertices.push_back(bottomRight);
+    vertices.push_back(topRight);
+    vertices.push_back(topLeft);
 
     indices.push_back(0);
     indices.push_back(1);
@@ -20,8 +30,8 @@ Sprite::Sprite()
 
     drawable = &renderer->CreateDrawable(vertices,
                                          indices,
-                                         "shaders/color.vert.spv",
-                                         "shaders/color.frag.spv",
+                                         "shaders/shader.vert.spv",
+                                         "shaders/shader.frag.spv",
                                          Renderer::TRIANGLES,
                                          "Assets/Textures/sheet.png");
 }

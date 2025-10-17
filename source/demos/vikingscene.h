@@ -6,8 +6,8 @@
 class VikingScene : public Scene
 {
 private:
-    Mesh* vikingCamp1;
-    Mesh* vikingCamp2;
+    Mesh* vikingCamp;
+    Mesh* ball;
 
 public:
     void Init();
