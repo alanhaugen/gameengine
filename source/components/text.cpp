@@ -1,5 +1,5 @@
 #include "text.h"
 
-Text::Text()
+Text::Text(const char *text, float x, float y, float z)
 {
 }

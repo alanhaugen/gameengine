@@ -1,5 +1,4 @@
 #include "input.h"
-#include "locator.h"
 
 bool Input::Held(int key)
 {

@@ -18,10 +18,10 @@ Sprite::Sprite()
     indices.push_back(3);
     indices.push_back(2);
 
-    renderer->CreateDrawable(vertices,
-                             indices,
-                             "shaders/gui.vert.spv",
-                             "shaders/gui.frag.spv");
+    drawable = &renderer->CreateDrawable(vertices,
+                                        indices,
+                                        "shaders/color.vert.spv",
+                                        "shaders/color.frag.spv");
 }
 
 void Sprite::Update()

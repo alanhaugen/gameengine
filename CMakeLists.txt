@@ -67,6 +67,7 @@ add_executable(QtVulkan
     source/demos/pong.cpp
     source/components/cube.h source/components/cube.cpp
     source/components/text.h source/components/text.cpp
+    source/components/sphere.h source/components/sphere.cpp
 )
 
 #OpenAL
