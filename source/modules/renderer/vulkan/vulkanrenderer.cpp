@@ -1641,12 +1641,13 @@ void VulkanRenderer::Render() {
     // Put the graphics onto the screen
     result = vkQueuePresentKHR(presentQueue, &presentInfo);
 
-    if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR || framebufferResized) {
+    // This crashes the program with multi texture support
+    /*if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR || framebufferResized) {
         framebufferResized = false;
         recreateSwapChain();
     } else if (result != VK_SUCCESS) {
         throw std::runtime_error("failed to present swap chain image!");
-    }
+    }*/
 
     //vkQueueWaitIdle(presentQueue); // debugging only
 
