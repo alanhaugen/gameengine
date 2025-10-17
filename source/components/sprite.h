@@ -6,7 +6,7 @@
 class Sprite : public Component
 {
 public:
-    Sprite();
+    Sprite(float x = 0.0f, float y = 0.0f, const char* glyphs = "");
     void Update();
 
     Renderer::Drawable* drawable;

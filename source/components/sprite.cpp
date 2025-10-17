@@ -1,6 +1,6 @@
 #include "sprite.h"
 
-Sprite::Sprite()
+Sprite::Sprite(float x, float y, const char *glyphs)
 {
     std::vector<Vertex> vertices;
     std::vector<uint32_t> indices;
@@ -10,10 +10,10 @@ Sprite::Sprite()
     Vertex topRight(1, 1, 0);     // 2
     Vertex topLeft(-1, 1, 0);     // 3
 
-    bottomLeft.texCoord  = glm::vec2(1, 1);
-    bottomRight.texCoord = glm::vec2(1, 0);
-    topRight.texCoord    = glm::vec2(1, 1);
-    topLeft.texCoord     = glm::vec2(0, 1);
+    bottomLeft.texCoord  = glm::vec2(0, 1);
+    bottomRight.texCoord = glm::vec2(1, 1);
+    topRight.texCoord    = glm::vec2(1, 0);
+    topLeft.texCoord     = glm::vec2(0, 0);
 
     vertices.push_back(bottomLeft);
     vertices.push_back(bottomRight);
@@ -33,7 +33,7 @@ Sprite::Sprite()
                                          "shaders/shader.vert.spv",
                                          "shaders/shader.frag.spv",
                                          Renderer::TRIANGLES,
-                                         "Assets/Textures/sheet.png");
+                                         "Assets/Textures/orange.jpg");
 }
 
 void Sprite::Update()
