@@ -62,6 +62,7 @@ add_executable(QtVulkan
     source/x-platform/input.cpp
     source/modules/renderer/vulkan/vulkantexture.h
     source/modules/physics/aaphysics/aaphysics.h source/modules/physics/aaphysics/aaphysics.cpp
+    source/components/sprite.h source/components/sprite.cpp
 )
 
 #OpenAL
