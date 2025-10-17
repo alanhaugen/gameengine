@@ -1,25 +1,9 @@
 #include "terrain.h"
-#include "glm/gtc/matrix_transform.hpp"
 #include <fstream>
 
 void Terrain::Init()
 {
-    //std::ifstream infile("Assets/Pointclouds/island.txt");
-    std::ifstream infile("Assets/Pointclouds/school.txt");
-
-    float x, y, z;
-    while (infile >> x >> z >> y)
-    {
-        glm::vec3 pos = glm::vec3((x - 610162.71) / 50.0f, (y - 123.28) / 50.0f, (z - 6732089.69) / 50.0f);
-        glm::vec3 color(0.0f, pos.y / pos.length() * 5.0f, 0.0f);
-        if (pos.y / pos.length() < 0.001f)
-        {
-            color = glm::vec3(1.0f - pos.y / pos.length());
-        }
-        vertices.push_back(Vertex(pos.x, pos.y, pos.z, color));
-    }
-
-    /*vertices.push_back(Vertex(0, 0, 0, glm::vec3(1,0.5,0))); // 0  bottom left
+    vertices.push_back(Vertex(0, 0, 0, glm::vec3(1,0.5,0))); // 0  bottom left
     vertices.push_back(Vertex(0, -0.2,  1, glm::vec3(0.5,1,0))); // 1  bottom left
     vertices.push_back(Vertex(1, -0.5, 0, glm::vec3(0,0.5,1))); // 2  top right
     vertices.push_back(Vertex(1, -0.4,  1, glm::vec3(0.7,0,0))); // 3  top left - B
@@ -41,26 +25,37 @@ void Terrain::Init()
 
     indices.push_back(2);
     indices.push_back(4);
-    indices.push_back(5);*/
+    indices.push_back(5);
 }
 
 Terrain::Terrain()
 {
     Init();
 
-    drawable = &renderer->CreateDrawable(vertices, indices, "shaders/color.vert.spv", "shaders/color.frag.spv", Renderer::POINTS);
-
-    //drawable->ubo.model = glm::translate(drawable->ubo.model, glm::vec3(-(largestX + (largestX - smallestX)) / 2, -(largestY + (largestY - smallestY)) / 2, -(largestZ + (largestZ - smallestZ)) / 2));
-    //Log("");
+    drawable = &renderer->CreateDrawable(vertices, indices, "shaders/color.vert.spv", "shaders/color.frag.spv");
 }
 
 Terrain::Terrain(const char *filePath,
            const char* vertexShaderPath,
            const char* fragmentShaderPath)
 {
-    Init(); // todo: change into reading data from file
+    std::ifstream infile(filePath);
 
-    drawable = &renderer->CreateDrawable(vertices, indices, vertexShaderPath, fragmentShaderPath);
+    float x, y, z;
+    while (infile >> x >> z >> y) // Notice z and y are swapped
+    {
+        static glm::vec3 offset = glm::vec3(x, y, z);
+
+        glm::vec3 pos = glm::vec3(x, y, z) - offset;
+        pos /= 50.0f;
+
+        glm::vec3 color(0.0f);
+        color.g = pos.y / pos.length() * 50.0f;
+
+        vertices.push_back(Vertex(pos.x, pos.y, pos.z, color));
+    }
+
+    drawable = &renderer->CreateDrawable(vertices, indices, vertexShaderPath, fragmentShaderPath, Renderer::POINTS);
 }
 
 void Terrain::Update()

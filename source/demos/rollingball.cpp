@@ -25,7 +25,7 @@ void RollingBall::Init()
     //ball->AddComponent(new SphereCollider());
 
     GameObject* terrain = new GameObject;
-    terrainMesh = new Terrain();//("Assets/terrain.png");
+    terrainMesh = new Terrain("Assets/Pointclouds/island.txt");//("Assets/terrain.png");
     ball->AddComponent(terrainMesh);
     ball->AddComponent(new TriangleCollider());
 
