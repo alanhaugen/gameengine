@@ -99,8 +99,8 @@ void VulkanRenderer::initVulkan() {
     createColorResources();
     createDepthResources();
     createFramebuffers();
-    //createTextureImage();
-    //createTextureImageView();
+    createTextureImage();
+    createTextureImageView();
     createTextureSampler();
     createUniformBuffers();
     createDescriptorPool();
@@ -654,6 +654,10 @@ VkPipeline VulkanRenderer::createGraphicsPipeline(const char* vertexShaderPath,
     else if (topology == LINES)
     {
         inputAssembly.topology = VK_PRIMITIVE_TOPOLOGY_LINE_LIST;
+    }
+    else if (topology == POINTS)
+    {
+        inputAssembly.topology = VK_PRIMITIVE_TOPOLOGY_POINT_LIST;
     }
     else
     {

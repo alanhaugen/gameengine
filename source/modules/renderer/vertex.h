@@ -29,7 +29,8 @@ struct Vertex {
     Vertex(glm::vec3 pos_)
     {
         pos = pos_;
-        color = glm::vec3(1.0f, 1.0f, 1.0f);
+        color = pos;
+        color /= color.length();
         normal = glm::vec3(1.0f, 1.0f, 1.0f);
     }
 
