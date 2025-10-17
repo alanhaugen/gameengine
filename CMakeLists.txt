@@ -63,6 +63,10 @@ add_executable(QtVulkan
     source/modules/renderer/vulkan/vulkantexture.h
     source/modules/physics/aaphysics/aaphysics.h source/modules/physics/aaphysics/aaphysics.cpp
     source/components/sprite.h source/components/sprite.cpp
+    source/demos/pong.h
+    source/demos/pong.cpp
+    source/components/cube.h source/components/cube.cpp
+    source/components/text.h source/components/text.cpp
 )
 
 #OpenAL

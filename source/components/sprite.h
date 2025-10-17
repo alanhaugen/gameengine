@@ -2,7 +2,6 @@
 #define SPRITE_H
 
 #include "component.h"
-#include "../modules/renderer/renderer.h"
 
 class Sprite : public Component
 {

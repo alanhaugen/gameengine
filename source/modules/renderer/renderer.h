@@ -1,6 +1,7 @@
 #pragma once
 
 #include "vertex.h" // TODO: Figure out if vulkan can be decoupled from vertex.h
+#include <string>
 
 class Renderer
 {
