@@ -18,7 +18,7 @@ Mesh::Mesh(const char *filePath,
     std::vector<tinyobj::material_t> materials;
     std::string warn, err;
 
-    if (!tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, filePath)) {
+    if (!tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, filePath, "Assets/Models")) {
         throw std::runtime_error(warn + err);
     }
 
@@ -28,8 +28,6 @@ Mesh::Mesh(const char *filePath,
     {
         textures.push_back(materials[0].diffuse_texname);
     }
-
-    textures.push_back("Assets/Textures/viking_room.png");
 
     std::unordered_map<Vertex, uint32_t> uniqueVertices{};
 
