@@ -3,7 +3,7 @@
 
 void VikingScene::Init()
 {
-    GameObject* first = new GameObject;
+    GameObject* first  = new GameObject;
     GameObject* second = new GameObject;
     vikingCamp1 = new Mesh("Assets/Models/viking_room.obj");
     vikingCamp2 = new Mesh("Assets/Models/viking_room.obj", "shaders/shader.vert.spv", "shaders/shader.frag.spv");
