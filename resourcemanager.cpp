@@ -89,10 +89,10 @@ void ResourceManager::toggleBackgroundMusic()
 
     if (state == AL_PLAYING) {
         alSourceStop(backgroundSource);
-        std::cout << "Shut that thing up!" << std::endl;
+        qDebug("Shut that thing up!");
     } else {
         alSourcePlay(backgroundSource);
-        std::cout << "Play that good shit!" << std::endl;
+        qDebug("Play that good shit!");
     }
 }
 
