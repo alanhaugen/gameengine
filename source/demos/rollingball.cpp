@@ -11,27 +11,18 @@ RollingBall::RollingBall()
 
 void RollingBall::Init()
 {
-    curve.controlPoints.push_back(glm::vec3(0,0,0));
-    curve.controlPoints.push_back(glm::vec3(0.5,0,1));
-    curve.controlPoints.push_back(glm::vec3(0,0,0.5));
-    curve.controlPoints.push_back(glm::vec3(1.5,0,0));
-    curve.controlPoints.push_back(glm::vec3(0,0,1));
-    curve.controlPoints.push_back(glm::vec3(0.5,0,1));
-
-    curve.degree = 3;
-
-    curve.t = {
-        0, 0, 0, 0, 0.25, 0.5, 0.75, 1, 1, 1, 1 //should match time-range/ interval in Update
-        /*0, 0, 0, 0,       // first d+1 knots
-        0.1, 0.2, 0.3,          // internal knots
-        1, 1, 1*/          // last d+1 knots
-    };
-
     GameObject* ball = new GameObject;
-    ballMesh = new Mesh("Assets/Models/ball.obj");
-    ball->AddComponent(ballMesh);
-    ball->AddComponent(new SphereCollider());
-    ballMesh->drawable->ubo.model = glm::scale(ballMesh->drawable->ubo.model, glm::vec3(0.1f,0.1f,0.1f));
+
+    for (int i = 0; i < 500; i++)
+    {
+        Mesh* ballMesh = new Mesh("Assets/Models/ball.obj");
+        balls.push_back(ballMesh);
+        directions.push_back(glm::vec3());
+        ballMesh->drawable->ubo.model = glm::scale(ballMesh->drawable->ubo.model, glm::vec3(0.1f,0.1f,0.1f));
+        ball->AddComponent(ballMesh);
+    }
+
+    //ball->AddComponent(new SphereCollider());
 
     GameObject* terrain = new GameObject;
     terrainMesh = new Terrain();//("Assets/terrain.png");
@@ -44,39 +35,38 @@ void RollingBall::Init()
 
     gameObjects.push_back(ball);
     gameObjects.push_back(terrain);
-
-    std::vector<Vertex> vertices;
-    std::vector<uint32_t> indices;
-
-    int j = 0;
-    indices.push_back(j);
-    for (float i = 0.0f; i < 1.0f; i += 0.01f)
-    {
-        j++;
-        glm::vec3 pos = curve.EvaluateBSplineSimple(i);
-        pos.y = terrainMesh->GetHeightAt(pos) + 0.1f;
-        vertices.push_back(Vertex(pos));
-        indices.push_back(j);
-        indices.push_back(j);
-    }
-
-    splineDrawable = &renderer->CreateDrawable(vertices, indices, "shaders/color.vert.spv", "shaders/color.frag.spv", Renderer::LINES);
 }
 
 void RollingBall::Update()
 {
-    static float time = 0.0f;
-
-    time += 0.001f;
-
-    if (time > 1.0f)
+    if (input.Held(input.Key.SPACE))
     {
-        time = 0.0f;
+        glm::mat4& matrix = balls[index]->drawable->ubo.model;
+        glm::vec3 pos = glm::vec3(matrix[3]);
+
+        pos = glm::vec3(camera.position);
+        matrix[3] = glm::vec4(pos, 1.0f);
+
+        directions[index] = glm::vec3(camera.forward / 90.0f);
+
+        index++;
+
+        if (index > balls.size() - 1)
+        {
+            index = 0;
+        }
     }
 
-    glm::vec3 pos = curve.EvaluateBSplineSimple(time);
-    pos.y = terrainMesh->GetHeightAt(pos) + 0.1f;
+    for (int i = 0; i < balls.size(); i++)
+    {
+        glm::mat4& matrix = balls[i]->drawable->ubo.model;
+        glm::vec3 pos = glm::vec3(matrix[3]);
 
-    glm::mat4& matrix = ballMesh->drawable->ubo.model;
-    matrix[3] = glm::vec4(pos, 1.0f);
+        directions[i] += terrainMesh->GetNormal(pos) / 5000.0f;
+
+        pos += directions[i];
+        pos.y = terrainMesh->GetHeightAt(pos) + 0.1f;
+
+        matrix[3] = glm::vec4(pos, 1.0f);
+    }
 }

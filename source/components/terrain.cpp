@@ -7,8 +7,8 @@ void Terrain::Init()
     vertices.push_back(Vertex(1, -0.5, 0, glm::vec3(0,0.5,1))); // 2  top right
     vertices.push_back(Vertex(1, -0.4,  1, glm::vec3(0.7,0,0))); // 3  top left - B
 
-    vertices.push_back(Vertex(2, -0.3,  1, glm::vec3(1,0,0))); // 4 bottom right
-    vertices.push_back(Vertex(2, -0.8,  0, glm::vec3(0,1,0)));  //5 C
+    vertices.push_back(Vertex(2, 0.3,  1, glm::vec3(1,0,0))); // 4 bottom right
+    vertices.push_back(Vertex(2, 0.8,  0, glm::vec3(0,1,0)));  //5 C
 
     indices.push_back(0);
     indices.push_back(1);
@@ -89,6 +89,56 @@ float Terrain::GetHeightAt(const glm::vec3 positionXZ) const
     }
 
     return 0.0f;  // Default flat
+}
+
+glm::vec3 Terrain::GetNormal(const glm::vec3 position) const
+{
+    glm::vec2 point(position.x, position.z);
+
+    for (size_t i = 0; i < indices.size(); i += 3) {
+        const Vertex& v0 = vertices[indices[i]];
+        const Vertex& v1 = vertices[indices[i + 1]];
+        const Vertex& v2 = vertices[indices[i + 2]];
+
+        glm::vec2 a(v0.pos.x, v0.pos.z);
+        glm::vec2 b(v1.pos.x, v1.pos.z);
+        glm::vec2 c(v2.pos.x, v2.pos.z);
+
+        glm::vec2 v0v2 = c - a;
+        glm::vec2 v0v1 = b - a;
+        glm::vec2 v0p = point - a;
+
+        float d00 = glm::dot(v0v1, v0v1);
+        float d01 = glm::dot(v0v1, v0v2);
+        float d11 = glm::dot(v0v2, v0v2);
+        float d20 = glm::dot(v0p, v0v1);
+        float d21 = glm::dot(v0p, v0v2);
+
+        float denom = d00 * d11 - d01 * d01;
+        if (denom == 0.0f) continue;
+
+        float v = (d11 * d20 - d01 * d21) / denom;
+        float w = (d00 * d21 - d01 * d20) / denom;
+        float u = 1.0f - v - w;
+
+        if (u >= 0.0f && v >= 0.0f && w >= 0.0f)
+        {
+            glm::vec3 dir;
+            glm::vec3 p1(v0.pos.x, v0.pos.y, v0.pos.z);
+            glm::vec3 p2(v1.pos.x, v1.pos.y, v1.pos.z);
+            glm::vec3 p3(v2.pos.x, v2.pos.y, v2.pos.z);
+
+            glm::vec3 A = p2 - p1;
+            glm::vec3 B = p3 - p1;
+
+            dir.x = A.y * B.z - A.z * B.y;
+            dir.y = A.z * B.x - A.x * B.z;
+            dir.z = A.x * B.y - A.y * B.x;
+
+            return dir;
+        }
+    }
+    return glm::vec3();
 }
 
 /*
