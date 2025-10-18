@@ -10,6 +10,7 @@ public:
 
 public:
     virtual void update() = 0;
+    virtual void Init() = 0;
 
 };
 

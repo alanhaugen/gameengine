@@ -21,6 +21,8 @@ add_executable(QtVulkan
 
     GameWorld.h GameWorld.cpp
     resourcemanager.h resourcemanager.cpp
+    Gameobject.h Gameobject.cpp
+    Camera.h Camera.cpp
 )
 
 #OpenAL
