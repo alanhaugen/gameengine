@@ -24,21 +24,21 @@ public:
             alignas(16) glm::mat4 proj;
             alignas(16) glm::mat4 modelMat;
             alignas(16) glm::mat4 normalMat;
-            alignas(16) glm::vec3 lightPosition;
-            alignas(16) glm::vec3 cameraPosition;
-            alignas(16) glm::float32_t time;
-            alignas(16) glm::float32_t index;
-            alignas(16) glm::vec2 pos;
-            alignas(16) glm::float32_t scaleX;
-            alignas(16) glm::float32_t scaleY;
-            alignas(16) glm::float32_t width;
-            alignas(16) glm::float32_t height;
-            alignas(16) glm::float32_t totalWidth;
-            alignas(16) glm::float32_t totalHeight;
-            alignas(16) glm::float32_t screenWidth;
-            alignas(16) glm::float32_t screenHeight;
-            alignas(16) glm::float32_t flip;
-            alignas(16) glm::float32_t flipVertical;
+            alignas(16) glm::vec4 lightPosition;
+            alignas(16) glm::vec4 cameraPosition;
+            alignas(16) glm::vec4 time;
+            alignas(16) glm::vec4 index;
+            alignas(16) glm::vec4 pos;
+            alignas(16) glm::vec4 scaleX;
+            alignas(16) glm::vec4 scaleY;
+            alignas(16) glm::vec4 width;
+            alignas(16) glm::vec4 height;
+            alignas(16) glm::vec4 totalWidth;
+            alignas(16) glm::vec4 totalHeight;
+            alignas(16) glm::vec4 screenWidth;
+            alignas(16) glm::vec4 screenHeight;
+            alignas(16) glm::vec4 flip;
+            alignas(16) glm::vec4 flipVertical;
         } ubo;
 
         VkPipeline graphicsPipeline;
@@ -69,4 +69,12 @@ public:
     virtual void SetViewMatrix(glm::mat4 view) = 0;
     virtual void SetCameraPosition(glm::vec3 pos) = 0;
     virtual void SetLightPos(glm::vec3 pos) = 0;
+
+    float clearColor[4] = {0.0f, 0.3f, 0.5f, 1.0f};
+
+    inline void SetClearColor(float r, float g, float b) {
+        clearColor[0] = r;
+        clearColor[1] = g;
+        clearColor[2] = b;
+    }
 };

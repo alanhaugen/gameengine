@@ -10,3 +10,16 @@ Code for Game Engine Architecture 2025
 Variables start with lowercase, camelCase
 
 Methods/Functions and Classes/Structs start with uppercase, PascalCase.
+
+## Sources
+
+The following font was used:
+
+Noto Sans Japanese.
+
+ License
+Copyright 2014-2021 Adobe (http://www.adobe.com/), with Reserved Font Name 'Source'
+
+This Font Software is licensed under the SIL Open Font License, Version 1.1 . This license is copied below, and is also available with a FAQ at: https://openfontlicense.org
+
+SIL OPEN FONT LICENSE Version 1.1 - 26 February 2007 

@@ -1478,12 +1478,19 @@ void VulkanRenderer::updateUniformBuffer(uint32_t currentImage, Drawable::Unifor
     //ubo.model = glm::rotate(glm::mat4(1.0f), time * glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
     static float time = 0.0f;
     time += 0.01f;
-    ubo.time = time;
-    ubo.cameraPosition = cameraPos;
-    ubo.lightPosition  = lightPos;
+    ubo.time.x = time;
+    ubo.cameraPosition = glm::vec4(cameraPos, 1);
+    ubo.lightPosition  = glm::vec4(lightPos, 1);
     ubo.view = cameraView;
     ubo.proj = glm::perspective(glm::radians(70.0f), swapChainExtent.width / (float) swapChainExtent.height, 0.1f, 10.0f);
     ubo.proj[1][1] *= -1;
+
+    ubo.index.x = 0;
+    ubo.pos = glm::vec4(ubo.model[3].x, ubo.model[3].y, 0, 0);
+    ubo.scaleX.x = 1.0f;
+    ubo.scaleY.x = 1.0f;
+    ubo.screenWidth.x = windowWidth;
+    ubo.screenHeight.x = windowHeight;
 
     char* data;
     vkMapMemory(device, uniformBuffersMemory[currentImage], 0, sizeof(ubo), 0, (void**)&data);
@@ -1539,7 +1546,7 @@ void VulkanRenderer::Render() {
     renderPassInfo.renderArea.extent = swapChainExtent;
 
     std::array<VkClearValue, 2> clearValues{};
-    clearValues[0].color = {0.0f, 0.3f, 0.5f, 1.0f};
+    clearValues[0].color = {clearColor[0], clearColor[1], clearColor[2], clearColor[3]};
     clearValues[1].depthStencil = {1.0f, 0};
 
     renderPassInfo.clearValueCount = static_cast<uint32_t>(clearValues.size());

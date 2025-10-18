@@ -1,52 +1,52 @@
 #include "cube.h"
 #include "glm/gtc/matrix_transform.hpp"
 
-Cube::Cube(float x, float y, float z, glm::vec3 scale)
+Cube::Cube(float x, float y, float z, glm::vec3 scale, glm::vec3 color)
 {
     std::vector<Vertex> vertices;
     std::vector<uint32_t> indices;
 
-    vertices.push_back(Vertex(glm::vec3(-10.0f,  10.0f, -10.0f)));
-    vertices.push_back(Vertex(glm::vec3(-10.0f, -10.0f, -10.0f)));
-    vertices.push_back(Vertex(glm::vec3( 10.0f, -10.0f, -10.0f)));
-    vertices.push_back(Vertex(glm::vec3( 10.0f, -10.0f, -10.0f)));
-    vertices.push_back(Vertex(glm::vec3( 10.0f,  10.0f, -10.0f)));
-    vertices.push_back(Vertex(glm::vec3(-10.0f,  10.0f, -10.0f)));
+    vertices.push_back(Vertex(glm::vec3(-10.0f,  10.0f, -10.0f), color));
+    vertices.push_back(Vertex(glm::vec3(-10.0f, -10.0f, -10.0f), color));
+    vertices.push_back(Vertex(glm::vec3( 10.0f, -10.0f, -10.0f), color));
+    vertices.push_back(Vertex(glm::vec3( 10.0f, -10.0f, -10.0f), color));
+    vertices.push_back(Vertex(glm::vec3( 10.0f,  10.0f, -10.0f), color));
+    vertices.push_back(Vertex(glm::vec3(-10.0f,  10.0f, -10.0f), color));
 
-    vertices.push_back(Vertex(glm::vec3(-10.0f, -10.0f,  10.0f)));
-    vertices.push_back(Vertex(glm::vec3(-10.0f, -10.0f, -10.0f)));
-    vertices.push_back(Vertex(glm::vec3(-10.0f,  10.0f, -10.0f)));
-    vertices.push_back(Vertex(glm::vec3(-10.0f,  10.0f, -10.0f)));
-    vertices.push_back(Vertex(glm::vec3(-10.0f,  10.0f,  10.0f)));
-    vertices.push_back(Vertex(glm::vec3(-10.0f, -10.0f,  10.0f)));
+    vertices.push_back(Vertex(glm::vec3(-10.0f, -10.0f,  10.0f), color));
+    vertices.push_back(Vertex(glm::vec3(-10.0f, -10.0f, -10.0f), color));
+    vertices.push_back(Vertex(glm::vec3(-10.0f,  10.0f, -10.0f), color));
+    vertices.push_back(Vertex(glm::vec3(-10.0f,  10.0f, -10.0f), color));
+    vertices.push_back(Vertex(glm::vec3(-10.0f,  10.0f,  10.0f), color));
+    vertices.push_back(Vertex(glm::vec3(-10.0f, -10.0f,  10.0f), color));
 
-    vertices.push_back(Vertex(glm::vec3(10.0f, -10.0f, -10.0f)));
-    vertices.push_back(Vertex(glm::vec3(10.0f, -10.0f,  10.0f)));
-    vertices.push_back(Vertex(glm::vec3(10.0f,  10.0f,  10.0f)));
-    vertices.push_back(Vertex(glm::vec3(10.0f,  10.0f,  10.0f)));
-    vertices.push_back(Vertex(glm::vec3(10.0f,  10.0f, -10.0f)));
-    vertices.push_back(Vertex(glm::vec3(10.0f, -10.0f, -10.0f)));
+    vertices.push_back(Vertex(glm::vec3(10.0f, -10.0f, -10.0f), color));
+    vertices.push_back(Vertex(glm::vec3(10.0f, -10.0f,  10.0f), color));
+    vertices.push_back(Vertex(glm::vec3(10.0f,  10.0f,  10.0f), color));
+    vertices.push_back(Vertex(glm::vec3(10.0f,  10.0f,  10.0f), color));
+    vertices.push_back(Vertex(glm::vec3(10.0f,  10.0f, -10.0f), color));
+    vertices.push_back(Vertex(glm::vec3(10.0f, -10.0f, -10.0f), color));
 
-    vertices.push_back(Vertex(glm::vec3(-10.0f, -10.0f,  10.0f)));
-    vertices.push_back(Vertex(glm::vec3(-10.0f,  10.0f,  10.0f)));
-    vertices.push_back(Vertex(glm::vec3( 10.0f,  10.0f,  10.0f)));
-    vertices.push_back(Vertex(glm::vec3( 10.0f,  10.0f,  10.0f)));
-    vertices.push_back(Vertex(glm::vec3( 10.0f, -10.0f,  10.0f)));
-    vertices.push_back(Vertex(glm::vec3(-10.0f, -10.0f,  10.0f)));
+    vertices.push_back(Vertex(glm::vec3(-10.0f, -10.0f,  10.0f), color));
+    vertices.push_back(Vertex(glm::vec3(-10.0f,  10.0f,  10.0f), color));
+    vertices.push_back(Vertex(glm::vec3( 10.0f,  10.0f,  10.0f), color));
+    vertices.push_back(Vertex(glm::vec3( 10.0f,  10.0f,  10.0f), color));
+    vertices.push_back(Vertex(glm::vec3( 10.0f, -10.0f,  10.0f), color));
+    vertices.push_back(Vertex(glm::vec3(-10.0f, -10.0f,  10.0f), color));
 
-    vertices.push_back(Vertex(glm::vec3(-10.0f,  10.0f, -10.0f)));
-    vertices.push_back(Vertex(glm::vec3( 10.0f,  10.0f, -10.0f)));
-    vertices.push_back(Vertex(glm::vec3( 10.0f,  10.0f,  10.0f)));
-    vertices.push_back(Vertex(glm::vec3( 10.0f,  10.0f,  10.0f)));
-    vertices.push_back(Vertex(glm::vec3(-10.0f,  10.0f,  10.0f)));
-    vertices.push_back(Vertex(glm::vec3(-10.0f,  10.0f, -10.0f)));
+    vertices.push_back(Vertex(glm::vec3(-10.0f,  10.0f, -10.0f), color));
+    vertices.push_back(Vertex(glm::vec3( 10.0f,  10.0f, -10.0f), color));
+    vertices.push_back(Vertex(glm::vec3( 10.0f,  10.0f,  10.0f), color));
+    vertices.push_back(Vertex(glm::vec3( 10.0f,  10.0f,  10.0f), color));
+    vertices.push_back(Vertex(glm::vec3(-10.0f,  10.0f,  10.0f), color));
+    vertices.push_back(Vertex(glm::vec3(-10.0f,  10.0f, -10.0f), color));
 
-    vertices.push_back(Vertex(glm::vec3(-10.0f, -10.0f, -10.0f)));
-    vertices.push_back(Vertex(glm::vec3(-10.0f, -10.0f,  10.0f)));
-    vertices.push_back(Vertex(glm::vec3( 10.0f, -10.0f, -10.0f)));
-    vertices.push_back(Vertex(glm::vec3( 10.0f, -10.0f, -10.0f)));
-    vertices.push_back(Vertex(glm::vec3(-10.0f, -10.0f,  10.0f)));
-    vertices.push_back(Vertex(glm::vec3( 10.0f, -10.0f,  10.0f)));
+    vertices.push_back(Vertex(glm::vec3(-10.0f, -10.0f, -10.0f), color));
+    vertices.push_back(Vertex(glm::vec3(-10.0f, -10.0f,  10.0f), color));
+    vertices.push_back(Vertex(glm::vec3( 10.0f, -10.0f, -10.0f), color));
+    vertices.push_back(Vertex(glm::vec3( 10.0f, -10.0f, -10.0f), color));
+    vertices.push_back(Vertex(glm::vec3(-10.0f, -10.0f,  10.0f), color));
+    vertices.push_back(Vertex(glm::vec3( 10.0f, -10.0f,  10.0f), color));
 
     drawable = &renderer->CreateDrawable(vertices,
                                          indices,

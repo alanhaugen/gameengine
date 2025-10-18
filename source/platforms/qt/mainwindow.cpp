@@ -2,6 +2,7 @@
 #include "ui_MainWindow.h"
 #include "../../modules/renderer/vulkan/vulkanrenderer.h"
 #include "../../components/mesh.h"
+#include "../../components/cube.h"
 #include <QTimer>
 #include "../../components/gameobject.h"
 #include <qinputdialog.h>
@@ -207,8 +208,13 @@ void MainWindow::AddVikingRoom()
 
 void MainWindow::AddCube()
 {
-    //scene->components.push_back(new Mesh("Assets/Models/viking_room.obj", renderer, scene->editor));
-    qDebug() << "Cube";
+    GameObject* gameobj = new GameObject("Cube");
+
+    Cube* cube = new Cube();
+
+    gameobj->AddComponent(cube);
+
+    scene->gameObjects.push_back(gameobj);
 }
 
 void MainWindow::AddSphere()

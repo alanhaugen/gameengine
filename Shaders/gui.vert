@@ -20,31 +20,30 @@ layout(set = 0, binding = 0) uniform UniformBufferObject {
     mat4 normalMat;
     vec4 lightPosition;
     vec4 cameraPosition;
-    float time;
-    float index;
-    vec2 pos;
-    float scaleX;
-    float scaleY;
-    float width;
-    float height;
-    float totalWidth;
-    float totalHeight;
-    float screenWidth;
-    float screenHeight;
-    float flip;
-    float flipVertical;
+    vec4 time;
+    vec4 index;
+    vec4 pos;
+    vec4 scaleX;
+    vec4 scaleY;
+    vec4 width;
+    vec4 height;
+    vec4 totalWidth;
+    vec4 totalHeight;
+    vec4 screenWidth;
+    vec4 screenHeight;
+    vec4 flip;
+    vec4 flipVertical;
 } uniformBuffer;
 
-layout(location = 0) out vec4 vSmoothColor;		//smooth colour to fragment shader
-layout(location = 1) out vec2 vSmoothTexcoord;
-layout(location = 2) out float vTime;
-layout(location = 3) out float vIndex;
-layout(location = 4) out float vWidth;
-layout(location = 5) out float vHeight;
-layout(location = 6) out float vTotalwidth;
-layout(location = 7) out float vTotalheight;
-layout(location = 8) out float vFlip;
-layout(location = 9) out float vFlipVertical;
+layout(location = 0) out vec2 vSmoothTexcoord;
+layout(location = 1) out float vTime;
+layout(location = 2) out float vIndex;
+layout(location = 3) out float vWidth;
+layout(location = 4) out float vHeight;
+layout(location = 5) out float vTotalwidth;
+layout(location = 6) out float vTotalheight;
+layout(location = 7) out float vFlip;
+layout(location = 8) out float vFlipVertical;
 #else
 smooth out vec2 vSmoothTexcoord;
 
@@ -76,6 +75,11 @@ out vec4 vColourTint;
 //out vec2 o_rotation;
 #endif
 
+const vec2 vertexList[] = vec2[](
+    vec2(-1.0, -1.0),
+    vec2(-1.0,  3.0),
+    vec2( 3.0, -1.0)
+);
 void main()
 {
 #ifndef VULKAN
@@ -97,19 +101,19 @@ void main()
 
     float y = inPosition.y;
 #ifdef VULKAN
-    float time = uniformBuffer.time;
-    float index = uniformBuffer.index;
-    vec2 pos = uniformBuffer.pos;
-    float scaleX = uniformBuffer.scaleX;
-    float scaleY = uniformBuffer.scaleY;
-    float width = uniformBuffer.width;
-    float height = uniformBuffer.height;
-    float totalWidth = uniformBuffer.totalWidth;
-    float totalHeight = uniformBuffer.totalHeight;
-    float screenWidth = uniformBuffer.screenWidth;
-    float screenHeight = uniformBuffer.screenHeight;
-    float flip = uniformBuffer.flip;
-    float flipVertical = uniformBuffer.flipVertical;
+    float time = uniformBuffer.time.x;
+    float index = uniformBuffer.index.x;
+    vec2 pos = uniformBuffer.pos.xy;
+    float scaleX = uniformBuffer.scaleX.x;
+    float scaleY = uniformBuffer.scaleY.x;
+    float width = uniformBuffer.width.x;
+    float height = uniformBuffer.height.x;
+    float totalWidth = uniformBuffer.totalWidth.x;
+    float totalHeight = uniformBuffer.totalHeight.x;
+    float screenWidth = uniformBuffer.screenWidth.x;
+    float screenHeight = uniformBuffer.screenHeight.x;
+    float flip = uniformBuffer.flip.x;
+    float flipVertical = uniformBuffer.flipVertical.x;
     // not sure if aspectRatio stuff makes any sense
     // Flip y-related variables because of Vulkan's inverted Y axis
     //y = -y;

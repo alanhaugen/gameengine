@@ -13,9 +13,6 @@ void VikingScene::Init()
     ball->drawable->ubo.modelMat = glm::mat4(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1);
     ball->drawable->ubo.normalMat = glm::mat4(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1);
 
-    ball->drawable->ubo.cameraPosition = glm::vec3(10,1,0);
-    ball->drawable->ubo.lightPosition = glm::vec3(1,1,0);
-
     vikingCamp->drawable->ubo.model = glm::scale(vikingCamp->drawable->ubo.model, glm::vec3(1.0, 1.0, 1.0));
     ball->drawable->ubo.model = glm::scale(ball->drawable->ubo.model, glm::vec3(1.0, 1.0, 1.0));
     vikingCamp->drawable->ubo.model = glm::translate(vikingCamp->drawable->ubo.model, glm::vec3(-0.3, 0, 0));

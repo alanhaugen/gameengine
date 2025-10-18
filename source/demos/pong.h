@@ -18,9 +18,13 @@ public:
     Cube* paddle2;
 
     glm::vec3 direction;
+    bool goRight = true;
 
     Text* score1;
     Text* score2;
+
+    int playerOneScore = 0;
+    int playerTwoScore = 0;
 };
 
 #endif // PONG_H

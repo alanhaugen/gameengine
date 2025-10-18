@@ -15,9 +15,9 @@ struct Vertex {
     glm::vec2 texCoord;
     glm::float32_t glyph;
 
-    Vertex(float x, float y, float z, glm::vec3 innColor = glm::vec3(1.0f)) {
+    Vertex(float x, float y, float z, glm::vec3 inColor = glm::vec3(1.0f)) {
         pos = glm::vec3(x, y, z);
-        color = innColor;
+        color = inColor;
         normal = glm::vec3(1.0f, 1.0f, 1.0f);
         glyph = -1.0f;
     }
@@ -29,10 +29,10 @@ struct Vertex {
         glyph = -1.0f;
     }
 
-    Vertex(glm::vec3 pos_)
+    Vertex(glm::vec3 pos_, glm::vec3 inColor = glm::vec3(1.0f))
     {
         pos = pos_;
-        color = glm::vec3(1.0f, 1.0f, 1.0f);
+        color = inColor;
         normal = glm::vec3(1.0f, 1.0f, 1.0f);
         glyph = -1.0f;
     }
