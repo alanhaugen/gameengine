@@ -5,6 +5,12 @@ Code for Game Engine Architecture 2025
 
 [https://drive.google.com/drive/folders/1fOzgci2yONdo4kGF_0fjPAl83TqqWe1H](https://drive.google.com/drive/folders/1fOzgci2yONdo4kGF_0fjPAl83TqqWe1H)
 
+## Working directory
+
+To test the program, set the working directory to this folder (the root foler).
+
+You change the working directory in Projects -> Run -> Working directory
+
 ## Coding conventions
 
 Variables start with lowercase, camelCase
