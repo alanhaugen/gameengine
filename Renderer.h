@@ -5,7 +5,9 @@
 #include <vulkan/vulkan_core.h>
 #include <string>
 #include <vector>
+#include "EntityManager.h"
 #include "Vertex.h"
+
 
 //Forward declarations
 struct SwapChainSupportDetails;
@@ -19,6 +21,11 @@ public:
     ~Renderer();
 
     void initVulkan();
+
+
+public:
+    //std::vector<bbl::Entity> getEntities() { return entities; }
+
 
 protected:
     //Qt event handlers - called when requestUpdate(); is called
@@ -38,6 +45,13 @@ private:
     VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
     VkSampleCountFlagBits msaaSamples = VK_SAMPLE_COUNT_1_BIT;
     VkDevice device;
+
+    std::unique_ptr<EntityManager> entityManager;
+    std::vector<bbl::Entity> entities;
+
+
+
+
 
     VkQueue graphicsQueue;
     VkQueue presentQueue;

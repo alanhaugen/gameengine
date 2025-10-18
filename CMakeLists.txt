@@ -22,6 +22,7 @@ add_executable(QtVulkan
     GameWorld.h GameWorld.cpp
     resourcemanager.h resourcemanager.cpp
     EntityManager.h EntityManager.cpp
+    modelloader.h modelloader.cpp
 )
 
 #OpenAL

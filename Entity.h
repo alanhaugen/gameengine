@@ -6,29 +6,55 @@
 
 namespace bbl
 {
+struct EntityComponents
+{
+    ComponentTypes mComponentType;
+    short mComponentIndex{-1};
+};
 
-    struct EntityComponents
-    {
-        ComponentTypes mComponentType;
-        short mComponentIndex{-1};
-    };
+class Entity
+{
+public:
+    Entity() : mEntityId(++nextId) {}
+    ~Entity() = default; // Virtual destructor for safety if derived
 
-    class Entity
-    {
-    public:
-        Entity() : mEntityId(++nextId){}
+    // Disable copying
+    Entity(const Entity&) = delete;
+    Entity& operator=(const Entity&) = delete;
 
-        std::size_t mEntityId;
-        std::vector<EntityComponents> mComponents;
+    // Enable moving
+    Entity(Entity&& other) noexcept : mEntityId(other.mEntityId), mComponents(std::move(other.mComponents)) {
+        other.mEntityId = 0; // Invalidate moved-from object
+        other.mComponents.clear();
+    }
+    Entity& operator=(Entity&& other) noexcept {
+        if (this != &other) {
+            mEntityId = other.mEntityId;
+            mComponents = std::move(other.mComponents);
+            other.mEntityId = 0;
+            other.mComponents.clear();
+        }
+        return *this;
+    }
 
-        inline static std::size_t nextId{0};
+    // Getters
+    std::size_t getEntityId() const { return mEntityId; }
+    const std::vector<EntityComponents>& getComponents() const { return mComponents; }
 
-    };
+    // Add a component (for use by EntityManager)
+    void addComponent(ComponentTypes type, short index) {
+        mComponents.push_back({type, index});
+    }
 
-}
-//namespace bbl
+    inline static std::size_t nextId{0};
+
+private:
+    std::size_t mEntityId;
+    std::vector<EntityComponents> mComponents;
 
 
+};
 
+} // namespace bbl
 
 #endif // ENTITY_H
