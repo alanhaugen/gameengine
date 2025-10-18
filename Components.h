@@ -1,9 +1,25 @@
 #ifndef COMPONENT_H
 #define COMPONENT_H
 
+#include <qobject.h>
 #include <glm/glm.hpp>
 #include <vector>
 
+
+class Component
+{
+protected:
+
+    QString Name;
+
+public:
+
+    void Update();
+
+    virtual void SetName(const QString NewName){Name = NewName;};
+
+    virtual const QString GetName(){return Name;};
+};
 
 //to avoid naming collisions, we will use namespace bbl - Boba Blast Labs
 namespace bbl
@@ -92,8 +108,6 @@ namespace bbl
         int MOUSEX{0};
         int MOUSEY{0};
     };
-
-
 
     //Create vector of the structs so that we at a later time can implement them into different systems
     inline std::vector<bbl::transform> TransformComponent;
