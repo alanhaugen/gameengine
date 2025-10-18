@@ -59,6 +59,7 @@ void Pong::Update()
         if (ballMatrix[3].x < -4.6f && ballMatrix[3].x > -4.8f
         && playerMatrix[3].y < ballMatrix[3].y + 0.5f && playerMatrix[3].y > ballMatrix[3].y - 0.5f)
         {
+            audio->PlaySound("Assets/Sounds/paddle_hit.wav");
             direction.y = (ballMatrix[3].y - playerMatrix[3].y);
             goRight = true;
         }
@@ -68,6 +69,7 @@ void Pong::Update()
         if (ballMatrix[3].x > 4.6f && ballMatrix[3].x < 4.8f
         && aiMatrix[3].y < ballMatrix[3].y + 0.5f && aiMatrix[3].y > ballMatrix[3].y - 0.5f)
         {
+            audio->PlaySound("Assets/Sounds/paddle_hit.wav");
             direction.y = (ballMatrix[3].y - aiMatrix[3].y);
             goRight = false;
         }
@@ -77,6 +79,7 @@ void Pong::Update()
     if (ballMatrix[3].y < -3.0f || ballMatrix[3].y > 3.0f)
     {
         direction.y *= -1;
+        audio->PlaySound("Assets/Sounds/wall_hit.wav");
     }
 
     // Check score state
@@ -90,6 +93,7 @@ void Pong::Update()
         score1->drawable->isVisible = false;
         delete score1;
         score1 = new Text((std::string("Player 1: ") + std::to_string(playerOneScore)).c_str());
+        audio->PlaySound("Assets/Sounds/score.wav");
     }
     else if (ballMatrix[3].x < -5.0f)
     {
@@ -101,6 +105,7 @@ void Pong::Update()
         score2->drawable->isVisible = false;
         delete score2;
         score2 = new Text((std::string("Player 2: ") + std::to_string(playerTwoScore)).c_str(), 700.0f, 0.0f);
+        audio->PlaySound("Assets/Sounds/score.wav");
     }
 
     // Update direction
