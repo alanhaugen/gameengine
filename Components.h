@@ -1,9 +1,14 @@
 #ifndef COMPONENT_H
 #define COMPONENT_H
 
+<<<<<<< HEAD
 #include <qobject.h>
+=======
+#include <glm/ext/matrix_transform.hpp>
+>>>>>>> Martin_Prototype
 #include <glm/glm.hpp>
 #include <vector>
+#include "Vertex.h"
 
 
 class Component
@@ -39,20 +44,40 @@ namespace bbl
     struct transform
     {
         glm::vec3 mPosition{};
-        glm::vec3 mRotation{};
+        glm::vec3 mRotation{}; // Euler angles (radians)
         glm::vec3 mScale{1, 1, 1};
         short mEntityId{-1};
+
+        // Helper to compute model matrix
+        glm::mat4 getModelMatrix() const {
+            glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, mPosition);
+            model = glm::rotate(model, glm::radians(mRotation.x), glm::vec3(1, 0, 0));
+            model = glm::rotate(model, glm::radians(mRotation.y), glm::vec3(0, 1, 0));
+            model = glm::rotate(model, glm::radians(mRotation.z), glm::vec3(0, 0, 1));
+            model = glm::scale(model, mScale);
+            return model;
+        }
     };
 
     struct mesh
     {
-        short mMesh{-1};
+        std::vector<Vertex> mVertices;
+        std::vector<uint32_t> mIndices;
+        VkBuffer mVertexBuffer{VK_NULL_HANDLE};
+        VkDeviceMemory mVertexBufferMemory{VK_NULL_HANDLE};
+        VkBuffer mIndexBuffer{VK_NULL_HANDLE};
+        VkDeviceMemory mIndexBufferMemory{VK_NULL_HANDLE};
         short mEntityId{-1};
     };
 
     struct texture
     {
-        short mTexture{-1};
+        VkImage mTextureImage{VK_NULL_HANDLE};
+        VkDeviceMemory mTextureImageMemory{VK_NULL_HANDLE};
+        VkImageView mTextureImageView{VK_NULL_HANDLE};
+        VkSampler mTextureSampler{VK_NULL_HANDLE};
+        VkDescriptorSet mDescriptorSet{VK_NULL_HANDLE}; // Per-entity descriptor set
         short mEntityId{-1};
 
     };

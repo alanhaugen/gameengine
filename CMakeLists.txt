@@ -21,8 +21,13 @@ add_executable(QtVulkan
 
     GameWorld.h GameWorld.cpp
     resourcemanager.h resourcemanager.cpp
+<<<<<<< HEAD
     Gameobject.h Gameobject.cpp
     Camera.h Camera.cpp
+=======
+    EntityManager.h EntityManager.cpp
+    modelloader.h modelloader.cpp
+>>>>>>> Martin_Prototype
 )
 
 #OpenAL
