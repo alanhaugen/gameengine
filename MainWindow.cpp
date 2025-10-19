@@ -17,6 +17,7 @@
 #include <QTabWidget>
 #include <QVBoxLayout>
 #include <QSplitter>
+#include <qPushButton>
 
 
     QPointer<QPlainTextEdit> MainWindow::messageLogWidget = nullptr;
@@ -51,7 +52,7 @@ MainWindow::MainWindow(ResourceManager* resourceMgr, QWidget *parent)
     this->setFocus();
     vulkanWidget->setFocusPolicy(Qt::NoFocus);
 
-
+    //===============TABS==================
     //Create a vertical splitter
     QSplitter* splitter = new QSplitter(Qt::Vertical, this);
     splitter->setChildrenCollapsible(false);
@@ -77,13 +78,41 @@ MainWindow::MainWindow(ResourceManager* resourceMgr, QWidget *parent)
     QWidget* secondTab = new QWidget(tabWidget);
     tabWidget->addTab(secondTab, tr("Second Tab"));
 
-    //Add the splitter to the Ui
-    ui->VulkanLayout->addWidget(splitter);
+    //Add splitter to bottom
+    splitter->addWidget(tabWidget);
 
-    //Install message handler
+    //================Right side buttons==============
+    //Right side UI
+    QWidget* rightPanel = new QWidget(this);
+    QVBoxLayout* rightLayout = new QVBoxLayout(rightPanel);
+
+    //Create buttons
+    QPushButton* button1 = new QPushButton("Square", rightPanel);
+    QPushButton* button2 = new QPushButton("Ball", rightPanel);
+    QPushButton* button3 = new QPushButton("Button", rightPanel);
+
+    //Add button to layout
+    rightLayout->addWidget(button1);
+    rightLayout->addWidget(button2);
+    rightLayout->addWidget(button3);
+
+    //Add strech
+    rightLayout->addStretch(1);
+
+    //Put everything into a horizontal layout
+    QHBoxLayout* mainLayout = new QHBoxLayout;;
+    mainLayout->addWidget(splitter, 4);
+    mainLayout->addWidget(rightPanel, 1);
+
+    //Central widget
+    QWidget* central = new QWidget(this);
+    central->setLayout(mainLayout);
+    setCentralWidget(central);
+
+    //Install logger
     qInstallMessageHandler(MainWindow::messageHandler);
 
-
+    //============Bottom text======================
     statusBar()->showMessage("Don't be afraid of slow progress, be afraid of standing still.");
 
     //Background musick (not annoying)
