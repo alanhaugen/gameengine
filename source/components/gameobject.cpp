@@ -21,7 +21,9 @@ GameObject::GameObject(const QString name)
 
 void GameObject::AddComponent(Component *newComponent)
 {
+    newComponent->gameobj = this;
     components.push_back(newComponent);
+    newComponent->OnAttach();
 }
 
 void GameObject::SetName(const QString NewName)
@@ -56,8 +58,13 @@ void GameObject::UpdatePos(float x, float y, float z)
     glm::vec3 pos =glm::vec3(x, y, z);
     mTransform.mPosition = pos;
 
-qDebug()<<mTransform.mPosition.x;
+   // qDebug()<<"Gameobjpos: "<<mTransform.mPosition.x;
 
+    for (unsigned i = 0; i < components.size(); i++)
+    {
+
+        components[i]->UpdatePos();
+    }
     //drawable->ubo.model = glm::translate(drawable->ubo.model, glm::vec3(-0.3, 0, 0));
     //glm::translate(glm::vec3(-0.3, 0, 0));
 }

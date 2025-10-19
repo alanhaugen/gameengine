@@ -29,7 +29,7 @@
      <x>0</x>
      <y>0</y>
      <width>997</width>
-     <height>37</height>
+     <height>17</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -307,8 +307,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>225</width>
-             <height>371</height>
+             <width>239</width>
+             <height>332</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -332,7 +332,11 @@
                 </widget>
                </item>
                <item row="0" column="1">
-                <widget class="QDoubleSpinBox" name="PosXSpin"/>
+                <widget class="QDoubleSpinBox" name="PosXSpin">
+                 <property name="minimum">
+                  <double>-99.000000000000000</double>
+                 </property>
+                </widget>
                </item>
                <item row="1" column="1">
                 <widget class="QDoubleSpinBox" name="PosYSpin"/>

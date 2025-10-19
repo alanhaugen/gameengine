@@ -1,5 +1,7 @@
 #include "mesh.h"
 #include <qdebug.h>
+#include "gameobject.h"
+#include "glm/gtc/matrix_transform.hpp"
 
 #define TINYOBJLOADER_IMPLEMENTATION
 #include "tiny_obj_loader.h"
@@ -56,4 +58,38 @@ Mesh::Mesh(const char *filePath,
 
 void Mesh::Update()
 {
+
+    if(!gameobj || !drawable)
+    {
+        return;
+    }
+
+   mTransform = gameobj->mTransform;
+
+
+    //qDebug()<<"Meshpos: "<<mTransform.mPosition.x;
+
+   //drawable->ubo.model = glm::translate(drawable->ubo.model, mTransform.mPosition);
+
+}
+
+void Mesh::OnAttach()
+{
+    if(gameobj)
+    {
+        gameobj->drawable = GetRenderer();
+    }
+}
+
+void Mesh::UpdatePos()
+{
+    glm::mat4 model = glm::mat4(1.0f);
+
+    model = glm::translate(model,mTransform.mPosition);
+ drawable->ubo.model = model;
+}
+
+Renderer::Drawable* Mesh::GetRenderer()
+{
+    return drawable;
 }

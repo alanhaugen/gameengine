@@ -7,12 +7,7 @@
 #include <glm/glm.hpp>
 #include <vector>
 
-struct Transform
-{
-    glm::vec3 mPosition;
-    glm::vec3 mRotation;
-    glm::vec3 mScale;
-};
+
 
 static unsigned int ID_TOP = 0;
 
@@ -21,11 +16,12 @@ class GameObject
 protected:
     unsigned int ID;
     QString Name;
-    Renderer::Drawable* drawable;
+
 
 public:
     GameObject(const QString name);
 
+     Renderer::Drawable* drawable;
     Transform mTransform;
    // std::vector<GameObject*> children;
     std::vector<Component*> components;
