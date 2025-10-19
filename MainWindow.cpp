@@ -89,7 +89,7 @@ MainWindow::MainWindow(ResourceManager* resourceMgr, QWidget *parent)
     //Create buttons
     QPushButton* button1 = new QPushButton("Square", rightPanel);
     QPushButton* button2 = new QPushButton("Ball", rightPanel);
-    QPushButton* button3 = new QPushButton("Button", rightPanel);
+    QPushButton* button3 = new QPushButton("Lizard", rightPanel);
 
     //Add button to layout
     rightLayout->addWidget(button1);
@@ -172,6 +172,7 @@ void MainWindow::onBallClicked()
 void MainWindow::onButtonClicked()
 {
     qInfo() << "Lizzard";
+    resourceManager->lizardSound();
 }
 
 

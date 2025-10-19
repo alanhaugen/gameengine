@@ -37,12 +37,15 @@ ResourceManager::ResourceManager()
         return;
     }
 
-    //Click and BG sounds
+    //Sounds
     alGenBuffers(1, &clickBuffer);
     alGenSources(1, &clickSource);
 
     alGenBuffers(1, &backgroundBuffer);
     alGenSources(1, &backgroundSource);
+
+    alGenBuffers(1, &lizardBuffer);
+    alGenSources(1, &lizardSource);
 
     loadWavFile("../../Assets/Sounds/click.wav", &clickBuffer);
     alSourcei(clickSource, AL_BUFFER, clickBuffer);
@@ -50,6 +53,9 @@ ResourceManager::ResourceManager()
     loadWavFile("../../Assets/Sounds/Background.wav", &backgroundBuffer);
     alSourcei(backgroundSource, AL_BUFFER, backgroundBuffer);
     alSourcei(backgroundSource, AL_LOOPING, AL_TRUE);
+
+    loadWavFile("../../Assets/Sounds/lizard.wav", &lizardBuffer);
+    alSourcei(lizardSource, AL_BUFFER, lizardBuffer);
 }
 
 ResourceManager::~ResourceManager()
@@ -60,6 +66,9 @@ ResourceManager::~ResourceManager()
 
     alDeleteSources(1, &backgroundSource);
     alDeleteBuffers(1, &backgroundBuffer);
+
+    alDeleteSources(1, &lizardSource);
+    alDeleteBuffers(1, &lizardBuffer);
 
     if (context) {
         alcMakeContextCurrent(nullptr);
@@ -94,6 +103,13 @@ void ResourceManager::toggleBackgroundMusic()
         alSourcePlay(backgroundSource);
         qDebug("Play that good shit!");
     }
+}
+
+void ResourceManager::lizardSound()
+{
+    ALint state;
+    alGetSourcei(lizardSource, AL_SOURCE_STATE, &state);
+    alSourcePlay(lizardSource);
 }
 
 bool ResourceManager::loadWavFile(const std::string& filename, ALuint* buffer)

@@ -16,6 +16,7 @@ public:
 
     void clickSound();
     void toggleBackgroundMusic();
+    void lizardSound();
 
 private:
     // OpenAL device + context
@@ -28,6 +29,9 @@ private:
 
     ALuint backgroundBuffer;
     ALuint backgroundSource;
+
+    ALuint lizardBuffer;
+    ALuint lizardSource;
 
     // Utility to load a WAV file
     bool loadWavFile(const std::string& filename, ALuint* buffer);
