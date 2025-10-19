@@ -74,6 +74,7 @@ add_executable(QtVulkan
     source/components/sphere.h source/components/sphere.cpp
     source/modules/audio/qtaudio/qtmultimediaaudio.cpp source/modules/audio/qtaudio/qtmultimediaaudio.h
     source/demos/flappybird.cpp source/demos/flappybird.h
+    source/demos/breakout.cpp source/demos/breakout.h
 )
 
 #OpenAL
