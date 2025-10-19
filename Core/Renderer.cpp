@@ -112,6 +112,8 @@ void Renderer::initVulkan()
     createCommandBuffers();
     createSyncObjects();
 
+    createDescriptorSets();
+
     //Hacking the camera:
     QSize size = this->size();
     int width = size.width();
@@ -221,9 +223,7 @@ void Renderer::recreateSwapChain()
     createFramebuffers();
     createUniformBuffers();
     createDescriptorPool();
-    for (size_t i = 0; i < 1; i++) {
-        createDescriptorSets(mTextures[i]);
-	}
+    createDescriptorSets();
     createCommandBuffers();
 
     imagesInFlight.resize(swapChainImages.size(), VK_NULL_HANDLE);
@@ -604,22 +604,32 @@ void Renderer::createDescriptorSetLayout()
     uboLayoutBinding.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
 
     VkDescriptorSetLayoutBinding samplerLayoutBinding{};
-    samplerLayoutBinding.binding = 1;
+    samplerLayoutBinding.binding = 0;
     samplerLayoutBinding.descriptorCount = 1;
     samplerLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
     samplerLayoutBinding.pImmutableSamplers = nullptr;
     samplerLayoutBinding.stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
 
-    std::array<VkDescriptorSetLayoutBinding, 2> bindings = {uboLayoutBinding, samplerLayoutBinding};
     VkDescriptorSetLayoutCreateInfo layoutInfo{};
     layoutInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
-    layoutInfo.bindingCount = static_cast<uint32_t>(bindings.size());
-    layoutInfo.pBindings = bindings.data();
+    layoutInfo.bindingCount = 1;
+    layoutInfo.pBindings = &uboLayoutBinding;
 
     if (vkCreateDescriptorSetLayout(device, &layoutInfo, nullptr, &descriptorSetLayout) != VK_SUCCESS) {
         throw std::runtime_error("failed to create descriptor set layout!");
     } else {
         qDebug("created DescriptorSetLayout");
+    }
+
+    VkDescriptorSetLayoutCreateInfo layoutInfo2{};
+    layoutInfo2.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
+    layoutInfo2.bindingCount = 1;
+    layoutInfo2.pBindings = &samplerLayoutBinding;
+
+    if (vkCreateDescriptorSetLayout(device, &layoutInfo2, nullptr, &textureSetLayout) != VK_SUCCESS) {
+        throw std::runtime_error("failed to create texture set layout!");
+    } else {
+        qDebug("created textureSetLayout");
     }
 }
 
@@ -742,8 +752,9 @@ void Renderer::createGraphicsPipeline()
 
     VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
     pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
-    pipelineLayoutInfo.setLayoutCount = 1;
-    pipelineLayoutInfo.pSetLayouts = &descriptorSetLayout;
+    std::vector<VkDescriptorSetLayout> setLayouts = {descriptorSetLayout, textureSetLayout};
+    pipelineLayoutInfo.setLayoutCount = setLayouts.size();
+    pipelineLayoutInfo.pSetLayouts = setLayouts.data();
     pipelineLayoutInfo.pushConstantRangeCount = 1;
     pipelineLayoutInfo.pPushConstantRanges = &pushConstantRange;
 
@@ -1306,24 +1317,25 @@ void Renderer::createUniformBuffers()
 
 void Renderer::createDescriptorPool()
 {
+    const int MAX_TEXTURES = 5000;
     std::array<VkDescriptorPoolSize, 2> poolSizes{};
     poolSizes[0].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
     poolSizes[0].descriptorCount = static_cast<uint32_t>(swapChainImages.size());
     poolSizes[1].type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-    poolSizes[1].descriptorCount = static_cast<uint32_t>(swapChainImages.size());
+    poolSizes[1].descriptorCount = MAX_TEXTURES;
 
     VkDescriptorPoolCreateInfo poolInfo{};
     poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
     poolInfo.poolSizeCount = static_cast<uint32_t>(poolSizes.size());
     poolInfo.pPoolSizes = poolSizes.data();
-    poolInfo.maxSets = static_cast<uint32_t>(swapChainImages.size());
+    poolInfo.maxSets = MAX_TEXTURES + static_cast<uint32_t>(swapChainImages.size());
 
     if (vkCreateDescriptorPool(device, &poolInfo, nullptr, &descriptorPool) != VK_SUCCESS) {
         throw std::runtime_error("failed to create descriptor pool!");
     }
 }
 
-void Renderer::createDescriptorSets(gea::Texture texture)
+void Renderer::createDescriptorSets()
 {
     std::vector<VkDescriptorSetLayout> layouts(swapChainImages.size(), descriptorSetLayout);
     VkDescriptorSetAllocateInfo allocInfo{};
@@ -1347,28 +1359,28 @@ void Renderer::createDescriptorSets(gea::Texture texture)
 
         VkDescriptorImageInfo imageInfo{};
         imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-        imageInfo.imageView = texture.mTextureImageView;
-        imageInfo.sampler = texture.mTextureSampler;
+        //imageInfo.imageView = texture.mTextureImageView;
+        //imageInfo.sampler = texture.mTextureSampler;
 
-        std::array<VkWriteDescriptorSet, 2> descriptorWrites{};
+        VkWriteDescriptorSet descriptorWrites{};
 
-        descriptorWrites[0].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-        descriptorWrites[0].dstSet = descriptorSets[i];
-        descriptorWrites[0].dstBinding = 0;
-        descriptorWrites[0].dstArrayElement = 0;
-        descriptorWrites[0].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-        descriptorWrites[0].descriptorCount = 1;
-        descriptorWrites[0].pBufferInfo = &bufferInfo;
+        descriptorWrites.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+        descriptorWrites.dstSet = descriptorSets[i];
+        descriptorWrites.dstBinding = 0;
+        descriptorWrites.dstArrayElement = 0;
+        descriptorWrites.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+        descriptorWrites.descriptorCount = 1;
+        descriptorWrites.pBufferInfo = &bufferInfo;
 
-        descriptorWrites[1].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-        descriptorWrites[1].dstSet = descriptorSets[i];
-        descriptorWrites[1].dstBinding = 1;
-        descriptorWrites[1].dstArrayElement = 0;
-        descriptorWrites[1].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-        descriptorWrites[1].descriptorCount = 1;
-        descriptorWrites[1].pImageInfo = &imageInfo;
+        //descriptorWrites[1].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+        //descriptorWrites[1].dstSet = descriptorSets[i];
+        //descriptorWrites[1].dstBinding = 1;
+        //descriptorWrites[1].dstArrayElement = 0;
+        //descriptorWrites[1].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+        //descriptorWrites[1].descriptorCount = 1;
+        //descriptorWrites[1].pImageInfo = &imageInfo;
 
-        vkUpdateDescriptorSets(device, static_cast<uint32_t>(descriptorWrites.size()), descriptorWrites.data(), 0, nullptr);
+        vkUpdateDescriptorSets(device, 1, &descriptorWrites, 0, nullptr);
     }
 }
 
@@ -1675,12 +1687,12 @@ void Renderer::drawFrame()
         throw std::runtime_error("failed to begin recording command buffer!");
     }
 
-    vkCmdBindPipeline(dynamicCommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline);
 
     for (size_t j = 0; j < mDynamicRenderComponents.size(); j++)
     {
         gea::RenderComponent renderComponent = mDynamicRenderComponents[j];
         gea::Mesh mesh = mMeshes[renderComponent.meshIndex];
+        gea::Texture texture = mTextures[j]; //renderComponent.textureIndex
         VkBuffer vertexBuffer = mesh.mVertexBuffer;
         VkBuffer indexBuffer = mesh.mIndexBuffer;
         std::vector<uint32_t> indices = mesh.mIndices;
@@ -1698,6 +1710,8 @@ void Renderer::drawFrame()
         vkCmdBindVertexBuffers(dynamicCommandBuffer, 0, 1, &vertexBuffer, offsets);
         vkCmdBindIndexBuffer(dynamicCommandBuffer, indexBuffer, 0, VK_INDEX_TYPE_UINT32);
         vkCmdBindDescriptorSets(dynamicCommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, &descriptorSets[imageIndex], 0, nullptr);
+        vkCmdBindDescriptorSets(dynamicCommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 1, 1, &texture.textureDescriptor, 0, nullptr);
+        vkCmdBindPipeline(dynamicCommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline);
         vkCmdDrawIndexed(dynamicCommandBuffer, static_cast<uint32_t>(indices.size()), 1, 0, 0, 0);
     }
 
@@ -1813,18 +1827,15 @@ gea::RenderComponent Renderer::CreateComponent(std::string mesh_path, std::strin
     gea::Texture texture;
     texture.mTexturePath = texture_path;
     gea::Mesh mesh(mesh_path);
-    if(mTextures.empty() == true)
-    {
-        createTextureImage(&texture);
-        createDescriptorSets(texture);
-    }
+    createTextureImage(&texture);
+    texture.textureDescriptor = createTextureDescriptor(texture);
     createVertexBuffer(&mesh);
     createIndexBuffer(&mesh);
 
     mMeshes.push_back(mesh);
     mTextures.push_back(texture);
 
-    gea::RenderComponent new_component = gea::RenderComponent{static_cast<int>(mMeshes.size()-1), 0, ID};
+    gea::RenderComponent new_component = gea::RenderComponent{static_cast<int>(mMeshes.size()-1), static_cast<int>(mTextures.size()-1), ID};
     mDynamicRenderComponents.push_back(new_component);
     return new_component;
 }
@@ -2076,6 +2087,41 @@ VkBool32 Renderer::debugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageS
     std::cerr << "validation layer: " << pCallbackData->pMessage << std::endl;
 
     return VK_FALSE;
+}
+
+VkDescriptorSet Renderer::createTextureDescriptor(gea::Texture &texture)
+{
+    VkDescriptorSetAllocateInfo allocInfo{};
+    allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
+    allocInfo.descriptorPool = descriptorPool;
+    allocInfo.descriptorSetCount = 1;
+    allocInfo.pSetLayouts = &textureSetLayout;
+
+    VkDescriptorSet textureDescriptor{};
+
+    if(vkAllocateDescriptorSets(device, &allocInfo, &textureDescriptor) != VK_SUCCESS)
+    {
+        throw std::runtime_error("failed to allocate texture descriptor set!");
+    }
+
+    VkDescriptorImageInfo imageInfo{};
+    imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+    imageInfo.imageView = texture.mTextureImageView;
+    imageInfo.sampler = texture.mTextureSampler;
+
+    VkWriteDescriptorSet descriptorWrites = {};
+
+    descriptorWrites.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+    descriptorWrites.dstSet = textureDescriptor;
+    descriptorWrites.dstBinding = 0;
+    descriptorWrites.dstArrayElement = 0;
+    descriptorWrites.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+    descriptorWrites.descriptorCount = 1;
+    descriptorWrites.pImageInfo = &imageInfo;
+
+    vkUpdateDescriptorSets(device, 1, &descriptorWrites, 0, nullptr);
+    //texture.textureDescriptor = textureDescriptor;
+    return textureDescriptor;
 }
 
 void Renderer::exposeEvent(QExposeEvent* event)

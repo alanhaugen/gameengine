@@ -17,7 +17,7 @@ Engine::Engine(Renderer* renderer, MainWindow *mainWindow) : mVulkanRenderer{ren
     t1.mPosition = glm::vec3(1.0f, 0.0f, 0.0f);
     mTransformComponents.push_back(t1);
 
-    renderer->CreateComponent(PATH + "Assets/Models/ball.obj", PATH + "Assets/Textures/orange.png", 1);
+    renderer->CreateComponent(PATH + "Assets/Models/ball.obj", PATH + "Assets/Textures/orange.jpg", 1);
     gea::TransformComponent t2 = gea::TransformComponent(1);
     t2.mPosition = glm::vec3(-1.0f, 0.0f, 0.0f);
     mTransformComponents.push_back(t2);
