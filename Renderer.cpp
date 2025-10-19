@@ -159,7 +159,7 @@ void Renderer::cleanup()
 
     cleanupSwapChain();
 
-    // Cleanup entity resources
+    // Entity resources
     for (auto& entity : entities) {
         entityManager->destroyEntity(entity);
     }
@@ -182,17 +182,18 @@ void Renderer::cleanup()
         vkFreeMemory(device, uniformBuffersMemory[i], nullptr);
     }
 
+    // destroy per-image renderFinished semaphores
+    for (size_t i = 0; i < swapChainImages.size(); i++) {
+        vkDestroySemaphore(device, renderFinishedSemaphores[i], nullptr);
+    }
+
+    // destroy per-frame semaphores + fences
     for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
         vkDestroySemaphore(device, imageAvailableSemaphores[i], nullptr);
-        vkDestroySemaphore(device, renderFinishedSemaphores[i], nullptr);
         vkDestroyFence(device, inFlightFences[i], nullptr);
     }
 
-
-
-
     vkDestroyCommandPool(device, commandPool, nullptr);
-
     vkDestroyDevice(device, nullptr);
 
     if (enableValidationLayers) {
@@ -201,9 +202,8 @@ void Renderer::cleanup()
 
     vkDestroySurfaceKHR(instance, surface, nullptr);
     vkDestroyInstance(instance, nullptr);
-
-
 }
+
 
 void Renderer::recreateSwapChain() {
     // int width = 0, height = 0;
@@ -1488,39 +1488,38 @@ void Renderer::createCommandBuffers()
 
 void Renderer::createSyncObjects()
 {
-    // Fences: We have one per frame in flight
+    // One fence and one imageAvailable semaphore per frame in flight
     inFlightFences.resize(MAX_FRAMES_IN_FLIGHT);
-    VkFenceCreateInfo fenceInfo{};
-    fenceInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
-    fenceInfo.flags = VK_FENCE_CREATE_SIGNALED_BIT; // start signaled so first frame doesn't get block
-
-    // Semaphores: imageAvailable per frame, renderFinished per swapchain image
     imageAvailableSemaphores.resize(MAX_FRAMES_IN_FLIGHT);
 
+    // One renderFinished semaphore per swapchain image
     renderFinishedSemaphores.resize(swapChainImages.size());
+
+    imagesInFlight.resize(swapChainImages.size(), VK_NULL_HANDLE);
+
+    VkFenceCreateInfo fenceInfo{};
+    fenceInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
+    fenceInfo.flags = VK_FENCE_CREATE_SIGNALED_BIT;
 
     VkSemaphoreCreateInfo semaphoreInfo{};
     semaphoreInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
 
-    // We create fences and frame-based imageAvailable semaphores
-    for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++)
-    {
+    // Create per-frame sync objects
+    for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
         if (vkCreateFence(device, &fenceInfo, nullptr, &inFlightFences[i]) != VK_SUCCESS ||
             vkCreateSemaphore(device, &semaphoreInfo, nullptr, &imageAvailableSemaphores[i]) != VK_SUCCESS) {
             throw std::runtime_error("failed to create fence or imageAvailable semaphore!");
         }
     }
 
-    // Create one renderFinished semaphore per swapchain image
+    // Create per-image renderFinished semaphores
     for (size_t i = 0; i < swapChainImages.size(); i++) {
         if (vkCreateSemaphore(device, &semaphoreInfo, nullptr, &renderFinishedSemaphores[i]) != VK_SUCCESS) {
             throw std::runtime_error("failed to create renderFinished semaphore!");
         }
     }
-
-    // Track which images are currently in flight
-    imagesInFlight.resize(swapChainImages.size(), VK_NULL_HANDLE);
 }
+
 
 
 
@@ -1606,6 +1605,7 @@ void Renderer::drawFrame()
 
     updateUniformBuffer(imageIndex);
 
+    // Wait if a previous frame is still using this image
     if (imagesInFlight[imageIndex] != VK_NULL_HANDLE) {
         vkWaitForFences(device, 1, &imagesInFlight[imageIndex], VK_TRUE, UINT64_MAX);
     }
@@ -1614,8 +1614,8 @@ void Renderer::drawFrame()
     VkSubmitInfo submitInfo{};
     submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
 
-    VkSemaphore waitSemaphores[] = {imageAvailableSemaphores[currentFrame]};
-    VkPipelineStageFlags waitStages[] = {VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT};
+    VkSemaphore waitSemaphores[] = { imageAvailableSemaphores[currentFrame] };
+    VkPipelineStageFlags waitStages[] = { VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT };
     submitInfo.waitSemaphoreCount = 1;
     submitInfo.pWaitSemaphores = waitSemaphores;
     submitInfo.pWaitDstStageMask = waitStages;
@@ -1623,7 +1623,8 @@ void Renderer::drawFrame()
     submitInfo.commandBufferCount = 1;
     submitInfo.pCommandBuffers = &commandBuffers[imageIndex];
 
-    VkSemaphore signalSemaphores[] = {renderFinishedSemaphores[currentFrame]};
+    // Signal renderFinished for this particular swapchain image
+    VkSemaphore signalSemaphores[] = { renderFinishedSemaphores[imageIndex] };
     submitInfo.signalSemaphoreCount = 1;
     submitInfo.pSignalSemaphores = signalSemaphores;
 
@@ -1637,7 +1638,7 @@ void Renderer::drawFrame()
     presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
     presentInfo.waitSemaphoreCount = 1;
     presentInfo.pWaitSemaphores = signalSemaphores;
-    VkSwapchainKHR swapChains[] = {swapChain};
+    VkSwapchainKHR swapChains[] = { swapChain };
     presentInfo.swapchainCount = 1;
     presentInfo.pSwapchains = swapChains;
     presentInfo.pImageIndices = &imageIndex;
@@ -1653,6 +1654,7 @@ void Renderer::drawFrame()
 
     currentFrame = (currentFrame + 1) % MAX_FRAMES_IN_FLIGHT;
 }
+
 
 VkShaderModule Renderer::createShaderModule(const std::vector<char> &code) {
     VkShaderModuleCreateInfo createInfo{};
