@@ -85,9 +85,9 @@ struct ProjectileComponent
 //MeshIndex, TextureIndex, EntityID
 struct RenderComponent
 {
-    short meshIndex{-1};
-    short textureIndex{-1};
-    short mEntityID{-1};
+    int meshIndex{-1};
+    int textureIndex{-1};
+    int mEntityID{-1};
 };
 
 typedef unsigned int ALuint;    //also defined in AL/al.h but did not want to include it here

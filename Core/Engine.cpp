@@ -9,20 +9,20 @@ namespace gea
 
 Engine::Engine(Renderer* renderer, MainWindow *mainWindow) : mVulkanRenderer{renderer}, mMainWindow{mainWindow}
 {
-    mMeshs.push_back(gea::Mesh());
-    mTextures.push_back(gea::Texture());
+    setupRenderSystem();
 
-    mRenderComponents.push_back(gea::RenderComponent{0, 0, 0});
+
+    renderer->CreateComponent(PATH + "Assets/Models/viking_room.obj", PATH + "Assets/Textures/viking_room.png", 0);//mRenderComponents.push_back(gea::RenderComponent{0, 0, 0});
     gea::TransformComponent t1 = gea::TransformComponent(0);
     t1.mPosition = glm::vec3(1.0f, 0.0f, 0.0f);
     mTransformComponents.push_back(t1);
 
-    mStaticRenderComponents.push_back(gea::RenderComponent{0, 0, 1});
+    renderer->CreateComponent(PATH + "Assets/Models/ball.obj", PATH + "Assets/Textures/orange.png", 1);
     gea::TransformComponent t2 = gea::TransformComponent(1);
     t2.mPosition = glm::vec3(-1.0f, 0.0f, 0.0f);
-    mStaticTransformComponents.push_back(t2);
+    mTransformComponents.push_back(t2);
 
-    setupRenderSystem();
+
     //mVulkanWindow->initVulkan();
     //updateRenderSystem();
 }
@@ -30,12 +30,12 @@ Engine::Engine(Renderer* renderer, MainWindow *mainWindow) : mVulkanRenderer{ren
 void Engine::setupRenderSystem()
 {
     mRenderSystem = new gea::RenderSystem(this, mVulkanRenderer);
-    mRenderSystem->initialize(mStaticRenderComponents, mStaticTransformComponents, mMeshs, mTextures);
+    mRenderSystem->initialize(mStaticTransformComponents, mMeshs, mTextures);
 }
 
 void Engine::updateRenderSystem()
 {
-    mRenderSystem->update(mRenderComponents, mTransformComponents);
+    mRenderSystem->update(mTransformComponents);
 }
 
 Entity* Engine::createEntity()

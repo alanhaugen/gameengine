@@ -18,7 +18,6 @@
 struct SwapChainSupportDetails;
 struct QueueFamilyIndices;
 
-
 class Renderer : public QWindow
 {
     Q_OBJECT
@@ -34,6 +33,11 @@ public:
     void initComponents(std::vector<gea::RenderComponent> staticComponents, std::vector<gea::TransformComponent> staticTransformComponents,
                         std::vector<gea::Mesh> meshes, std::vector<gea::Texture> textures);
     void updateCompoments(std::vector<gea::RenderComponent> renderComponents, std::vector<gea::TransformComponent> transformComponents);
+    gea::RenderComponent CreateComponent(std::string, std::string, int);
+
+    std::vector<gea::RenderComponent> mRenderComponents;
+    std::vector<gea::RenderComponent> mDynamicRenderComponents;
+    std::vector<gea::RenderComponent> mStaticRenderComponents;
 
     gea::Engine* mEngine{nullptr};
     Camera mCamera; //probably should be a pointer to this
@@ -125,8 +129,8 @@ private:
     //this is done for testing sake. in the real ecs there would only be one vector of transform components
     std::vector<gea::TransformComponent> mDynamicTransformComponents;
     std::vector<gea::TransformComponent> mStaticTransformComponents;
-    std::vector<gea::RenderComponent> mDynamicRenderComponents;
-    std::vector<gea::RenderComponent> mStaticRenderComponents;
+
+
 
     // void initWindow();
 

@@ -95,20 +95,20 @@ void Renderer::initVulkan()
     //loadModel();
     createVertexBuffer();
     createIndexBuffer();
-    for (size_t i = 0; i < mTextures.size(); i++) {
-        createTextureImage(&mTextures[i]);
-    }
-	for (size_t i = 0; i < mMeshes.size(); i++) {
-        createVertexBuffer(&mMeshes[i]);
-	}
-    for (size_t i = 0; i < mMeshes.size(); i++) {
-        createIndexBuffer(&mMeshes[i]);
-    }
+    //for (size_t i = 0; i < mTextures.size(); i++) {
+    //    createTextureImage(&mTextures[i]);
+    //}
+    //for (size_t i = 0; i < mMeshes.size(); i++) {
+    //    createVertexBuffer(&mMeshes[i]);
+    //}
+    //for (size_t i = 0; i < mMeshes.size(); i++) {
+    //    createIndexBuffer(&mMeshes[i]);
+    //}
     createUniformBuffers();
     createDescriptorPool();
-    for (size_t i = 0; i < mTextures.size(); i++) {
-        createDescriptorSets(mTextures[i]);
-    }
+    //for (size_t i = 0; i < mTextures.size(); i++) {
+    //    createDescriptorSets(mTextures[i]);
+    //}
     createCommandBuffers();
     createSyncObjects();
 
@@ -221,7 +221,7 @@ void Renderer::recreateSwapChain()
     createFramebuffers();
     createUniformBuffers();
     createDescriptorPool();
-	for (size_t i = 0; i < mTextures.size(); i++) {
+    for (size_t i = 0; i < 1; i++) {
         createDescriptorSets(mTextures[i]);
 	}
     createCommandBuffers();
@@ -1537,16 +1537,16 @@ void Renderer::createCommandBuffers()
 
         vkCmdBindPipeline(staticCommandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline);
 
-		for (size_t j = 0; j < mStaticRenderComponents.size(); j++)
-		{
-			gea::RenderComponent renderComponent = mStaticRenderComponents[j];
-			gea::Mesh mesh = mMeshes[renderComponent.meshIndex];
-			VkBuffer vertexBuffer = mesh.mVertexBuffer;
-			VkBuffer indexBuffer = mesh.mIndexBuffer;
-			std::vector<uint32_t> indices = mesh.mIndices;
-			VkDeviceSize offsets[] = { 0 };
+        for (size_t j = 0; j < mStaticRenderComponents.size(); j++)
+        {
+            gea::RenderComponent renderComponent = mStaticRenderComponents[j];
+            gea::Mesh mesh = mMeshes[renderComponent.meshIndex];
+            VkBuffer vertexBuffer = mesh.mVertexBuffer;
+            VkBuffer indexBuffer = mesh.mIndexBuffer;
+            std::vector<uint32_t> indices = mesh.mIndices;
+            VkDeviceSize offsets[] = { 0 };
 
-			glm::mat4 model = glm::mat4(1.0f);
+            glm::mat4 model = glm::mat4(1.0f);
             model = glm::translate(model, mStaticTransformComponents[j].mPosition);
             model = glm::rotate(model, glm::radians(mStaticTransformComponents[j].mRotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
             model = glm::rotate(model, glm::radians(mStaticTransformComponents[j].mRotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
@@ -1555,11 +1555,11 @@ void Renderer::createCommandBuffers()
 
             vkCmdPushConstants(staticCommandBuffers[i], pipelineLayout, VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(glm::mat4), &model);
 
-			vkCmdBindVertexBuffers(staticCommandBuffers[i], 0, 1, &vertexBuffer, offsets);
-			vkCmdBindIndexBuffer(staticCommandBuffers[i], indexBuffer, 0, VK_INDEX_TYPE_UINT32);
-			vkCmdBindDescriptorSets(staticCommandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, &descriptorSets[i], 0, nullptr);
-			vkCmdDrawIndexed(staticCommandBuffers[i], static_cast<uint32_t>(indices.size()), 1, 0, 0, 0);
-		}
+            vkCmdBindVertexBuffers(staticCommandBuffers[i], 0, 1, &vertexBuffer, offsets);
+            vkCmdBindIndexBuffer(staticCommandBuffers[i], indexBuffer, 0, VK_INDEX_TYPE_UINT32);
+            vkCmdBindDescriptorSets(staticCommandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, &descriptorSets[i], 0, nullptr);
+            vkCmdDrawIndexed(staticCommandBuffers[i], static_cast<uint32_t>(indices.size()), 1, 0, 0, 0);
+        }
 
         if (vkEndCommandBuffer(staticCommandBuffers[i]) != VK_SUCCESS)
             throw std::runtime_error("failed to record command buffer!");
@@ -1806,6 +1806,27 @@ void Renderer::updateCompoments(std::vector<gea::RenderComponent> renderComponen
 {
     mDynamicRenderComponents = renderComponents;
     mDynamicTransformComponents = transformComponents;
+}
+
+gea::RenderComponent Renderer::CreateComponent(std::string mesh_path, std::string texture_path, int ID)
+{
+    gea::Texture texture;
+    texture.mTexturePath = texture_path;
+    gea::Mesh mesh(mesh_path);
+    if(mTextures.empty() == true)
+    {
+        createTextureImage(&texture);
+        createDescriptorSets(texture);
+    }
+    createVertexBuffer(&mesh);
+    createIndexBuffer(&mesh);
+
+    mMeshes.push_back(mesh);
+    mTextures.push_back(texture);
+
+    gea::RenderComponent new_component = gea::RenderComponent{static_cast<int>(mMeshes.size()-1), 0, ID};
+    mDynamicRenderComponents.push_back(new_component);
+    return new_component;
 }
 
 VkShaderModule Renderer::createShaderModule(const std::vector<char> &code)

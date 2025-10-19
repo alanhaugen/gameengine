@@ -4,12 +4,13 @@
 #include <QMessageBox>
 #include <stdexcept>
 
-gea::Mesh::Mesh()
+gea::Mesh::Mesh(std::string Mesh_Path)
 {
 	mVertexBuffer = VK_NULL_HANDLE;
 	mIndexBuffer = VK_NULL_HANDLE;
 	mVertexBufferMemory = VK_NULL_HANDLE;
 	mIndexBufferMemory = VK_NULL_HANDLE;
+    mModelPath = Mesh_Path;
     loadModel();
 }
 
