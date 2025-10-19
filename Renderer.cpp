@@ -159,6 +159,11 @@ void Renderer::cleanup()
 
     cleanupSwapChain();
 
+    // Cleanup entity resources
+    for (auto& entity : entities) {
+        entityManager->destroyEntity(entity);
+    }
+
     vkDestroySampler(device, textureSampler, nullptr);
     vkDestroyImageView(device, textureImageView, nullptr);
     vkDestroyImage(device, textureImage, nullptr);
@@ -183,6 +188,9 @@ void Renderer::cleanup()
         vkDestroyFence(device, inFlightFences[i], nullptr);
     }
 
+
+
+
     vkDestroyCommandPool(device, commandPool, nullptr);
 
     vkDestroyDevice(device, nullptr);
@@ -194,10 +202,7 @@ void Renderer::cleanup()
     vkDestroySurfaceKHR(instance, surface, nullptr);
     vkDestroyInstance(instance, nullptr);
 
-    // Cleanup entity resources
-    for (auto& entity : entities) {
-        entityManager->destroyEntity(entity);
-    }
+
 }
 
 void Renderer::recreateSwapChain() {
