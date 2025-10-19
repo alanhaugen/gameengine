@@ -96,6 +96,11 @@ MainWindow::MainWindow(ResourceManager* resourceMgr, QWidget *parent)
     rightLayout->addWidget(button2);
     rightLayout->addWidget(button3);
 
+    //Connect buttons
+    connect(button1, &QPushButton::clicked, this, &MainWindow::onSquareClicked);
+    connect(button2, &QPushButton::clicked, this, &MainWindow::onBallClicked);
+    connect(button3, &QPushButton::clicked, this, &MainWindow::onButtonClicked);
+
     //Add strech
     rightLayout->addStretch(1);
 
@@ -154,7 +159,19 @@ void MainWindow::keyPressEvent(QKeyEvent* event)
     if (event->key() == Qt::Key_Q) {
         resourceManager->toggleBackgroundMusic();
     }
+}
 
+void MainWindow::onSquareClicked()
+{
+    qInfo() << "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHHHHHHHH!!";
+}
+void MainWindow::onBallClicked()
+{
+    qInfo() << "Ball";
+}
+void MainWindow::onButtonClicked()
+{
+    qInfo() << "Lizzard";
 }
 
 

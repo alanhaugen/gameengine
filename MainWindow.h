@@ -34,7 +34,6 @@ private:
 
     static void messageHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg);
 
-
 protected:
     //bool eventFilter(QObject* obj, QEvent* event);
     void keyPressEvent(QKeyEvent* event) override;
@@ -42,5 +41,8 @@ protected:
 private slots:
     void on_action_Quit_triggered();
     void on_action_Open_triggered();
+    void onSquareClicked();
+    void onBallClicked();
+    void onButtonClicked();
 };
 #endif // MAINWINDOW_H
