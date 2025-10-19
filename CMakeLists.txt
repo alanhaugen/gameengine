@@ -24,6 +24,7 @@ add_executable(QtVulkan
     Camera.h Camera.cpp
     EntityManager.h EntityManager.cpp
     modelloader.h modelloader.cpp
+    BblHub.h BblHub.cpp
 
 )
 
