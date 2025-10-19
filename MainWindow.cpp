@@ -17,16 +17,21 @@
 #include <QTabWidget>
 #include <QVBoxLayout>
 #include <QSplitter>
+#include "BblHub.h"
 
 
     QPointer<QPlainTextEdit> MainWindow::messageLogWidget = nullptr;
 
 
-MainWindow::MainWindow(ResourceManager* resourceMgr, QWidget *parent)
+MainWindow::MainWindow(ResourceManager* resourceManager, QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
-    , resourceManager(resourceMgr)          //Assign from main
+    , resourceManager(resourceManager)          //Assign from main
 {
+
+    BBLHub::SetMainWindow(this);
+    BBLHub::SetResourceManager(resourceManager);
+
     ui->setupUi(this);
     //MainWindow size:
     resize(1300, 850);
@@ -106,27 +111,6 @@ void MainWindow::start()
     mVulkanWindow->requestUpdate();
 }
 
-void MainWindow::keyPressEvent(QKeyEvent* event)
-{
-    if (event->key() == Qt::Key_Escape) {
-        delete mVulkanWindow;
-        mVulkanWindow = nullptr;
-        close(); // Example: close window on ESC
-    }
-    if (event->key() == Qt::Key_Space) {
-        start();
-    }
-    if (event->key() == Qt::Key_W) {
-        qWarning("MARVIN");
-    }
-    if (event->key() == Qt::Key_A) {
-        resourceManager->clickSound();
-    }
-    if (event->key() == Qt::Key_Q) {
-        resourceManager->toggleBackgroundMusic();
-    }
-
-}
 
 
 void MainWindow::on_action_Quit_triggered()
