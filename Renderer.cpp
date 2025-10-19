@@ -28,6 +28,10 @@
 #include <set>
 #include <unordered_map>
 #include <QDebug>
+#include <QKeyEvent>
+#include "BblHub.h"
+#include "ResourceManager.h"
+#include "MainWindow.h"
 
 #ifdef _WIN32			// Windows specific includes
 #define NOMINMAX		// Prevent Windows.h from defining min/max macros
@@ -1915,4 +1919,26 @@ bool Renderer::event(QEvent* ev)
         return true;
     }
     return QWindow::event(ev);
+}
+
+
+
+void Renderer::keyPressEvent(QKeyEvent* event)
+{
+    if (event->key() == Qt::Key_Escape) {
+        BBLHub::mainWindow->close();
+    }
+    if (event->key() == Qt::Key_Space) {
+        BBLHub::mainWindow->start();
+    }
+    if (event->key() == Qt::Key_W) {
+        qWarning("MARVIN");
+    }
+    if (event->key() == Qt::Key_A) {
+        BBLHub::resourceManager->clickSound();
+    }
+    if (event->key() == Qt::Key_Q) {
+
+    }
+
 }

@@ -25,6 +25,7 @@ public:
 
 public:
     //std::vector<bbl::Entity> getEntities() { return entities; }
+    void keyPressEvent(QKeyEvent* event) override;
 
 
 protected:
