@@ -100,9 +100,11 @@ void Renderer::initVulkan() {
     entities.push_back(entityManager->createPlayer());
     entities.push_back(entityManager->createPlayer());
 
+
     // Optionally add loaded entities to EntityManager for tracking
     entityManager->addEntities(entities);
     entityManager->addEntities(entities);
+
 
 
 
@@ -615,63 +617,53 @@ void Renderer::createGraphicsPipeline() {
 
     VkPipelineShaderStageCreateInfo vertShaderStageInfo{};
     vertShaderStageInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
-    vertShaderStageInfo.stage = VK_SHADER_STAGE_VERTEX_BIT; //Shader stage type
-    vertShaderStageInfo.module = vertShaderModule;          //Shader module to be used by stage
-    vertShaderStageInfo.pName = "main";                     //Entry point in to the shader
+    vertShaderStageInfo.stage = VK_SHADER_STAGE_VERTEX_BIT;
+    vertShaderStageInfo.module = vertShaderModule;
+    vertShaderStageInfo.pName = "main";
 
     VkPipelineShaderStageCreateInfo fragShaderStageInfo{};
     fragShaderStageInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
-    fragShaderStageInfo.stage = VK_SHADER_STAGE_FRAGMENT_BIT;   //Shader stage type
-    fragShaderStageInfo.module = fragShaderModule;              //Shader module to be used by stage
-    fragShaderStageInfo.pName = "main";                         //Entry point in to the shader
+    fragShaderStageInfo.stage = VK_SHADER_STAGE_FRAGMENT_BIT;
+    fragShaderStageInfo.module = fragShaderModule;
+    fragShaderStageInfo.pName = "main";
 
     VkPipelineShaderStageCreateInfo shaderStages[] = {vertShaderStageInfo, fragShaderStageInfo};
 
-    // CREATE PIPELINE
-
-    //1. Vertex input
-    //How the vertex data for a single vertex (including info such as position, colour, texture coords, normals, etc) is as a whole
+    // 1. Vertex input
     VkPipelineVertexInputStateCreateInfo vertexInputInfo{};
     vertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
-
     VkVertexInputBindingDescription bindingDescription = Vertex::getBindingDescription();
     std::array<VkVertexInputAttributeDescription, 3> attributeDescriptions = Vertex::getAttributeDescriptions();
-
     vertexInputInfo.vertexBindingDescriptionCount = 1;
     vertexInputInfo.vertexAttributeDescriptionCount = static_cast<uint32_t>(attributeDescriptions.size());
     vertexInputInfo.pVertexBindingDescriptions = &bindingDescription;
     vertexInputInfo.pVertexAttributeDescriptions = attributeDescriptions.data();
 
-    //2. Input assembly
-    //How the vertices are assembed into primitives
+    // 2. Input assembly
     VkPipelineInputAssemblyStateCreateInfo inputAssembly{};
     inputAssembly.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
     inputAssembly.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
     inputAssembly.primitiveRestartEnable = VK_FALSE;
 
-    //3. Viewport & Scissor
-    //Create a viewport info struct - area of the image to render to, usually (0,0) to (width, height)
-    VkViewport viewport{};
-    viewport.x = 0.0f;
-    viewport.y = 0.0f;
-    viewport.width = (float) swapChainExtent.width;
-    viewport.height = (float) swapChainExtent.height;
-    viewport.minDepth = 0.0f;
-    viewport.maxDepth = 1.0f;
-
-    //Create a scissor info struct - area to draw in the target frame buffer
-    VkRect2D scissor{};
-    scissor.offset = {0, 0};
-    scissor.extent = swapChainExtent;
-
+    // 3. Viewport & Scissor (Modified for dynamic state)
     VkPipelineViewportStateCreateInfo viewportState{};
     viewportState.sType = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;
-    viewportState.viewportCount = 1;
-    viewportState.pViewports = &viewport;
-    viewportState.scissorCount = 1;
-    viewportState.pScissors = &scissor;
+    viewportState.viewportCount = 1; // Must be > 0, even for dynamic
+    viewportState.pViewports = nullptr; // Ignored for dynamic state
+    viewportState.scissorCount = 1; // Must be > 0
+    viewportState.pScissors = nullptr; // Ignored for dynamic state
 
-    //5. Rasterizer, converts the vector shapes into fragments
+    // 4. Dynamic State
+    std::vector<VkDynamicState> dynamicStates = {
+        VK_DYNAMIC_STATE_VIEWPORT,
+        VK_DYNAMIC_STATE_SCISSOR
+    };
+    VkPipelineDynamicStateCreateInfo dynamicState{};
+    dynamicState.sType = VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO;
+    dynamicState.dynamicStateCount = static_cast<uint32_t>(dynamicStates.size());
+    dynamicState.pDynamicStates = dynamicStates.data();
+
+    // 5. Rasterizer
     VkPipelineRasterizationStateCreateInfo rasterizer{};
     rasterizer.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
     rasterizer.depthClampEnable = VK_FALSE;
@@ -682,12 +674,13 @@ void Renderer::createGraphicsPipeline() {
     rasterizer.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE;
     rasterizer.depthBiasEnable = VK_FALSE;
 
-    //6. Multisampling
+    // 6. Multisampling
     VkPipelineMultisampleStateCreateInfo multisampling{};
     multisampling.sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;
     multisampling.sampleShadingEnable = VK_FALSE;
     multisampling.rasterizationSamples = msaaSamples;
 
+    // 7. Depth and Stencil
     VkPipelineDepthStencilStateCreateInfo depthStencil{};
     depthStencil.sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
     depthStencil.depthTestEnable = VK_TRUE;
@@ -696,15 +689,11 @@ void Renderer::createGraphicsPipeline() {
     depthStencil.depthBoundsTestEnable = VK_FALSE;
     depthStencil.stencilTestEnable = VK_FALSE;
 
-    //7. Blending
-    //Blending decides how to blend a new colour being written to a fragment, with the old value
-
-    //7.1 Blend attachment state
+    // 8. Blending
     VkPipelineColorBlendAttachmentState colorBlendAttachment{};
     colorBlendAttachment.colorWriteMask = VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT;
     colorBlendAttachment.blendEnable = VK_FALSE;
 
-    //7.2 Blending state
     VkPipelineColorBlendStateCreateInfo colorBlending{};
     colorBlending.sType = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
     colorBlending.logicOpEnable = VK_FALSE;
@@ -716,6 +705,7 @@ void Renderer::createGraphicsPipeline() {
     colorBlending.blendConstants[2] = 0.0f;
     colorBlending.blendConstants[3] = 0.0f;
 
+    // 9. Pipeline Layout
     VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
     pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
     pipelineLayoutInfo.setLayoutCount = 1;
@@ -725,14 +715,7 @@ void Renderer::createGraphicsPipeline() {
         throw std::runtime_error("failed to create pipeline layout!");
     }
 
-    //Here we can adding a push constat for e.g. model matrix
-    // VkPushConstantRange pushConstantRange{};
-    // pushConstantRange.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
-    // pushConstantRange.offset = 0;
-    // pushConstantRange.size = sizeof(glm::mat4);
-
-    //9. Create the pipeline
-    //Overall information to create a graphics pipeline
+    // 10. Create the pipeline
     VkGraphicsPipelineCreateInfo pipelineInfo{};
     pipelineInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
     pipelineInfo.stageCount = 2;
@@ -744,19 +727,19 @@ void Renderer::createGraphicsPipeline() {
     pipelineInfo.pMultisampleState = &multisampling;
     pipelineInfo.pDepthStencilState = &depthStencil;
     pipelineInfo.pColorBlendState = &colorBlending;
+    pipelineInfo.pDynamicState = &dynamicState; // Add dynamic state
     pipelineInfo.layout = pipelineLayout;
     pipelineInfo.renderPass = renderPass;
     pipelineInfo.subpass = 0;
     pipelineInfo.basePipelineHandle = VK_NULL_HANDLE;
 
-    //Create Graphics Pipeline
     if (vkCreateGraphicsPipelines(device, VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &graphicsPipeline) != VK_SUCCESS) {
         throw std::runtime_error("failed to create graphics pipeline!");
-    }else {
+    } else {
         qDebug("Successfully created a Graphics pipeline!");
     }
 
-    //Destroy the shader modules, no longer needed after the pipeline has been created
+    // Destroy shader modules
     vkDestroyShaderModule(device, fragShaderModule, nullptr);
     vkDestroyShaderModule(device, vertShaderModule, nullptr);
 }
@@ -1480,8 +1463,8 @@ void Renderer::createCommandBuffers()
                     meshComp = &bbl::MeshComponent[comp.mComponentIndex];
             }
             if (texComp && meshComp && texComp->mDescriptorSet != VK_NULL_HANDLE) {
-                uint32_t dynamicOffset = static_cast<uint32_t>(j * sizeof(UniformBufferObject));
-                vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, &texComp->mDescriptorSet, 1, &dynamicOffset);
+                // Bind descriptor set without dynamic offset
+                vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, &texComp->mDescriptorSet, 0, nullptr);
                 VkBuffer vertexBuffers[] = {meshComp->mVertexBuffer};
                 VkDeviceSize offsets[] = {0};
                 vkCmdBindVertexBuffers(commandBuffers[i], 0, 1, vertexBuffers, offsets);
@@ -1550,7 +1533,7 @@ void Renderer::updateUniformBuffer(uint32_t currentImage)
         const auto& entity = entities[i];
         bbl::transform* transComp = nullptr;
 
-        for (const auto& comp : entity.getComponents()) {
+        for (const bbl::EntityComponents& comp : entity.getComponents()) {
             if (comp.mComponentType == bbl::ComponentTypes::transform) {
                 transComp = &bbl::TransformComponent[comp.mComponentIndex];
                 break;
@@ -1561,9 +1544,12 @@ void Renderer::updateUniformBuffer(uint32_t currentImage)
             // Move objects to avoid overlap
             if (i == 0) {
                 transComp->mPosition = glm::vec3(-1.0f, 0.0f, 0.0f);
-            } else if (i == 1) {
+            }
+            else if (i == 1) {
                 transComp->mPosition = glm::vec3(1.0f, 0.0f, 0.0f);
             }
+
+
 
             // Compute model matrix
             glm::mat4 model = transComp->getModelMatrix();
