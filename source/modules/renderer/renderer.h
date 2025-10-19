@@ -55,6 +55,9 @@ public:
         bool isTextured = false;
 
         int offset = 0;
+
+        float textureWidth = 0.0f;
+        float textureHeight = 0.0f;
     };
 
     float windowWidth, windowHeight;

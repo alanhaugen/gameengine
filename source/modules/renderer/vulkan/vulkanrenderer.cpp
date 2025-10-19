@@ -127,6 +127,8 @@ Renderer::Drawable& VulkanRenderer::CreateDrawable(std::vector<Vertex> vertices,
     {
         drawable.isTextured = true;
         drawable.textureDescriptor = createTextureDescriptor(texture, texturesQuantity);
+        drawable.textureWidth = textures[texturesQuantity].width;
+        drawable.textureHeight = textures[texturesQuantity].height;
         texturesQuantity++;
     }
 
@@ -943,6 +945,8 @@ void VulkanRenderer::createTextureImage(int textureID, std::string filePath)
     stbi_uc* pixels = stbi_load(filePath.c_str(), &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
     VkDeviceSize imageSize = texWidth * texHeight * 4;
     textures[textureID].mipLevels = static_cast<uint32_t>(std::floor(std::log2(std::max(texWidth, texHeight)))) + 1;
+    textures[textureID].width = texWidth;
+    textures[textureID].height = texHeight;
 
     if (!pixels) {
         throw std::runtime_error("failed to load texture image!");

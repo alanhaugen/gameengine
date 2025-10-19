@@ -10,6 +10,9 @@ struct VulkanTexture
     VkDeviceMemory textureImageMemory;
     VkImageView textureImageView;
     VkSampler textureSampler;
+
+    int width;
+    int height;
 };
 
 #endif // VULKANTEXTURE_H
