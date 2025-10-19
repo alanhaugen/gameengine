@@ -1,11 +1,11 @@
 #ifndef COMPONENT_H
 #define COMPONENT_H
 
-<<<<<<< HEAD
+
 #include <qobject.h>
-=======
+
 #include <glm/ext/matrix_transform.hpp>
->>>>>>> Martin_Prototype
+
 #include <glm/glm.hpp>
 #include <vector>
 #include "Vertex.h"
