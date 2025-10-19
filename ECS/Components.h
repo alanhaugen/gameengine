@@ -82,6 +82,7 @@ struct ProjectileComponent
     short mEntityID{ -1 };
 };
 
+//MeshIndex, TextureIndex, EntityID
 struct RenderComponent
 {
     short meshIndex{-1};

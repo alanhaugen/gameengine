@@ -137,7 +137,7 @@ void Engine::update()
     auto timeSinceLastFrame = clockNow - mClockLastFrame;
     float deltaTimeSeconds = std::chrono::duration_cast<std::chrono::duration<float>>(timeSinceLastFrame).count();
     mClockLastFrame = clockNow;
-    qDebug("DeltaTime %.6f", deltaTimeSeconds);    //prints float with 6 decimal places
+    //qDebug("DeltaTime %.6f", deltaTimeSeconds);    //prints float with 6 decimal places
 
 
     // ***** Update systems and other stuff each frame
