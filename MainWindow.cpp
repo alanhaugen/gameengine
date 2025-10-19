@@ -14,6 +14,9 @@
 #include <QDir>
 #include <QDebug>
 #include <QMessageBox>
+#include <QTabWidget>
+#include <QVBoxLayout>
+#include <QSplitter>
 
 
     QPointer<QPlainTextEdit> MainWindow::messageLogWidget = nullptr;
@@ -49,31 +52,37 @@ MainWindow::MainWindow(ResourceManager* resourceMgr, QWidget *parent)
     vulkanWidget->setFocusPolicy(Qt::NoFocus);
 
 
-    /*
-     * Logger Implementation in MainWindow
-     */
-    QDockWidget* logDock = new QDockWidget("Logger", this);
-    logDock->setAllowedAreas(Qt::BottomDockWidgetArea | Qt::TopDockWidgetArea);
+    //Create a vertical splitter
+    QSplitter* splitter = new QSplitter(Qt::Vertical, this);
+    splitter->setChildrenCollapsible(false);
 
-    // Creating the Log Widget
-    messageLogWidget = new QPlainTextEdit(logDock);
+    //Put Vulkan window on top of the splitter
+    splitter->addWidget(vulkanWidget);
+
+    //Create tab widget
+    QTabWidget* tabWidget = new QTabWidget(splitter);
+    tabWidget->setObjectName("MainTabWidget");
+
+    //Tab 1 with logger
+    QWidget* loggerTab = new QWidget(tabWidget);
+    QVBoxLayout* loggerLayout = new QVBoxLayout(loggerTab);
+    messageLogWidget = new QPlainTextEdit(loggerTab);
     messageLogWidget->setReadOnly(true);
+    loggerLayout->setContentsMargins(4,4,4,4);
+    loggerLayout->addWidget(messageLogWidget);
+    loggerTab->setLayout(loggerLayout);
+    tabWidget->addTab(loggerTab, tr("Logger"));
 
-    // Setting the logger inside the widget
-    logDock->setWidget(messageLogWidget);
+    //Tab 2 (empty)
+    QWidget* secondTab = new QWidget(tabWidget);
+    tabWidget->addTab(secondTab, tr("Second Tab"));
 
-    // Adding dock
-    addDockWidget(Qt::BottomDockWidgetArea, logDock);
+    //Add the splitter to the Ui
+    ui->VulkanLayout->addWidget(splitter);
 
+    //Install message handler
     qInstallMessageHandler(MainWindow::messageHandler);
 
-    //Menu
-    logDock->setObjectName("LoggerDock");
-    ui->actionLogger->setCheckable(true);
-    ui->actionLogger->setChecked(true); // visible by default
-
-    connect(ui->actionLogger, &QAction::toggled, logDock, &QDockWidget::setVisible);
-    connect(logDock, &QDockWidget::visibilityChanged, ui->actionLogger, &QAction::setChecked);
 
     statusBar()->showMessage("Don't be afraid of slow progress, be afraid of standing still.");
 
