@@ -1,7 +1,7 @@
 #include "sprite.h"
 #include "glm/gtc/matrix_transform.hpp"
 
-Sprite::Sprite(const char* texture, float x, float y, int width, int height, const char *glyphs)
+Sprite::Sprite(const char* texture, float x, float y, float scaleX, float scaleY, int width, int height, const char *glyphs)
 {
     std::vector<Vertex> vertices;
     std::vector<uint32_t> indices;
@@ -51,7 +51,7 @@ Sprite::Sprite(const char* texture, float x, float y, int width, int height, con
     if (width == 0 && height == 0)
     {
         drawable->ubo.width.x  = drawable->textureWidth;
-        drawable->ubo.height.x = drawable->textureWidth;
+        drawable->ubo.height.x = drawable->textureHeight;
     }
     else
     {
@@ -63,6 +63,8 @@ Sprite::Sprite(const char* texture, float x, float y, int width, int height, con
     drawable->ubo.totalHeight.x = drawable->textureHeight;
     drawable->ubo.flip.x = 0.0f;
     drawable->ubo.flipVertical.x = 0.0f;
+    drawable->ubo.scaleX.x = scaleX;
+    drawable->ubo.scaleY.x = scaleY;
 
     drawable->ubo.model = glm::translate(drawable->ubo.model, glm::vec3(x,y,0));
 }

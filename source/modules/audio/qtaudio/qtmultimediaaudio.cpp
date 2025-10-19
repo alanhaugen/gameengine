@@ -4,6 +4,7 @@
 void QtMultimediaAudio::Init()
 {
     player = new QMediaPlayer();
+    player->setLoops(-1);
     audioOutput = new QAudioOutput;
     audioOutput->setVolume(1.0);
     player->setAudioOutput(audioOutput);

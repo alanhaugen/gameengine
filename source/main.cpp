@@ -7,11 +7,11 @@
 
 int main(int argumentQuantity, char *argumentArray[])
 {
-    Application application(argumentQuantity, argumentArray, "Pong", 1100, 700);
+    Application application(argumentQuantity, argumentArray, "Flappy Bird", 1100, 700);
     //application.AddScene(new Empty);
     //application.AddScene(new VikingScene);
     //application.AddScene(new RollingBall);
-    application.AddScene(new Pong);
-    //application.AddScene(new FlappyBird);
+    //application.AddScene(new Pong);
+    application.AddScene(new FlappyBird);
     return application.Run();
 }

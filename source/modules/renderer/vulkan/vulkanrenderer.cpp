@@ -1491,8 +1491,6 @@ void VulkanRenderer::updateUniformBuffer(uint32_t currentImage, Drawable::Unifor
 
     ubo.index.x = 0;
     ubo.pos = glm::vec4(ubo.model[3].x, ubo.model[3].y, 0, 0);
-    ubo.scaleX.x = 1.0f;
-    ubo.scaleY.x = 1.0f;
     ubo.screenWidth.x = windowWidth;
     ubo.screenHeight.x = windowHeight;
 
