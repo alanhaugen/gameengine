@@ -49,7 +49,9 @@ Mesh::Mesh(const char *filePath,
     }
 
     drawable = &renderer->CreateDrawable(vertices, indices, vertexShaderPath, fragmentShaderPath);
-    editor->AddEntity(filePath);
+
+    //THis is creating a second item and messing up
+    //editor->AddEntity(filePath);
 }
 
 void Mesh::Update()

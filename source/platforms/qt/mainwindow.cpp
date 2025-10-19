@@ -64,9 +64,13 @@ MainWindow::MainWindow(QWidget *parent, const char* windowTitle, int windowWidth
     connect(ui->actionViking_Room, &QAction::triggered, this, &MainWindow::AddVikingRoom);
     connect(ui->actionCube, &QAction::triggered, this, &MainWindow::AddCube);
     connect(ui->actionSphere, &QAction::triggered, this, &MainWindow::AddSphere);
+    connect(ui->PosXSpin, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &MainWindow::Posx);
+
 
     //
     connect(ui->treeGameObjects, &QTreeWidget::customContextMenuRequested, this, &MainWindow::OnRightClickGameObjectWidget);
+
+    connect(ui->treeGameObjects, &QTreeWidget::itemClicked, this, &MainWindow::OnLeftClickGameObjectWidget);
 
     lastTime = std::chrono::high_resolution_clock::now();
 
@@ -83,6 +87,8 @@ MainWindow::MainWindow(QWidget *parent, const char* windowTitle, int windowWidth
     Locator::physics->Init();
     Locator::renderer->Init();
     Locator::filesystem->Init();
+
+
 }
 
 MainWindow::~MainWindow()
@@ -122,6 +128,12 @@ void MainWindow::MainGameLoop()
 
     Locator::input.Update();
     scene->editor->UpdateStatusBar((std::string("(") + std::to_string(Locator::input.mouse.x) + ", " + std::to_string(Locator::input.mouse.y) + std::string(")")).c_str());
+
+    // if(ObjSelected)
+    // {
+    //     qDebug()<<ObjSelected->GetName() <<"Ballss";
+
+    // }
 
     if (scene)
     {
@@ -174,6 +186,7 @@ void MainWindow::OnRightClickGameObjectWidget(const QPoint &ClickedOn)
 
     QMenu menu(this);
     QAction* Rename = menu.addAction("Rename");
+    QAction* Delete = menu.addAction("Delete");
 
     QAction* Selected = menu.exec(ui->treeGameObjects->viewport()->mapToGlobal(ClickedOn));
 
@@ -195,10 +208,31 @@ void MainWindow::OnRightClickGameObjectWidget(const QPoint &ClickedOn)
             }
         }
     }
+    if(Selected == Delete)
+    {
+        void* ptrToObj = GameObjSelected->data(0,Qt::UserRole).value<void*>();
+        GameObject* objClicked = reinterpret_cast<GameObject*>(ptrToObj);
+
+    }
 }
+
+void MainWindow::OnLeftClickGameObjectWidget(QTreeWidgetItem *item, int column)
+{
+    if(!item){return;}
+
+    qDebug() << "Left-click detected at" << item;
+
+    void* ptrToObj = item->data(0,Qt::UserRole).value<void*>();
+    ObjSelected = reinterpret_cast<GameObject*>(ptrToObj);
+}
+
+
+
+
 
 void MainWindow::AddVikingRoom()
 {
+    qDebug() << "Connected VikingRoom action";
     GameObject* gameobj = new GameObject("VikingRoom");
 
     Mesh* mesh = new Mesh("Assets/Models/viking_room.obj");
@@ -206,6 +240,18 @@ void MainWindow::AddVikingRoom()
     gameobj->AddComponent(mesh);
 
     scene->gameObjects.push_back(gameobj);
+
+    QTreeWidgetItem * MainObj = new QTreeWidgetItem(ui->treeGameObjects);
+
+    MainObj->setText(0,gameobj->GetName());
+    MainObj->setData(0, Qt::UserRole, QVariant::fromValue((void*)gameobj));
+    MainObj->setExpanded(true);
+
+    QTreeWidgetItem * ObjItem = new QTreeWidgetItem(MainObj);
+    ObjItem->setText(0,"mesh");
+    ObjItem->setData(0, Qt::UserRole, QVariant::fromValue((void*)mesh));
+
+    MainObj->addChild(ObjItem);
 }
 
 void MainWindow::AddCube()
@@ -218,6 +264,23 @@ void MainWindow::AddSphere()
 {
     //scene->components.push_back(new Mesh("Assets/Models/viking_room.obj", renderer, scene->editor));
     qDebug() << "Sphere";
+}
+
+void MainWindow::Posx(double)
+{
+    if(!ObjSelected)
+    {
+        qDebug()<<"fuck this";
+        return;
+    }
+
+     qDebug()<<"fuck it";
+    float x = static_cast<float>(ui->PosXSpin->value());
+    float y = static_cast<float>(ui->PosXSpin->value());
+    float z = static_cast<float>(ui->PosXSpin->value());
+
+    ObjSelected->UpdatePos(x,0,0);
+
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)

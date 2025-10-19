@@ -14,6 +14,8 @@ public:
     virtual void SetName(const QString NewName){Name = NewName;};
 
     virtual const QString GetName(){return Name;};
+
+
 };
 
 

@@ -21,9 +21,10 @@ class GameObject
 protected:
     unsigned int ID;
     QString Name;
+    Renderer::Drawable* drawable;
 
 public:
-    GameObject(const QString name = "empty");
+    GameObject(const QString name);
 
     Transform mTransform;
    // std::vector<GameObject*> children;
@@ -40,6 +41,8 @@ public:
     const uint32_t GetEntityId();
 
     void Update();
+    void UpdatePos(float x,float y,float z);
+
 };
 
 #endif // GAMEOBJECT_H

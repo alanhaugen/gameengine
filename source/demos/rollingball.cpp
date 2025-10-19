@@ -11,7 +11,7 @@ RollingBall::RollingBall()
 
 void RollingBall::Init()
 {
-    GameObject* ball = new GameObject;
+    GameObject* ball = new GameObject("ball");
 
     for (int i = 0; i < 500; i++)
     {
@@ -24,7 +24,7 @@ void RollingBall::Init()
 
     //ball->AddComponent(new SphereCollider());
 
-    GameObject* terrain = new GameObject;
+    GameObject* terrain = new GameObject("terrain");
     terrainMesh = new Terrain();//("Assets/terrain.png");
     ball->AddComponent(terrainMesh);
     ball->AddComponent(new TriangleCollider());
