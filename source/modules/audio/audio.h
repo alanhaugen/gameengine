@@ -10,4 +10,5 @@ public:
     virtual void Init() = 0;
     virtual void Update() = 0;
     virtual void PlaySound(std::string filename, glm::vec3 pos = glm::vec3()) = 0;
+    virtual void PlayMusic(std::string filename) = 0;
 };

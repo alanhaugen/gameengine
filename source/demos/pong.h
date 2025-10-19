@@ -25,6 +25,22 @@ public:
 
     int playerOneScore = 0;
     int playerTwoScore = 0;
+
+    enum state
+    {
+        PLAYING,
+        START,
+        WIN,
+        WAIT
+    };
+
+    int state = START;
+
+    Text* instructions1;
+    Text* instructions2;
+
+    Text* win1;
+    Text* win2;
 };
 
 #endif // PONG_H

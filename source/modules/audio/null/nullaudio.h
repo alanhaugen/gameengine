@@ -9,6 +9,7 @@ public:
     void Init() override;
     void Update() override;
     void PlaySound(std::string filename, glm::vec3 pos) override;
+    void PlayMusic(std::string filename) override;
 };
 
 #endif // NULLAUDIO_H

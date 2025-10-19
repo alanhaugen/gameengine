@@ -2,17 +2,17 @@
 
 bool Input::Held(int key)
 {
-    return keys[key];
+    return keys[key % KEYS];
 }
 
 bool Input::Released(int key)
 {
-    return keys[key] == false && oldKeys[key] == true;
+    return keys[key % KEYS] == false && oldKeys[key % KEYS] == true;
 }
 
 bool Input::Pressed(int key)
 {
-    return keys[key] == true && oldKeys[key] == false;
+    return keys[key % KEYS] == true && oldKeys[key % KEYS] == false;
 }
 
 void Input::Init()
@@ -45,7 +45,7 @@ void Input::Update()
     mouse.yOld = mouse.y;
 }
 
-void Input::OnButton(const unsigned int button, const bool isDown)
+void Input::OnButton(const int button, const bool isDown)
 {
     keys[button % KEYS] = isDown;
 }

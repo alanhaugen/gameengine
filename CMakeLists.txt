@@ -72,7 +72,7 @@ add_executable(QtVulkan
     source/components/cube.h source/components/cube.cpp
     source/components/text.h source/components/text.cpp
     source/components/sphere.h source/components/sphere.cpp
-    source/modules/audio/qtaudio/qtaudio.cpp source/modules/audio/qtaudio/qtaudio.h
+    source/modules/audio/qtaudio/qtmultimediaaudio.cpp source/modules/audio/qtaudio/qtmultimediaaudio.h
 )
 
 #OpenAL
