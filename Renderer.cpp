@@ -1555,7 +1555,7 @@ void Renderer::updateUniformBuffer(uint32_t currentImage)
             else if (i == 2)
             {
                 transComp->mPosition = glm::vec3(0.0f, 0.0f, 0.0f);
-                transComp->mScale = glm::vec3(0.00002f, 0.00002f, 0.00002f);
+                transComp->mScale = glm::vec3(0.0002f, 0.0002f, 0.0002f);
             }
 
 
