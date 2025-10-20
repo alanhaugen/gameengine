@@ -12,6 +12,9 @@ public:
     void Update();
 
     Sprite* background;
+    Sprite* paddle;
+
+    std::vector<Sprite*> blocks;
 };
 
 #endif // BREAKOUT_H
