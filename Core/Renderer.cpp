@@ -1549,6 +1549,7 @@ void Renderer::createCommandBuffers()
 
         vkCmdBindPipeline(staticCommandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline);
 
+        // VH: For loop not in in use? Why do we make the distinction for dynamic/static objects for rendering?
         for (size_t j = 0; j < mStaticRenderComponents.size(); j++)
         {
             gea::RenderComponent renderComponent = mStaticRenderComponents[j];
