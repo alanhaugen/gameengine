@@ -95,13 +95,16 @@ void Renderer::initVulkan() {
     bbl::ModelLoader modelLoader(device, physicalDevice, commandPool, graphicsQueue);
     modelLoader.loadModel("../../Assets/Models/viking_room.obj", entities, "../../Assets/Textures/viking_room.png");
     modelLoader.loadModel("../../Assets/Models/viking_room.obj", entities, "../../Assets/Textures/viking_room.png");
+    modelLoader.loadModel("../../Assets/Models/Ball.obj", entities, "../../Assets/Textures/texture.jpg");
 
 
+    entities.push_back(entityManager->createPlayer());
     entities.push_back(entityManager->createPlayer());
     entities.push_back(entityManager->createPlayer());
 
 
     // Optionally add loaded entities to EntityManager for tracking
+    entityManager->addEntities(entities);
     entityManager->addEntities(entities);
     entityManager->addEntities(entities);
 
@@ -1547,6 +1550,12 @@ void Renderer::updateUniformBuffer(uint32_t currentImage)
             }
             else if (i == 1) {
                 transComp->mPosition = glm::vec3(1.0f, 0.0f, 0.0f);
+
+            }
+            else if (i == 2)
+            {
+                transComp->mPosition = glm::vec3(0.0f, 0.0f, 0.0f);
+                transComp->mScale = glm::vec3(0.00002f, 0.00002f, 0.00002f);
             }
 
 
