@@ -169,9 +169,9 @@ void MainWindow::keyPressEvent(QKeyEvent* event)
     if(event->key() == Qt::Key_A)
         mInput.A = true;
     if(event->key() == Qt::Key_Q)
-        mInput.D = true;
+        mInput.Q = true;
     if(event->key() == Qt::Key_E)
-        mInput.A = true;
+        mInput.E = true;
 }
 
 void MainWindow::keyReleaseEvent(QKeyEvent *event)
@@ -186,9 +186,9 @@ void MainWindow::keyReleaseEvent(QKeyEvent *event)
     if(event->key() == Qt::Key_A)
         mInput.A = false;
     if(event->key() == Qt::Key_Q)
-        mInput.D = false;
+        mInput.Q = false;
     if(event->key() == Qt::Key_E)
-        mInput.A = false;
+        mInput.E = false;
 }
 
 void MainWindow::mousePressEvent(QMouseEvent *event)
@@ -258,26 +258,22 @@ void MainWindow::handleInput()
     //If camera is not set, don't try to update it!
     if (!mCamera)
         return;
-    mCamera->setSpeeds(0.f);  //cancel last frame movement
 
-    //setCameraSpeed(100.0f);
-
-    // if(mInput.RMB)
-        // qDebug() << "RMB held down";
+    mCamera->resetMovement();  //reset last frame movement
 
     if (mInput.RMB)
     {
         if (mInput.W)
-            mCamera->mZSpeed -= mCameraSpeed;
+            mCamera->mCameraMovement.z += mCameraSpeed; //forward
         if (mInput.S)
-            mCamera->mZSpeed += mCameraSpeed;
+            mCamera->mCameraMovement.z -= mCameraSpeed; //backward
         if (mInput.D)
-            mCamera->mXSpeed += mCameraSpeed;
+            mCamera->mCameraMovement.x += mCameraSpeed; //right
         if (mInput.A)
-            mCamera->mXSpeed -= mCameraSpeed;
+            mCamera->mCameraMovement.x -= mCameraSpeed; //left
         if (mInput.Q)
-            mCamera->mYSpeed += mCameraSpeed;
+            mCamera->mCameraMovement.y -= mCameraSpeed; //down
         if (mInput.E)
-            mCamera->mYSpeed -= mCameraSpeed;
+            mCamera->mCameraMovement.y += mCameraSpeed; //up
     }
 }
