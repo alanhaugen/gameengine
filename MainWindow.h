@@ -36,7 +36,7 @@ private:
 
 protected:
     //bool eventFilter(QObject* obj, QEvent* event);
-    void keyPressEvent(QKeyEvent* event) override;
+
 
 private slots:
     void on_action_Quit_triggered();
