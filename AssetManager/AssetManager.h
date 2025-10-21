@@ -8,23 +8,17 @@
 #include "QDirIterator"
 #include "AssetManager/Mesh.h"
 #include "AssetManager/Texture.h"
-#include "AssetManager/Sound.h"
+//#include "AssetManager/Sound.h"
+#include "WavfileReader.h"
 #include <type_traits>
 template <typename T>
 class AssetManager{
 public:
     AssetManager<T>(){AssetManager<T>::importObjects();};
-    AssetManager<T>(std::vector<T> input_vector)
-    {
-        for(auto it: input_vector)
-        {
-            mAssets.push_back(it);
-        }
-    };
 
-    std::vector<T> mAssets;
-
-    //std::vector<T> mIntintAssets;
+    std::vector<gea::Mesh*> mAssets;
+    std::vector<gea::Texture*> mTextures;
+    std::vector<wave_t> mSounds;
 
     QSet<QString> mFilesNamesSet;
     QStack<QString> mFilesNamesStack;
@@ -32,10 +26,7 @@ public:
     void importTextures();
     void importSounds();
     void importObjects();
-    // gea::Mesh* mMesh{nullptr};
-    // gea::Mesh* mTexture{nullptr};
-    // gea::Mesh* mSound{nullptr};
-    // void import(T asset);
+
     // void deleteAsset(T asset);
 };
 
@@ -69,24 +60,9 @@ void AssetManager<T>::importObjects(){
     else if constexpr (std::is_same<T,gea::Texture>::value){
         importTextures();
     }
-    else {
-        qDebug()<<"---------------------------------------------------something weird------------------------------------------------------------";
+    else if constexpr (std::is_same<T,wave_t>::value){
         importSounds();
     }
 };
-
-//mesh
-// struct ObjAsset
-// {  //currently mesh component
-//     ObjAsset()=default;
-
-//     std::vector<Vertex> mVertices;
-//     std::vector<uint32_t> mIndices;
-//     bool mIsActive=false;
-// };
-
-//add flag if the mesh is used when drawing it after loading them in
-//use the flags to also give warning before deleting the mesh, if any entities use that mesh
-
 
 #endif // ASSETMANAGER_H
