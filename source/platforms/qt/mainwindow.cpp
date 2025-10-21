@@ -169,7 +169,11 @@ void MainWindow::MainGameLoop()
          ui->Inspectorwidget->setHidden(false);
         if(ObjSelected->components.empty())
         {
-             ui->MeshBox->setHidden(true);
+            ui->MeshBox->setHidden(true);
+        }
+        else
+        {
+            ui->MeshBox->setHidden(false);
         }
     }
     else
