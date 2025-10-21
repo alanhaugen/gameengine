@@ -4,6 +4,7 @@
 #include <glm/glm.hpp>
 #include <glm/trigonometric.hpp>
 
+//Camera now only holds vectors and rotation values. The View and Perspective matrix are made in the Renderer
 class Camera
 {
 public:
@@ -13,31 +14,17 @@ public:
     void init();
 
     void translate(float x, float y, float z);
-    void rotate(float t, float x, float y, float z);
-    void pitch(float deg);
-    void yaw(float deg);
     void moveRight(float delta);
     void moveUp(float delta);
 
-    void setPerspective(float fovy, float screenWidth, float near, float far);
-    //void setPerspective(glm::radians(float fovy), float screenWidth, float near, float far);
-    void lookAt(glm::vec3 position, glm::vec3 forward, glm::vec3 up);
-
-    inline void setViewMatrix(const glm::mat4 &newViewMatrix) { mViewMatrix = newViewMatrix; }
-    inline void setProjectionMatrix(const glm::mat4 &newProjectionMatrix) {mProjectionMatrix = newProjectionMatrix; }
     void setPosition(const glm::vec3 &newPos);
     void setSpeeds(float speed);
 
     void update();
 
-    //glm::mat4 perspective = (glm::radians(45.0f),( double aspect, double near, double far));
-
-    glm::mat4 mProjectionMatrix{};
-    glm::mat4 mViewMatrix{};
-
-    glm::vec3 mPosition = {2.0f, 2.0f, 2.0f};
-    glm::vec3 mForward = {0, 0, -1.0};
-    glm::vec3 mUp = {0, 0, 1};
+    glm::vec3 mPosition = {0.0f, 0.0f, 2.0f};
+    glm::vec3 mForward = {0, 0, -1};
+    glm::vec3 mUp = {0, 1, 0};
     glm::vec3 mTarget = {0.0f, 0.0f, 0.0f};
 
     float mPitch = 0.f;
@@ -50,6 +37,50 @@ public:
 
 
     // float *ptr = &mSpeed;
+
+    //Utility functions - should be in some common place so we can reuse it in all of our code:
+
+    // Rotates vector v by angleEuler degrees around the selected axis
+    glm::vec3 rotateX(const glm::vec3& v, float angleEuler)
+    {
+        float angleRad = glm::radians(angleEuler);
+        float c = cos(angleRad);
+        float s = sin(angleRad);
+        return glm::vec3
+            (
+            v.x,
+            c * v.y - s * v.z,
+            s * v.y + c * v.z
+            );
+    }
+
+    // Rotates vector v by angleEuler degrees around the selected axis
+    glm::vec3 rotateY(const glm::vec3& v, float angleEuler)
+    {
+        float angleRad = glm::radians(angleEuler);
+        float c = cos(angleRad);
+        float s = sin(angleRad);
+        return glm::vec3
+            (
+            c * v.x + s * v.z,
+            v.y,
+            -s * v.x + c * v.z
+            );
+    }
+
+    // Rotates vector v by angleEuler degrees around the selected axis
+    glm::vec3 rotateZ(const glm::vec3& v, float angleEuler)
+    {
+        float angleRad = glm::radians(angleEuler);
+        float c = cos(angleRad);
+        float s = sin(angleRad);
+        return glm::vec3
+            (
+            c * v.x - s * v.y,
+            s * v.x + c * v.y,
+            v.z
+            );
+    }
 };
 
 #endif // CAMERA_H

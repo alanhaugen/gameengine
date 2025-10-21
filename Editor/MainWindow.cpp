@@ -111,7 +111,7 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
     //Should eventually be run from the Engine
     gea::SoundSystem* testSound = new gea::SoundSystem(mEngine);
     testSound->setMainWindow(this);
-    testSound->playSound("Test Drive.mp3");
+    // testSound->playSound("Test Drive.mp3");
 
     gea::ScriptingSystem* testScript = new gea::ScriptingSystem(this, mEngine);
 
@@ -146,17 +146,6 @@ void MainWindow::start()
     mVulkanWindow->requestUpdate();
     // mEngine->mIsRunning = true;
     // mEngine->GameLoop(); //not correct yet
-}
-
-void MainWindow::setCameraSpeed(float value)
-{
-    mCameraSpeed += value;
-
-    //Keep within some min and max values
-    if(mCameraSpeed < 0.01f)
-        mCameraSpeed = 0.01f;
-    if (mCameraSpeed > 0.3f)
-        mCameraSpeed = 0.3f;
 }
 
 void MainWindow::keyPressEvent(QKeyEvent* event)
@@ -230,8 +219,8 @@ void MainWindow::mouseMoveEvent(QMouseEvent *event)
         mMouseXlast = event->pos().x() - mMouseXlast;
         mMouseYlast = event->pos().y() - mMouseYlast;
 
-        mCamera->mTarget.x += mMouseXlast * mCameraRotateSpeed;
-        mCamera->mTarget.y += mMouseYlast * mCameraRotateSpeed;
+        mCamera->mYaw += mMouseXlast * mCameraRotateSpeed;
+        mCamera->mPitch += mMouseYlast * mCameraRotateSpeed;
 
     }
     mMouseXlast = event->pos().x();
@@ -241,6 +230,26 @@ void MainWindow::mouseMoveEvent(QMouseEvent *event)
 
 void MainWindow::wheelEvent(QWheelEvent *event)
 {
+    QPoint numDegrees = event->angleDelta() / 8;
+
+    //if RMB, change the speed of the camera
+    //The values here could be set in a config-file instead of being hardcoded
+    if (mInput.RMB)
+    {
+        if (numDegrees.y() > 1)
+        {
+            mCameraSpeed += 0.0005f;
+            if (mCameraSpeed > 0.1f)    //test to not go to high
+                mCameraSpeed = 0.1f;
+        }
+        if (numDegrees.y() < 1)
+        {
+            mCameraSpeed -= 0.0005f;    //test to not go to low / negative
+            if (mCameraSpeed < 0.0005f)
+                mCameraSpeed = 0.0005f;
+        }
+    }
+    event->accept();
 
 }
 
@@ -259,16 +268,16 @@ void MainWindow::handleInput()
     if (mInput.RMB)
     {
         if (mInput.W)
-            mCamera->mYSpeed -= mCameraSpeed;
-        if (mInput.S)
-            mCamera->mYSpeed += mCameraSpeed;
-        if (mInput.D)
-            mCamera->mXSpeed -= mCameraSpeed;
-        if (mInput.A)
-            mCamera->mXSpeed += mCameraSpeed;
-        if (mInput.Q)
-            mCamera->mZSpeed += mCameraSpeed;
-        if (mInput.E)
             mCamera->mZSpeed -= mCameraSpeed;
+        if (mInput.S)
+            mCamera->mZSpeed += mCameraSpeed;
+        if (mInput.D)
+            mCamera->mXSpeed += mCameraSpeed;
+        if (mInput.A)
+            mCamera->mXSpeed -= mCameraSpeed;
+        if (mInput.Q)
+            mCamera->mYSpeed += mCameraSpeed;
+        if (mInput.E)
+            mCamera->mYSpeed -= mCameraSpeed;
     }
 }

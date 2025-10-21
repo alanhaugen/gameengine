@@ -50,10 +50,8 @@ private:
     class gea::EntityModel* mEntityModel{nullptr};
     class Camera* mCamera{ nullptr };
 
-    void setCameraSpeed(float value);
-
     float mCameraSpeed{0.005f};
-    float mCameraRotateSpeed{ -0.001f };
+    float mCameraRotateSpeed{ -0.1f };
     int mMouseXlast{0}; //for mouse rotate input
     int mMouseYlast{0};
     Input mInput;

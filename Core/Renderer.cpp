@@ -112,12 +112,7 @@ void Renderer::initVulkan()
     createCommandBuffers();
     createSyncObjects();
 
-    //Hacking the camera:
-    QSize size = this->size();
-    int width = size.width();
-    int height = size.height();
-    qDebug() << "Window size:" << width << "x" << height;
-    mCamera.setPerspective(45.f, size.width() / (float) size.height(), 0.01f, 500.0f);
+    qDebug() << "Window size:" << this->size().width() << "x" << this->size().height();
 }
 
 void Renderer::cleanupSwapChain()
@@ -1609,8 +1604,8 @@ void Renderer::updateUniformBuffer(uint32_t currentImage)
     UniformBufferObject ubo{};
     ubo.lightPos = glm::vec3{(cos(time)), abs(sin(time)), 0};
     ubo.model = glm::rotate(glm::mat4(1.0f), time * glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-    // ubo.view = glm::lookAt(glm::vec3(2.0f, 2.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-    ubo.view = glm::lookAt(mCamera.mPosition, mCamera.mTarget, mCamera.mUp);
+    // ubo.view = glm::lookAt(glm::vec3(2.0f, 2.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+    ubo.view = glm::lookAt(mCamera.mPosition, mCamera.mPosition + mCamera.mForward, mCamera.mUp);
     ubo.proj = glm::perspective(glm::radians(45.0f), swapChainExtent.width / (float) swapChainExtent.height, 0.1f, 10.0f);
     // ubo.proj = mCamera.mProjectionMatrix;
     ubo.proj[1][1] *= -1;
@@ -2068,13 +2063,6 @@ void Renderer::exposeEvent(QExposeEvent* event)
         // drawFrame();			//actual drawing
     }
     #endif
-
-    //Hacking the camera:
-    QSize size = this->size();
-    int width = size.width();
-    int height = size.height();
-    qDebug() << "Window size:" << width << "x" << height;
-    mCamera.setPerspective(45.f, size.width() / (float) size.height(), 0.01f, 500.0f);
 }
 
 void Renderer::resizeEvent(QResizeEvent *event)
