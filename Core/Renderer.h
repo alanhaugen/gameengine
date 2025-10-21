@@ -6,7 +6,7 @@
 #include <string>
 #include <vector>
 #include "Editor/MainWindow.h"
-#include "QDirIterator"
+//#include "QDirIterator"
 #include "AssetManager/AssetManager.h"
 #include "AssetManager/Texture.h"
 #include "AssetManager/Mesh.h"
@@ -27,9 +27,9 @@ public:
     ~Renderer();
 
     void initVulkan();
-    ObjAsset* obj_asset{nullptr};
-    AssetManager<ObjAsset>* objManager=new AssetManager<ObjAsset>();
-    bool filesImported=false;
+    // ObjAsset* obj_asset{nullptr};
+    // AssetManager<ObjAsset>* objManager=new AssetManager<ObjAsset>();
+    // bool filesImported=false;
     void drawFrame();
     void initComponents(std::vector<gea::RenderComponent> staticComponents, std::vector<gea::TransformComponent> staticTransformComponents,
                         std::vector<gea::Mesh> meshes, std::vector<gea::Texture> textures);
@@ -166,10 +166,10 @@ private:
                      VkImage& image, VkDeviceMemory& imageMemory);
     void transitionImageLayout(VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout, uint32_t mipLevels);
     void copyBufferToImage(VkBuffer buffer, VkImage image, uint32_t width, uint32_t height);
-    void loadModel(QString MODEL_PATH);
-    void importObjects();;
-    void createVertexBuffer();
-    void createIndexBuffer();
+    //void loadModel(QString MODEL_PATH);
+    //void importObjects();;
+    // void createVertexBuffer();
+    // void createIndexBuffer();
     void createVertexBuffer(gea::Mesh* mesh);
     void createIndexBuffer(gea::Mesh* mesh);
     void createUniformBuffers();

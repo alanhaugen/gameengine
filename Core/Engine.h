@@ -4,6 +4,7 @@
 #include "ECS/Entity.h"
 #include "ECS/Components.h"
 #include "ECS/RenderSystem.h"
+#include "AssetManager/AssetManager.h"
 #include "AssetManager/Mesh.h"
 #include "AssetManager/Texture.h"
 #include "Editor/MainWindow.h"
@@ -73,6 +74,8 @@ public:
     //RenderComponent
     std::vector<Mesh> mMeshs;
     std::vector<Texture> mTextures;
+
+    AssetManager<Mesh*>* mMeshManager{nullptr}; //vector<Mesh>*
 
     //The plan is that the systems can use these vectors containing all components of the different types
     //The components should be sorted by EntityID when added to the vectors.

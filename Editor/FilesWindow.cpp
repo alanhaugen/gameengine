@@ -5,7 +5,7 @@
 
 //"If parent is nullptr, the new widget becomes a window. If parent is another widget, this widget becomes a child window inside parent.
 
-FilesWindow::FilesWindow(AssetManager<ObjAsset>* manager,QWidget* parent)
+FilesWindow::FilesWindow(AssetManager<gea::Mesh*>* manager,QWidget* parent)
 {
     setWindowTitle("Files");
     setMinimumHeight(100);
@@ -92,7 +92,7 @@ void FilesWindow::dropEvent(QDropEvent *event)
 
 // }
 
-void FilesWindow::createButtons(AssetManager<ObjAsset> *assets_)
+void FilesWindow::createButtons(AssetManager<gea::Mesh*> *assets_)
 {
     for(int i=0; i<assets_->mAssets.size(); i++){
         //create button

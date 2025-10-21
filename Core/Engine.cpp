@@ -9,6 +9,8 @@ namespace gea
 
 Engine::Engine(Renderer* renderer, MainWindow *mainWindow) : mVulkanRenderer{renderer}, mMainWindow{mainWindow}
 {
+    mMeshManager=new AssetManager<gea::Mesh*>();
+
     mMeshs.push_back(gea::Mesh());
     mTextures.push_back(gea::Texture());
 
@@ -23,6 +25,9 @@ Engine::Engine(Renderer* renderer, MainWindow *mainWindow) : mVulkanRenderer{ren
     mStaticTransformComponents.push_back(t2);
 
     setupRenderSystem();
+
+
+
     //mVulkanWindow->initVulkan();
     //updateRenderSystem();
 }

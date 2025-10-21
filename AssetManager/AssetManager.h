@@ -2,41 +2,88 @@
 #define ASSETMANAGER_H
 
 #include <vector>
-#include "Core/Vertex.h"
 #include <QString>
 #include <QSet>
 #include <QStack>
-
+#include "QDirIterator"
+#include "AssetManager/Mesh.h"
+#include "AssetManager/Texture.h"
+#include "AssetManager/Sound.h"
+#include <type_traits>
 template <typename T>
 class AssetManager{
 public:
-    AssetManager<T>()=default;
+    AssetManager<T>(){AssetManager<T>::importObjects();};
     AssetManager<T>(std::vector<T> input_vector)
     {
         for(auto it: input_vector)
         {
-            mIntintAssets.push_back(it);
+            mAssets.push_back(it);
         }
     };
 
-    std::vector<T*> mAssets;
+    std::vector<T> mAssets;
 
-    std::vector<T> mIntintAssets;
+    //std::vector<T> mIntintAssets;
 
     QSet<QString> mFilesNamesSet;
     QStack<QString> mFilesNamesStack;
+    void importMeshes();
+    void importTextures();
+    void importSounds();
+    void importObjects();
+    // gea::Mesh* mMesh{nullptr};
+    // gea::Mesh* mTexture{nullptr};
+    // gea::Mesh* mSound{nullptr};
     // void import(T asset);
     // void deleteAsset(T asset);
 };
 
-struct ObjAsset
-{  //currently mesh component
-    ObjAsset()=default;
+template<typename T>
+void AssetManager<T>::importMeshes()
+{
+    QDirIterator it(QString(PATH.c_str()) + "Assets/Models/",QStringList()<<"*.obj", QDir::NoFilter,QDirIterator::Subdirectories );
+    while(it.hasNext())
+    {
+        QString path=it.next();
+        QFileInfo fileInfo(path);
+        QString name=fileInfo.baseName();
+        //qDebug()<<fileInfo.filePath()<<" "<<fileInfo.absoluteFilePath()<<"\n";
+        mFilesNamesSet.insert(name); //for future check if mesh has been imported in the engine before
+        mFilesNamesStack.push_back(path); //for loading in all meshes when we start engine
+    }
 
-    std::vector<Vertex> mVertices;
-    std::vector<uint32_t> mIndices;
-    bool mIsActive=false;
+    for(auto it: mFilesNamesStack)
+    {
+        gea::Mesh* mesh=new gea::Mesh(it);
+        mAssets.push_back(mesh);
+    }
+}
+
+template<typename T>
+void AssetManager<T>::importObjects(){
+
+    if constexpr (std::is_same<T,gea::Mesh*>::value){ //constexpr
+        importMeshes();
+    }
+    else if constexpr (std::is_same<T,gea::Texture>::value){
+        importTextures();
+    }
+    else {
+        qDebug()<<"---------------------------------------------------something weird------------------------------------------------------------";
+        importSounds();
+    }
 };
+
+//mesh
+// struct ObjAsset
+// {  //currently mesh component
+//     ObjAsset()=default;
+
+//     std::vector<Vertex> mVertices;
+//     std::vector<uint32_t> mIndices;
+//     bool mIsActive=false;
+// };
 
 //add flag if the mesh is used when drawing it after loading them in
 //use the flags to also give warning before deleting the mesh, if any entities use that mesh
