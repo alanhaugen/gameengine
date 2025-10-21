@@ -22,7 +22,6 @@ Engine::Engine(Renderer* renderer, MainWindow *mainWindow) : mVulkanRenderer{ren
     t2.mPosition = glm::vec3(-1.0f, 0.0f, 0.0f);
     mTransformComponents.push_back(t2);
 
-
     //mVulkanWindow->initVulkan();
     //updateRenderSystem();
 }

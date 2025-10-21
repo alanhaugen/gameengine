@@ -902,7 +902,9 @@ void Renderer::createTextureImage(gea::Texture* texture)
 
     VkBuffer stagingBuffer;
     VkDeviceMemory stagingBufferMemory;
-    createBuffer(imageSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory);
+    createBuffer(imageSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
+                 VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
+                 stagingBuffer, stagingBufferMemory);
 
     void* data;
     vkMapMemory(device, stagingBufferMemory, 0, imageSize, 0, &data);
@@ -911,7 +913,11 @@ void Renderer::createTextureImage(gea::Texture* texture)
 
     stbi_image_free(pixels);
 
-    createImage(texWidth, texHeight, texture->mMipLevels, VK_SAMPLE_COUNT_1_BIT, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, texture->mTextureImage, texture->mTextureImageMemory);
+    createImage(texWidth, texHeight, texture->mMipLevels,
+                VK_SAMPLE_COUNT_1_BIT, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_TILING_OPTIMAL,
+                VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT,
+                VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
+                texture->mTextureImage, texture->mTextureImageMemory);
 
     transitionImageLayout(texture->mTextureImage, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, texture->mMipLevels);
     copyBufferToImage(stagingBuffer, texture->mTextureImage, static_cast<uint32_t>(texWidth), static_cast<uint32_t>(texHeight));
@@ -922,7 +928,10 @@ void Renderer::createTextureImage(gea::Texture* texture)
 
     generateMipmaps(texture->mTextureImage, VK_FORMAT_R8G8B8A8_SRGB, texWidth, texHeight, texture->mMipLevels);
 
-    createTextureImageView(texture);
+    /* Create View */
+    texture->mTextureImageView = createImageView(texture->mTextureImage, VK_FORMAT_R8G8B8A8_SRGB,
+                                                 VK_IMAGE_ASPECT_COLOR_BIT, texture->mMipLevels);
+    //createTextureImageView(texture);
     createTextureSampler(texture);
 }
 
@@ -1693,7 +1702,7 @@ void Renderer::drawFrame()
     {
         gea::RenderComponent renderComponent = mDynamicRenderComponents[j];
         gea::Mesh mesh = mMeshes[renderComponent.meshIndex];
-        gea::Texture texture = mTextures[j]; //renderComponent.textureIndex
+        gea::Texture texture = mTextures[renderComponent.textureIndex]; //
         VkBuffer vertexBuffer = mesh.mVertexBuffer;
         VkBuffer indexBuffer = mesh.mIndexBuffer;
         std::vector<uint32_t> indices = mesh.mIndices;
@@ -1712,6 +1721,16 @@ void Renderer::drawFrame()
         vkCmdBindIndexBuffer(dynamicCommandBuffer, indexBuffer, 0, VK_INDEX_TYPE_UINT32);
         vkCmdBindDescriptorSets(dynamicCommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, &descriptorSets[imageIndex], 0, nullptr);
         vkCmdBindDescriptorSets(dynamicCommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 1, 1, &texture.textureDescriptor, 0, nullptr);
+
+        for (size_t i = 0; i < mTextures.size(); ++i) {
+            auto &t = mTextures[i];
+            qDebug() << "Texture[" << i << "]: image=" << t.mTextureImage
+                     << " view=" << t.mTextureImageView
+                     << " sampler=" << t.mTextureSampler
+                     << " descSet=" << t.textureDescriptor;
+        }
+        qDebug() << "VH Test: Jeg Vil Ha Texture Informasjon.";
+
         vkCmdBindPipeline(dynamicCommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline);
         vkCmdDrawIndexed(dynamicCommandBuffer, static_cast<uint32_t>(indices.size()), 1, 0, 0, 0);
     }
@@ -1829,10 +1848,9 @@ gea::RenderComponent Renderer::CreateComponent(std::string mesh_path, std::strin
     texture.mTexturePath = texture_path;
     gea::Mesh mesh(mesh_path);
     createTextureImage(&texture);
-    texture.textureDescriptor = createTextureDescriptor(texture);
     createVertexBuffer(&mesh);
     createIndexBuffer(&mesh);
-
+    texture.textureDescriptor = createTextureDescriptor(texture);
     mMeshes.push_back(mesh);
     mTextures.push_back(texture);
 
@@ -2122,6 +2140,8 @@ VkDescriptorSet Renderer::createTextureDescriptor(gea::Texture &texture)
 
     vkUpdateDescriptorSets(device, 1, &descriptorWrites, 0, nullptr);
     //texture.textureDescriptor = textureDescriptor;
+
+    qDebug() << "VH Test: Allocated texture descriptor: " << textureDescriptor << " for path " << texture.mTexturePath << '\n';
     return textureDescriptor;
 }
 
