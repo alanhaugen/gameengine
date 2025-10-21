@@ -111,7 +111,7 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
     //Should eventually be run from the Engine
     gea::SoundSystem* testSound = new gea::SoundSystem(mEngine);
     testSound->setMainWindow(this);
-    testSound->playSound("Test Drive.mp3");
+    //testSound->playSound("Test Drive.mp3");
 
     gea::ScriptingSystem* testScript = new gea::ScriptingSystem(this, mEngine);
 

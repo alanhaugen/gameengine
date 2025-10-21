@@ -113,6 +113,7 @@ void Renderer::initVulkan()
     createSyncObjects();
 
     createDescriptorSets();
+    RecreateTextureDescriptors();
 
     //Hacking the camera:
     QSize size = this->size();
@@ -160,7 +161,7 @@ void Renderer::cleanup()
 {
     cleanupSwapChain();
 
-	for (gea::Texture texture : mTextures) {
+    for (gea::Texture texture : mTextures) {
         vkDestroySampler(device, texture.mTextureSampler, nullptr);
         vkDestroyImageView(device, texture.mTextureImageView, nullptr);
         vkDestroyImage(device, texture.mTextureImage, nullptr);
@@ -224,6 +225,7 @@ void Renderer::recreateSwapChain()
     createUniformBuffers();
     createDescriptorPool();
     createDescriptorSets();
+    RecreateTextureDescriptors();
     createCommandBuffers();
 
     imagesInFlight.resize(swapChainImages.size(), VK_NULL_HANDLE);
@@ -1331,7 +1333,7 @@ void Renderer::createDescriptorPool()
     poolSizes[0].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
     poolSizes[0].descriptorCount = static_cast<uint32_t>(swapChainImages.size());
     poolSizes[1].type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-    poolSizes[1].descriptorCount = MAX_TEXTURES;
+    poolSizes[1].descriptorCount = static_cast<uint32_t>(mTextures.size()) * std::max(1, MAX_FRAMES_IN_FLIGHT);
 
     VkDescriptorPoolCreateInfo poolInfo{};
     poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
@@ -1722,14 +1724,6 @@ void Renderer::drawFrame()
         vkCmdBindDescriptorSets(dynamicCommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, &descriptorSets[imageIndex], 0, nullptr);
         vkCmdBindDescriptorSets(dynamicCommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 1, 1, &texture.textureDescriptor, 0, nullptr);
 
-        for (size_t i = 0; i < mTextures.size(); ++i) {
-            auto &t = mTextures[i];
-            qDebug() << "Texture[" << i << "]: image=" << t.mTextureImage
-                     << " view=" << t.mTextureImageView
-                     << " sampler=" << t.mTextureSampler
-                     << " descSet=" << t.textureDescriptor;
-        }
-        qDebug() << "VH Test: Jeg Vil Ha Texture Informasjon.";
 
         vkCmdBindPipeline(dynamicCommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline);
         vkCmdDrawIndexed(dynamicCommandBuffer, static_cast<uint32_t>(indices.size()), 1, 0, 0, 0);
@@ -1847,11 +1841,11 @@ gea::RenderComponent Renderer::CreateComponent(std::string mesh_path, std::strin
     gea::Texture texture;
     texture.mTexturePath = texture_path;
     gea::Mesh mesh(mesh_path);
-    createTextureImage(&texture);
     createVertexBuffer(&mesh);
     createIndexBuffer(&mesh);
-    texture.textureDescriptor = createTextureDescriptor(texture);
     mMeshes.push_back(mesh);
+    createTextureImage(&texture);
+    texture.textureDescriptor = createTextureDescriptor(texture);
     mTextures.push_back(texture);
 
     gea::RenderComponent new_component = gea::RenderComponent{static_cast<int>(mMeshes.size()-1), static_cast<int>(mTextures.size()-1), ID};
@@ -2141,8 +2135,18 @@ VkDescriptorSet Renderer::createTextureDescriptor(gea::Texture &texture)
     vkUpdateDescriptorSets(device, 1, &descriptorWrites, 0, nullptr);
     //texture.textureDescriptor = textureDescriptor;
 
-    qDebug() << "VH Test: Allocated texture descriptor: " << textureDescriptor << " for path " << texture.mTexturePath << '\n';
     return textureDescriptor;
+}
+
+void Renderer::RecreateTextureDescriptors()
+{
+    // Recreate texture descriptor sets after descriptorPool is recreated.
+    // Safe even if mTextures is empty.
+    for (size_t i = 0; i < mTextures.size(); ++i) {
+        // Re-allocate and update descriptor for this texture from the current descriptorPool
+        mTextures[i].textureDescriptor = createTextureDescriptor(mTextures[i]);
+        qDebug() << "Recreated texture descriptor for index" << (int)i << "desc=" << mTextures[i].textureDescriptor;
+    }
 }
 
 void Renderer::exposeEvent(QExposeEvent* event)
