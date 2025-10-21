@@ -32,6 +32,8 @@ public:
     Scene* scene = nullptr;
     Ui::MainWindow *ui = nullptr;
 
+    void mousePressed(QMouseEvent*event);
+
 private:
     QWidget* vulkanWidget;
 
@@ -40,6 +42,9 @@ private:
     //ObjectSelect
     GameObject* ObjSelected = nullptr;
 
+    //bool to prevent set value from changing values
+    bool IsInspectorUpdated = false;
+
     //QWidget* mRenderWindowContainer{nullptr};   //Qt container for the RenderWindow
 
     //right click the object in gameobjectWidget
@@ -47,7 +52,11 @@ private:
 
         //Left click the object in gameobjectWidget
    void OnLeftClickGameObjectWidget(QTreeWidgetItem* item, int column);
+   //deselect
+   bool eventFilter(QObject* obj,QEvent* event) override;
 
+   //Update inspector with values
+   void UpdateInspector();
 
     //for the Menuadd
     //add Objects to the scene and to the gameobject
@@ -55,7 +64,8 @@ private:
     void AddCube();
     void AddSphere();
 
-    void Posx(double);
+
+    void PosObj(double);
 
     QTimer* timer;
 };

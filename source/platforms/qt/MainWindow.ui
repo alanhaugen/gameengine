@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>997</width>
+    <width>1037</width>
     <height>672</height>
    </rect>
   </property>
@@ -28,7 +28,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>997</width>
+     <width>1037</width>
      <height>17</height>
     </rect>
    </property>
@@ -222,7 +222,7 @@
    </property>
    <property name="minimumSize">
     <size>
-     <width>220</width>
+     <width>260</width>
      <height>300</height>
     </size>
    </property>
@@ -306,146 +306,232 @@
            <property name="geometry">
             <rect>
              <x>0</x>
-             <y>0</y>
+             <y>-217</y>
              <width>239</width>
-             <height>332</height>
+             <height>521</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_3">
             <item>
-             <widget class="QGroupBox" name="groupTransform">
-              <property name="maximumSize">
-               <size>
-                <width>16777215</width>
-                <height>120</height>
-               </size>
-              </property>
+             <widget class="QGroupBox" name="TransformBox">
               <property name="title">
                <string>Transform</string>
               </property>
-              <layout class="QFormLayout" name="formLayout">
-               <item row="0" column="0">
-                <widget class="QLabel" name="PositionX">
-                 <property name="text">
-                  <string>Position X:</string>
+              <property name="checkable">
+               <bool>true</bool>
+              </property>
+              <layout class="QVBoxLayout" name="verticalLayout">
+               <item>
+                <widget class="QGroupBox" name="groupTransform">
+                 <property name="maximumSize">
+                  <size>
+                   <width>16777215</width>
+                   <height>120</height>
+                  </size>
                  </property>
+                 <property name="title">
+                  <string/>
+                 </property>
+                 <layout class="QFormLayout" name="formLayout">
+                  <item row="0" column="0">
+                   <widget class="QLabel" name="PositionX">
+                    <property name="text">
+                     <string>Position X:</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="0" column="1">
+                   <widget class="QDoubleSpinBox" name="PosXSpin">
+                    <property name="minimum">
+                     <double>-99.000000000000000</double>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="1">
+                   <widget class="QDoubleSpinBox" name="PosYSpin"/>
+                  </item>
+                  <item row="1" column="0">
+                   <widget class="QLabel" name="PositionY">
+                    <property name="text">
+                     <string>Position Y:</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="2" column="1">
+                   <widget class="QDoubleSpinBox" name="PosZSpin"/>
+                  </item>
+                  <item row="2" column="0">
+                   <widget class="QLabel" name="PositionZ">
+                    <property name="text">
+                     <string>Position Z:</string>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
                 </widget>
                </item>
-               <item row="0" column="1">
-                <widget class="QDoubleSpinBox" name="PosXSpin">
-                 <property name="minimum">
-                  <double>-99.000000000000000</double>
+               <item>
+                <widget class="QGroupBox" name="groupRotation">
+                 <property name="maximumSize">
+                  <size>
+                   <width>16777215</width>
+                   <height>120</height>
+                  </size>
                  </property>
+                 <property name="title">
+                  <string>Rotation</string>
+                 </property>
+                 <layout class="QFormLayout" name="formLayout_2">
+                  <item row="0" column="0">
+                   <widget class="QLabel" name="RotationX">
+                    <property name="text">
+                     <string>Rotation X:</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="0" column="1">
+                   <widget class="QDoubleSpinBox" name="RotationXSpin"/>
+                  </item>
+                  <item row="1" column="1">
+                   <widget class="QDoubleSpinBox" name="RotationYSpin"/>
+                  </item>
+                  <item row="1" column="0">
+                   <widget class="QLabel" name="RotationY">
+                    <property name="text">
+                     <string>Rotation Y:</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="2" column="1">
+                   <widget class="QDoubleSpinBox" name="RotationZSpin"/>
+                  </item>
+                  <item row="2" column="0">
+                   <widget class="QLabel" name="RotationZ">
+                    <property name="text">
+                     <string>Rotation Z:</string>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
                 </widget>
                </item>
-               <item row="1" column="1">
-                <widget class="QDoubleSpinBox" name="PosYSpin"/>
-               </item>
-               <item row="1" column="0">
-                <widget class="QLabel" name="PositionY">
-                 <property name="text">
-                  <string>Position Y:</string>
+               <item>
+                <widget class="QGroupBox" name="groupScale">
+                 <property name="maximumSize">
+                  <size>
+                   <width>16777215</width>
+                   <height>120</height>
+                  </size>
                  </property>
-                </widget>
-               </item>
-               <item row="2" column="1">
-                <widget class="QDoubleSpinBox" name="PosZSpin"/>
-               </item>
-               <item row="2" column="0">
-                <widget class="QLabel" name="PositionZ">
-                 <property name="text">
-                  <string>Position Z:</string>
+                 <property name="title">
+                  <string>Scale</string>
                  </property>
+                 <layout class="QFormLayout" name="formLayout_3">
+                  <item row="0" column="0">
+                   <widget class="QLabel" name="ScaleX">
+                    <property name="text">
+                     <string>Scale X:</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="0" column="1">
+                   <widget class="QDoubleSpinBox" name="ScaleXSpin"/>
+                  </item>
+                  <item row="1" column="1">
+                   <widget class="QDoubleSpinBox" name="ScaleYSpin"/>
+                  </item>
+                  <item row="1" column="0">
+                   <widget class="QLabel" name="ScaleY">
+                    <property name="text">
+                     <string>Scale Y:</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="2" column="1">
+                   <widget class="QDoubleSpinBox" name="ScaleZSpin"/>
+                  </item>
+                  <item row="2" column="0">
+                   <widget class="QLabel" name="ScaleZ">
+                    <property name="text">
+                     <string>Scale Z:</string>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
                 </widget>
                </item>
               </layout>
              </widget>
             </item>
             <item>
-             <widget class="QGroupBox" name="groupRotation">
-              <property name="maximumSize">
-               <size>
-                <width>16777215</width>
-                <height>120</height>
-               </size>
-              </property>
+             <widget class="QGroupBox" name="MeshBox">
               <property name="title">
-               <string>Rotation</string>
+               <string>Mesh</string>
               </property>
-              <layout class="QFormLayout" name="formLayout_2">
-               <item row="0" column="0">
-                <widget class="QLabel" name="RotationX">
-                 <property name="text">
-                  <string>Rotation X:</string>
+              <property name="checkable">
+               <bool>true</bool>
+              </property>
+              <layout class="QVBoxLayout" name="verticalLayout_6">
+               <item>
+                <widget class="QGroupBox" name="groupBox_2">
+                 <property name="title">
+                  <string/>
                  </property>
-                </widget>
-               </item>
-               <item row="0" column="1">
-                <widget class="QDoubleSpinBox" name="RotationXSpin"/>
-               </item>
-               <item row="1" column="1">
-                <widget class="QDoubleSpinBox" name="RotationYSpin"/>
-               </item>
-               <item row="1" column="0">
-                <widget class="QLabel" name="RotationY">
-                 <property name="text">
-                  <string>Rotation Y:</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="2" column="1">
-                <widget class="QDoubleSpinBox" name="RotationZSpin"/>
-               </item>
-               <item row="2" column="0">
-                <widget class="QLabel" name="RotationZ">
-                 <property name="text">
-                  <string>Rotation Z:</string>
-                 </property>
+                 <layout class="QFormLayout" name="formLayout_4">
+                  <item row="0" column="0">
+                   <widget class="QLabel" name="Mesh_Label">
+                    <property name="text">
+                     <string>Mesh:</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="0" column="1">
+                   <widget class="QPushButton" name="pushButton">
+                    <property name="text">
+                     <string>Button</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="0">
+                   <widget class="QLabel" name="Material_Label">
+                    <property name="text">
+                     <string>Material:</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="1">
+                   <widget class="QPushButton" name="pushButton_2">
+                    <property name="text">
+                     <string>PushButton</string>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
                 </widget>
                </item>
               </layout>
              </widget>
             </item>
             <item>
-             <widget class="QGroupBox" name="groupScale">
-              <property name="maximumSize">
-               <size>
-                <width>16777215</width>
-                <height>120</height>
-               </size>
-              </property>
+             <widget class="QGroupBox" name="ColliderBox">
               <property name="title">
-               <string>Scale</string>
+               <string>Collider</string>
               </property>
-              <layout class="QFormLayout" name="formLayout_3">
-               <item row="0" column="0">
-                <widget class="QLabel" name="ScaleX">
-                 <property name="text">
-                  <string>Scale X:</string>
+              <layout class="QVBoxLayout" name="verticalLayout_8">
+               <item>
+                <widget class="QGroupBox" name="groupBox">
+                 <property name="title">
+                  <string/>
                  </property>
-                </widget>
-               </item>
-               <item row="0" column="1">
-                <widget class="QDoubleSpinBox" name="ScaleXSpin"/>
-               </item>
-               <item row="1" column="1">
-                <widget class="QDoubleSpinBox" name="ScaleYSpin"/>
-               </item>
-               <item row="1" column="0">
-                <widget class="QLabel" name="ScaleY">
-                 <property name="text">
-                  <string>Scale Y:</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="2" column="1">
-                <widget class="QDoubleSpinBox" name="ScaleZSpin"/>
-               </item>
-               <item row="2" column="0">
-                <widget class="QLabel" name="ScaleZ">
-                 <property name="text">
-                  <string>Scale Z:</string>
-                 </property>
+                 <layout class="QFormLayout" name="formLayout_5">
+                  <item row="0" column="0">
+                   <widget class="QLabel" name="label">
+                    <property name="text">
+                     <string>imcomplete</string>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
                 </widget>
                </item>
               </layout>

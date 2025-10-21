@@ -15,6 +15,8 @@ MainWindow::MainWindow(QWidget *parent, const char* windowTitle, int windowWidth
 {
     ui->setupUi(this);
     ui->treeGameObjects->setContextMenuPolicy(Qt::CustomContextMenu);
+    ui->treeGameObjects->viewport()->installEventFilter(this);
+
     //MainWindow size:
     resize((1300 - 1100) + windowWidth, (850 - 700) + windowHeight);
 
@@ -59,18 +61,50 @@ MainWindow::MainWindow(QWidget *parent, const char* windowTitle, int windowWidth
 
     timer->start(8); // 120 Hz
 
+    //allow the spinBox go to negative numbers
+    ui->PosXSpin->setMinimum(-990);
+    ui->PosYSpin->setMinimum(-990);
+    ui->PosZSpin->setMinimum(-990);
+
+    ui->RotationXSpin->setMinimum(-990);
+    ui->RotationYSpin->setMinimum(-990);
+    ui->RotationZSpin->setMinimum(-990);
+
 
     //Connections to functions
     connect(ui->actionViking_Room, &QAction::triggered, this, &MainWindow::AddVikingRoom);
     connect(ui->actionCube, &QAction::triggered, this, &MainWindow::AddCube);
     connect(ui->actionSphere, &QAction::triggered, this, &MainWindow::AddSphere);
-    connect(ui->PosXSpin, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &MainWindow::Posx);
+
+    //SpinBoxes
+    //Position
+    connect(ui->PosXSpin, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &MainWindow::PosObj);
+    connect(ui->PosYSpin, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &MainWindow::PosObj);
+    connect(ui->PosZSpin, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &MainWindow::PosObj);
+    //Rotation
+    connect(ui->RotationXSpin, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &MainWindow::PosObj);
+    connect(ui->RotationXSpin, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &MainWindow::PosObj);
+    connect(ui->RotationZSpin, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &MainWindow::PosObj);
+    //Scale
+    connect(ui->ScaleXSpin, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &MainWindow::PosObj);
+    connect(ui->ScaleYSpin, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &MainWindow::PosObj);
+    connect(ui->ScaleZSpin, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &MainWindow::PosObj);
+
+
+
+
+
+
+
+    ui->Inspectorwidget->setHidden(true);
 
 
     //
     connect(ui->treeGameObjects, &QTreeWidget::customContextMenuRequested, this, &MainWindow::OnRightClickGameObjectWidget);
 
+
     connect(ui->treeGameObjects, &QTreeWidget::itemClicked, this, &MainWindow::OnLeftClickGameObjectWidget);
+
 
     lastTime = std::chrono::high_resolution_clock::now();
 
@@ -129,11 +163,22 @@ void MainWindow::MainGameLoop()
     Locator::input.Update();
     scene->editor->UpdateStatusBar((std::string("(") + std::to_string(Locator::input.mouse.x) + ", " + std::to_string(Locator::input.mouse.y) + std::string(")")).c_str());
 
-    // if(ObjSelected)
-    // {
-    //     qDebug()<<ObjSelected->GetName() <<"Ballss";
+    //working area
+    if(ObjSelected)
+    {
+         ui->Inspectorwidget->setHidden(false);
+        if(ObjSelected->components.empty())
+        {
+             ui->MeshBox->setHidden(true);
+        }
+    }
+    else
+    {
+        ui->Inspectorwidget->setHidden(true);
+    }
 
-    // }
+
+
 
     if (scene)
     {
@@ -174,6 +219,7 @@ void MainWindow::MainGameLoop()
     }
 }
 
+
 void MainWindow::OnRightClickGameObjectWidget(const QPoint &ClickedOn)
 {
     qDebug() << "Right-click detected at" << ClickedOn;
@@ -186,10 +232,14 @@ void MainWindow::OnRightClickGameObjectWidget(const QPoint &ClickedOn)
 
     QMenu menu(this);
     QAction* Rename = menu.addAction("Rename");
+    //QAction* AddMesh = menu.addAction("AddMesh");
+    //QAction* AddCollider = menu.addAction("AddCollider");
     QAction* Delete = menu.addAction("Delete");
 
     QAction* Selected = menu.exec(ui->treeGameObjects->viewport()->mapToGlobal(ClickedOn));
 
+    void* ptrToObj = GameObjSelected->data(0,Qt::UserRole).value<void*>();
+    GameObject* obj = reinterpret_cast<GameObject*>(ptrToObj);
 
     if(Selected == Rename)
     {
@@ -199,9 +249,6 @@ void MainWindow::OnRightClickGameObjectWidget(const QPoint &ClickedOn)
         {
             GameObjSelected->setText(0,newName);
 
-            void* ptrToObj = GameObjSelected->data(0,Qt::UserRole).value<void*>();
-            GameObject* obj = reinterpret_cast<GameObject*>(ptrToObj);
-
             if(obj)
             {
                 obj->SetName(newName);
@@ -210,20 +257,98 @@ void MainWindow::OnRightClickGameObjectWidget(const QPoint &ClickedOn)
     }
     if(Selected == Delete)
     {
-        void* ptrToObj = GameObjSelected->data(0,Qt::UserRole).value<void*>();
-        GameObject* objClicked = reinterpret_cast<GameObject*>(ptrToObj);
 
     }
 }
 
 void MainWindow::OnLeftClickGameObjectWidget(QTreeWidgetItem *item, int column)
 {
-    if(!item){return;}
+    //needs a way to figure what you clicked on, atm just works if you click the parent
+
+    if(!item)
+    {
+        ObjSelected = nullptr;
+        return;
+    }
 
     qDebug() << "Left-click detected at" << item;
 
-    void* ptrToObj = item->data(0,Qt::UserRole).value<void*>();
-    ObjSelected = reinterpret_cast<GameObject*>(ptrToObj);
+
+    void* ptrToObj = item->data(column,Qt::UserRole).value<void*>();
+
+    QString type = item->data(column,Qt::UserRole+1).toString();
+    GameObject* obj =reinterpret_cast<GameObject*>(ptrToObj);
+    Component* comp =reinterpret_cast<Component*>(ptrToObj);
+
+    //ObjSelected = reinterpret_cast<GameObject*>(ptrToObj);
+
+
+    //check what i click, but always connects it to the parent
+    if(type == "GameObject")
+    {
+        ObjSelected =obj;
+        //qDebug()<<"Parent";
+    }
+    else if(type == "Component")
+    {
+        ObjSelected = comp->GetGameObjectOwner();
+       // qDebug()<<"componentboi"<< column;
+    }
+
+
+    UpdateInspector();
+
+}
+
+bool MainWindow::eventFilter(QObject *obj, QEvent *event)
+{
+    if(obj == ui->treeGameObjects->viewport() && event->type() == QEvent::MouseButtonPress)
+    {
+        QMouseEvent* mouseEvent= static_cast<QMouseEvent*>(event);
+        QTreeWidgetItem* item = ui->treeGameObjects->itemAt(mouseEvent->pos());
+
+        if(!item)
+        {
+            ObjSelected = nullptr;
+            ui->treeGameObjects->clearSelection();
+        }
+    }
+
+    return QMainWindow::eventFilter(obj,event);
+}
+
+void MainWindow::UpdateInspector()
+{
+
+    IsInspectorUpdated = true;
+    ui->RotationXSpin->setValue(ObjSelected->mTransform.mRotation.x);
+    ui->RotationYSpin->setValue(ObjSelected->mTransform.mRotation.y);
+    ui->RotationZSpin->setValue(ObjSelected->mTransform.mRotation.z);
+
+    ui->ScaleXSpin->setValue(ObjSelected->mTransform.mScale.x);
+    ui->ScaleYSpin->setValue(ObjSelected->mTransform.mScale.y);
+    ui->ScaleZSpin->setValue(ObjSelected->mTransform.mScale.z);
+
+
+   // qDebug() <<"helllllll"<<ObjSelected->mTransform.mScale.y;
+    //when it get completed the editor this will attach the info of the components to the inspector
+    // if(!ObjSelected->components.empty())
+    // {
+    //     for (Component* comp: ObjSelected->components)
+    //     {
+    //         QString typeName = comp->GetName();
+
+    //         if(typeName == "mesh")
+    //         {
+
+    //         }
+    //     }
+    // }
+
+
+    IsInspectorUpdated = false;
+
+
 }
 
 
@@ -235,9 +360,14 @@ void MainWindow::AddVikingRoom()
     qDebug() << "Connected VikingRoom action";
     GameObject* gameobj = new GameObject("VikingRoom");
 
+    gameobj-> UpdateTransform(glm::vec3(0.0,0.0,0.0),glm::vec3(0.0, 0.0, 0.0),glm::vec3(1.0, 1.0, 1.0));
     Mesh* mesh = new Mesh("Assets/Models/viking_room.obj");
 
     gameobj->AddComponent(mesh);
+
+
+
+
 
     scene->gameObjects.push_back(gameobj);
 
@@ -245,17 +375,26 @@ void MainWindow::AddVikingRoom()
 
     MainObj->setText(0,gameobj->GetName());
     MainObj->setData(0, Qt::UserRole, QVariant::fromValue((void*)gameobj));
+    MainObj->setData(0,Qt::UserRole +1,"GameObject");
     MainObj->setExpanded(true);
 
     QTreeWidgetItem * ObjItem = new QTreeWidgetItem(MainObj);
     ObjItem->setText(0,"mesh");
     ObjItem->setData(0, Qt::UserRole, QVariant::fromValue((void*)mesh));
+    ObjItem->setData(0,Qt::UserRole +1,"Component");
 
     MainObj->addChild(ObjItem);
 }
 
 void MainWindow::AddCube()
 {
+    GameObject* gameobj = new GameObject("Cube");
+    QTreeWidgetItem * MainObj = new QTreeWidgetItem(ui->treeGameObjects);
+
+    MainObj->setText(0,gameobj->GetName());
+    MainObj->setData(0, Qt::UserRole, QVariant::fromValue((void*)gameobj));
+    MainObj->setData(0,Qt::UserRole +1,"GameObject");
+    MainObj->setExpanded(true);
     //scene->components.push_back(new Mesh("Assets/Models/viking_room.obj", renderer, scene->editor));
     qDebug() << "Cube";
 }
@@ -266,20 +405,50 @@ void MainWindow::AddSphere()
     qDebug() << "Sphere";
 }
 
-void MainWindow::Posx(double)
+void MainWindow::PosObj(double)
 {
+
     if(!ObjSelected)
     {
-        qDebug()<<"fuck this";
+        qDebug()<<"not found";
         return;
     }
 
-     qDebug()<<"fuck it";
-    float x = static_cast<float>(ui->PosXSpin->value());
-    float y = static_cast<float>(ui->PosXSpin->value());
-    float z = static_cast<float>(ui->PosXSpin->value());
+    if(IsInspectorUpdated)
+    {
+        return;
+    }
 
-    ObjSelected->UpdatePos(x,0,0);
+     qDebug()<<"found it";
+    float Posx = static_cast<float>(ui->PosXSpin->value());
+    float Posy = static_cast<float>(ui->PosYSpin->value());
+    float Posz = static_cast<float>(ui->PosZSpin->value());
+
+
+     glm::vec3 Pos =glm::vec3(Posx, Posy, Posz);
+
+    float Rotx = static_cast<float>(ui->RotationXSpin->value());
+    float Roty = static_cast<float>(ui->RotationYSpin->value());
+    float Rotz = static_cast<float>(ui->RotationZSpin->value());
+
+    glm::vec3 Rotation =glm::vec3(Rotx, Roty, Rotz);
+
+   // glm::vec3 Rotation =glm::vec3(0, 0, 0);
+
+    float Scalex = static_cast<float>(ui->ScaleXSpin->value());
+    float Scaley = static_cast<float>(ui->ScaleYSpin->value());
+    float Scalez = static_cast<float>(ui->ScaleZSpin->value());
+
+    glm::vec3 Scale =glm::vec3(Scalex, Scaley, Scalez);
+
+    if(ObjSelected)
+    {
+        ObjSelected->UpdateTransform(Pos,Rotation,Scale);
+        UpdateInspector();
+    }
+
+
+
 
 }
 

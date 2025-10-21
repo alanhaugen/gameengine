@@ -15,7 +15,7 @@ public:
     void Update() override;
 
     void OnAttach() override;
-    void UpdatePos() override;
+    void UpdateTransform() override;
 
     Renderer::Drawable *GetRenderer();
 

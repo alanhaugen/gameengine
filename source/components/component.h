@@ -18,10 +18,10 @@ class Component : public Locator
 {
 protected:
      QString Name;
-
+  GameObject* gameobjOwner = nullptr;
 public:
 
-    GameObject* gameobj = nullptr;
+
 
     Transform mTransform;
 
@@ -30,9 +30,14 @@ public:
     virtual void SetName(const QString NewName){Name = NewName;};
 
     virtual const QString GetName(){return Name;};
+
+    virtual GameObject* GetGameObjectOwner(){return gameobjOwner;}
+
+    virtual void SetGameObjOwner(GameObject* Owner){gameobjOwner = Owner;}
+
     virtual void OnAttach(){};
 
-    virtual void UpdatePos(){};
+    virtual void UpdateTransform(){};
 
 
 };

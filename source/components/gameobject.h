@@ -37,7 +37,7 @@ public:
     const uint32_t GetEntityId();
 
     void Update();
-    void UpdatePos(float x,float y,float z);
+    void UpdateTransform(glm::vec3 Position,glm::vec3 Rotation,glm::vec3 Scale);
 
 };
 

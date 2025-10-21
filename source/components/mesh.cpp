@@ -59,34 +59,47 @@ Mesh::Mesh(const char *filePath,
 void Mesh::Update()
 {
 
-    if(!gameobj || !drawable)
+    if(!gameobjOwner || !drawable)
     {
         return;
     }
 
-   mTransform = gameobj->mTransform;
+   mTransform = gameobjOwner->mTransform;
 
 
     //qDebug()<<"Meshpos: "<<mTransform.mPosition.x;
-
-   //drawable->ubo.model = glm::translate(drawable->ubo.model, mTransform.mPosition);
 
 }
 
 void Mesh::OnAttach()
 {
-    if(gameobj)
+    if(gameobjOwner)
     {
-        gameobj->drawable = GetRenderer();
+        gameobjOwner->drawable = GetRenderer();
     }
 }
 
-void Mesh::UpdatePos()
+void Mesh::UpdateTransform()
 {
-    glm::mat4 model = glm::mat4(1.0f);
+    glm::mat4 Neutral = glm::mat4(1.0f);
 
-    model = glm::translate(model,mTransform.mPosition);
- drawable->ubo.model = model;
+
+
+    Neutral = glm::translate(Neutral,mTransform.mPosition);
+    //rotation
+    Neutral  = glm::rotate(Neutral, glm::radians(mTransform.mRotation.x),  glm::vec3(1,0,0));
+    Neutral  = glm::rotate(Neutral, glm::radians(mTransform.mRotation.y),  glm::vec3(0,1,0));
+    Neutral = glm::rotate(Neutral, glm::radians(mTransform.mRotation.z),  glm::vec3(0,0,1));
+   //scale
+   Neutral = glm::scale(Neutral,mTransform.mScale);
+
+    drawable->ubo.model = Neutral;
+
+    qDebug() << "Mesh Transform updated:"
+             << "Pos" << mTransform.mPosition.x << mTransform.mPosition.y << mTransform.mPosition.z
+             << "Rot" << mTransform.mRotation.x << mTransform.mRotation.y << mTransform.mRotation.z
+             << "Scale" << mTransform.mScale.x << mTransform.mScale.y << mTransform.mScale.z;
+
 }
 
 Renderer::Drawable* Mesh::GetRenderer()
