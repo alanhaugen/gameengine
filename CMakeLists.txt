@@ -75,6 +75,7 @@ add_executable(QtVulkan
     source/modules/audio/qtaudio/qtmultimediaaudio.cpp source/modules/audio/qtaudio/qtmultimediaaudio.h
     source/demos/flappybird.cpp source/demos/flappybird.h
     source/demos/breakout.cpp source/demos/breakout.h
+    source/towerdefense/game.cpp source/towerdefense/game.h source/towerdefense/gameover.cpp source/towerdefense/gameover.h source/towerdefense/mainmenu.cpp source/towerdefense/mainmenu.h source/towerdefense/victory.cpp source/towerdefense/victory.h
 )
 
 #OpenAL
