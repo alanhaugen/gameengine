@@ -95,21 +95,16 @@ void Renderer::initVulkan() {
     bbl::ModelLoader modelLoader(device, physicalDevice, commandPool, graphicsQueue);
     modelLoader.loadModel("../../Assets/Models/viking_room.obj", entities, "../../Assets/Textures/viking_room.png");
     modelLoader.loadModel("../../Assets/Models/viking_room.obj", entities, "../../Assets/Textures/viking_room.png");
-    modelLoader.loadModel("../../Assets/Models/Ball.obj", entities, "../../Assets/Textures/texture.jpg");
-
+    modelLoader.loadModel("../../Assets/Models/Ball2.obj", entities, "../../Assets/Textures/Blue.jpg");
 
     entities.push_back(entityManager->createPlayer());
     entities.push_back(entityManager->createPlayer());
     entities.push_back(entityManager->createPlayer());
-
 
     // Optionally add loaded entities to EntityManager for tracking
     entityManager->addEntities(entities);
     entityManager->addEntities(entities);
     entityManager->addEntities(entities);
-
-
-
 
     //createVertexBuffer();
     //createIndexBuffer();
@@ -118,9 +113,6 @@ void Renderer::initVulkan() {
     createDescriptorSets();
     createCommandBuffers();
     createSyncObjects();
-
-
-
 }
 
 void Renderer::cleanupSwapChain() {
@@ -991,9 +983,9 @@ void Renderer::createTextureSampler() {
     samplerInfo.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
     samplerInfo.magFilter = VK_FILTER_LINEAR;
     samplerInfo.minFilter = VK_FILTER_LINEAR;
-    samplerInfo.addressModeU = VK_SAMPLER_ADDRESS_MODE_REPEAT;
-    samplerInfo.addressModeV = VK_SAMPLER_ADDRESS_MODE_REPEAT;
-    samplerInfo.addressModeW = VK_SAMPLER_ADDRESS_MODE_REPEAT;
+    samplerInfo.addressModeU = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
+    samplerInfo.addressModeV = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
+    samplerInfo.addressModeW = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
     samplerInfo.anisotropyEnable = VK_TRUE;
     samplerInfo.maxAnisotropy = properties.limits.maxSamplerAnisotropy;
     samplerInfo.borderColor = VK_BORDER_COLOR_INT_OPAQUE_BLACK;
@@ -1555,7 +1547,7 @@ void Renderer::updateUniformBuffer(uint32_t currentImage)
             else if (i == 2)
             {
                 transComp->mPosition = glm::vec3(0.0f, 0.0f, 0.0f);
-                transComp->mScale = glm::vec3(0.0002f, 0.0002f, 0.0002f);
+                transComp->mScale = glm::vec3(0.5);
             }
 
 
@@ -1570,7 +1562,7 @@ void Renderer::updateUniformBuffer(uint32_t currentImage)
             uboData[i].model = model;
 
             // Camera
-            uboData[i].view = glm::lookAt(glm::vec3(2.0f, 2.0f, 2.0f),
+            uboData[i].view = glm::lookAt(glm::vec3(5.0f, 5.0f, 5.0f),
                                           glm::vec3(0.0f, 0.0f, 0.0f),
                                           glm::vec3(0.0f, 0.0f, 1.0f));
 
