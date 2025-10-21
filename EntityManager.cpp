@@ -51,17 +51,17 @@ void EntityManager::destroyEntity(bbl::Entity& entity)
             vkFreeMemory(mDevice, mesh.mVertexBufferMemory, nullptr);
             vkDestroyBuffer(mDevice, mesh.mIndexBuffer, nullptr);
             vkFreeMemory(mDevice, mesh.mIndexBufferMemory, nullptr);
-            bbl::MeshComponent.erase(bbl::MeshComponent.begin() + comp.mComponentIndex);
+            //bbl::MeshComponent.erase(bbl::MeshComponent.begin() + comp.mComponentIndex);
         } else if (comp.mComponentType == bbl::ComponentTypes::texture) {
             auto& tex = bbl::TextureComponent[comp.mComponentIndex];
             vkDestroySampler(mDevice, tex.mTextureSampler, nullptr);
             vkDestroyImageView(mDevice, tex.mTextureImageView, nullptr);
             vkDestroyImage(mDevice, tex.mTextureImage, nullptr);
             vkFreeMemory(mDevice, tex.mTextureImageMemory, nullptr);
-            bbl::TextureComponent.erase(bbl::TextureComponent.begin() + comp.mComponentIndex);
+            //bbl::TextureComponent.erase(bbl::TextureComponent.begin() + comp.mComponentIndex);
         }
     }
-    // Note: This simplistic erase doesn't update mComponentIndex in other entities. See previous response for a better approach.
+
 }
 
 void EntityManager::addEntities(const std::vector<bbl::Entity>& entities)
@@ -78,6 +78,6 @@ void EntityManager::addEntities(const std::vector<bbl::Entity>& entities)
             }
         }
         // In this design, we don't need to re-add to global vectors since ModelLoader already did this
-        // However, you might want to track entities internally if needed
+
     }
 }
