@@ -12,17 +12,21 @@
 #include <QVBoxLayout>
 #include <QScrollArea>
 #include <QStatusBar>
+#include <QDockWidget>
 
  //template <typename T>
-class FilesWindow: public QFrame //for drag and drop
+class FilesWindow: public QDockWidget // public QFrame for drag and drop
 {
+
+
 public:
-    FilesWindow(AssetManager<ObjAsset>* manager); // T
+    FilesWindow(AssetManager<ObjAsset>* manager, QWidget* parent=nullptr); // T
 
     std::vector<QPushButton*> mDisplayAssets; //based on assets input vector size
     AssetManager<ObjAsset>* mAssetsPtr{nullptr};
+    QWidget* mCentralWidget{nullptr};
     QScrollArea* mScrolling{nullptr};
-    QWidget* mScrollingWidget = new QWidget();
+    QWidget* mScrollingWidget{nullptr};
     QVBoxLayout* mScrollingLayout{nullptr};
     QVBoxLayout* mMainLayout{nullptr};
     QStatusBar* mStatus{nullptr};

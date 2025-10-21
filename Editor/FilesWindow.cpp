@@ -3,7 +3,9 @@
 #include <QString>
 #include <QDebug>
 
-FilesWindow::FilesWindow(AssetManager<ObjAsset>* manager)
+//"If parent is nullptr, the new widget becomes a window. If parent is another widget, this widget becomes a child window inside parent.
+
+FilesWindow::FilesWindow(AssetManager<ObjAsset>* manager,QWidget* parent)
 {
     setWindowTitle("Files");
     setMinimumHeight(100);
@@ -12,21 +14,27 @@ FilesWindow::FilesWindow(AssetManager<ObjAsset>* manager)
 
     mAssetsPtr= manager;
 
-    mMainLayout=new QVBoxLayout(this);
+    mCentralWidget=new QWidget(this);  //main parent, which is a docker window
+    mMainLayout=new QVBoxLayout(mCentralWidget); //central widget (parent) contains main layout(child)
 
-    //window has 2 children: a status bar and a scroller
-    mScrolling=new QScrollArea(this);
-    mScrollingLayout=new QVBoxLayout(mScrollingWidget);
+    //main layout contains: a status bar and a scroller (with its children)
+    mScrolling=new QScrollArea(mCentralWidget); //main layout holds the scroller, but layouts cant be parents, so the central widget is
+    mScrollingWidget=new QWidget(mScrolling); //scroller (parent) has scrolling widget(child)
+    mScrollingLayout=new QVBoxLayout(mScrollingWidget); //scrolling widget (parent) has layout (child) for future buttons
     mScrollingWidget->setLayout(mScrollingLayout);
-    mScrolling->setWidget(mScrollingWidget);
+    mScrolling->setWidget(mScrollingWidget); //scrollers content is scrolling widget with the future buttons
     mScrolling->setWidgetResizable(true);
-    //scrolling->setGeometry(0,0,width(), height());
-    mMainLayout->addWidget(mScrolling);
 
-    mStatus=new QStatusBar(this);
+    mMainLayout->addWidget(mScrolling); //main layout has scroller
+
+    mStatus=new QStatusBar(mCentralWidget);
     mStatus->showMessage(" Drop new files in this window ");
-    mMainLayout->addWidget(mStatus);
-    //mainLayout->setGeometry(0,0,width(), height());
+
+    mMainLayout->addWidget(mStatus); //main layout has status
+
+    mCentralWidget->setLayout(mMainLayout);
+    setWidget(mCentralWidget); //docker window content is the central widget parent that contains all the children: main layout->scroller, -->status, etc
+
     createButtons(mAssetsPtr);
     show();
 }

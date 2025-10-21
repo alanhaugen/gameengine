@@ -2,6 +2,10 @@ cmake_minimum_required(VERSION 3.19)
 project(QtVulkan LANGUAGES CXX)
 
 # Find Qt (Widgets implies Core)
+# #import QtMultimedia
+# target_include_directories(Sound PRIVATE $ENV{OPENAL_HOME}/include)
+# # Add lib directory
+# target_link_libraries(Sound PRIVATE $ENV{OPENAL_HOME}/libs/Win64/libOpenAL32.dll.a)
 find_package(Qt6 6.5 REQUIRED COMPONENTS Core Gui Widgets Multimedia)
 
 # Keep qt helper (optional but useful)
