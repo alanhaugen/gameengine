@@ -4,6 +4,8 @@
 #include "../x-platform/scene.h"
 #include "../components/text.h"
 
+const int NUMBER_OF_BLOCKS = 10;
+
 class Breakout : public Scene
 {
 public:

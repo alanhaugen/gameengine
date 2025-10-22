@@ -1,31 +1,27 @@
-# GEA2025
-Code for Game Engine Architecture 2025
+## Link to your/teams github branch, where you have done your work
 
-[https://docs.google.com/document/d/1SOMO8CufboZFFjqsUNzGA5UfNpaCmmEuZl1iUjt-jw8/edit?tab=t.0#heading=h.h1nk9gnq12cz](https://docs.google.com/document/d/1SOMO8CufboZFFjqsUNzGA5UfNpaCmmEuZl1iUjt-jw8/edit?tab=t.0#heading=h.h1nk9gnq12cz)
+[https://github.com/INN-DGE/GEA2025/tree/awh](https://github.com/INN-DGE/GEA2025/tree/awh)
 
-[https://drive.google.com/drive/folders/1fOzgci2yONdo4kGF_0fjPAl83TqqWe1H](https://drive.google.com/drive/folders/1fOzgci2yONdo4kGF_0fjPAl83TqqWe1H)
+## What has been done
 
-## Working directory
+* Textures
+* Multiple texture support (one per render component)
+* Text
+* Sprite (with sprite sheet animation support)
+* Terrain
+* Pong and flappy bird demos
+* QtMultimedia sound system
 
-To test the program, set the working directory to this folder (the root foler).
+## What is ok, fun, easy, great
 
-You change the working directory in Projects -> Run -> Working directory
+It was all fun if a bit like redoing old work
 
-## Coding conventions
+## What is hard, boring, confusing
 
-Variables start with lowercase, camelCase
+It was hard figuring out textures again but now that is finally done.
 
-Methods/Functions and Classes/Structs start with uppercase, PascalCase.
+## What can be challenges going forward
 
-## Sources
+Will try to implement skeletal animation and make a demo of the final game.
 
-The following font was used:
-
-Noto Sans Japanese.
-
- License
-Copyright 2014-2021 Adobe (http://www.adobe.com/), with Reserved Font Name 'Source'
-
-This Font Software is licensed under the SIL Open Font License, Version 1.1 . This license is copied below, and is also available with a FAQ at: https://openfontlicense.org
-
-SIL OPEN FONT LICENSE Version 1.1 - 26 February 2007 
+Will also implement the RPG Riad talked about. Technically, both things would have been done by now if time was spent better.

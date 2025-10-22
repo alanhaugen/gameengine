@@ -1,0 +1,51 @@
+<h2
+id="link-to-yourteams-github-branch-where-you-have-done-your-work">Link
+to your/teams github branch, where you have done your work</h2>
+<p><a
+href="https://github.com/INN-DGE/GEA2025/tree/awh">https://github.com/INN-DGE/GEA2025/tree/awh</a></p>
+<h2 id="what-has-been-done">What has been done</h2>
+<ul>
+<li>Textures</li>
+<li>Multiple texture support (one per render component)</li>
+<li>Text</li>
+<li>Sprite (with sprite sheet animation support)</li>
+<li>Terrain</li>
+<li>Pong and flappy bird demos</li>
+<li>QtMultimedia sound system</li>
+</ul>
+<h2 id="what-is-ok-fun-easy-great">What is ok, fun, easy, great</h2>
+<p>It was all fun if a bit like redoing old work</p>
+<h2 id="what-is-hard-boring-confusing">What is hard, boring,
+confusing</h2>
+<p>It was hard figuring out textures again but now that is finally
+done.</p>
+<h2 id="what-can-be-challenges-going-forward">What can be challenges
+going forward</h2>
+<p>Will try to implement skeletal animation and make a demo of the final
+game.</p>
+<p>Will also implement the RPG Riad talked about. Technically, both
+things would have been done by now if time was spent better.</p>
+<h1 id="gea2025">GEA2025</h1>
+<p>Code for Game Engine Architecture 2025</p>
+<p><a
+href="https://docs.google.com/document/d/1SOMO8CufboZFFjqsUNzGA5UfNpaCmmEuZl1iUjt-jw8/edit?tab=t.0#heading=h.h1nk9gnq12cz">https://docs.google.com/document/d/1SOMO8CufboZFFjqsUNzGA5UfNpaCmmEuZl1iUjt-jw8/edit?tab=t.0#heading=h.h1nk9gnq12cz</a></p>
+<p><a
+href="https://drive.google.com/drive/folders/1fOzgci2yONdo4kGF_0fjPAl83TqqWe1H">https://drive.google.com/drive/folders/1fOzgci2yONdo4kGF_0fjPAl83TqqWe1H</a></p>
+<h2 id="working-directory">Working directory</h2>
+<p>To test the program, set the working directory to this folder (the
+root foler).</p>
+<p>You change the working directory in Projects -&gt; Run -&gt; Working
+directory</p>
+<h2 id="coding-conventions">Coding conventions</h2>
+<p>Variables start with lowercase, camelCase</p>
+<p>Methods/Functions and Classes/Structs start with uppercase,
+PascalCase.</p>
+<h2 id="sources">Sources</h2>
+<p>The following font was used:</p>
+<p>Noto Sans Japanese.</p>
+<p>License Copyright 2014-2021 Adobe (http://www.adobe.com/), with
+Reserved Font Name ‘Source’</p>
+<p>This Font Software is licensed under the SIL Open Font License,
+Version 1.1 . This license is copied below, and is also available with a
+FAQ at: https://openfontlicense.org</p>
+<p>SIL OPEN FONT LICENSE Version 1.1 - 26 February 2007</p>
