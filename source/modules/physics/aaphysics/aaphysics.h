@@ -11,6 +11,7 @@ public:
 
     void Init() override;
     void Update() override;
+    bool Collision(const char* type = 0) override;
     Collider CreateCollider(int response) override;
 
 private:
