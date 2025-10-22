@@ -54,7 +54,6 @@ void GameObject::Update()
 void GameObject::UpdateTransform(glm::vec3 Position, glm::vec3 Rotation, glm::vec3 Scale)
 {
 
-    qDebug()<<"called gamePos oi";
     mTransform.mPosition = Position;
     mTransform.mRotation = Rotation;
     mTransform.mScale = Scale;

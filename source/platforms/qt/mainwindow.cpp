@@ -83,7 +83,7 @@ MainWindow::MainWindow(QWidget *parent, const char* windowTitle, int windowWidth
     connect(ui->PosZSpin, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &MainWindow::PosObj);
     //Rotation
     connect(ui->RotationXSpin, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &MainWindow::PosObj);
-    connect(ui->RotationXSpin, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &MainWindow::PosObj);
+    connect(ui->RotationYSpin, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &MainWindow::PosObj);
     connect(ui->RotationZSpin, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &MainWindow::PosObj);
     //Scale
     connect(ui->ScaleXSpin, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &MainWindow::PosObj);
@@ -325,6 +325,12 @@ void MainWindow::UpdateInspector()
 {
 
     IsInspectorUpdated = true;
+
+    ui->PosXSpin->setValue(ObjSelected->mTransform.mPosition.x);
+    ui->PosYSpin->setValue(ObjSelected->mTransform.mPosition.y);
+    ui->PosZSpin->setValue(ObjSelected->mTransform.mPosition.z);
+
+
     ui->RotationXSpin->setValue(ObjSelected->mTransform.mRotation.x);
     ui->RotationYSpin->setValue(ObjSelected->mTransform.mRotation.y);
     ui->RotationZSpin->setValue(ObjSelected->mTransform.mRotation.z);
@@ -405,6 +411,13 @@ void MainWindow::AddCube()
 
 void MainWindow::AddSphere()
 {
+    GameObject* gameobj = new GameObject("Sphere");
+    QTreeWidgetItem * MainObj = new QTreeWidgetItem(ui->treeGameObjects);
+
+    MainObj->setText(0,gameobj->GetName());
+    MainObj->setData(0, Qt::UserRole, QVariant::fromValue((void*)gameobj));
+    MainObj->setData(0,Qt::UserRole +1,"GameObject");
+    MainObj->setExpanded(true);
     //scene->components.push_back(new Mesh("Assets/Models/viking_room.obj", renderer, scene->editor));
     qDebug() << "Sphere";
 }
@@ -437,19 +450,16 @@ void MainWindow::PosObj(double)
 
     glm::vec3 Rotation =glm::vec3(Rotx, Roty, Rotz);
 
-   // glm::vec3 Rotation =glm::vec3(0, 0, 0);
-
     float Scalex = static_cast<float>(ui->ScaleXSpin->value());
     float Scaley = static_cast<float>(ui->ScaleYSpin->value());
     float Scalez = static_cast<float>(ui->ScaleZSpin->value());
 
     glm::vec3 Scale =glm::vec3(Scalex, Scaley, Scalez);
 
-    if(ObjSelected)
-    {
-        ObjSelected->UpdateTransform(Pos,Rotation,Scale);
-        UpdateInspector();
-    }
+
+    ObjSelected->UpdateTransform(Pos,Rotation,Scale);
+    UpdateInspector();
+
 
 
 

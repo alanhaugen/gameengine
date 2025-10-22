@@ -73,6 +73,7 @@ void Mesh::Update()
 
 void Mesh::OnAttach()
 {
+    //attached the drawable to the gameobject
     if(gameobjOwner)
     {
         gameobjOwner->drawable = GetRenderer();
@@ -81,10 +82,11 @@ void Mesh::OnAttach()
 
 void Mesh::UpdateTransform()
 {
+    //multiplies the value by 1 instead of zero
     glm::mat4 Neutral = glm::mat4(1.0f);
 
 
-
+    //Position
     Neutral = glm::translate(Neutral,mTransform.mPosition);
     //rotation
     Neutral  = glm::rotate(Neutral, glm::radians(mTransform.mRotation.x),  glm::vec3(1,0,0));
