@@ -99,7 +99,7 @@ MainWindow::MainWindow(QWidget *parent, const char* windowTitle, int windowWidth
     ui->Inspectorwidget->setHidden(true);
 
 
-    //
+    //clicks
     connect(ui->treeGameObjects, &QTreeWidget::customContextMenuRequested, this, &MainWindow::OnRightClickGameObjectWidget);
 
 

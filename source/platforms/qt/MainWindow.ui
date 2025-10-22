@@ -306,7 +306,7 @@
            <property name="geometry">
             <rect>
              <x>0</x>
-             <y>-217</y>
+             <y>0</y>
              <width>239</width>
              <height>521</height>
             </rect>
@@ -644,7 +644,7 @@
   </action>
   <action name="actionSomething">
    <property name="text">
-    <string>Something</string>
+    <string>New Scene</string>
    </property>
   </action>
   <action name="actionShow_Grid">
