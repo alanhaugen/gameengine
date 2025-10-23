@@ -23,9 +23,12 @@ public:
     QSet<QString> mFilesNamesSet;
     QStack<QString> mFilesNamesStack;
     void importMeshes();
+    void addNewMesh(gea::Mesh* newMesh);
+
     void importTextures();
     void importSounds();
     void importObjects();
+
 
     // void deleteAsset(T asset);
 };
@@ -50,6 +53,14 @@ void AssetManager<T>::importMeshes()
         mAssets.push_back(mesh);
     }
 }
+
+template<typename T>
+inline void AssetManager<T>::addNewMesh(gea::Mesh *newMesh)
+{
+    mAssets.push_back(newMesh);
+}
+
+
 
 template<typename T>
 void AssetManager<T>::importObjects(){

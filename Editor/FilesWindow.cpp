@@ -67,7 +67,8 @@ void FilesWindow::dropEvent(QDropEvent *event)
         {
             mAssetsPtr->mFilesNamesSet.insert(name);
             int i=mAssetsPtr->mFilesNamesSet.size();
-            //importObjects(path);
+            gea::Mesh* newMesh=new gea::Mesh(path);
+            mAssetsPtr->addNewMesh(newMesh);
             QPushButton* new_button=new QPushButton(name, mScrollingWidget);
             mDisplayAssets.push_back(new_button);
             mScrollingLayout->addWidget(new_button);

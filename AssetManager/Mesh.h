@@ -1,6 +1,10 @@
 #ifndef MESH_H
 #define MESH_H
 
+
+// #define TINYOBJLOADER_IMPLEMENTATION
+#include "External/tiny_obj_loader.h"
+
 #include "Core/Utilities.h"
 #include <QString>
 #include "Core/Vertex.h"
@@ -23,6 +27,7 @@ public:
     VkDeviceMemory mVertexBufferMemory;
     VkDeviceMemory mIndexBufferMemory;
     QString mPath;
+
     bool isUsed=false;
 protected:
 };
