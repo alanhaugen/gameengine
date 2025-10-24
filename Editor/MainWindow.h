@@ -31,6 +31,8 @@ public:
 
     ~MainWindow();
 
+    FilesWindow* mFilesWidget{nullptr};
+
     void setStatusBarMessage(const char* message);
     // void AddToolbar(const char* name, const char* action);
 
@@ -42,7 +44,7 @@ private:
 
     class Renderer* mVulkanWindow{nullptr};
 
-    FilesWindow* mFilesWidget{nullptr};
+    // FilesWindow* mFilesWidget{nullptr};
     //FilesWindow<mVulkanWindow->objManager>(mVulkanWindow->objManager)* mFilesWidget{nullptr};
 
     //GUI for Entities

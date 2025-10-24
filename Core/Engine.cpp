@@ -9,14 +9,16 @@ namespace gea
 
 Engine::Engine(Renderer* renderer, MainWindow *mainWindow) : mVulkanRenderer{renderer}, mMainWindow{mainWindow}
 {
-    mMeshManager=new AssetManager<gea::Mesh*>();
+    mMeshManager=new AssetManager<gea::Mesh>(); //new AssetManager<gea::Mesh>();
+    mMeshManager->importObjects();
+
     //should make 2 objects "visible"
     //mMeshManager->mAssets.at(2)->isUsed=true;
     mMeshManager->mAssets.at(4)->isUsed=true;
     //doing it this way to not change how the render system works
     for(gea::Mesh*& it: mMeshManager->mAssets){
         if(it->isUsed){
-             mMeshs.push_back(*it);
+             mMeshs.push_back(it);
         }
 
     }

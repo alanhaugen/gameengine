@@ -22,10 +22,10 @@ class FilesWindow: public QDockWidget // public QFrame for drag and drop
 
 
 public:
-    FilesWindow(AssetManager<gea::Mesh*>* manager, QWidget* parent=nullptr); // T
+    FilesWindow(AssetManager<gea::Mesh>* manager, QWidget* parent=nullptr); // T
 
     std::vector<QPushButton*> mDisplayAssets; //based on assets input vector size
-    AssetManager<gea::Mesh*>* mAssetsPtr{nullptr};
+    AssetManager<gea::Mesh>* mAssetsPtr{nullptr};
     QWidget* mCentralWidget{nullptr};
     QScrollArea* mScrolling{nullptr};
     QWidget* mScrollingWidget{nullptr};
@@ -39,7 +39,7 @@ public:
     // void dragMoveEvent(QDragMoveEvent *event) override;
     // void mousePressEvent(QMouseEvent *event) override;
 
-    void createButtons(AssetManager<gea::Mesh*>* assets_);
+    void createButtons(AssetManager<gea::Mesh>* assets_);
 };
 
 #endif // FILESWINDOW_H

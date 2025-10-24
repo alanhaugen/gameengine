@@ -32,7 +32,7 @@ public:
     // bool filesImported=false;
     void drawFrame();
     void initComponents(std::vector<gea::RenderComponent> staticComponents, std::vector<gea::TransformComponent> staticTransformComponents,
-                        std::vector<gea::Mesh> meshes, std::vector<gea::Texture> textures);
+                        std::vector<gea::Mesh*> meshes, std::vector<gea::Texture> textures);
     void updateCompoments(std::vector<gea::RenderComponent> renderComponents, std::vector<gea::TransformComponent> transformComponents);
 
     gea::Engine* mEngine{nullptr};
@@ -120,7 +120,7 @@ private:
     VkBuffer indexBuffer;
     VkDeviceMemory indexBufferMemory;
     //QSet<QString> filesSet=objManager->filesNamesSet;
-    std::vector<gea::Mesh> mMeshes;
+    std::vector<gea::Mesh*> mMeshes;
     std::vector<gea::Texture> mTextures;
     //this is done for testing sake. in the real ecs there would only be one vector of transform components
     std::vector<gea::TransformComponent> mDynamicTransformComponents;
@@ -155,7 +155,7 @@ private:
     VkFormat findSupportedFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features);
     VkFormat findDepthFormat();
     bool hasStencilComponent(VkFormat format);
-    //void createTextureImage(gea::Texture* texture);
+    void createTextureImage(gea::Texture* texture);//moved to Texture
     void createTextureResource(gea::Texture* texture);
     void generateMipmaps(VkImage image, VkFormat imageFormat, int32_t texWidth, int32_t texHeight, uint32_t mipLevels);
     VkSampleCountFlagBits getMaxUsableSampleCount();

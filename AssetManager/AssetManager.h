@@ -14,7 +14,8 @@
 template <typename T>
 class AssetManager{
 public:
-    AssetManager<T>(){AssetManager<T>::importObjects();};
+    AssetManager<T>()=default;
+    void initialize(){importObjects();};
 
     std::vector<T*> mAssets;
     //std::vector<gea::Texture*> mTextures;
@@ -95,7 +96,7 @@ inline void AssetManager<T>::importTextures()
 template<typename T>
 void AssetManager<T>::importObjects(){
 
-    if constexpr (std::is_same<T,gea::Mesh*>::value){ //constexpr
+    if constexpr (std::is_same<T,gea::Mesh>::value){ //constexpr
         QString folder="Models";
         QString object_type="*.obj";
         importAssets(folder, object_type, nullptr);
@@ -110,6 +111,9 @@ void AssetManager<T>::importObjects(){
         QString folder="Sounds";
         QString object_type="*.wav"; //or mp3
         importAssets(folder, object_type,nullptr);
+    }
+    else{
+        qDebug()<<"WRONG";
     }
 };
 
