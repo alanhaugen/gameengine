@@ -34,10 +34,6 @@ add_executable(QtVulkan
     shaders/phong.vert
     shaders/shader.frag
     shaders/shader.vert
-    shaders/color.frag
-    shaders/color.vert
-    shaders/gui.frag
-    shaders/gui.vert
     source/x-platform/editor.h
     source/platforms/qt/qteditor.h source/platforms/qt/qteditor.cpp
     source/demos/empty.h source/demos/empty.cpp
@@ -60,21 +56,16 @@ add_executable(QtVulkan
     source/x-platform/debug.h source/x-platform/debug.cpp
     source/demos/rollingball.cpp source/demos/rollingball.h
     source/components/terrain.cpp source/components/terrain.h
+    source/components/cube.cpp source/components/cube.h
     source/components/trianglecollider.cpp source/components/trianglecollider.h
     source/components/spherecollider.cpp source/components/spherecollider.h
     source/x-platform/input.h
     source/x-platform/input.cpp
-    source/modules/renderer/vulkan/vulkantexture.h
-    source/modules/physics/aaphysics/aaphysics.h source/modules/physics/aaphysics/aaphysics.cpp
-    source/components/sprite.h source/components/sprite.cpp
-    source/demos/pong.h
-    source/demos/pong.cpp
-    source/components/cube.h source/components/cube.cpp
-    source/components/text.h source/components/text.cpp
-    source/components/sphere.h source/components/sphere.cpp
     source/modules/audio/qtaudio/qtmultimediaaudio.cpp source/modules/audio/qtaudio/qtmultimediaaudio.h
-    source/demos/flappybird.cpp source/demos/flappybird.h
-    source/demos/breakout.cpp source/demos/breakout.h
+    source/modules/physics/aaphysics/aaphysics.h source/modules/physics/aaphysics/aaphysics.cpp
+    shaders/gui.frag shaders/gui.vert shaders/phong.frag shaders/color.vert shaders/color.frag shaders/shader.frag
+    source/demos/breakout.cpp source/demos/breakout.h source/demos/empty.cpp source/demos/flappybird.cpp source/demos/flappybird.h source/demos/pong.cpp source/demos/pong.h source/demos/rollingball.cpp source/demos/rollingball.h source/demos/vikingscene.cpp source/demos/vikingscene.h
+    source/components/cube.cpp source/components/cube.h source/components/mesh.cpp source/components/sphere.cpp source/components/sphere.h source/components/sprite.cpp source/components/sprite.h source/components/terrain.cpp source/components/terrain.h source/components/text.cpp source/components/text.h source/components/mesh.h source/components/camera.cpp source/components/camera.h source/components/component.h source/components/fpscamera.cpp source/components/fpscamera.h source/components/gameobject.cpp source/components/gameobject.h source/components/spherecollider.cpp source/components/spherecollider.h source/components/trianglecollider.cpp source/components/trianglecollider.h
 )
 
 #OpenAL
@@ -84,7 +75,8 @@ if(DEFINED ENV{OPENAL_HOME})
     target_link_libraries(QtVulkan PRIVATE $ENV{OPENAL_HOME}/libs/Win64/OpenAL32.lib)
 
     add_custom_command(TARGET QtVulkan POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+
+        source/components/visualobject.h     COMMAND ${CMAKE_COMMAND} -E copy_if_different
             $ENV{OPENAL_HOME}/bin/Win64/OpenAL32.dll
             $<TARGET_FILE_DIR:QtVulkan>
     )
@@ -101,8 +93,7 @@ if(MSVC)
     target_link_libraries(QtVulkan PRIVATE
         Qt::Core
         Qt::Widgets
-        Qt6::Widgets
-        Qt6::Multimedia
+        Qt::Multimedia
         "C:/VulkanSDK/1.4.321.1/Lib/vulkan-1.lib"
     )
 else()
@@ -113,7 +104,7 @@ else()
     target_link_libraries(QtVulkan PRIVATE
         Qt::Core
         Qt::Widgets
-        Qt6::Multimedia
+        Qt::Multimedia
         "-framework QuartzCore"
         "-framework Metal"
         "-framework Foundation"
@@ -127,8 +118,8 @@ else()
     )
 endif()
 
-#file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/Shaders" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
-#file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/Assets" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
+file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/Shaders" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
+file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/Assets" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
 
 include(GNUInstallDirs)
 install(TARGETS QtVulkan
