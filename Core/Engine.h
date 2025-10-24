@@ -75,7 +75,7 @@ public:
     std::vector<Mesh> mMeshs;
     std::vector<Texture> mTextures;
 
-    AssetManager<Mesh*>* mMeshManager{nullptr}; //vector<Mesh>*
+    AssetManager<Mesh*>* mMeshManager{nullptr}; //vector<Mesh>*s
 
     //The plan is that the systems can use these vectors containing all components of the different types
     //The components should be sorted by EntityID when added to the vectors.

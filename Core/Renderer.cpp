@@ -99,7 +99,7 @@ void Renderer::initVulkan()
     //createIndexBuffer();
     for (size_t i = 0; i < mTextures.size(); i++) {
         //createTextureImage(&mTextures[i]); //this has moved to the Texture class
-        createTextureResource(&mTextures[i]);
+         mMeshsNamesSetource(&mTextures[i]);
     }
 	for (size_t i = 0; i < mMeshes.size(); i++) {
         createVertexBuffer(&mMeshes[i]);
