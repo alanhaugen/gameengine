@@ -70,8 +70,7 @@ public:
     BSplineCurve curve;
 
     glm::vec3 velocity;
-    float acceleration = 0.0f;
-    float mass = 1.0f;
+    glm::vec3 gravity = glm::vec3(0, -0.98, 0);
 
     Terrain* terrainMesh;
     Mesh* ballMesh;

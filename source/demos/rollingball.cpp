@@ -26,8 +26,12 @@ void RollingBall::Update()
     {
         pos = glm::vec3();
         velocity = glm::vec3();
-        acceleration = 0.0f;
     }
+
+    glm::vec3 normal = terrainMesh->GetNormal(pos);
+
+    pos += velocity;
+    pos.y = terrainMesh->GetHeightAt(pos) + 0.1f;
 
     ballMesh->SetPosition(pos);
 }
