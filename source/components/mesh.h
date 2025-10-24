@@ -11,6 +11,4 @@ public:
          const char* vertexShaderPath = "shaders/phong.vert.spv",
          const char* fragmentShaderPath = "shaders/phong.frag.spv");
     void Update();
-
-    Renderer::Drawable* drawable;
 };
