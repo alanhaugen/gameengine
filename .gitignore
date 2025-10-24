@@ -80,6 +80,7 @@ CMakeLists.txt.user*
 .rcc/
 .uic/
 /build*/
+/Assets/
 
 #Visual Studio
 /.vs
