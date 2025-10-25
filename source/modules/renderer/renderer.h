@@ -12,7 +12,8 @@ public:
     enum Topology
     {
         TRIANGLES,
-        LINES
+        LINES,
+        POINTS
     };
 
     class Drawable
