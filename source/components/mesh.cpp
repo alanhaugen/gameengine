@@ -26,7 +26,7 @@ Mesh::Mesh(const char *filePath,
 
     if (materials.size() > 0)
     {
-        texture = materials[0].diffuse_texname.c_str();
+        //texture = materials[0].diffuse_texname.c_str();
     }
 
     std::unordered_map<Vertex, uint32_t> uniqueVertices{};
