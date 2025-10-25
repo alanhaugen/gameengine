@@ -12,7 +12,7 @@ void RollingBall::Init()
     ballMesh = new Mesh("Assets/Models/ball.obj");
     ballMesh->Scale(0.1f);
 
-    terrainMesh = new Terrain("Assets/Pointclouds/island.txt");//("Assets/terrain.png");
+    terrainMesh = new Terrain();//("Assets/terrain.png");
 
     camera.position = glm::vec3(0.0f, 0.0f, 4.0f);
 
