@@ -69,18 +69,18 @@ add_executable(QtVulkan
 )
 
 #OpenAL
-if(DEFINED ENV{OPENAL_HOME})
-    target_include_directories(QtVulkan PRIVATE $ENV{OPENAL_HOME}/include)
-
-    target_link_libraries(QtVulkan PRIVATE $ENV{OPENAL_HOME}/libs/Win64/OpenAL32.lib)
-
-    add_custom_command(TARGET QtVulkan POST_BUILD
-
-        source/components/visualobject.h     COMMAND ${CMAKE_COMMAND} -E copy_if_different
-            $ENV{OPENAL_HOME}/bin/Win64/OpenAL32.dll
-            $<TARGET_FILE_DIR:QtVulkan>
-    )
-endif()
+#if(DEFINED ENV{OPENAL_HOME})
+#    target_include_directories(QtVulkan PRIVATE $ENV{OPENAL_HOME}/include)
+#
+#    target_link_libraries(QtVulkan PRIVATE $ENV{OPENAL_HOME}/libs/Win64/OpenAL32.lib)
+#
+#    add_custom_command(TARGET QtVulkan POST_BUILD
+#
+#        source/components/visualobject.h     COMMAND ${CMAKE_COMMAND} -E copy_if_different
+#            $ENV{OPENAL_HOME}/bin/Win64/OpenAL32.dll
+#            $<TARGET_FILE_DIR:QtVulkan>
+#    )
+#endif()
 
 target_include_directories(QtVulkan PRIVATE include)
 
