@@ -1591,7 +1591,7 @@ void VulkanRenderer::Render() {
         // Descriptor set 1 has the texture
         if (drawable.isTextured)
         {
-            //vkCmdBindDescriptorSets(commandBuffers[imageIndex], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 1, 1, &drawable.textureDescriptor, 0, nullptr);
+            vkCmdBindDescriptorSets(commandBuffers[imageIndex], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 1, 1, &drawable.textureDescriptor, 0, nullptr);
         }
 
         if (drawable.indicesQuantity == 0)
