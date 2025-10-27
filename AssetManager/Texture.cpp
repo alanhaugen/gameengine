@@ -1,13 +1,23 @@
 #include "Texture.h"
 
-gea::Texture::Texture() //(model_path)
+// gea::Texture::Texture() //(model_path)
+// {
+// 	mMipLevels = 1;
+// 	mTextureImage = VK_NULL_HANDLE;
+// 	mTextureImageMemory = VK_NULL_HANDLE;
+// 	mTextureImageView = VK_NULL_HANDLE;
+// 	mTextureSampler = VK_NULL_HANDLE;
+// }
+
+gea::Texture::Texture(QString MODEL_PATH)
 {
-	mMipLevels = 1;
-	mTextureImage = VK_NULL_HANDLE;
-	mTextureImageMemory = VK_NULL_HANDLE;
-	mTextureImageView = VK_NULL_HANDLE;
-	mTextureSampler = VK_NULL_HANDLE;
-    ////createTextureImage(Model_path);
+    mMipLevels = 1;
+    mTextureImage = VK_NULL_HANDLE;
+    mTextureImageMemory = VK_NULL_HANDLE;
+    mTextureImageView = VK_NULL_HANDLE;
+    mTextureSampler = VK_NULL_HANDLE;
+    createTextureImage(MODEL_PATH);
+
 }
 
 void gea::Texture::createTextureImage(QString MODEL_PATH)

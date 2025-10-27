@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include "Editor/FilesWindow.h"
+#include "AssetManager/Mesh.h"
 #include <QKeyEvent>
 
 #include "Core/Input.h"
@@ -20,6 +21,7 @@ namespace gea
     class EntityModel;
     class RenderSystem;
     class Engine;
+    class Mesh;
 }
 
 class MainWindow : public QMainWindow
@@ -31,7 +33,8 @@ public:
 
     ~MainWindow();
 
-    FilesWindow* mFilesWidget{nullptr};
+    FilesWindow<gea::Mesh>* mFilesWidget{nullptr};
+    FilesWindow<gea::Texture>* mTextureWidget{nullptr};
 
     void setStatusBarMessage(const char* message);
     // void AddToolbar(const char* name, const char* action);

@@ -24,13 +24,13 @@ public:
     QSet<QString> mFilesNamesSet;
     QStack<QString> mFilesNamesStack;
 
-    // void addNewMesh(gea::Mesh* newMesh);
     void addNewAsset(T* newAsset);
+    //void addNewAsset(const T& newAsset);
 
-    void importTextures();
-    void importSounds();
+    // void importTextures();
+    // void importSounds();
+
     void importObjects();
-
     void importAssets(QString folder, QString object_type, QString object_type2);
 
 
@@ -73,37 +73,31 @@ void AssetManager<T>::importAssets(QString folder, QString object_type, QString 
     }
 }
 
-// template<typename T>
-// inline void AssetManager<T>::addNewMesh(gea::Mesh *newMesh)
-// {
-//     mAssets.push_back(newMesh);
-// }
+
 
 template<typename T>
-inline void AssetManager<T>::addNewAsset(T *newAsset)
+void AssetManager<T>::addNewAsset(T *newAsset)
 {
     mAssets.push_back(newAsset);
 }
 
-template<typename T>
-inline void AssetManager<T>::importTextures()
-{
-
-}
-
-
+// template<typename T>
+// void AssetManager<T>::addNewAsset(const T& newAsset)
+// {
+//     mAssets.push_back(newAsset);
+// }
 
 template<typename T>
 void AssetManager<T>::importObjects(){
 
-    if constexpr (std::is_same<T,gea::Mesh>::value){ //constexpr
+    if constexpr (std::is_same<T,gea::Mesh>::value){ //const expression comparisson, check if T is Mesh, call import Assets with mesh
         QString folder="Models";
         QString object_type="*.obj";
         importAssets(folder, object_type, nullptr);
     }
     else if constexpr (std::is_same<T,gea::Texture>::value){
         QString folder="Textures";
-        QString object_type="*.obj";
+        QString object_type="*.jpg";
         QString object_type2="*.png";
         importAssets(folder, object_type,object_type2);
     }
@@ -113,7 +107,7 @@ void AssetManager<T>::importObjects(){
         importAssets(folder, object_type,nullptr);
     }
     else{
-        qDebug()<<"WRONG";
+        qDebug()<<"WRONG: not reading objects";
     }
 };
 

@@ -70,11 +70,15 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
     //-------------------------------------------file system widget-------------------------------------------------------
     // new: need to create asset manager in the "engine" and call it here
 
-    mFilesWidget= new FilesWindow(mEngine->mMeshManager);
+    mFilesWidget= new FilesWindow<gea::Mesh>(mEngine->mMeshManager);
     addDockWidget(Qt::BottomDockWidgetArea,mFilesWidget); //add files window as a docker at the bottom
     //docker can float by itself and be moved out or in main window
     mFilesWidget->setFeatures(QDockWidget::DockWidgetFloatable | QDockWidget::DockWidgetMovable);
 
+    mTextureWidget= new FilesWindow<gea::Texture>(mEngine->mTextureManager);
+    addDockWidget(Qt::BottomDockWidgetArea,mTextureWidget); //add files window as a docker at the bottom
+    //docker can float by itself and be moved out or in main window
+    mTextureWidget->setFeatures(QDockWidget::DockWidgetFloatable | QDockWidget::DockWidgetMovable);
 
     //////////////model view test/////////
     // QWidget window;

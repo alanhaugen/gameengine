@@ -14,7 +14,8 @@ namespace gea
 class Texture
 {
 public:
-    Texture();
+    //Texture();
+    Texture(QString MODEL_PATH);
 
    //should be commented out
     std::string mTexturePath = PATH + "Assets/Textures/viking_room.png";

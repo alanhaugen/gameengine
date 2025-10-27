@@ -87,7 +87,7 @@ void Renderer::initVulkan()
     createColorResources();
     createDepthResources();
     createFramebuffers();
-    //createTextureImage();
+    //();
     //createTextureImageView();
     //createTextureSampler();
 
@@ -98,8 +98,8 @@ void Renderer::initVulkan()
     //createVertexBuffer();
     //createIndexBuffer();
     for (size_t i = 0; i < mTextures.size(); i++) {
-        createTextureImage(&mTextures[i]); //this has moved to the Texture class
-        //createTextureResource(&mTextures[i]);
+        //createTextureImage(mTextures[i]); //this has moved to the Texture class
+        createTextureResource(mTextures[i]);
     }
 	for (size_t i = 0; i < mMeshes.size(); i++) {
         createVertexBuffer(mMeshes[i]);
@@ -110,7 +110,7 @@ void Renderer::initVulkan()
     createUniformBuffers();
     createDescriptorPool();
     for (size_t i = 0; i < mTextures.size(); i++) {
-        createDescriptorSets(mTextures[i]);
+        createDescriptorSets(*mTextures[i]);
     }
     createCommandBuffers();
     createSyncObjects();
@@ -161,11 +161,11 @@ void Renderer::cleanup()
 {
     cleanupSwapChain();
 
-	for (gea::Texture texture : mTextures) {
-        vkDestroySampler(device, texture.mTextureSampler, nullptr);
-        vkDestroyImageView(device, texture.mTextureImageView, nullptr);
-        vkDestroyImage(device, texture.mTextureImage, nullptr);
-        vkFreeMemory(device, texture.mTextureImageMemory, nullptr);
+    for (gea::Texture* texture : mTextures) {
+        vkDestroySampler(device, texture->mTextureSampler, nullptr);
+        vkDestroyImageView(device, texture->mTextureImageView, nullptr);
+        vkDestroyImage(device, texture->mTextureImage, nullptr);
+        vkFreeMemory(device, texture->mTextureImageMemory, nullptr);
 	}
 
     vkDestroyDescriptorSetLayout(device, descriptorSetLayout, nullptr);
@@ -225,7 +225,7 @@ void Renderer::recreateSwapChain()
     createUniformBuffers();
     createDescriptorPool();
 	for (size_t i = 0; i < mTextures.size(); i++) {
-        createDescriptorSets(mTextures[i]);
+        createDescriptorSets(*mTextures[i]);
 	}
     createCommandBuffers();
 
@@ -881,13 +881,13 @@ bool Renderer::hasStencilComponent(VkFormat format) {
     return format == VK_FORMAT_D32_SFLOAT_S8_UINT || format == VK_FORMAT_D24_UNORM_S8_UINT;
 }
 
-void Renderer::createTextureResource(gea::Texture *texture)
+void Renderer:: createTextureResource(gea::Texture *texture)
 {
     VkDeviceSize imageSize = texture->mTexWidth * texture->mTexHeight * 4;
 
 
     VkBuffer stagingBuffer;
-    VkDeviceMemory stagingBufferMemory;
+    VkDeviceMemory stagingBufferMemory; //  mTextureImageMemory?
     createBuffer(imageSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory);
     //copy pixels from texture to staging buffer
     void* data;
@@ -896,7 +896,7 @@ void Renderer::createTextureResource(gea::Texture *texture)
     vkUnmapMemory(device, stagingBufferMemory);
 
     //MAKE VULKAN IMAGE
-    createImage(texture->mTexWidth, texture->mTexHeight, texture->mMipLevels, VK_SAMPLE_COUNT_1_BIT, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, texture->mTextureImage, texture->mTextureImageMemory);
+    createImage(texture->mTexWidth, texture->mTexHeight, texture->mMipLevels, VK_SAMPLE_COUNT_1_BIT, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, texture->mTextureImage, stagingBufferMemory);
 
     transitionImageLayout(texture->mTextureImage, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, texture->mMipLevels);
     copyBufferToImage(stagingBuffer,texture->mTextureImage, static_cast<uint32_t>(texture->mTexWidth), static_cast<uint32_t>(texture->mTexHeight));
@@ -904,7 +904,7 @@ void Renderer::createTextureResource(gea::Texture *texture)
 
     //clean up staging buffer
     vkDestroyBuffer(device, stagingBuffer, nullptr);
-    vkFreeMemory(device, stagingBufferMemory, nullptr);
+    vkFreeMemory(device, stagingBufferMemory, nullptr); //comment this out? similar thing is called in cleanup()where mTextureImageMemory is VkDeviceMemory
 
     generateMipmaps(texture->mTextureImage, VK_FORMAT_R8G8B8A8_SRGB, texture->mTexWidth, texture->mTexHeight, texture->mMipLevels);
 
@@ -912,42 +912,42 @@ void Renderer::createTextureResource(gea::Texture *texture)
     createTextureSampler(texture);
 }
 
-void Renderer::createTextureImage(gea::Texture* texture)
-{
-    int texWidth, texHeight, texChannels;
-    stbi_uc* pixels = stbi_load(texture->mTexturePath.c_str(), &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
-    VkDeviceSize imageSize = texWidth * texHeight * 4;
-    texture->mMipLevels = static_cast<uint32_t>(std::floor(std::log2(std::max(texWidth, texHeight)))) + 1;
+// void Renderer::createTextureImage(gea::Texture* texture)
+// {
+//     int texWidth, texHeight, texChannels;
+//     stbi_uc* pixels = stbi_load(texture->mTexturePath.c_str(), &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
+//     VkDeviceSize imageSize = texWidth * texHeight * 4;
+//     texture->mMipLevels = static_cast<uint32_t>(std::floor(std::log2(std::max(texWidth, texHeight)))) + 1;
 
-    if (!pixels) {
-        throw std::runtime_error("failed to load texture image!");
-    }
+//     if (!pixels) {
+//         throw std::runtime_error("failed to load texture image!");
+//     }
 
-    VkBuffer stagingBuffer;
-    VkDeviceMemory stagingBufferMemory;
-    createBuffer(imageSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory);
+//     VkBuffer stagingBuffer;
+//     VkDeviceMemory stagingBufferMemory;
+//     createBuffer(imageSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory);
 
-    void* data;
-    vkMapMemory(device, stagingBufferMemory, 0, imageSize, 0, &data);
-    memcpy(data, pixels, static_cast<size_t>(imageSize));
-    vkUnmapMemory(device, stagingBufferMemory);
+//     void* data;
+//     vkMapMemory(device, stagingBufferMemory, 0, imageSize, 0, &data);
+//     memcpy(data, pixels, static_cast<size_t>(imageSize));
+//     vkUnmapMemory(device, stagingBufferMemory);
 
-    stbi_image_free(pixels);
+//     stbi_image_free(pixels);
 
-    createImage(texWidth, texHeight, texture->mMipLevels, VK_SAMPLE_COUNT_1_BIT, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, texture->mTextureImage, texture->mTextureImageMemory);
+//     createImage(texWidth, texHeight, texture->mMipLevels, VK_SAMPLE_COUNT_1_BIT, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, texture->mTextureImage, stagingBufferMemory);
 
-    transitionImageLayout(texture->mTextureImage, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, texture->mMipLevels);
-    copyBufferToImage(stagingBuffer, texture->mTextureImage, static_cast<uint32_t>(texWidth), static_cast<uint32_t>(texHeight));
-    //transitioned to VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL while generating mipmaps
+//     transitionImageLayout(texture->mTextureImage, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, texture->mMipLevels);
+//     copyBufferToImage(stagingBuffer, texture->mTextureImage, static_cast<uint32_t>(texWidth), static_cast<uint32_t>(texHeight));
+//     //transitioned to VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL while generating mipmaps
 
-    vkDestroyBuffer(device, stagingBuffer, nullptr);
-    vkFreeMemory(device, stagingBufferMemory, nullptr);
+//     vkDestroyBuffer(device, stagingBuffer, nullptr);
+//     vkFreeMemory(device, stagingBufferMemory, nullptr);
 
-    generateMipmaps(texture->mTextureImage, VK_FORMAT_R8G8B8A8_SRGB, texWidth, texHeight, texture->mMipLevels);
+//     generateMipmaps(texture->mTextureImage, VK_FORMAT_R8G8B8A8_SRGB, texWidth, texHeight, texture->mMipLevels);
 
-    createTextureImageView(texture);
-    createTextureSampler(texture);
-}
+//     createTextureImageView(texture);
+//     createTextureSampler(texture);
+// }
 
 void Renderer::generateMipmaps(VkImage image, VkFormat imageFormat, int32_t texWidth, int32_t texHeight, uint32_t mipLevels)
 {
@@ -1828,7 +1828,7 @@ void Renderer::drawFrame()
 }
 
 void Renderer::initComponents(std::vector<gea::RenderComponent> staticComponents, std::vector<gea::TransformComponent> staticTransformComponents,
-                              std::vector<gea::Mesh*> meshes, std::vector<gea::Texture> textures)
+                              std::vector<gea::Mesh*> meshes, std::vector<gea::Texture*> textures)
 {
     mStaticRenderComponents = staticComponents;
     mStaticTransformComponents = staticTransformComponents;

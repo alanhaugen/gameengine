@@ -73,9 +73,10 @@ public:
     //These are the ACTUAL meshes and Textures, and is used by Entities from a
     //RenderComponent
     std::vector<Mesh*> mMeshs;
-    std::vector<Texture> mTextures;
+    std::vector<Texture*> mTextures;
 
-    AssetManager<gea::Mesh>* mMeshManager{nullptr}; //vector<Mesh>*s
+    AssetManager<gea::Mesh>* mMeshManager{nullptr}; //vector<Mesh*>*
+    AssetManager<gea::Texture>* mTextureManager{nullptr};
 
     //The plan is that the systems can use these vectors containing all components of the different types
     //The components should be sorted by EntityID when added to the vectors.
