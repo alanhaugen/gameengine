@@ -25,7 +25,7 @@ void RollingBall::Init()
     //ball->AddComponent(new SphereCollider());
 
     GameObject* terrain = new GameObject;
-    terrainMesh = new Terrain("Assets/Pointclouds/island.txt");//("Assets/terrain.png");
+    terrainMesh = new Terrain("Assets/Pointclouds/output.txt");//("Assets/terrain.png");
     ball->AddComponent(terrainMesh);
     ball->AddComponent(new TriangleCollider());
 
@@ -44,10 +44,10 @@ void RollingBall::Update()
         glm::mat4& matrix = balls[index]->drawable->ubo.model;
         glm::vec3 pos = glm::vec3(matrix[3]);
 
-        pos = glm::vec3(camera.position);
+        pos = glm::vec3();
         matrix[3] = glm::vec4(pos, 1.0f);
 
-        directions[index] = glm::vec3(camera.forward / 90.0f);
+        directions[index] = glm::vec3();
 
         index++;
 
