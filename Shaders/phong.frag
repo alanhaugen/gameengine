@@ -13,9 +13,9 @@ layout(set=0,location = 2) in vec3 o_toCamera; // direction to camera
 layout(set=0,location = 3) in vec2 o_texcoords;
 layout(set=0,location = 4) in vec4 o_colour;
 
-layout(location=0) out vec4 resultingColor;
+layout(location = 0) out vec4 resultingColor;
 
-layout(binding=1) uniform sampler2D u_diffuseTexture;
+layout(set = 1, binding = 0) uniform sampler2D u_diffuseTexture;
 
 #else
 in vec3 o_normal;
@@ -132,7 +132,7 @@ void main(void)
     vec3 Ispe = specularLighting(N, L, V);
 
     // diffuse color of the object from texture
-    vec3 diffuseColor = o_colour.rgb; //texture(u_diffuseTexture, o_texcoords).rgb;
+    vec3 diffuseColor = texture(u_diffuseTexture, o_texcoords).rgb;
 
     // combination of all components and diffuse color of the object
     resultingColor.xyz = diffuseColor * (Iamb + Idif + Ispe);

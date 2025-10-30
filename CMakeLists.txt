@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.19)
 project(QtVulkan LANGUAGES CXX)
 
-find_package(Qt6 6.5 REQUIRED COMPONENTS Core Widgets)
+find_package(Qt6 6.5 REQUIRED COMPONENTS Core Widgets Multimedia)
 
 qt_standard_project_setup()
 
@@ -34,6 +34,10 @@ add_executable(QtVulkan
     shaders/phong.vert
     shaders/shader.frag
     shaders/shader.vert
+    shaders/color.frag
+    shaders/color.vert
+    shaders/gui.frag
+    shaders/gui.vert
     source/x-platform/editor.h
     source/platforms/qt/qteditor.h source/platforms/qt/qteditor.cpp
     source/demos/empty.h source/demos/empty.cpp
@@ -60,7 +64,18 @@ add_executable(QtVulkan
     source/components/spherecollider.cpp source/components/spherecollider.h
     source/x-platform/input.h
     source/x-platform/input.cpp
+    source/modules/renderer/vulkan/vulkantexture.h
     source/modules/physics/aaphysics/aaphysics.h source/modules/physics/aaphysics/aaphysics.cpp
+    source/components/sprite.h source/components/sprite.cpp
+    source/demos/pong.h
+    source/demos/pong.cpp
+    source/components/cube.h source/components/cube.cpp
+    source/components/text.h source/components/text.cpp
+    source/components/sphere.h source/components/sphere.cpp
+    source/modules/audio/qtaudio/qtmultimediaaudio.cpp source/modules/audio/qtaudio/qtmultimediaaudio.h
+    source/demos/flappybird.cpp source/demos/flappybird.h
+    source/demos/breakout.cpp source/demos/breakout.h
+    source/towerdefense/game.cpp source/towerdefense/game.h source/towerdefense/gameover.cpp source/towerdefense/gameover.h source/towerdefense/mainmenu.cpp source/towerdefense/mainmenu.h source/towerdefense/victory.cpp source/towerdefense/victory.h
 )
 
 #OpenAL
@@ -88,6 +103,7 @@ if(MSVC)
         Qt::Core
         Qt::Widgets
         Qt6::Widgets
+        Qt6::Multimedia
         "C:/VulkanSDK/1.4.321.1/Lib/vulkan-1.lib"
     )
 else()
@@ -98,6 +114,7 @@ else()
     target_link_libraries(QtVulkan PRIVATE
         Qt::Core
         Qt::Widgets
+        Qt6::Multimedia
         "-framework QuartzCore"
         "-framework Metal"
         "-framework Foundation"
