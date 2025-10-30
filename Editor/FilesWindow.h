@@ -119,50 +119,6 @@ void FilesWindow<T>::dropEvent(QDropEvent *event)
     for(const QUrl &it: urls){
         QString path=it.toLocalFile();
         QString name=QFileInfo(path).baseName();
-        //-------------------------incorrect, but always works, keeping for now
-        // if constexpr (std::is_same<T,gea::Mesh>::value){ //if window is mesh window
-        //     if (path.endsWith(".obj") && !mAssetsPtr->mFilesNamesSet.contains(name)){ //file has not been imported allready
-        //         mAssetsPtr->mFilesNamesSet.insert(name);
-        //         int i=mAssetsPtr->mFilesNamesSet.size();
-        //         //gea::Mesh* newMesh=new gea::Mesh(path);
-        //         T* newMesh=new T(path);
-        //         mAssetsPtr->addNewAsset(newMesh); //actually import a new object with its vertices&indices
-        //         QPushButton* new_button=new QPushButton(name, mScrollingWidget);
-        //         mDisplayAssets.push_back(new_button);
-        //         mScrollingLayout->addWidget(new_button);
-        //         //displayAssets.back()->setGeometry(QRect(QPoint(200*i, 100), QSize(200, 50)));
-
-        //         //connect buttons to the objects
-        //         connect(mDisplayAssets.back(), &QPushButton::released, this,[this, i]{ mHandleButton(i-1); });
-        //         mStatus->showMessage(" Drop new files in this window ");
-        //     }
-        //     else
-        //         mStatus->showMessage(" imported or wrong file");
-        // }
-
-        // //-----------add texture----------------------
-        // else if constexpr (std::is_same<T,gea::Texture>::value){ //if window is textures window
-        //     if(path.endsWith(".png") || path.endsWith(".jpg") && !mAssetsPtr->mFilesNamesSet.contains(name)){//if correct type,check if already has been imported
-        //             mAssetsPtr->mFilesNamesSet.insert(name);
-        //             int i=mAssetsPtr->mFilesNamesSet.size();
-        //             //gea::Texture* newTexture=new gea::Texture(path);
-        //             T* newTexture=new T(path);
-        //             mAssetsPtr->addNewAsset(newTexture);//actually importing new texture
-        //             QPushButton* new_button=new QPushButton(name, mScrollingWidget);
-        //             mDisplayAssets.push_back(new_button);
-        //             mScrollingLayout->addWidget(new_button);
-        //             //displayAssets.back()->setGeometry(QRect(QPoint(200*i, 100), QSize(200, 50)));
-
-        //             //connect buttons to the objects
-        //             connect(mDisplayAssets.back(), &QPushButton::released, this,[this, i]{ mHandleButton(i-1); });
-        //             mStatus->showMessage(" Drop new files in this window ");
-        //     }
-        //     else
-        //         mStatus->showMessage(" Incorrect file type or imported. ");
-        // }
-
-        //--------------------------correct, but doesnt work sometimes--------------------
-
         //looking up an element in QSet is faster than iterating over a stack
         //------------------------add mesh-------------------
         if constexpr (std::is_same<T,gea::Mesh>::value){ //if window is mesh window
@@ -176,7 +132,6 @@ void FilesWindow<T>::dropEvent(QDropEvent *event)
                 QPushButton* new_button=new QPushButton(name, mScrollingWidget);
                 mDisplayAssets.push_back(new_button);
                 mScrollingLayout->addWidget(new_button);
-                //displayAssets.back()->setGeometry(QRect(QPoint(200*i, 100), QSize(200, 50)));
 
                 //connect buttons to the objects
                 connect(mDisplayAssets.back(), &QPushButton::released, this,[this, i]{ mHandleButton(i-1); });
@@ -201,7 +156,6 @@ void FilesWindow<T>::dropEvent(QDropEvent *event)
                     QPushButton* new_button=new QPushButton(name, mScrollingWidget);
                     mDisplayAssets.push_back(new_button);
                     mScrollingLayout->addWidget(new_button);
-                    //displayAssets.back()->setGeometry(QRect(QPoint(200*i, 100), QSize(200, 50)));
 
                     //connect buttons to the objects
                     connect(mDisplayAssets.back(), &QPushButton::released, this,[this, i]{ mHandleButton(i-1); });

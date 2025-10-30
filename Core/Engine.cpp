@@ -22,7 +22,7 @@ Engine::Engine(Renderer* renderer, MainWindow *mainWindow) : mVulkanRenderer{ren
 
     mTextureManager=new AssetManager<gea::Texture>();
     mTextureManager->importObjects();
-    mTextureManager->mAssets.at(3)->isUsed=true;
+    mTextureManager->mAssets.at(16)->isUsed=true;
     for(gea::Texture*& it: mTextureManager->mAssets){
         if(it->isUsed){
             mTextures.push_back(it);

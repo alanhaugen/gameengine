@@ -99,6 +99,7 @@ void Renderer::initVulkan()
     //createIndexBuffer();
     for (size_t i = 0; i < mTextures.size(); i++) {
         //createTextureImage(mTextures[i]); //this has moved to the Texture class
+
         createTextureResource(mTextures[i]);
     }
 	for (size_t i = 0; i < mMeshes.size(); i++) {
@@ -887,7 +888,7 @@ void Renderer:: createTextureResource(gea::Texture *texture)
 
 
     VkBuffer stagingBuffer;
-    VkDeviceMemory stagingBufferMemory; //  mTextureImageMemory?
+    VkDeviceMemory stagingBufferMemory; //  texture->mTextureImageMemory?
     createBuffer(imageSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory);
     //copy pixels from texture to staging buffer
     void* data;
@@ -902,14 +903,15 @@ void Renderer:: createTextureResource(gea::Texture *texture)
     copyBufferToImage(stagingBuffer,texture->mTextureImage, static_cast<uint32_t>(texture->mTexWidth), static_cast<uint32_t>(texture->mTexHeight));
     //transitioned to VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL while generating mipmaps
 
-    //clean up staging buffer
-    vkDestroyBuffer(device, stagingBuffer, nullptr);
-    vkFreeMemory(device, stagingBufferMemory, nullptr); //comment this out? similar thing is called in cleanup()where mTextureImageMemory is VkDeviceMemory
-
     generateMipmaps(texture->mTextureImage, VK_FORMAT_R8G8B8A8_SRGB, texture->mTexWidth, texture->mTexHeight, texture->mMipLevels);
 
     createTextureImageView(texture);
     createTextureSampler(texture);
+
+    //clean up staging buffer
+    vkDestroyBuffer(device, stagingBuffer, nullptr);
+    vkFreeMemory(device, stagingBufferMemory, nullptr); //comment this out?: no. in cleanup()where mTextureImageMemory is VkDeviceMemory it should be its own thing
+
 }
 
 // void Renderer::createTextureImage(gea::Texture* texture)
