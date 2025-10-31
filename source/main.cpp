@@ -1,11 +1,9 @@
 #include "platforms/application.h"
+#include "demos/rollingball.h"
 
 int main(int argumentQuantity, char *argumentArray[])
 {
     Application application(argumentQuantity, argumentArray, "Breakout", 1100, 700);
-    application.AddScene(new MainMenu);
-    application.AddScene(new Game);
-    application.AddScene(new GameOver);
-    application.AddScene(new Victory);
+    application.AddScene(new RollingBall);
     return application.Run();
 }
