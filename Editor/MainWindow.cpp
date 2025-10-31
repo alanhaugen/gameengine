@@ -111,7 +111,7 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
     //Should eventually be run from the Engine
     gea::SoundSystem* testSound = new gea::SoundSystem(mEngine);
     testSound->setMainWindow(this);
-    testSound->playSound("Test Drive.mp3");
+    // testSound->playSound("Test Drive.mp3");
 
     gea::ScriptingSystem* testScript = new gea::ScriptingSystem(this, mEngine);
 
@@ -148,17 +148,6 @@ void MainWindow::start()
     // mEngine->GameLoop(); //not correct yet
 }
 
-void MainWindow::setCameraSpeed(float value)
-{
-    mCameraSpeed += value;
-
-    //Keep within some min and max values
-    if(mCameraSpeed < 0.01f)
-        mCameraSpeed = 0.01f;
-    if (mCameraSpeed > 0.3f)
-        mCameraSpeed = 0.3f;
-}
-
 void MainWindow::keyPressEvent(QKeyEvent* event)
 {
     if (event->key() == Qt::Key_Escape)
@@ -180,9 +169,9 @@ void MainWindow::keyPressEvent(QKeyEvent* event)
     if(event->key() == Qt::Key_A)
         mInput.A = true;
     if(event->key() == Qt::Key_Q)
-        mInput.D = true;
+        mInput.Q = true;
     if(event->key() == Qt::Key_E)
-        mInput.A = true;
+        mInput.E = true;
 }
 
 void MainWindow::keyReleaseEvent(QKeyEvent *event)
@@ -197,9 +186,9 @@ void MainWindow::keyReleaseEvent(QKeyEvent *event)
     if(event->key() == Qt::Key_A)
         mInput.A = false;
     if(event->key() == Qt::Key_Q)
-        mInput.D = false;
+        mInput.Q = false;
     if(event->key() == Qt::Key_E)
-        mInput.A = false;
+        mInput.E = false;
 }
 
 void MainWindow::mousePressEvent(QMouseEvent *event)
@@ -230,8 +219,8 @@ void MainWindow::mouseMoveEvent(QMouseEvent *event)
         mMouseXlast = event->pos().x() - mMouseXlast;
         mMouseYlast = event->pos().y() - mMouseYlast;
 
-        mCamera->mTarget.x += mMouseXlast * mCameraRotateSpeed;
-        mCamera->mTarget.y += mMouseYlast * mCameraRotateSpeed;
+        mCamera->mYaw += mMouseXlast * mCameraRotateSpeed;
+        mCamera->mPitch += mMouseYlast * mCameraRotateSpeed;
 
     }
     mMouseXlast = event->pos().x();
@@ -241,6 +230,26 @@ void MainWindow::mouseMoveEvent(QMouseEvent *event)
 
 void MainWindow::wheelEvent(QWheelEvent *event)
 {
+    QPoint numDegrees = event->angleDelta() / 8;
+
+    //if RMB, change the speed of the camera
+    //The values here could be set in a config-file instead of being hardcoded
+    if (mInput.RMB)
+    {
+        if (numDegrees.y() > 1)
+        {
+            mCameraSpeed += 0.0005f;
+            if (mCameraSpeed > 0.1f)    //test to not go to high
+                mCameraSpeed = 0.1f;
+        }
+        if (numDegrees.y() < 1)
+        {
+            mCameraSpeed -= 0.0005f;    //test to not go to low / negative
+            if (mCameraSpeed < 0.0005f)
+                mCameraSpeed = 0.0005f;
+        }
+    }
+    event->accept();
 
 }
 
@@ -249,26 +258,22 @@ void MainWindow::handleInput()
     //If camera is not set, don't try to update it!
     if (!mCamera)
         return;
-    mCamera->setSpeeds(0.f);  //cancel last frame movement
 
-    //setCameraSpeed(100.0f);
-
-    // if(mInput.RMB)
-        // qDebug() << "RMB held down";
+    mCamera->resetMovement();  //reset last frame movement
 
     if (mInput.RMB)
     {
         if (mInput.W)
-            mCamera->mYSpeed -= mCameraSpeed;
+            mCamera->mCameraMovement.z += mCameraSpeed; //forward
         if (mInput.S)
-            mCamera->mYSpeed += mCameraSpeed;
+            mCamera->mCameraMovement.z -= mCameraSpeed; //backward
         if (mInput.D)
-            mCamera->mXSpeed -= mCameraSpeed;
+            mCamera->mCameraMovement.x += mCameraSpeed; //right
         if (mInput.A)
-            mCamera->mXSpeed += mCameraSpeed;
+            mCamera->mCameraMovement.x -= mCameraSpeed; //left
         if (mInput.Q)
-            mCamera->mZSpeed += mCameraSpeed;
+            mCamera->mCameraMovement.y -= mCameraSpeed; //down
         if (mInput.E)
-            mCamera->mZSpeed -= mCameraSpeed;
+            mCamera->mCameraMovement.y += mCameraSpeed; //up
     }
 }
