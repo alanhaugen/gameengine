@@ -14,3 +14,8 @@ void NullAudio::PlaySound(std::string filename, glm::vec3 pos)
 {
 
 }
+
+void NullAudio::PlayMusic(std::string filename)
+{
+
+}

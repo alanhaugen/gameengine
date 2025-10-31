@@ -2,11 +2,14 @@
 #include "ui_MainWindow.h"
 #include "../../modules/renderer/vulkan/vulkanrenderer.h"
 #include "../../components/mesh.h"
+#include "../../components/cube.h"
 #include <QTimer>
 #include "../../components/gameobject.h"
 #include <qinputdialog.h>
 #include "../../x-platform/locator.h"
+#include "../../x-platform/scene.h"
 #include "../../modules/audio/openal/openalaudio.h"
+#include "../../modules/audio/qtaudio/qtmultimediaaudio.h"
 #include "../../modules/physics/aaphysics/aaphysics.h"
 
 MainWindow::MainWindow(QWidget *parent, const char* windowTitle, int windowWidth, int windowHeight)
@@ -37,7 +40,7 @@ MainWindow::MainWindow(QWidget *parent, const char* windowTitle, int windowWidth
     vulkanWidget->sizePolicy().setHorizontalPolicy(QSizePolicy::Expanding);
     vulkanWidget->sizePolicy().setVerticalPolicy(QSizePolicy::Expanding);
 
-    vulkanWidget->setFocusPolicy(Qt::NoFocus);
+    vulkanWidget->setFocusPolicy(Qt::StrongFocus);
 
     ui->VulkanLayout->addWidget(vulkanWidget);
 
@@ -51,8 +54,8 @@ MainWindow::MainWindow(QWidget *parent, const char* windowTitle, int windowWidth
     //GameObject treewidget
     ui->treeGameObjects->setMinimumWidth(100);
 
-    //sets the keyboard input focus to the MainWindow when program starts
-    this->setFocus();
+    //sets the keyboard input focus to the renderer when program starts
+    vulkanWidget->setFocus();
 
     timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, &MainWindow::MainGameLoop);
@@ -70,10 +73,12 @@ MainWindow::MainWindow(QWidget *parent, const char* windowTitle, int windowWidth
 
     lastTime = std::chrono::high_resolution_clock::now();
 
-    OpenALAudio* openAL = new OpenALAudio();
+    //OpenALAudio* openAL = new OpenALAudio();
+    QtMultimediaAudio* qtAudio = new QtMultimediaAudio();
     AAPhysics* aaphysics = new AAPhysics();
 
-    Locator::SetAudio(openAL);
+    //Locator::SetAudio(openAL);
+    Locator::SetAudio(qtAudio);
     Locator::SetPhysics(aaphysics);
     Locator::SetRenderer(renderer);
 
@@ -210,25 +215,34 @@ void MainWindow::AddVikingRoom()
 
 void MainWindow::AddCube()
 {
-    //scene->components.push_back(new Mesh("Assets/Models/viking_room.obj", renderer, scene->editor));
-    qDebug() << "Cube";
+    GameObject* gameobj = new GameObject("Cube");
+
+    Cube* cube = new Cube();
+
+    gameobj->AddComponent(cube);
+
+    scene->gameObjects.push_back(gameobj);
 }
 
 void MainWindow::AddSphere()
 {
-    //scene->components.push_back(new Mesh("Assets/Models/viking_room.obj", renderer, scene->editor));
-    qDebug() << "Sphere";
+    GameObject* gameobj = new GameObject("Sphere");
+
+    Mesh* mesh = new Mesh("Assets/Models/ball.obj");
+
+    gameobj->AddComponent(mesh);
+
+    scene->gameObjects.push_back(gameobj);
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
-#ifdef Q_OS_WIN
     if (renderer)
     {
         delete renderer;
         renderer = nullptr;
         close();
-        timer->stop();
     }
-#endif
+
+    timer->stop();
 }

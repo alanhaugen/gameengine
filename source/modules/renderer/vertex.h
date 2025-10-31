@@ -13,25 +13,29 @@ struct Vertex {
     glm::vec3 color;
     glm::vec3 normal;
     glm::vec2 texCoord;
+    glm::float32_t glyph;
 
-    Vertex(float x, float y, float z, glm::vec3 innColor = glm::vec3(1.0f)) {
+    Vertex(float x, float y, float z, glm::vec3 inColor = glm::vec3(1.0f)) {
         pos = glm::vec3(x, y, z);
-        color = innColor;
+        color = inColor;
         normal = glm::vec3(1.0f, 1.0f, 1.0f);
+        glyph = -1.0f;
     }
 
     Vertex()
     {
         color = glm::vec3(1.0f, 1.0f, 1.0f);
         normal = glm::vec3(1.0f, 1.0f, 1.0f);
+        glyph = -1.0f;
     }
 
-    Vertex(glm::vec3 pos_)
+    Vertex(glm::vec3 pos_, glm::vec3 inColor = glm::vec3(1.0f))
     {
         pos = pos_;
         color = pos;
         color /= color.length();
         normal = glm::vec3(1.0f, 1.0f, 1.0f);
+        glyph = -1.0f;
     }
 
     static VkVertexInputBindingDescription getBindingDescription() {
@@ -43,8 +47,8 @@ struct Vertex {
         return bindingDescription;
     }
 
-    static std::array<VkVertexInputAttributeDescription, 4> getAttributeDescriptions() {
-        std::array<VkVertexInputAttributeDescription, 4> attributeDescriptions{};
+    static std::array<VkVertexInputAttributeDescription, 5> getAttributeDescriptions() {
+        std::array<VkVertexInputAttributeDescription, 5> attributeDescriptions{};
 
         attributeDescriptions[0].binding = 0;
         attributeDescriptions[0].location = 0;
@@ -65,6 +69,11 @@ struct Vertex {
         attributeDescriptions[3].location = 3;
         attributeDescriptions[3].format = VK_FORMAT_R32G32_SFLOAT;
         attributeDescriptions[3].offset = offsetof(Vertex, texCoord);
+
+        attributeDescriptions[4].binding = 0;
+        attributeDescriptions[4].location = 4;
+        attributeDescriptions[4].format = VK_FORMAT_R32_SFLOAT;
+        attributeDescriptions[4].offset = offsetof(Vertex, glyph);
 
         return attributeDescriptions;
     }
