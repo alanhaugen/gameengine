@@ -37,28 +37,51 @@ Terrain::Terrain()
 
 Terrain::Terrain(const char *filePath,
            const char* vertexShaderPath,
-           const char* fragmentShaderPath)
+           const char* fragmentShaderPath,
+           bool isCloud)
 {
     float x, y, z;
 
     int width,height,n;
     unsigned char *data = stbi_load(filePath, &width, &height, &n, 0);
 
-    for (int y = 0; y < height; y++)
+    int index = 0;
+    for (int y = 0; y < height - 1; y++)
     {
-        for (int x = 0; x < width; x++)
+        for (int x = 0; x < width - 1; x++)
         {
-            glm::vec3 pos = glm::vec3(x, y, data[x + y * height]);
-            pos /= 100.0f;
+            glm::vec3 topLeft  = glm::vec3(x, data[x + y * height], y);
+            glm::vec3 topRight = glm::vec3(x + 1, data[(x + 1) + y * height], y);
+            glm::vec3 bottomLeft = glm::vec3(x, data[x + (y + 1) * height], y + 1);
+            glm::vec3 bottomRight = glm::vec3(x + 1, data[(x + 1) + (y + 1) * height], y + 1);
 
-            glm::vec3 color(0.0f);
-            color.g = pos.y / pos.length() * 50.0f;
+            float scale = 50.0f;
 
-            vertices.push_back(Vertex(pos.x, pos.y, pos.z, color));
+            vertices.push_back(bottomLeft / scale);
+            vertices.push_back(bottomRight / scale);
+            vertices.push_back(topRight / scale);
+            vertices.push_back(topLeft / scale);
+
+            indices.push_back(0 + index);
+            indices.push_back(1 + index);
+            indices.push_back(2 + index);
+
+            indices.push_back(2 + index);
+            indices.push_back(3 + index);
+            indices.push_back(0 + index);
+
+            index += 4;
         }
     }
 
-    drawable = &renderer->CreateDrawable(vertices, indices, vertexShaderPath, fragmentShaderPath, Renderer::POINTS);
+    if (isCloud)
+    {
+        drawable = &renderer->CreateDrawable(vertices, indices, vertexShaderPath, fragmentShaderPath, Renderer::POINTS);
+    }
+    else
+    {
+        drawable = &renderer->CreateDrawable(vertices, indices, vertexShaderPath, fragmentShaderPath, Renderer::TRIANGLES);
+    }
 }
 
 void Terrain::Update()

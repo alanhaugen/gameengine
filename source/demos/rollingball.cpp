@@ -11,62 +11,46 @@ RollingBall::RollingBall()
 
 void RollingBall::Init()
 {
-    GameObject* ball = new GameObject;
+    ballMesh = new Mesh("Assets/Models/ball.obj");
+    ballMesh->drawable->ubo.model = glm::scale(ballMesh->drawable->ubo.model, glm::vec3(0.1));
 
-    for (int i = 0; i < 500; i++)
-    {
-        Mesh* ballMesh = new Mesh("Assets/Models/ball.obj");
-        balls.push_back(ballMesh);
-        directions.push_back(glm::vec3());
-        ballMesh->drawable->ubo.model = glm::scale(ballMesh->drawable->ubo.model, glm::vec3(0.1f,0.1f,0.1f));
-        ball->AddComponent(ballMesh);
-    }
-
-    //ball->AddComponent(new SphereCollider());
-
-    GameObject* terrain = new GameObject;
     terrainMesh = new Terrain("Assets/Textures/perlin.png");
-    ball->AddComponent(terrainMesh);
-    ball->AddComponent(new TriangleCollider());
+    terrainMeshPoints = new Terrain("Assets/Textures/dovre.png", "shaders/color.vert.spv", "shaders/color.frag.spv", true);
+    terrainMeshPoints->drawable->isVisible = false;
 
     camera.position = glm::vec3(0.0f, 0.0f, 4.0f);
 
     renderer->SetLightPos(glm::vec3(0,2,0));
-
-    gameObjects.push_back(ball);
-    gameObjects.push_back(terrain);
 }
 
 void RollingBall::Update()
 {
     if (input.Held(input.Key.SPACE))
     {
-        glm::mat4& matrix = balls[index]->drawable->ubo.model;
+        glm::mat4& matrix = ballMesh->drawable->ubo.model;
         glm::vec3 pos = glm::vec3(matrix[3]);
 
         pos = glm::vec3(camera.position);
         matrix[3] = glm::vec4(pos, 1.0f);
 
-        directions[index] = glm::vec3(camera.forward / 90.0f);
+        direction = glm::vec3(camera.forward / 90.0f);
 
         index++;
-
-        if (index > balls.size() - 1)
-        {
-            index = 0;
-        }
     }
 
-    for (int i = 0; i < balls.size(); i++)
+    if (input.Held(input.Key.G))
     {
-        glm::mat4& matrix = balls[i]->drawable->ubo.model;
-        glm::vec3 pos = glm::vec3(matrix[3]);
-
-        directions[i] += terrainMesh->GetNormal(pos) / 5000.0f;
-
-        pos += directions[i];
-        pos.y = terrainMesh->GetHeightAt(pos) + 0.1f;
-
-        matrix[3] = glm::vec4(pos, 1.0f);
+        terrainMeshPoints->drawable->isVisible = !terrainMeshPoints->drawable->isVisible;
+        terrainMesh->drawable->isVisible = !terrainMesh->drawable->isVisible;
     }
+
+    glm::mat4& matrix = ballMesh->drawable->ubo.model;
+    glm::vec3 pos = glm::vec3(matrix[3]);
+
+    direction += terrainMesh->GetNormal(pos);
+
+    pos += direction;
+    pos.y = terrainMesh->GetHeightAt(pos) + 0.1f;
+
+    matrix[3] = glm::vec4(pos, 1.0f);
 }

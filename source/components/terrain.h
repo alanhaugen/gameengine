@@ -14,7 +14,8 @@ public:
     Terrain();
     Terrain(const char* filePath,
          const char* vertexShaderPath = "shaders/color.vert.spv",
-         const char* fragmentShaderPath = "shaders/color.frag.spv");
+         const char* fragmentShaderPath = "shaders/color.frag.spv",
+         bool isCloud = false);
     void Update();
 
     Renderer::Drawable* drawable;
