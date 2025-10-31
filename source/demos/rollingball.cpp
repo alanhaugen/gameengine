@@ -25,7 +25,7 @@ void RollingBall::Init()
     //ball->AddComponent(new SphereCollider());
 
     GameObject* terrain = new GameObject;
-    terrainMesh = new Terrain();//("Assets/Pointclouds/AndreasLasData.txt");
+    terrainMesh = new Terrain("Assets/Textures/perlin.png");
     ball->AddComponent(terrainMesh);
     ball->AddComponent(new TriangleCollider());
 

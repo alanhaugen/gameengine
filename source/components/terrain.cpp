@@ -1,5 +1,5 @@
 #include "terrain.h"
-#include <fstream>
+#include "stb_image.h"
 
 void Terrain::Init()
 {
@@ -39,20 +39,23 @@ Terrain::Terrain(const char *filePath,
            const char* vertexShaderPath,
            const char* fragmentShaderPath)
 {
-    std::ifstream infile(filePath);
-
     float x, y, z;
-    while (infile >> x >> z >> y) // Notice z and y are swapped
+
+    int width,height,n;
+    unsigned char *data = stbi_load(filePath, &width, &height, &n, 0);
+
+    for (int y = 0; y < height; y++)
     {
-        static glm::vec3 offset = glm::vec3(x, y, z);
+        for (int x = 0; x < width; x++)
+        {
+            glm::vec3 pos = glm::vec3(x, y, data[x + y * height]);
+            pos /= 100.0f;
 
-        glm::vec3 pos = glm::vec3(x, y, z) - offset;
-        pos /= 50.0f;
+            glm::vec3 color(0.0f);
+            color.g = pos.y / pos.length() * 50.0f;
 
-        glm::vec3 color(0.0f);
-        color.g = pos.y / pos.length() * 50.0f;
-
-        vertices.push_back(Vertex(pos.x, pos.y, pos.z, color));
+            vertices.push_back(Vertex(pos.x, pos.y, pos.z, color));
+        }
     }
 
     drawable = &renderer->CreateDrawable(vertices, indices, vertexShaderPath, fragmentShaderPath, Renderer::POINTS);
