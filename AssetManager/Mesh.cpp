@@ -1,5 +1,5 @@
 #include "Mesh.h"
-#include "External/tiny_obj_loader.h"
+#include "include/tiny_obj_loader.h"
 #include <stdexcept>
 
 gea::Mesh::Mesh()

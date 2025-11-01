@@ -2,7 +2,7 @@
 #define COMPONENTS_H
 
 #include <glm/glm.hpp>
-#include <glm/ext/matrix_transform.hpp> //for tranlate, rotate, scale
+#include <glm/gtc/matrix_transform.hpp> //for tranlate, rotate, scale
 
 //Need namespace, since we start to get naming collisions with other code
 namespace gea {

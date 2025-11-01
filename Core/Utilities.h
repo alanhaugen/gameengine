@@ -22,7 +22,7 @@ const uint32_t HEIGHT = 600;
 #if defined(BUILD_ENV_VISUAL_STUDIO)
 const std::string PATH = "../../../";
 #elif defined(BUILD_ENV_QTCREATOR)
-const std::string PATH = "../../";
+const std::string PATH = "";
 #else
 const std::string PATH = "../../"; // fallback
 #endif

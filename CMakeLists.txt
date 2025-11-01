@@ -102,7 +102,8 @@ elseif(APPLE)
 
     target_include_directories(QtVulkan PRIVATE
         #Hardcoded path for Oles Macs for now:
-        "/Users/ole/VulkanSDK/1.4.328.1/macOS/include"
+        "/Users/awh/VulkanSDK/1.4.304.1/macOS/include"
+        "/Users/awh/inn/GEA2025/include"
         ${CMAKE_CURRENT_SOURCE_DIR}
         ${CMAKE_CURRENT_SOURCE_DIR}/External/Lua/include
     )
@@ -119,7 +120,7 @@ elseif(APPLE)
         "-framework AppKit"
         ${CMAKE_CURRENT_SOURCE_DIR}/External/Lua/lib/liblua.a
         #Hardcoded path for Oles Macs for now:
-        "/Users/ole/VulkanSDK/1.4.328.1/macOS/lib/MoltenVK.xcframework/macos-arm64_x86_64/libMoltenVK.a"
+        "/Users/awh/inn/GEA2025/lib/darwin/arm64/libMoltenVK.a"
     )
 endif()
 
