@@ -100,3 +100,4 @@ CMakeUserPresets.json
 *.ttf
 
 glm/
+/Assets/*/*.txt
