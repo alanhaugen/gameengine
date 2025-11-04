@@ -41,7 +41,7 @@ void gea::Texture::createTextureImage(QString MODEL_PATH)
         // memcpy(data, pixels, static_cast<size_t>(imageSize));
         // vkUnmapMemory(device, stagingBufferMemory);
 
-        stbi_image_free(mPixels);
+        // stbi_image_free(mPixels);
 
         //createImage(mTexWidth, mTexHeight, mMipLevels, VK_SAMPLE_COUNT_1_BIT, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, mTextureImage, mTextureImageMemory);
 

@@ -100,7 +100,7 @@ void FilesWindow<T>::mHandleButton(int index)
     // change the text
     mDisplayAssets[index]->setText(new_text);
     // resize button
-    mDisplayAssets[index]->resize(100,100);
+    //mDisplayAssets[index]->resize(100,100);
 }
 
 template<typename T>

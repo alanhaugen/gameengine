@@ -12,17 +12,19 @@ Engine::Engine(Renderer* renderer, MainWindow *mainWindow) : mVulkanRenderer{ren
     mMeshManager=new AssetManager<gea::Mesh>();
     mMeshManager->importObjects();
     //should make 2 objects "visible"
-    //mMeshManager->mAssets.at(2)->isUsed=true;
-    mMeshManager->mAssets.at(4)->isUsed=true;
-    for(gea::Mesh*& it: mMeshManager->mAssets){
-        if(it->isUsed){
-             mMeshs.push_back(it);
-        }
-    }
+    // mMeshManager->mAssets.at(4)->isUsed=true;
+    // mMeshManager->mAssets.at(1)->isUsed=true;
+    // mMeshManager->mAssets.at(2)->isUsed=true;
+    // for(gea::Mesh*& it: mMeshManager->mAssets){
+    //     if(it->isUsed){
+    //          mMeshs.push_back(it);
+    //     }
+    // }
 
     mTextureManager=new AssetManager<gea::Texture>();
     mTextureManager->importObjects();
-    mTextureManager->mAssets.at(16)->isUsed=true;
+    mTextureManager->mAssets.at(3)->isUsed=true;
+    //mTextureManager->mAssets.at(19)->isUsed=true;
     for(gea::Texture*& it: mTextureManager->mAssets){
         if(it->isUsed){
             mTextures.push_back(it);
@@ -30,16 +32,15 @@ Engine::Engine(Renderer* renderer, MainWindow *mainWindow) : mVulkanRenderer{ren
 
     }
 
-    // mMeshs.push_back(gea::Mesh());
-
+    //mMeshs.push_back(gea::Mesh());
     //mTextures.push_back(gea::Texture());
 
-    mRenderComponents.push_back(gea::RenderComponent{0, 0, 0});
+    mRenderComponents.push_back(gea::RenderComponent{1, 0, 0});
     gea::TransformComponent t1 = gea::TransformComponent(0);
     t1.mPosition = glm::vec3(1.0f, 0.0f, 0.0f);
     mTransformComponents.push_back(t1);
 
-    mStaticRenderComponents.push_back(gea::RenderComponent{0, 0, 1});
+    mStaticRenderComponents.push_back(gea::RenderComponent{0, 2, 1});
     gea::TransformComponent t2 = gea::TransformComponent(1);
     t2.mPosition = glm::vec3(-1.0f, 0.0f, 0.0f);
     mStaticTransformComponents.push_back(t2);
@@ -55,7 +56,7 @@ Engine::Engine(Renderer* renderer, MainWindow *mainWindow) : mVulkanRenderer{ren
 void Engine::setupRenderSystem()
 {
     mRenderSystem = new gea::RenderSystem(this, mVulkanRenderer);
-    mRenderSystem->initialize(mStaticRenderComponents, mStaticTransformComponents, mMeshs, mTextures);
+    mRenderSystem->initialize(mStaticRenderComponents, mStaticTransformComponents, mMeshManager->mAssets, mTextures);
 }
 
 void Engine::updateRenderSystem()

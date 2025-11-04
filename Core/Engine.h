@@ -72,7 +72,7 @@ public:
 
     //These are the ACTUAL meshes and Textures, and is used by Entities from a
     //RenderComponent
-    std::vector<Mesh*> mMeshs;
+    // std::vector<Mesh*> mMeshs;
     std::vector<Texture*> mTextures;
 
     AssetManager<gea::Mesh>* mMeshManager{nullptr}; //vector<Mesh*>*

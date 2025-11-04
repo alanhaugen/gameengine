@@ -102,9 +102,15 @@ void Renderer::initVulkan()
 
         createTextureResource(mTextures[i]);
     }
-	for (size_t i = 0; i < mMeshes.size(); i++) {
+    // for(gea::Mesh* it: *mMeshes){
+    //     createVertexBuffer(it);
+    // }
+    // for(gea::Mesh* it: *mMeshes){
+    //     createIndexBuffer(it);
+    // }
+    for (size_t i = 0; i < mMeshes.size(); i++) {
         createVertexBuffer(mMeshes[i]);
-	}
+    }
     for (size_t i = 0; i < mMeshes.size(); i++) {
         createIndexBuffer(mMeshes[i]);
     }
@@ -898,7 +904,7 @@ void Renderer:: createTextureResource(gea::Texture *texture)
 
     //MAKE VULKAN IMAGE
     createImage(texture->mTexWidth, texture->mTexHeight, texture->mMipLevels, VK_SAMPLE_COUNT_1_BIT, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, texture->mTextureImage, stagingBufferMemory);
-
+    stbi_image_free(texture->mPixels);
     transitionImageLayout(texture->mTextureImage, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, texture->mMipLevels);
     copyBufferToImage(stagingBuffer,texture->mTextureImage, static_cast<uint32_t>(texture->mTexWidth), static_cast<uint32_t>(texture->mTexHeight));
     //transitioned to VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL while generating mipmaps
