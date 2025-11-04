@@ -23,9 +23,8 @@ void gea::Mesh::loadModel()
 
     if (!tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, mModelPath.c_str()))
     {
-        QMessageBox messageBox;
-        messageBox.critical(0, "Error", "Could not load model!");
-        messageBox.setFixedSize(500,200);
+        std::string msg = std::string("Could not load model ") + mModelPath;
+        QMessageBox::critical(nullptr, "Error", QString::fromStdString(msg));
         throw std::runtime_error(warn + err);
     }
 
