@@ -18,8 +18,17 @@ gea::Mesh::Mesh(QString MODEL_PATH)
 	mIndexBuffer = VK_NULL_HANDLE;
 	mVertexBufferMemory = VK_NULL_HANDLE;
 	mIndexBufferMemory = VK_NULL_HANDLE;
+    mPath=MODEL_PATH;
     loadModel(MODEL_PATH);
 }
+
+// bool gea::Mesh::hasmPath()
+// {
+//     if(mPath!=nullptr){
+//         return true;
+//     }
+//     return false;
+// }
 
 gea::Mesh* gea::Mesh::loadModel(QString MODEL_PATH)
 {

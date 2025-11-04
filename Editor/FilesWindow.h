@@ -125,6 +125,7 @@ void FilesWindow<T>::dropEvent(QDropEvent *event)
             if (path.endsWith(".obj")){
                 if(!mAssetsPtr->mFilesNamesSet.contains(name)){ //file has not been imported allready
                 mAssetsPtr->mFilesNamesSet.insert(name);
+                mAssetsPtr->mFilesNamesStack.push_back(path);
                 int i=mAssetsPtr->mFilesNamesSet.size();
                 //gea::Mesh* newMesh=new gea::Mesh(path);
                 T* newMesh=new T(path);

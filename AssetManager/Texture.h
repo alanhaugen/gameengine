@@ -18,7 +18,7 @@ public:
     Texture(QString MODEL_PATH);
 
    //should be commented out
-    std::string mTexturePath = PATH + "Assets/Textures/viking_room.png";
+    QString mPath; // = PATH + "Assets/Textures/viking_room.png";
 
     int mTexWidth{0}, mTexHeight{0}, mTexChannels{0};
     uint32_t mMipLevels;

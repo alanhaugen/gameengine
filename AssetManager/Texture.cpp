@@ -16,6 +16,7 @@ gea::Texture::Texture(QString MODEL_PATH)
     mTextureImageMemory = VK_NULL_HANDLE;
     mTextureImageView = VK_NULL_HANDLE;
     mTextureSampler = VK_NULL_HANDLE;
+    mPath=MODEL_PATH;
     createTextureImage(MODEL_PATH);
 
 }

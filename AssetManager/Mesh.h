@@ -28,6 +28,7 @@ public:
     VkDeviceMemory mIndexBufferMemory;
     QString mPath;
 
+
     bool isUsed=false;
 protected:
 };
