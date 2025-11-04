@@ -12,7 +12,8 @@ FilesWindow::FilesWindow(AssetManager<ObjAsset>* manager)
 
     mAssetsPtr= manager;
 
-    mMainLayout=new QVBoxLayout(this);
+    mCentralWidget=new QWidget(this);  //main parent, which is a docker window
+    mMainLayout=new QVBoxLayout(mCentralWidget); //central widget (parent) contains main layout(child)
 
     //window has 2 children: a status bar and a scroller
     mScrolling=new QScrollArea(this);
@@ -23,10 +24,14 @@ FilesWindow::FilesWindow(AssetManager<ObjAsset>* manager)
     //scrolling->setGeometry(0,0,width(), height());
     mMainLayout->addWidget(mScrolling);
 
-    mStatus=new QStatusBar(this);
+    mStatus=new QStatusBar(mCentralWidget);
     mStatus->showMessage(" Drop new files in this window ");
-    mMainLayout->addWidget(mStatus);
-    //mainLayout->setGeometry(0,0,width(), height());
+
+    mMainLayout->addWidget(mStatus); //main layout has status
+
+    mCentralWidget->setLayout(mMainLayout);
+    setWidget(mCentralWidget); //docker window content is the central widget parent that contains all the children: main layout->scroller, -->status, etc
+
     createButtons(mAssetsPtr);
     show();
 }

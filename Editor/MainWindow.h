@@ -32,7 +32,6 @@ public:
     ~MainWindow();
 
     void setStatusBarMessage(const char* message);
-    // void AddToolbar(const char* name, const char* action);
 
     void start();
     void handleInput();
