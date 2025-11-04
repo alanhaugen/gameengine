@@ -95,22 +95,25 @@ void Renderer::initVulkan()
     //loadModel();
     createVertexBuffer();
     createIndexBuffer();
-    for (size_t i = 0; i < mTextures.size(); i++) {
-        createTextureImage(&mTextures[i]);
-    }
-	for (size_t i = 0; i < mMeshes.size(); i++) {
-        createVertexBuffer(&mMeshes[i]);
-	}
-    for (size_t i = 0; i < mMeshes.size(); i++) {
-        createIndexBuffer(&mMeshes[i]);
-    }
+    //for (size_t i = 0; i < mTextures.size(); i++) {
+    //    createTextureImage(&mTextures[i]);
+    //}
+    //for (size_t i = 0; i < mMeshes.size(); i++) {
+    //    createVertexBuffer(&mMeshes[i]);
+    //}
+    //for (size_t i = 0; i < mMeshes.size(); i++) {
+    //    createIndexBuffer(&mMeshes[i]);
+    //}
     createUniformBuffers();
     createDescriptorPool();
-    for (size_t i = 0; i < mTextures.size(); i++) {
-        createDescriptorSets(mTextures[i]);
-    }
+    //for (size_t i = 0; i < mTextures.size(); i++) {
+    //    createDescriptorSets(mTextures[i]);
+    //}
     createCommandBuffers();
     createSyncObjects();
+
+    createDescriptorSets();
+    RecreateTextureDescriptors();
 
     qDebug() << "Window size:" << this->size().width() << "x" << this->size().height();
 }
@@ -153,7 +156,7 @@ void Renderer::cleanup()
 {
     cleanupSwapChain();
 
-	for (gea::Texture texture : mTextures) {
+    for (gea::Texture texture : mTextures) {
         vkDestroySampler(device, texture.mTextureSampler, nullptr);
         vkDestroyImageView(device, texture.mTextureImageView, nullptr);
         vkDestroyImage(device, texture.mTextureImage, nullptr);
@@ -216,9 +219,8 @@ void Renderer::recreateSwapChain()
     createFramebuffers();
     createUniformBuffers();
     createDescriptorPool();
-	for (size_t i = 0; i < mTextures.size(); i++) {
-        createDescriptorSets(mTextures[i]);
-	}
+    createDescriptorSets();
+    RecreateTextureDescriptors();
     createCommandBuffers();
 
     imagesInFlight.resize(swapChainImages.size(), VK_NULL_HANDLE);
@@ -599,22 +601,32 @@ void Renderer::createDescriptorSetLayout()
     uboLayoutBinding.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
 
     VkDescriptorSetLayoutBinding samplerLayoutBinding{};
-    samplerLayoutBinding.binding = 1;
+    samplerLayoutBinding.binding = 0;
     samplerLayoutBinding.descriptorCount = 1;
     samplerLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
     samplerLayoutBinding.pImmutableSamplers = nullptr;
     samplerLayoutBinding.stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
 
-    std::array<VkDescriptorSetLayoutBinding, 2> bindings = {uboLayoutBinding, samplerLayoutBinding};
     VkDescriptorSetLayoutCreateInfo layoutInfo{};
     layoutInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
-    layoutInfo.bindingCount = static_cast<uint32_t>(bindings.size());
-    layoutInfo.pBindings = bindings.data();
+    layoutInfo.bindingCount = 1;
+    layoutInfo.pBindings = &uboLayoutBinding;
 
     if (vkCreateDescriptorSetLayout(device, &layoutInfo, nullptr, &descriptorSetLayout) != VK_SUCCESS) {
         throw std::runtime_error("failed to create descriptor set layout!");
     } else {
         qDebug("created DescriptorSetLayout");
+    }
+
+    VkDescriptorSetLayoutCreateInfo layoutInfo2{};
+    layoutInfo2.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
+    layoutInfo2.bindingCount = 1;
+    layoutInfo2.pBindings = &samplerLayoutBinding;
+
+    if (vkCreateDescriptorSetLayout(device, &layoutInfo2, nullptr, &textureSetLayout) != VK_SUCCESS) {
+        throw std::runtime_error("failed to create texture set layout!");
+    } else {
+        qDebug("created textureSetLayout");
     }
 }
 
@@ -737,8 +749,9 @@ void Renderer::createGraphicsPipeline()
 
     VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
     pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
-    pipelineLayoutInfo.setLayoutCount = 1;
-    pipelineLayoutInfo.pSetLayouts = &descriptorSetLayout;
+    std::vector<VkDescriptorSetLayout> setLayouts = {descriptorSetLayout, textureSetLayout};
+    pipelineLayoutInfo.setLayoutCount = setLayouts.size();
+    pipelineLayoutInfo.pSetLayouts = setLayouts.data();
     pipelineLayoutInfo.pushConstantRangeCount = 1;
     pipelineLayoutInfo.pPushConstantRanges = &pushConstantRange;
 
@@ -886,7 +899,9 @@ void Renderer::createTextureImage(gea::Texture* texture)
 
     VkBuffer stagingBuffer;
     VkDeviceMemory stagingBufferMemory;
-    createBuffer(imageSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory);
+    createBuffer(imageSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
+                 VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
+                 stagingBuffer, stagingBufferMemory);
 
     void* data;
     vkMapMemory(device, stagingBufferMemory, 0, imageSize, 0, &data);
@@ -895,7 +910,11 @@ void Renderer::createTextureImage(gea::Texture* texture)
 
     stbi_image_free(pixels);
 
-    createImage(texWidth, texHeight, texture->mMipLevels, VK_SAMPLE_COUNT_1_BIT, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, texture->mTextureImage, texture->mTextureImageMemory);
+    createImage(texWidth, texHeight, texture->mMipLevels,
+                VK_SAMPLE_COUNT_1_BIT, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_TILING_OPTIMAL,
+                VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT,
+                VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
+                texture->mTextureImage, texture->mTextureImageMemory);
 
     transitionImageLayout(texture->mTextureImage, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, texture->mMipLevels);
     copyBufferToImage(stagingBuffer, texture->mTextureImage, static_cast<uint32_t>(texWidth), static_cast<uint32_t>(texHeight));
@@ -906,7 +925,10 @@ void Renderer::createTextureImage(gea::Texture* texture)
 
     generateMipmaps(texture->mTextureImage, VK_FORMAT_R8G8B8A8_SRGB, texWidth, texHeight, texture->mMipLevels);
 
-    createTextureImageView(texture);
+    /* Create View */
+    texture->mTextureImageView = createImageView(texture->mTextureImage, VK_FORMAT_R8G8B8A8_SRGB,
+                                                 VK_IMAGE_ASPECT_COLOR_BIT, texture->mMipLevels);
+    //createTextureImageView(texture);
     createTextureSampler(texture);
 }
 
@@ -1301,24 +1323,25 @@ void Renderer::createUniformBuffers()
 
 void Renderer::createDescriptorPool()
 {
+    const int MAX_TEXTURES = 5000;
     std::array<VkDescriptorPoolSize, 2> poolSizes{};
     poolSizes[0].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
     poolSizes[0].descriptorCount = static_cast<uint32_t>(swapChainImages.size());
     poolSizes[1].type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-    poolSizes[1].descriptorCount = static_cast<uint32_t>(swapChainImages.size());
+    poolSizes[1].descriptorCount = static_cast<uint32_t>(mTextures.size()) * std::max(1, MAX_FRAMES_IN_FLIGHT);
 
     VkDescriptorPoolCreateInfo poolInfo{};
     poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
     poolInfo.poolSizeCount = static_cast<uint32_t>(poolSizes.size());
     poolInfo.pPoolSizes = poolSizes.data();
-    poolInfo.maxSets = static_cast<uint32_t>(swapChainImages.size());
+    poolInfo.maxSets = MAX_TEXTURES + static_cast<uint32_t>(swapChainImages.size());
 
     if (vkCreateDescriptorPool(device, &poolInfo, nullptr, &descriptorPool) != VK_SUCCESS) {
         throw std::runtime_error("failed to create descriptor pool!");
     }
 }
 
-void Renderer::createDescriptorSets(gea::Texture texture)
+void Renderer::createDescriptorSets()
 {
     std::vector<VkDescriptorSetLayout> layouts(swapChainImages.size(), descriptorSetLayout);
     VkDescriptorSetAllocateInfo allocInfo{};
@@ -1342,28 +1365,28 @@ void Renderer::createDescriptorSets(gea::Texture texture)
 
         VkDescriptorImageInfo imageInfo{};
         imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-        imageInfo.imageView = texture.mTextureImageView;
-        imageInfo.sampler = texture.mTextureSampler;
+        //imageInfo.imageView = texture.mTextureImageView;
+        //imageInfo.sampler = texture.mTextureSampler;
 
-        std::array<VkWriteDescriptorSet, 2> descriptorWrites{};
+        VkWriteDescriptorSet descriptorWrites{};
 
-        descriptorWrites[0].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-        descriptorWrites[0].dstSet = descriptorSets[i];
-        descriptorWrites[0].dstBinding = 0;
-        descriptorWrites[0].dstArrayElement = 0;
-        descriptorWrites[0].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-        descriptorWrites[0].descriptorCount = 1;
-        descriptorWrites[0].pBufferInfo = &bufferInfo;
+        descriptorWrites.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+        descriptorWrites.dstSet = descriptorSets[i];
+        descriptorWrites.dstBinding = 0;
+        descriptorWrites.dstArrayElement = 0;
+        descriptorWrites.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+        descriptorWrites.descriptorCount = 1;
+        descriptorWrites.pBufferInfo = &bufferInfo;
 
-        descriptorWrites[1].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-        descriptorWrites[1].dstSet = descriptorSets[i];
-        descriptorWrites[1].dstBinding = 1;
-        descriptorWrites[1].dstArrayElement = 0;
-        descriptorWrites[1].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-        descriptorWrites[1].descriptorCount = 1;
-        descriptorWrites[1].pImageInfo = &imageInfo;
+        //descriptorWrites[1].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+        //descriptorWrites[1].dstSet = descriptorSets[i];
+        //descriptorWrites[1].dstBinding = 1;
+        //descriptorWrites[1].dstArrayElement = 0;
+        //descriptorWrites[1].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+        //descriptorWrites[1].descriptorCount = 1;
+        //descriptorWrites[1].pImageInfo = &imageInfo;
 
-        vkUpdateDescriptorSets(device, static_cast<uint32_t>(descriptorWrites.size()), descriptorWrites.data(), 0, nullptr);
+        vkUpdateDescriptorSets(device, 1, &descriptorWrites, 0, nullptr);
     }
 }
 
@@ -1532,16 +1555,17 @@ void Renderer::createCommandBuffers()
 
         vkCmdBindPipeline(staticCommandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline);
 
-		for (size_t j = 0; j < mStaticRenderComponents.size(); j++)
-		{
-			gea::RenderComponent renderComponent = mStaticRenderComponents[j];
-			gea::Mesh mesh = mMeshes[renderComponent.meshIndex];
-			VkBuffer vertexBuffer = mesh.mVertexBuffer;
-			VkBuffer indexBuffer = mesh.mIndexBuffer;
-			std::vector<uint32_t> indices = mesh.mIndices;
-			VkDeviceSize offsets[] = { 0 };
+        // VH: For loop not in in use? Why do we make the distinction for dynamic/static objects for rendering?
+        for (size_t j = 0; j < mStaticRenderComponents.size(); j++)
+        {
+            gea::RenderComponent renderComponent = mStaticRenderComponents[j];
+            gea::Mesh mesh = mMeshes[renderComponent.meshIndex];
+            VkBuffer vertexBuffer = mesh.mVertexBuffer;
+            VkBuffer indexBuffer = mesh.mIndexBuffer;
+            std::vector<uint32_t> indices = mesh.mIndices;
+            VkDeviceSize offsets[] = { 0 };
 
-			glm::mat4 model = glm::mat4(1.0f);
+            glm::mat4 model = glm::mat4(1.0f);
             model = glm::translate(model, mStaticTransformComponents[j].mPosition);
             model = glm::rotate(model, glm::radians(mStaticTransformComponents[j].mRotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
             model = glm::rotate(model, glm::radians(mStaticTransformComponents[j].mRotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
@@ -1550,11 +1574,11 @@ void Renderer::createCommandBuffers()
 
             vkCmdPushConstants(staticCommandBuffers[i], pipelineLayout, VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(glm::mat4), &model);
 
-			vkCmdBindVertexBuffers(staticCommandBuffers[i], 0, 1, &vertexBuffer, offsets);
-			vkCmdBindIndexBuffer(staticCommandBuffers[i], indexBuffer, 0, VK_INDEX_TYPE_UINT32);
-			vkCmdBindDescriptorSets(staticCommandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, &descriptorSets[i], 0, nullptr);
-			vkCmdDrawIndexed(staticCommandBuffers[i], static_cast<uint32_t>(indices.size()), 1, 0, 0, 0);
-		}
+            vkCmdBindVertexBuffers(staticCommandBuffers[i], 0, 1, &vertexBuffer, offsets);
+            vkCmdBindIndexBuffer(staticCommandBuffers[i], indexBuffer, 0, VK_INDEX_TYPE_UINT32);
+            vkCmdBindDescriptorSets(staticCommandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, &descriptorSets[i], 0, nullptr);
+            vkCmdDrawIndexed(staticCommandBuffers[i], static_cast<uint32_t>(indices.size()), 1, 0, 0, 0);
+        }
 
         if (vkEndCommandBuffer(staticCommandBuffers[i]) != VK_SUCCESS)
             throw std::runtime_error("failed to record command buffer!");
@@ -1670,12 +1694,12 @@ void Renderer::drawFrame()
         throw std::runtime_error("failed to begin recording command buffer!");
     }
 
-    vkCmdBindPipeline(dynamicCommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline);
 
     for (size_t j = 0; j < mDynamicRenderComponents.size(); j++)
     {
         gea::RenderComponent renderComponent = mDynamicRenderComponents[j];
         gea::Mesh mesh = mMeshes[renderComponent.meshIndex];
+        gea::Texture texture = mTextures[renderComponent.textureIndex]; //
         VkBuffer vertexBuffer = mesh.mVertexBuffer;
         VkBuffer indexBuffer = mesh.mIndexBuffer;
         std::vector<uint32_t> indices = mesh.mIndices;
@@ -1693,6 +1717,10 @@ void Renderer::drawFrame()
         vkCmdBindVertexBuffers(dynamicCommandBuffer, 0, 1, &vertexBuffer, offsets);
         vkCmdBindIndexBuffer(dynamicCommandBuffer, indexBuffer, 0, VK_INDEX_TYPE_UINT32);
         vkCmdBindDescriptorSets(dynamicCommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, &descriptorSets[imageIndex], 0, nullptr);
+        vkCmdBindDescriptorSets(dynamicCommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 1, 1, &texture.textureDescriptor, 0, nullptr);
+
+
+        vkCmdBindPipeline(dynamicCommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline);
         vkCmdDrawIndexed(dynamicCommandBuffer, static_cast<uint32_t>(indices.size()), 1, 0, 0, 0);
     }
 
@@ -1801,6 +1829,23 @@ void Renderer::updateCompoments(std::vector<gea::RenderComponent> renderComponen
 {
     mDynamicRenderComponents = renderComponents;
     mDynamicTransformComponents = transformComponents;
+}
+
+gea::RenderComponent Renderer::CreateComponent(std::string mesh_path, std::string texture_path, int ID)
+{
+    gea::Texture texture;
+    texture.mTexturePath = texture_path;
+    gea::Mesh mesh(mesh_path);
+    createVertexBuffer(&mesh);
+    createIndexBuffer(&mesh);
+    mMeshes.push_back(mesh);
+    createTextureImage(&texture);
+    texture.textureDescriptor = createTextureDescriptor(texture);
+    mTextures.push_back(texture);
+
+    gea::RenderComponent new_component = gea::RenderComponent{static_cast<int>(mMeshes.size()-1), static_cast<int>(mTextures.size()-1), ID};
+    mDynamicRenderComponents.push_back(new_component);
+    return new_component;
 }
 
 VkShaderModule Renderer::createShaderModule(const std::vector<char> &code)
@@ -2050,6 +2095,53 @@ VkBool32 Renderer::debugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageS
     std::cerr << "validation layer: " << pCallbackData->pMessage << std::endl;
 
     return VK_FALSE;
+}
+
+VkDescriptorSet Renderer::createTextureDescriptor(gea::Texture &texture)
+{
+    VkDescriptorSetAllocateInfo allocInfo{};
+    allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
+    allocInfo.descriptorPool = descriptorPool;
+    allocInfo.descriptorSetCount = 1;
+    allocInfo.pSetLayouts = &textureSetLayout;
+
+    VkDescriptorSet textureDescriptor{};
+
+    if(vkAllocateDescriptorSets(device, &allocInfo, &textureDescriptor) != VK_SUCCESS)
+    {
+        throw std::runtime_error("failed to allocate texture descriptor set!");
+    }
+
+    VkDescriptorImageInfo imageInfo{};
+    imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+    imageInfo.imageView = texture.mTextureImageView;
+    imageInfo.sampler = texture.mTextureSampler;
+
+    VkWriteDescriptorSet descriptorWrites = {};
+
+    descriptorWrites.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+    descriptorWrites.dstSet = textureDescriptor;
+    descriptorWrites.dstBinding = 0;
+    descriptorWrites.dstArrayElement = 0;
+    descriptorWrites.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+    descriptorWrites.descriptorCount = 1;
+    descriptorWrites.pImageInfo = &imageInfo;
+
+    vkUpdateDescriptorSets(device, 1, &descriptorWrites, 0, nullptr);
+    //texture.textureDescriptor = textureDescriptor;
+
+    return textureDescriptor;
+}
+
+void Renderer::RecreateTextureDescriptors()
+{
+    // Recreate texture descriptor sets after descriptorPool is recreated.
+    // Safe even if mTextures is empty.
+    for (size_t i = 0; i < mTextures.size(); ++i) {
+        // Re-allocate and update descriptor for this texture from the current descriptorPool
+        mTextures[i].textureDescriptor = createTextureDescriptor(mTextures[i]);
+        qDebug() << "Recreated texture descriptor for index" << (int)i << "desc=" << mTextures[i].textureDescriptor;
+    }
 }
 
 void Renderer::exposeEvent(QExposeEvent* event)

@@ -64,8 +64,7 @@ public:
     std::vector<SoundComponent> mSoundComponents;
 
     //RenderTesting
-    std::vector<gea::RenderComponent> mRenderComponents;
-    std::vector<gea::RenderComponent> mStaticRenderComponents;
+
     //this is done for testing sake. in the real ecs there would only be one vector of transform components
     std::vector<gea::TransformComponent> mStaticTransformComponents;
 

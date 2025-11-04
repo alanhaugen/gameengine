@@ -18,7 +18,6 @@
 struct SwapChainSupportDetails;
 struct QueueFamilyIndices;
 
-
 class Renderer : public QWindow
 {
     Q_OBJECT
@@ -34,6 +33,11 @@ public:
     void initComponents(std::vector<gea::RenderComponent> staticComponents, std::vector<gea::TransformComponent> staticTransformComponents,
                         std::vector<gea::Mesh> meshes, std::vector<gea::Texture> textures);
     void updateCompoments(std::vector<gea::RenderComponent> renderComponents, std::vector<gea::TransformComponent> transformComponents);
+    gea::RenderComponent CreateComponent(std::string, std::string, int);
+
+    std::vector<gea::RenderComponent> mRenderComponents;
+    std::vector<gea::RenderComponent> mDynamicRenderComponents;
+    std::vector<gea::RenderComponent> mStaticRenderComponents;
 
     gea::Engine* mEngine{nullptr};
     Camera mCamera; //probably should be a pointer to this
@@ -83,6 +87,7 @@ private:
 
     VkRenderPass renderPass;
     VkDescriptorSetLayout descriptorSetLayout;
+    VkDescriptorSetLayout textureSetLayout;
     VkPipelineLayout pipelineLayout;
     VkPipeline graphicsPipeline;
 
@@ -125,8 +130,8 @@ private:
     //this is done for testing sake. in the real ecs there would only be one vector of transform components
     std::vector<gea::TransformComponent> mDynamicTransformComponents;
     std::vector<gea::TransformComponent> mStaticTransformComponents;
-    std::vector<gea::RenderComponent> mDynamicRenderComponents;
-    std::vector<gea::RenderComponent> mStaticRenderComponents;
+
+
 
     // void initWindow();
 
@@ -174,7 +179,7 @@ private:
     void createIndexBuffer(gea::Mesh* mesh);
     void createUniformBuffers();
     void createDescriptorPool();
-    void createDescriptorSets(gea::Texture texture);
+    void createDescriptorSets();
     void createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory);
     VkCommandBuffer beginSingleTimeCommands();
     void endSingleTimeCommands(VkCommandBuffer commandBuffer);
@@ -195,6 +200,8 @@ private:
     bool checkValidationLayerSupport();
     static std::vector<char> readFile(const std::string& filename);
     static VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity, VkDebugUtilsMessageTypeFlagsEXT messageType, const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData, void* pUserData);
+    VkDescriptorSet createTextureDescriptor(gea::Texture &);
+    void RecreateTextureDescriptors();
 };
 
 

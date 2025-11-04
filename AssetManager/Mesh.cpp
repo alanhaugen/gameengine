@@ -1,13 +1,16 @@
 #include "Mesh.h"
 #include "External/tiny_obj_loader.h"
+#include <qlogging.h>
+#include <QMessageBox>
 #include <stdexcept>
 
-gea::Mesh::Mesh()
+gea::Mesh::Mesh(std::string Mesh_Path)
 {
 	mVertexBuffer = VK_NULL_HANDLE;
 	mIndexBuffer = VK_NULL_HANDLE;
 	mVertexBufferMemory = VK_NULL_HANDLE;
 	mIndexBufferMemory = VK_NULL_HANDLE;
+    mModelPath = Mesh_Path;
     loadModel();
 }
 
@@ -19,7 +22,13 @@ void gea::Mesh::loadModel()
     std::string warn, err;
 
     if (!tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, mModelPath.c_str()))
+    {
+        QMessageBox messageBox;
+        messageBox.critical(0, "Error", "Could not load model!");
+        messageBox.setFixedSize(500,200);
         throw std::runtime_error(warn + err);
+    }
+
 
     std::unordered_map<Vertex, uint32_t> uniqueVertices{};
 

@@ -11,12 +11,13 @@ class Texture
 public:
     Texture();
 
-    std::string mTexturePath = PATH + "Assets/Textures/viking_room.png";
+    std::string mTexturePath;
     uint32_t mMipLevels;
     VkImage mTextureImage;
     VkDeviceMemory mTextureImageMemory;
     VkImageView mTextureImageView;
     VkSampler mTextureSampler;
+    VkDescriptorSet textureDescriptor{};
 };
 
 } //namespace gea

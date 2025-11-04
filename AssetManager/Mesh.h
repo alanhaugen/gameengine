@@ -8,7 +8,7 @@ namespace gea
 class Mesh
 {
 public:
-    Mesh();
+    Mesh(std::string Mesh_Path);
     void loadModel();
 
     std::string mModelPath = PATH + "Assets/Models/viking_room.obj";
