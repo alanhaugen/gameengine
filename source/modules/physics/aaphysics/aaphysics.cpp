@@ -7,7 +7,7 @@ AAPhysics::AAPhysics()
 
 bool AAPhysics::Init()
 {
-    return false;
+    return true;
 }
 
 void AAPhysics::Update()

@@ -27,6 +27,15 @@ bool OpenALAudio::Init()
     else
         std::cout << "Intialization complete!\n";
 
+    //Start listing of found sound devices:
+    //Not yet implemented
+    //ALDeviceList *pDeviceList = NULL;
+    //ALCcontext *pContext = NULL;
+    //ALCdevice *pDevice = NULL;
+    //ALint i;	//will hold the number of the preferred device
+    //ALboolean bReturn = AL_FALSE;
+
+
     return true;
 }
 
@@ -39,13 +48,24 @@ SoundSource* OpenALAudio::PlaySound(std::string name, std::string filepath, bool
 {
     SoundSource* playSound{nullptr};
     playSound = getInstance()->createSource(name, pos, filepath, loop, gain);
+    playSound = createSource(name, pos, filepath, loop, gain);
     playSound->Play();
     return playSound;
 }
 
-//For what or why would I use this?
+void OpenALAudio::PlayMusic(std::string filename)
+{
+
+}
+
+void OpenALAudio::PlaySound(std::string filename, glm::vec3 pos)
+{
+
+}
+
 void OpenALAudio::cleanUp()
 {
+
     mContext = alcGetCurrentContext();
     mDevice = alcGetContextsDevice(mContext);
     alcMakeContextCurrent(NULL);
@@ -53,9 +73,9 @@ void OpenALAudio::cleanUp()
     alcCloseDevice(mDevice);
 }
 
-//Do I even need this?
 bool OpenALAudio::checkError()
 {
+
     switch (alGetError())
     {
     case AL_NO_ERROR:
@@ -82,11 +102,13 @@ bool OpenALAudio::checkError()
 
 SoundSource* OpenALAudio::createSource(std::string name, glm::vec3 pos, std::string filePath, bool loop, float gain)
 {
+
     SoundSource* tempPtr = new SoundSource(name, loop, gain);
     tempPtr->setPosition(pos);
     if (filePath != "")
         tempPtr->loadWave(filePath);
     return tempPtr;
+    return nullptr;
 }
 
 void OpenALAudio::updateListener(glm::vec3 pos, glm::vec3 vel, glm::vec3 dir, glm::vec3 up)
@@ -110,4 +132,5 @@ void OpenALAudio::updateListener(glm::vec3 pos, glm::vec3 vel, glm::vec3 dir, gl
     alListenerfv(AL_POSITION, posVec);
     alListenerfv(AL_VELOCITY, velVec);
     alListenerfv(AL_ORIENTATION, headVec);
+
 }

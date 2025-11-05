@@ -5,6 +5,9 @@
 #include <qtreewidget.h>
 #include "../../modules/renderer/vulkan/vulkanrenderer.h"
 
+class Scene;
+class GameObject;
+
 QT_BEGIN_NAMESPACE
 namespace Ui {
 class MainWindow;
@@ -39,24 +42,8 @@ private:
 
     std::chrono::time_point<std::chrono::steady_clock> lastTime;
 
-    //ObjectSelect
-    GameObject* ObjSelected = nullptr;
-
-    //bool to prevent set value from changing values
-    bool IsInspectorUpdated = false;
-
-    //QWidget* mRenderWindowContainer{nullptr};   //Qt container for the RenderWindow
-
     //right click the object in gameobjectWidget
    void OnRightClickGameObjectWidget(const QPoint& ClickedOn);
-
-        //Left click the object in gameobjectWidget
-   void OnLeftClickGameObjectWidget(QTreeWidgetItem* item, int column);
-   //deselect
-   bool eventFilter(QObject* obj,QEvent* event) override;
-
-   //Update inspector with values
-   void UpdateInspector();
 
     //for the Menuadd
     //add Objects to the scene and to the gameobject

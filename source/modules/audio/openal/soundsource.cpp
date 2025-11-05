@@ -10,6 +10,7 @@ SoundSource::SoundSource(std::string name, bool loop, float gain) :
     mPosition(0.0f, 0.0f, 0.0f),
     mVelocity(0.0f, 0.0f, 0.0f)
 {
+
     alGetError();
     alGenBuffers(1, &mBuffer);
     checkError("alGenBuffers");
@@ -27,9 +28,11 @@ SoundSource::SoundSource(std::string name, bool loop, float gain) :
     alSourcefv(mSource, AL_VELOCITY, temp2);
 
     alSourcei(mSource, AL_LOOPING, loop);
+
 }
 SoundSource::~SoundSource()
 {
+
     std::cout << "Destroying SoundSource " + mName;
     Stop();
     alGetError();
@@ -39,10 +42,12 @@ SoundSource::~SoundSource()
     checkError("alDeleteSources");
     alDeleteBuffers(1, &mBuffer);
     checkError("alDeleteBuffers");
+
 }
 
 bool SoundSource::loadWave(std::string filePath)
 {
+
     std::cout << "Loading wave file!\n";
     ALuint frequency{};
     ALenum format{};
@@ -102,6 +107,7 @@ bool SoundSource::loadWave(std::string filePath)
     std::cout << "Loading complete!\n";
     if (waveData->buffer) delete waveData->buffer;
     if (waveData) delete waveData;
+
     return true;
 }
 
@@ -118,6 +124,7 @@ void SoundSource::Pause()
 }
 void SoundSource::Stop()
 {
+
     alSourceStop(mSource);
     checkError("Stop source");
     isPlaying = false;
@@ -125,12 +132,14 @@ void SoundSource::Stop()
 
 void SoundSource::setPosition(glm::vec3 newPos)
 {
+
     mPosition = newPos;
     ALfloat temp[3] = {mPosition.x, mPosition.y, mPosition.z};
     alSourcefv(mSource, AL_POSITION, temp);
 }
 void SoundSource::setVelocity(glm::vec3 newVel)
 {
+
     mVelocity = newVel;
     ALfloat temp[3] = {mVelocity.x, mVelocity.y, mVelocity.z};
     alSourcefv(mSource, AL_VELOCITY, temp);
@@ -138,6 +147,7 @@ void SoundSource::setVelocity(glm::vec3 newVel)
 
 bool SoundSource::checkError(std::string name)
 {
+
     switch (alGetError())
     {
     case AL_NO_ERROR:
@@ -159,6 +169,7 @@ bool SoundSource::checkError(std::string name)
         return false;
     default: break;
     }
+
     return true;
 }
 

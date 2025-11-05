@@ -20,7 +20,8 @@ public:
     bool Init() override;
     void Update() override;
     SoundSource* PlaySound(std::string name, std::string filepath, bool loop, float gain, glm::vec3 pos) override;
-
+    void PlayMusic(std::string filename) override;
+    void PlaySound(std::string filename, glm::vec3 pos)  override;
 public:
     struct SoundListener
     {

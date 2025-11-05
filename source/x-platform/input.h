@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../modules/system.h"
+#include <QtCore/QtCore>
 
 struct KeyMap
 {
@@ -77,7 +78,7 @@ struct KeyMap
         TAB,
         OPENBRACE,
         CLOSEBRACE,
-        ENTER,
+        ENTER = Qt::Key_Enter,
         SEMICOLON,
         QUOTE,
         BACKSLASH,
@@ -93,10 +94,10 @@ struct KeyMap
         END,
         PGUP,
         PGDN,
-        LEFT,
-        RIGHT,
-        UP,
-        DOWN,
+        LEFT = Qt::LeftArrow,
+        RIGHT = Qt::RightArrow,
+        UP = Qt::UpArrow,
+        DOWN = Qt::DownArrow,
 
         PAD_SLASH,
         PAD_ASTERISK,
@@ -173,7 +174,7 @@ public:
     KeyMap Key;
     Mouse mouse;
 
-    void OnButton(const unsigned int button, const bool isDown);
+    void OnButton(const int button, const bool isDown);
     bool Held(int key);
     bool Released(int key);
     bool Pressed(int key);

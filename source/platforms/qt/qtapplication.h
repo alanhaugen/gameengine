@@ -4,6 +4,7 @@
 #include <QWindow>
 #include "mainwindow.h"
 #include "../../modules/renderer/renderer.h"
+#include "../../x-platform/editor.h"
 
 class QtApplication
 {
