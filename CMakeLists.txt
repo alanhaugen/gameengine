@@ -65,6 +65,8 @@ add_executable(QtVulkan
     source/x-platform/input.h
     source/x-platform/input.cpp
     source/modules/renderer/vulkan/vulkantexture.h
+    source/modules/audio/openal/soundsource.h source/modules/audio/openal/soundsource.cpp
+    source/modules/audio/openal/wavfilereader.h source/modules/audio/openal/wavfilereader.cpp
     source/modules/physics/aaphysics/aaphysics.h source/modules/physics/aaphysics/aaphysics.cpp
     source/components/sprite.h source/components/sprite.cpp
     source/demos/pong.h
@@ -77,7 +79,6 @@ add_executable(QtVulkan
     source/demos/breakout.cpp source/demos/breakout.h
     source/towerdefense/game.cpp source/towerdefense/game.h source/towerdefense/gameover.cpp source/towerdefense/gameover.h source/towerdefense/mainmenu.cpp source/towerdefense/mainmenu.h source/towerdefense/victory.cpp source/towerdefense/victory.h
 )
-
 #OpenAL
 if(DEFINED ENV{OPENAL_HOME})
     target_include_directories(QtVulkan PRIVATE $ENV{OPENAL_HOME}/include)

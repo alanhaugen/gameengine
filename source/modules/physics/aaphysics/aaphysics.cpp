@@ -5,9 +5,9 @@ AAPhysics::AAPhysics()
 
 }
 
-void AAPhysics::Init()
+bool AAPhysics::Init()
 {
-
+    return true;
 }
 
 void AAPhysics::Update()

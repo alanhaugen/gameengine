@@ -9,7 +9,7 @@ class AAPhysics : public Physics
 public:
     AAPhysics();
 
-    void Init() override;
+    bool Init() override;
     void Update() override;
     Collider CreateCollider(int response) override;
 

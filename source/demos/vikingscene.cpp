@@ -4,12 +4,13 @@
 
 void VikingScene::Init()
 {
-    GameObject* first  = new GameObject("Viking room 1");
-    GameObject* second = new GameObject("Viking room 2");
+    GameObject* first  = new GameObject("Viking room");
+    GameObject* second = new GameObject("Ball");
     vikingCamp = new Mesh("Assets/Models/viking_room.obj");
     ball = new Mesh("Assets/Models/ball.obj", "shaders/shader.vert.spv", "shaders/shader.frag.spv");
 
     camera.position = glm::vec3(.6,0,3);
+    audio->PlayMusic("Assets/Audio/Caravan_mono.wav");
 
     ball->drawable->ubo.modelMat = glm::mat4(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1);
     ball->drawable->ubo.normalMat = glm::mat4(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1);

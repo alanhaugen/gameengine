@@ -1,8 +1,8 @@
 #include "nullscript.h"
 
-void NullScript::Init()
+bool NullScript::Init()
 {
-
+    return true;
 }
 
 void NullScript::Update()

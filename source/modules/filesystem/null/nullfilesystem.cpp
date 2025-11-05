@@ -1,7 +1,8 @@
 #include "nullfilesystem.h"
 
-void NullFileSystem::Init()
+bool NullFileSystem::Init()
 {
+    return true;
 }
 
 void NullFileSystem::Update()
