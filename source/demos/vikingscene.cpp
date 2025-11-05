@@ -8,7 +8,8 @@ void VikingScene::Init()
     vikingCamp1 = new Mesh("Assets/Models/viking_room.obj");
     vikingCamp2 = new Mesh("Assets/Models/viking_room.obj", "shaders/shader.vert.spv", "shaders/shader.frag.spv");
 
-    Music = audio->PlaySound("Music", "Assets/Audio/Caravan_mono.wav", glm::vec3(), true, 1.0f);
+    audio->updateListener(glm::vec3(0.0f, 0.0f, 0.0f));
+    Music = audio->PlaySound("Music", "Assets/Audio/Caravan_mono.wav", true, 0.5f);
 
     camera.position += glm::vec3(.6,0,3);
 
@@ -42,6 +43,21 @@ void VikingScene::Update()
             Music->Play();
         }
     }
+
+    if(input.Held(input.Key.W))
+    {
+        Music->adjustGain(0.005f);
+    }
+    if(input.Held(input.Key.S))
+    {
+        Music->adjustGain(-0.005f);
+    }
+    if(input.Held(input.Key.R))
+    {
+        Music->adjustGain();
+        //should reset gain
+    }
+
     vikingCamp1->drawable->ubo.model = glm::rotate(vikingCamp1->drawable->ubo.model, glm::radians(1.0f), glm::vec3(0,0,1));
     vikingCamp2->drawable->ubo.model = glm::rotate(vikingCamp2->drawable->ubo.model, glm::radians(-1.0f), glm::vec3(0,0,1));
 }

@@ -6,6 +6,7 @@ OpenALAudio::OpenALAudio() {}
 
 OpenALAudio* OpenALAudio::mInstance = NULL;
 
+//This runs when you call getinstance() for the first time
 bool OpenALAudio::Init()
 {
     std::cout << "Intializing OpenAL!\n";
@@ -26,14 +27,6 @@ bool OpenALAudio::Init()
     else
         std::cout << "Intialization complete!\n";
 
-    //Start listing of found sound devices:
-    //Not yet implemented
-    //ALDeviceList *pDeviceList = NULL;
-    //ALCcontext *pContext = NULL;
-    //ALCdevice *pDevice = NULL;
-    //ALint i;	//will hold the number of the preferred device
-    //ALboolean bReturn = AL_FALSE;
-
     return true;
 }
 
@@ -42,15 +35,15 @@ void OpenALAudio::Update()
 
 }
 
-SoundSource* OpenALAudio::PlaySound(std::string name, std::string filepath, glm::vec3 pos = glm::vec3(), bool loop = false, float gain = 1.0f)
+SoundSource* OpenALAudio::PlaySound(std::string name, std::string filepath, bool loop = false, float gain = 1.0f, glm::vec3 pos = glm::vec3())
 {
     SoundSource* playSound{nullptr};
-    getInstance()->updateListener(pos, glm::vec3(0,0,0), glm::vec3(0,0,-1), glm::vec3(0,1,0));
     playSound = getInstance()->createSource(name, pos, filepath, loop, gain);
     playSound->Play();
     return playSound;
 }
 
+//For what or why would I use this?
 void OpenALAudio::cleanUp()
 {
     mContext = alcGetCurrentContext();
@@ -60,6 +53,7 @@ void OpenALAudio::cleanUp()
     alcCloseDevice(mDevice);
 }
 
+//Do I even need this?
 bool OpenALAudio::checkError()
 {
     switch (alGetError())

@@ -10,7 +10,12 @@ void NullAudio::Update()
 
 }
 
-Audio::AudioComponent* NullAudio::PlaySound(std::string name, std::string filepath, glm::vec3 pos, bool loop, float gain)
+Audio::AudioComponent* NullAudio::PlaySound(std::string name, std::string filepath, bool loop, float gain, glm::vec3 pos = glm::vec3())
 {
     return nullptr;
+}
+
+void NullAudio::updateListener(glm::vec3 pos, glm::vec3 vel, glm::vec3 dir, glm::vec3 up)
+{
+    return;
 }

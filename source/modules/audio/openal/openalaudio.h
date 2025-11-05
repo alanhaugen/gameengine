@@ -19,7 +19,7 @@ public:
     OpenALAudio();
     bool Init() override;
     void Update() override;
-    SoundSource* PlaySound(std::string name, std::string filepath, glm::vec3 pos, bool loop, float gain) override;
+    SoundSource* PlaySound(std::string name, std::string filepath, bool loop, float gain, glm::vec3 pos) override;
 
 public:
     struct SoundListener
@@ -63,7 +63,7 @@ public:
     **/
     SoundSource* createSource(std::string name, glm::vec3 pos, std::string filePath = "", bool loop = false, float gain = 1.0);
 
-    void updateListener(glm::vec3 pos, glm::vec3 vel, glm::vec3 dir, glm::vec3 up);
+    void updateListener(glm::vec3 pos, glm::vec3 vel = glm::vec3(.0f,.0f,.0f), glm::vec3 dir = glm::vec3(.0f,.0f,-1.0f), glm::vec3 up = glm::vec3(.0f,1.0f,.0f)) override;
 
 private:                         ///< Private constructor.
     OpenALAudio(OpenALAudio const&);      ///< Private copy constructor.

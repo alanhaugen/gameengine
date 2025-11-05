@@ -18,6 +18,9 @@ SoundSource::SoundSource(std::string name, bool loop, float gain) :
     alSourcef(mSource, AL_PITCH, 1.0f);
     alSourcef(mSource, AL_GAIN, gain);
 
+    originalGain = gain;
+    currGain = gain;
+
     ALfloat temp[3] = {mPosition.x, mPosition.y, mPosition.z};
     alSourcefv(mSource, AL_POSITION, temp);
     ALfloat temp2[3] = {mVelocity.x, mVelocity.y, mVelocity.z};
@@ -157,4 +160,24 @@ bool SoundSource::checkError(std::string name)
     default: break;
     }
     return true;
+}
+
+//If adjust by 0, reset to original value
+void SoundSource::adjustGain(float gain){
+    if(gain == 0.0f)
+    {
+        gain = originalGain;
+        alSourcef(mSource, AL_GAIN, gain);
+        return;
+    }
+
+    currGain += gain;
+
+    if(currGain < 0.0f)
+        currGain = 0.0f;
+
+    if(currGain > 1.0f)
+        currGain = 1.0f;
+
+    alSourcef(mSource, AL_GAIN, currGain);
 }

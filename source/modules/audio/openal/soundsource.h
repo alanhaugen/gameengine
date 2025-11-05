@@ -49,7 +49,7 @@ public:
     glm::vec3 getPosition() {return mPosition;}     ///< Returns source position as glm::vec3.
     void setVelocity(glm::vec3 newVel);             ///< Sets source velocity from glm::vec3.
     glm::vec3 getVelocity() {return mVelocity;}     ///< Returns source velocity as glm::vec3.
-
+    void adjustGain(float gain = 0.0f) override;
 private:
     std::string mName;          ///< The name of the sound source (Not used).
     ALuint mSource;             ///< The sound source.
@@ -57,4 +57,6 @@ private:
     glm::vec3 mPosition;    ///< Vector containing source position.
     glm::vec3 mVelocity;    ///< Vector containing source velocity.
     bool checkError(std::string name);
+    float originalGain;
+    float currGain;
 };
