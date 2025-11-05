@@ -64,8 +64,8 @@ smooth in vec4 vSmoothColor;		//interpolated colour to fragment shader
 #endif
 
 //TODO: remove these, use uniforms instead (see above)
-    vec3 u_lightAmbientIntensity = vec3(1.0, 1.0, 1.0);
-    vec3 u_lightDiffuseIntensity = vec3(1.0, 1.0, 1.0);
+    vec3 u_lightAmbientIntensity = vec3(0.5, 0.5, 0.5);
+    vec3 u_lightDiffuseIntensity = vec3(0.5, 0.5, 0.5);
     vec3 u_lightSpecularIntensity = vec3(1.0, 1.0, 1.0);
 
     // parameters of the material and possible values
@@ -132,7 +132,7 @@ void main(void)
     vec3 Ispe = specularLighting(N, L, V);
 
     // diffuse color of the object from texture
-    vec3 diffuseColor = texture(u_diffuseTexture, o_texcoords).rgb;
+    vec3 diffuseColor = o_colour.rgb; //texture(u_diffuseTexture, o_texcoords).rgb;
 
     // combination of all components and diffuse color of the object
     resultingColor.xyz = diffuseColor * (Iamb + Idif + Ispe);

@@ -29,7 +29,8 @@ public:
     Drawable& CreateDrawable(std::vector<Vertex> vertices,
                              std::vector<uint32_t> indices,
                              const char* vertexShader,
-                             const char* fragmentShader) override;
+                             const char* fragmentShader,
+                             const int topology = TRIANGLES) override;
 
     void Render();
 
@@ -125,7 +126,8 @@ private:
     void createRenderPass();
     void createDescriptorSetLayout();
     VkPipeline createGraphicsPipeline(const char *vertexShaderPath,
-                                      const char *fragmentShaderPath);
+                                      const char *fragmentShaderPath,
+                                      const int topology = TRIANGLES);
     void createFramebuffers();
     void createCommandPool();
     void createColorResources();
