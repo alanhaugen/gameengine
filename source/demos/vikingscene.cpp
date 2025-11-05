@@ -60,7 +60,7 @@ void VikingScene::Update()
     if(input.Held(input.Key.R))
     {
         Music->adjustGain();
-        //should reset gain
+        //reset gain
     }
 
     vikingCamp1->drawable->ubo.model = glm::rotate(vikingCamp1->drawable->ubo.model, glm::radians(1.0f), glm::vec3(0,0,1));
