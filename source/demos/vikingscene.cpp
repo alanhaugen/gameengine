@@ -1,10 +1,11 @@
 #include "vikingscene.h"
 #include "glm/gtc/matrix_transform.hpp"
+#include "../components/gameobject.h"
 
 void VikingScene::Init()
 {
-    GameObject* first  = new GameObject;
-    GameObject* second = new GameObject;
+    GameObject* first  = new GameObject("Viking room 1");
+    GameObject* second = new GameObject("Viking room 2");
     vikingCamp = new Mesh("Assets/Models/viking_room.obj");
     ball = new Mesh("Assets/Models/ball.obj", "shaders/shader.vert.spv", "shaders/shader.frag.spv");
 
