@@ -14,7 +14,7 @@ public:
     Camera(float x, float y, float z);
     ~Camera() {}
 
-    void Update();
+    void Update() override;
 
     glm::vec3 position;
     glm::vec3 forward;

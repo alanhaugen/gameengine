@@ -10,6 +10,7 @@
 #include "../modules/script/null/nullscript.h"
 
 #include <vector>
+#include <string>
 #include "../modules/system.h"
 
 class Locator
@@ -44,7 +45,7 @@ private:
 #define Log(string) if(Locator::debug) Locator::debug->Write(string)
 
 //! Macro to easily access the debug singleton and Log a warning
-#define LogWarning(string) if(Locator::debug) Locator::debug->Warning(String(__FILE__) + "(" + String(__LINE__) + "): " + string )
+#define LogWarning(string) if(Locator::debug) Locator::debug->Warning(std::string(__FILE__) + std::string("(") + std::string(__LINE__) + std::string("): ") + std::string(string) )
 
 //! Macro to easily access the debug singleton and Log an error
-#define LogError(string) if(Locator::debug) Locator::debug->Error( (String("Error ") + String(__FILE__) + "(" + String(__LINE__) + "): " + string )
+#define LogError(string) if(Locator::debug) Locator::debug->Error(string) //(std::string("Error ") + std::string(__FILE__) + "(" + std::string(__LINE__) + "): " + string )

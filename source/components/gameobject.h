@@ -7,12 +7,7 @@
 #include <glm/glm.hpp>
 #include <vector>
 
-struct Transform
-{
-    glm::vec3 mPosition;
-    glm::vec3 mRotation;
-    glm::vec3 mScale;
-};
+
 
 static unsigned int ID_TOP = 0;
 
@@ -22,9 +17,11 @@ protected:
     unsigned int ID;
     QString Name;
 
-public:
-    GameObject(const QString name = "empty");
 
+public:
+    GameObject(const QString name);
+
+     Renderer::Drawable* drawable;
     Transform mTransform;
    // std::vector<GameObject*> children;
     std::vector<Component*> components;
@@ -40,6 +37,8 @@ public:
     const uint32_t GetEntityId();
 
     void Update();
+    void UpdateTransform(glm::vec3 Position,glm::vec3 Rotation,glm::vec3 Scale);
+
 };
 
 #endif // GAMEOBJECT_H
