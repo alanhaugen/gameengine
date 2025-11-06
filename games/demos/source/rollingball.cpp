@@ -1,6 +1,6 @@
 #include "rollingball.h"
-#include "../components/mesh.h"
-#include "../components/terrain.h"
+#include "core/components/mesh.h"
+#include "core/components/terrain.h"
 #include <glm/gtc/matrix_transform.hpp>
 
 RollingBall::RollingBall()

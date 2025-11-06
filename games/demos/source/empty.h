@@ -1,7 +1,7 @@
 #ifndef EMPTY_H
 #define EMPTY_H
 
-#include "../x-platform/scene.h"
+#include "core/x-platform/scene.h"
 
 class Empty : public Scene
 {

@@ -1,8 +1,8 @@
 #ifndef BREAKOUT_H
 #define BREAKOUT_H
 
-#include "../x-platform/scene.h"
-#include "../components/text.h"
+#include "core/x-platform/scene.h"
+#include "core/components/text.h"
 
 const int NUMBER_OF_BLOCKS = 13 * 4;
 

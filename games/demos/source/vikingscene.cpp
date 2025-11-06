@@ -1,6 +1,6 @@
 #include "vikingscene.h"
 #include "glm/gtc/matrix_transform.hpp"
-#include "../components/gameobject.h"
+#include "core/components/gameobject.h"
 
 void VikingScene::Init()
 {
@@ -8,6 +8,9 @@ void VikingScene::Init()
     GameObject* second = new GameObject("Ball");
     vikingCamp = new Mesh("Assets/Models/viking_room.obj");
     ball = new Mesh("Assets/Models/ball.obj", "shaders/shader.vert.spv", "shaders/shader.frag.spv");
+
+    //ballCollider = new SphereCollider();
+    //first->AddComponent(ballCollider);
 
     audio->updateListener(glm::vec3(0.0f, 0.0f, 0.0f));
     Music = audio->PlaySound("Music", "Assets/Audio/Caravan_mono.wav", true, 0.5f);

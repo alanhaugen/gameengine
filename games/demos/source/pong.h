@@ -1,10 +1,10 @@
 #ifndef PONG_H
 #define PONG_H
 
-#include "../x-platform/scene.h"
-#include "../components/sphere.h"
-#include "../components/cube.h"
-#include "../components/text.h"
+#include "core/x-platform/scene.h"
+#include "core/components/sphere.h"
+#include "core/components/cube.h"
+#include "core/components/text.h"
 
 class Pong : public Scene
 {

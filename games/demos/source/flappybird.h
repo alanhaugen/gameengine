@@ -1,8 +1,8 @@
 #ifndef FLAPPYBIRD_H
 #define FLAPPYBIRD_H
 
-#include "../x-platform/scene.h"
-#include "../components/text.h"
+#include "core/x-platform/scene.h"
+#include "core/components/text.h"
 
 const int MAX_SCORE = 100;
 

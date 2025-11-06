@@ -1,7 +1,7 @@
 #ifndef ROLLINGBALL_H
 #define ROLLINGBALL_H
 
-#include "../x-platform/scene.h"
+#include "core/x-platform/scene.h"
 
 class Mesh;
 class Terrain;
