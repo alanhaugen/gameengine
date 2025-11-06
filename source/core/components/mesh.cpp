@@ -21,7 +21,8 @@ Mesh::Mesh(const char *filePath,
     std::string warn, err;
 
     if (!tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, filePath, "Assets/Models")) {
-        throw std::runtime_error(warn + err);
+        LogError(warn+err+"\nTry downloading the assets files or changing the working directory");
+        exit(0);
     }
 
     const char* texture = "";

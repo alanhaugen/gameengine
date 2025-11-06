@@ -6,6 +6,8 @@
 #include "systems/renderer/renderer.h"
 #include "core/x-platform/editor.h"
 
+static bool isAlive = true;
+
 class QtApplication
 {
 private:

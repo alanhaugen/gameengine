@@ -32,7 +32,13 @@ void VikingScene::Update()
 {
     if(input.Held(input.Key.SPACE))
     {
-        //Application::SetScene(1);
+        Application::NextScene();
+    }
+
+    if(input.Held(input.Key.ESCAPE))
+    {
+        Log("Quitting");
+        Application::Quit();
     }
 
     /*

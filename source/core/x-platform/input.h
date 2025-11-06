@@ -8,7 +8,7 @@ struct KeyMap
     enum
     {
         NONE,
-        A = 65,
+        A = Qt::Key_A,
         B,
         C,
         D,
@@ -70,7 +70,7 @@ struct KeyMap
         F11,
         F12,
 
-        ESCAPE = 27,
+        ESCAPE = Qt::Key_Escape,
         TILDE,
         MINUS,
         EQUALS,
@@ -86,7 +86,7 @@ struct KeyMap
         COMMA,
         FULLSTOP,
         SLASH,
-        SPACE = 32,
+        SPACE = Qt::Key_Space,
 
         INSERT,
         DELETE_KEY,

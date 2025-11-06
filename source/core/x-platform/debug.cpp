@@ -1,5 +1,7 @@
 #include "debug.h"
 #include <iostream>
+#include <QMessageBox>
+#include <QString>
 
 #include "locator.h"
 
@@ -21,5 +23,6 @@ void Debug::Warning(std::string log)
 
 void Debug::Error(std::string log)
 {
+    QMessageBox::critical(nullptr, "Error", QString(log.c_str()));
     std::cout << log;
 }

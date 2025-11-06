@@ -1,4 +1,5 @@
 #include "mainwindow.h"
+#include "core/platforms/qt/qtapplication.h"
 #include "ui_MainWindow.h"
 #include "systems/renderer/vulkan/vulkanrenderer.h"
 #include "core/components/mesh.h"
@@ -199,6 +200,11 @@ void MainWindow::OnRightClickGameObjectWidget(const QPoint &ClickedOn)
                 obj->SetName(newName);
             }
         }
+    }
+
+    if (isAlive == false)
+    {
+        close();
     }
 }
 

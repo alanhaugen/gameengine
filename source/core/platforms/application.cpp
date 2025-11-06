@@ -38,6 +38,16 @@ void Application::AddScene(Scene *scene)
     }
 }
 
+void Application::NextScene()
+{
+    //currentScene = nullptr;
+}
+
+void Application::Quit()
+{
+    isAlive = false;
+}
+
 int Application::Run()
 {
     return PLATFORM::Run();

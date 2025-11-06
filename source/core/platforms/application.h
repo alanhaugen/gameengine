@@ -17,5 +17,7 @@ public:
     void SetScene(int scene);
     void SetScene(Scene* scene);
     void AddScene(Scene* scene);
+    static void NextScene();
+    static void Quit();
     int Run();
 };
