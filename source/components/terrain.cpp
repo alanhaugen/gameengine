@@ -1,4 +1,5 @@
 #include "terrain.h"
+#include <fstream>
 
 void Terrain::Init()
 {
@@ -38,9 +39,23 @@ Terrain::Terrain(const char *filePath,
            const char* vertexShaderPath,
            const char* fragmentShaderPath)
 {
-    Init(); // todo: change into reading data from file
+    std::ifstream infile(filePath);
 
-    drawable = &renderer->CreateDrawable(vertices, indices, vertexShaderPath, fragmentShaderPath);
+    float x, y, z;
+    while (infile >> x >> z >> y) // Notice z and y are swapped
+    {
+        static glm::vec3 offset = glm::vec3(x, y, z);
+
+        glm::vec3 pos = glm::vec3(x, y, z) - offset;
+        pos /= 50.0f;
+
+        glm::vec3 color(0.0f);
+        color.g = pos.y / pos.length() * 50.0f;
+
+        vertices.push_back(Vertex(pos.x, pos.y, pos.z, color));
+    }
+
+    drawable = &renderer->CreateDrawable(vertices, indices, vertexShaderPath, fragmentShaderPath, Renderer::POINTS);
 }
 
 void Terrain::Update()

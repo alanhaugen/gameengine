@@ -1,8 +1,8 @@
 #pragma once
 
-#include "component.h"
+#include "visualobject.h"
 
-class Mesh : public Component
+class Mesh : public VisualObject
 {
 private:
 

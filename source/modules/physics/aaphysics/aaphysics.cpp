@@ -16,6 +16,11 @@ void AAPhysics::Update()
     CollisionDetection();
 }
 
+bool AAPhysics::Collision(const char *type)
+{
+    return false;
+}
+
 void AAPhysics::ApplyGravity(float deltaTime)
 {
 

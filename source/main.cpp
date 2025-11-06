@@ -1,4 +1,5 @@
 #include "platforms/application.h"
+#include "demos/rollingball.h"
 #include "demos/empty.h"
 #include "demos/pong.h"
 

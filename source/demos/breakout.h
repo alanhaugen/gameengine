@@ -4,6 +4,8 @@
 #include "../x-platform/scene.h"
 #include "../components/text.h"
 
+const int NUMBER_OF_BLOCKS = 13 * 4;
+
 class Breakout : public Scene
 {
 public:
@@ -15,6 +17,8 @@ public:
     Sprite* paddle;
 
     std::vector<Sprite*> blocks;
+    std::vector<Sprite*> balls;
+    std::vector<glm::vec3> ballDirection;
 };
 
 #endif // BREAKOUT_H

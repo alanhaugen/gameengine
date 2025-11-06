@@ -11,5 +11,6 @@ private:
 public:
     bool Init();
     void Update();
+    bool Collision(const char* type = 0);
     Collider CreateCollider(int response);
 };

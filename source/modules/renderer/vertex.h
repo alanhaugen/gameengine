@@ -33,6 +33,8 @@ struct Vertex {
     {
         pos = pos_;
         color = inColor;
+        color = pos;
+        color /= color.length();
         normal = glm::vec3(1.0f, 1.0f, 1.0f);
         glyph = -1.0f;
     }

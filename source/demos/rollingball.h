@@ -69,19 +69,11 @@ public:
 
     BSplineCurve curve;
 
-    float acceleration = 1.0f;
-    float mass = 1.0f;
-
-
-    Renderer::Drawable* splineDrawable;
-
-    std::vector<Mesh*> balls;
-    std::vector<glm::vec3> directions;
-
-    int index = 0;
+    glm::vec3 velocity;
+    glm::vec3 gravity = glm::vec3(0, -0.98, 0);
 
     Terrain* terrainMesh;
-    //Mesh* ballMesh;
+    Mesh* ballMesh;
 };
 
 #endif // ROLLINGBALL_H
