@@ -56,6 +56,7 @@ set(SOURCES
     Editor/EntityModel.h Editor/EntityModel.cpp
     Editor/MainWindow.h Editor/MainWindow.cpp
     Editor/MainWindow.ui
+    Editor/OutlinerDock.h Editor/OutlinerDock.cpp
     main.cpp
 )
 

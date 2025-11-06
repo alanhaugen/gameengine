@@ -15,6 +15,7 @@
 #include "ECS/ScriptingSystem.h"
 #include "ECS/SoundSystem.h"
 #include "ECS/RenderSystem.h"
+#include "Editor/OutlinerDock.h"
 #include "ui_MainWindow.h"
 #include <QKeyEvent>
 
@@ -56,10 +57,14 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
     mUi->VulkanLayout->addWidget(mVulkanWidget);
 
 
-
+	// Show the entity outliner dock
+    // This could probably be a local variable and not a class variable?
     mEntityModel = new gea::EntityModel(mEngine, this);
 
-    //Testing the layout - showing only number for now
+    // Making it a dock widget with the Entity list:
+    gea::OutlinerDock* outlinerDock = new gea::OutlinerDock(mEntityModel,this);
+
+    //Testing the layout
     mEngine->createEntity();
     mEngine->mEntityVector.at(0).mName = "Primus";
     mEngine->createEntity();
@@ -67,8 +72,10 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
     mEngine->createEntity();
     mEngine->mEntityVector.at(2).mName = "Tertius";
 
+	// Add the outliner dock to the main window right side
+    addDockWidget(Qt::RightDockWidgetArea, outlinerDock);
 
-    mUi->entityList->setModel(mEntityModel);
+    //mUi->entityList->setModel(mEntityModel);
 
     //sets the keyboard input focus to the MainWindow when program starts
     this->setFocus();
