@@ -1,14 +1,54 @@
 cmake_minimum_required(VERSION 3.19)
-project(QtVulkan LANGUAGES CXX)
+project(Core LANGUAGES CXX)
 
-find_package(Qt6 6.5 REQUIRED COMPONENTS Core Widgets Multimedia)
+#add_subdirectory(source/modules/ai/null)
+#add_subdirectory(source/modules/audio/null)
+#add_subdirectory(source/modules/audio/openal)
+#add_subdirectory(source/modules/audio/qtaudio)
+#add_subdirectory(source/modules/filesystem/null)
+#add_subdirectory(source/modules/physics/null)
+#add_subdirectory(source/modules/physics/aaphysics)
+#add_subdirectory(source/modules/renderer/null)
+#add_subdirectory(source/modules/renderer/vulkan)
+#add_subdirectory(source/modules/renderer/opengl)
+#add_subdirectory(source/modules/script/null)
+
+#############################################################
+
+# Project configuration
+# You can set modules here
+
+#set(RENDERER VulkanRenderer)
+#set(RENDERER OpenGLRenderer)
+#set(RENDERER NullRenderer)
+#set(AUDIO OpenALAudio)
+#set(AUDIO NullAudio)
+#set(AUDIO QtMulimediaAudio)
+#set(SCRIPT LuaScript)
+#set(SCRIPT NullScript)
+#set(FILESYSTEM STDFilesystem)
+#set(FILESYSTEM NullFilesystem)
+#set(FILESYSTEM AAPhysics)
+#set(FILESYSTEM Bullet3Physics)
+#set(FILESYSTEM NullPhysics)
+
+# You do not need to change any code beyond this point
+
+#############################################################
+
+# Asset Conditioning Pipeline (ACP)
+
+#############################################################
+
+find_package(Qt6 REQUIRED COMPONENTS Core Widgets)
+find_package(Qt6 REQUIRED COMPONENTS Multimedia)
 
 qt_standard_project_setup()
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-add_executable(QtVulkan
+add_executable(Core
     source/modules/renderer/vulkan/vulkanrenderer.cpp
     source/modules/renderer/vulkan/vulkanrenderer.h
     source/platforms/qt/mainwindow.h
@@ -79,25 +119,31 @@ add_executable(QtVulkan
     source/demos/breakout.cpp source/demos/breakout.h
     source/towerdefense/game.cpp source/towerdefense/game.h source/towerdefense/gameover.cpp source/towerdefense/gameover.h source/towerdefense/mainmenu.cpp source/towerdefense/mainmenu.h source/towerdefense/victory.cpp source/towerdefense/victory.h
 )
+
 #OpenAL
+if(DEFINED AUDIO)
+    message("Will try to use " AUDIO)
 if(DEFINED ENV{OPENAL_HOME})
-    target_include_directories(QtVulkan PRIVATE $ENV{OPENAL_HOME}/include)
+    target_include_directories(Core PRIVATE $ENV{OPENAL_HOME}/include)
 
-    target_link_libraries(QtVulkan PRIVATE $ENV{OPENAL_HOME}/libs/Win64/OpenAL32.lib)
+    target_link_libraries(Core PRIVATE $ENV{OPENAL_HOME}/libs/Win64/OpenAL32.lib)
 
-    add_custom_command(TARGET QtVulkan POST_BUILD
+    add_custom_command(TARGET Core POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_if_different
             $ENV{OPENAL_HOME}/bin/Win64/OpenAL32.dll
             $<TARGET_FILE_DIR:QtVulkan>
     )
+else()
+
+endif()
 endif()
 
-target_include_directories(QtVulkan PRIVATE include)
+target_include_directories(Core PRIVATE include)
 
 if(MSVC)
     # Required for proper C++ exception handling with MSVC
-    target_compile_options(QtVulkan PRIVATE /EHsc)
-    target_include_directories(QtVulkan PRIVATE
+    target_compile_options(Core PRIVATE /EHsc)
+    target_include_directories(Core PRIVATE
         "C:/VulkanSDK/1.4.321.1/Include"
     )
     target_link_libraries(QtVulkan PRIVATE
@@ -112,7 +158,7 @@ else()
     # It stops Validation layers from being used - needs to be fixed!!!
     add_compile_definitions(NDEBUG)
 
-    target_link_libraries(QtVulkan PRIVATE
+    target_link_libraries(Core PRIVATE
         Qt::Core
         Qt::Widgets
         Qt6::Multimedia
@@ -133,7 +179,7 @@ endif()
 #file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/Assets" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
 
 include(GNUInstallDirs)
-install(TARGETS QtVulkan
+install(TARGETS Core
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
