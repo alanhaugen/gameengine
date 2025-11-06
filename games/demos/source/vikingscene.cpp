@@ -1,3 +1,4 @@
+#include <core/platforms/application.h>
 #include "vikingscene.h"
 #include "glm/gtc/matrix_transform.hpp"
 #include "core/components/gameobject.h"
@@ -13,7 +14,7 @@ void VikingScene::Init()
     //first->AddComponent(ballCollider);
 
     audio->updateListener(glm::vec3(0.0f, 0.0f, 0.0f));
-    Music = audio->PlaySound("Music", "Assets/Audio/Caravan_mono.wav", true, 0.5f);
+    music = audio->PlaySound("Music", "Assets/Audio/Caravan_mono.wav", true, 0.5f);
     camera.position = glm::vec3(.6,0,3);
 
     vikingCamp->Scale(glm::vec3(1.0, 1.0, 1.0));
@@ -31,30 +32,35 @@ void VikingScene::Update()
 {
     if(input.Held(input.Key.SPACE))
     {
-        if(Music->isPlaying)
+        //Application::SetScene(1);
+    }
+
+    /*
+    if(input.Held(input.Key.SPACE))
+    {
+        if(music->isPlaying)
         {
-            Music->Pause();
+            music->Pause();
         }
         else
         {
-            Music->Play();
+            music->Play();
         }
     }
 
     if(input.Held(input.Key.W))
     {
-        Music->adjustGain(0.005f);
+        music->adjustGain(0.005f);
     }
     if(input.Held(input.Key.S))
     {
-        Music->adjustGain(-0.005f);
+        music->adjustGain(-0.005f);
     }
     if(input.Held(input.Key.R))
     {
-        Music->adjustGain();
+        music->adjustGain();
         //reset gain
-    }
-
+    }*/
 
     vikingCamp->drawable->ubo.model = glm::rotate(vikingCamp->drawable->ubo.model, glm::radians(1.0f), glm::vec3(0,0,1));
     ball->drawable->ubo.model = glm::rotate(ball->drawable->ubo.model, glm::radians(-1.0f), glm::vec3(0,0,1));

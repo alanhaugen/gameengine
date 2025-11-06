@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../x-platform/scene.h"
+#include "core/x-platform/scene.h"
 
 #define PLATFORM_HEADER "qt/qtapplication.h"
 #define PLATFORM QtApplication
@@ -14,6 +14,7 @@ private:
 
 public:
     Application(int argc, char* argv[], const char* windowTitle, int windowWidth, int windowHeight);
+    void SetScene(int scene);
     void SetScene(Scene* scene);
     void AddScene(Scene* scene);
     int Run();

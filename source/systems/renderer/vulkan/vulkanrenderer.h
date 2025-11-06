@@ -23,7 +23,7 @@ public:
     void Update() override;
 
     explicit VulkanRenderer(QWindow* parent = nullptr);
-    virtual ~VulkanRenderer();
+    ~VulkanRenderer();
 
     void initVulkan();
     Drawable& CreateDrawable(std::vector<Vertex> vertices,

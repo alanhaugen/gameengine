@@ -10,11 +10,11 @@ class VikingScene : public Scene
 private:
     Mesh* vikingCamp;
     Mesh* ball;
+    Audio::AudioComponent* music;
     //SphereCollision* ballCollider;
     //BoxCollision* vikingCampCollider;
 
 public:
     void Init();
     void Update();
-    Audio::AudioComponent* Music;
 };

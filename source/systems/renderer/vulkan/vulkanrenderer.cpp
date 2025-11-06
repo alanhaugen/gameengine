@@ -51,7 +51,7 @@ VulkanRenderer::VulkanRenderer(QWindow* parent)
 
 VulkanRenderer::~VulkanRenderer()
 {
-    for (int i = 0; i < drawablesQuantity; i++)
+    /*for (int i = 0; i < drawablesQuantity; i++)
     {
         if (drawables[i].isTextured)
         {
@@ -66,7 +66,7 @@ VulkanRenderer::~VulkanRenderer()
     }
 
     vkDestroyPipelineLayout(device, pipelineLayout, nullptr);
-    cleanup();
+    cleanup();*/
 }
 
 // void VulkanRenderer::initWindow() {

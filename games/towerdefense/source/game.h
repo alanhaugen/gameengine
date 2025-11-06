@@ -1,7 +1,7 @@
 #ifndef GAME_H
 #define GAME_H
 
-#include "../x-platform/scene.h"
+#include "core/x-platform/scene.h"
 
 class Game : public Scene
 {

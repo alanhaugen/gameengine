@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.19)
 project(Demos LANGUAGES CXX)
 
-find_package(Qt6 REQUIRED COMPONENTS Core Widgets)
+find_package(Qt6 REQUIRED COMPONENTS Core Widgets Multimedia)
 
 qt_standard_project_setup()
 
@@ -23,8 +23,10 @@ add_executable(Demos
 )
 
 target_link_libraries(Demos PRIVATE
-    Core # The inn game engine
+    Qt::Core
     Qt::Widgets
+    Qt::Multimedia
+    Core # The inn game engine
 
     NullAI
     NullAudio

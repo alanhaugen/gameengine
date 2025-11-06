@@ -88,7 +88,7 @@ void Mesh::OnAttach()
     //attached the drawable to the gameobject
     if(gameobjOwner)
     {
-        gameobjOwner->drawable = GetRenderer();
+        gameobjOwner->drawable = drawable;
     }
 }
 
@@ -104,8 +104,8 @@ void Mesh::UpdateTransform()
     Neutral  = glm::rotate(Neutral, glm::radians(mTransform.mRotation.x),  glm::vec3(1,0,0));
     Neutral  = glm::rotate(Neutral, glm::radians(mTransform.mRotation.y),  glm::vec3(0,1,0));
     Neutral = glm::rotate(Neutral, glm::radians(mTransform.mRotation.z),  glm::vec3(0,0,1));
-   //scale
-   Neutral = glm::scale(Neutral,mTransform.mScale);
+    //scale
+    Neutral = glm::scale(Neutral,mTransform.mScale);
 
     drawable->ubo.model = Neutral;
 
@@ -114,9 +114,4 @@ void Mesh::UpdateTransform()
              << "Rot" << mTransform.mRotation.x << mTransform.mRotation.y << mTransform.mRotation.z
              << "Scale" << mTransform.mScale.x << mTransform.mScale.y << mTransform.mScale.z;
 
-}
-
-Renderer::Drawable* Mesh::GetRenderer()
-{
-    return drawable;
 }

@@ -1,10 +1,16 @@
 #include "application.h"
+#include "core/components/fpscamera.h"
 #include <vector>
-#include "../components/fpscamera.h"
 
 Application::Application(int argc, char* argv[], const char *windowTitle, int windowWidth, int windowHeight)
     : PLATFORM(argc, argv, windowTitle, windowWidth, windowHeight)
 {
+}
+
+void Application::SetScene(int scene)
+{
+    currentScene = scenes[scene];
+    currentScene->Init();
 }
 
 void Application::SetScene(Scene *scene)
