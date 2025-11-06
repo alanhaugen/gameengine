@@ -16,7 +16,6 @@ QT_END_NAMESPACE
 namespace gea
 {
     //Forward declarations
-    class EntityContainer;
     class EntityModel;
     class RenderSystem;
     class Engine;
@@ -45,7 +44,6 @@ private:
     //FilesWindow<mVulkanWindow->objManager>(mVulkanWindow->objManager)* mFilesWidget{nullptr};
 
     //GUI for Entities
-    class gea::EntityContainer* mEntityContainer{nullptr};
     class gea::EntityModel* mEntityModel{nullptr};
     class Camera* mCamera{ nullptr };
 

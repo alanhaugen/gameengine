@@ -40,6 +40,7 @@ void Engine::updateRenderSystem()
 Entity* Engine::createEntity()
 {
     mEntityVector.emplace_back();
+    emit itemAppended(mEntityVector.size() - 1);
     return &mEntityVector.back();
 }
 

@@ -53,7 +53,6 @@ set(SOURCES
     Editor/DisplayWidget.cpp
     Editor/DraggableButton.h Editor/DraggableButton.cpp
     Editor/FilesWindow.h Editor/FilesWindow.cpp
-    Editor/EntityContainer.h Editor/EntityContainer.cpp
     Editor/EntityModel.h Editor/EntityModel.cpp
     Editor/MainWindow.h Editor/MainWindow.cpp
     Editor/MainWindow.ui

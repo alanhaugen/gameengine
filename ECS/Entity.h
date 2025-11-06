@@ -1,7 +1,9 @@
 #ifndef ENTITY_H
 #define ENTITY_H
 
+#include <qcontainerfwd.h>
 #include <vector>
+#include <QString>
 #include "ECS/Components.h"
 
 //Need namespace, since we start to get naming collisions with other code
@@ -19,6 +21,8 @@ class Entity
 public:
     Entity();
     ~Entity();
+
+    QString mName{"Nemo"};
 
     std::size_t mEntityID;                      //unique ID for each Entity
     std::vector<EntityComponents> mComponents;  //holds the components for this Entity

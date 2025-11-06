@@ -12,8 +12,9 @@
 namespace gea
 {
 
-class Engine
+class Engine : public QObject
 {
+    Q_OBJECT
 public:
     Engine(Renderer* renderer, MainWindow* mainWindow);
 
@@ -78,6 +79,9 @@ public:
     //A Render system then might need many vectors, but a Move system might only need one or two.
     //Each system just access the ones they need, and iterates through them and do their job.
     //Since the components are sorted by EntityID, the iteration should go well and we should get DOD benefits.
+
+signals:
+    void itemAppended(int newIndex);
 };
 
 } //namespace gea

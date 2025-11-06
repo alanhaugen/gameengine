@@ -1,6 +1,5 @@
 #include "MainWindow.h"
 #include "Core/Engine.h"
-#include "EntityContainer.h"
 #include "EntityModel.h"
 #include "Core/Renderer.h"
 #include <QKeyEvent>
@@ -56,11 +55,18 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
     // Put the mVulkanWidget into the VulkanLayout spot, made in the MainWindow.ui file
     mUi->VulkanLayout->addWidget(mVulkanWidget);
 
-    mEntityContainer = new gea::EntityContainer(this);
-    mEntityModel = new gea::EntityModel(mEntityContainer, this);
+
+
+    mEntityModel = new gea::EntityModel(mEngine, this);
 
     //Testing the layout - showing only number for now
-    mEntityContainer->appendItem(gea::Entity());
+    mEngine->createEntity();
+    mEngine->mEntityVector.at(0).mName = "Primus";
+    mEngine->createEntity();
+    mEngine->mEntityVector.at(1).mName = "Octigon";
+    mEngine->createEntity();
+    mEngine->mEntityVector.at(2).mName = "Tertius";
+
 
     mUi->entityList->setModel(mEntityModel);
 
