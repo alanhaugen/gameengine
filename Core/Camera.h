@@ -17,12 +17,12 @@ public:
     void update();
 
 
-    glm::vec3 mPosition {0.0f, 0.0f, 2.0f};
+    glm::vec3 mPosition {0.0f, 2.0f, 5.0f};
     glm::vec3 mForward {0, 0, -1};  // Forward vector local to the camera
     glm::vec3 mRight {1, 0, 0};     // Right vector local to the camera
     glm::vec3 mUp {0, 1, 0};        // Using world up
 
-    float mPitch {0.f};     // The pitch of the camera - in Euler angle
+    float mPitch {-15.f};     // The pitch of the camera - in Euler angle
     float mYaw {0.f};       // The yaw of the camera - in Euler angle
 
     // How much should the camera move next frame in cameraForward coordinates

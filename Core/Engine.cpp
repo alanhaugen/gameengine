@@ -14,15 +14,21 @@ Engine::Engine(Renderer* renderer, MainWindow *mainWindow) : mVulkanRenderer{ren
 
     mScriptSystem = new ScriptingSystem(mainWindow, this);
 
-    renderer->CreateComponent(PATH + "Assets/Models/viking_room.obj", PATH + "Assets/Textures/viking_room.png", 0);//mRenderComponents.push_back(gea::RenderComponent{0, 0, 0});
+    mVulkanRenderer->CreateComponent(PATH + "Assets/Models/viking_room.obj", PATH + "Assets/Textures/viking_room.png", 0);//mRenderComponents.push_back(gea::RenderComponent{0, 0, 0});
     gea::TransformComponent t1 = gea::TransformComponent(0);
-    t1.mPosition = glm::vec3(1.0f, 0.0f, 0.0f);
+    t1.mPosition = glm::vec3(0.0f, 0.0f, 0.0f);
+    t1.mRotation = glm::vec3(-90.0f, 0.0f, 0.0f);
     mTransformComponents.push_back(t1);
 
-    renderer->CreateComponent(PATH + "Assets/Models/ball.obj", PATH + "Assets/Textures/orange.jpg", 1);
+    mVulkanRenderer->CreateComponent(PATH + "Assets/Models/ball.obj", PATH + "Assets/Textures/orange.jpg", 1);
     gea::TransformComponent t2 = gea::TransformComponent(1);
-    t2.mPosition = glm::vec3(-1.0f, 0.0f, 0.0f);
+    t2.mPosition = glm::vec3(-2.0f, 0.0f, 0.0f);
     mTransformComponents.push_back(t2);
+
+    mVulkanRenderer->CreateComponent(PATH + "Assets/Models/cylinder.obj", PATH + "Assets/Textures/pink.jpg", 2);
+    gea::TransformComponent t3 = gea::TransformComponent(2);
+    t3.mPosition = glm::vec3(1.5f, 0.0f, 0.0f);
+    mTransformComponents.push_back(t3);
 
     //mVulkanWindow->initVulkan();
     //updateRenderSystem();
