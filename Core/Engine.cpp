@@ -1,5 +1,6 @@
 #include "Engine.h"
 #include "Core/Renderer.h"
+#include "ECS/ScriptingSystem.h"
 #include <algorithm>
 #include <chrono>
 #include <qlogging.h>
@@ -11,6 +12,7 @@ Engine::Engine(Renderer* renderer, MainWindow *mainWindow) : mVulkanRenderer{ren
 {
     setupRenderSystem();
 
+    mScriptSystem = new ScriptingSystem(mainWindow, this);
 
     renderer->CreateComponent(PATH + "Assets/Models/viking_room.obj", PATH + "Assets/Textures/viking_room.png", 0);//mRenderComponents.push_back(gea::RenderComponent{0, 0, 0});
     gea::TransformComponent t1 = gea::TransformComponent(0);

@@ -100,7 +100,7 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
     testSound->setMainWindow(this);
     // testSound->playSound("Test Drive.mp3");
 
-    gea::ScriptingSystem* testScript = new gea::ScriptingSystem(this, mEngine);
+    //gea::ScriptingSystem* testScript = new gea::ScriptingSystem(this, mEngine);
 
     //statusBar()->showMessage(" put something cool here! ");
 }

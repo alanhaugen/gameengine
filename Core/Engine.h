@@ -30,6 +30,7 @@ public:
 
     gea::RenderSystem* mRenderSystem{nullptr};
     Renderer* mVulkanRenderer{nullptr};
+    class ScriptingSystem* mScriptSystem{nullptr};
 
     MainWindow* mMainWindow{nullptr};
 
