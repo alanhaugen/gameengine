@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1429</width>
-    <height>942</height>
+    <width>1505</width>
+    <height>995</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -32,8 +32,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1429</width>
-     <height>17</height>
+     <width>1505</width>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -49,15 +49,15 @@
     </property>
     <addaction name="actionSomething"/>
    </widget>
-   <widget class="QMenu" name="menuTools">
+   <widget class="QMenu" name="menuDebug">
     <property name="title">
-     <string>Tools</string>
+     <string>Debug</string>
     </property>
-    <addaction name="actionLogger"/>
+    <addaction name="actionLog"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
-   <addaction name="menuTools"/>
+   <addaction name="menuDebug"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <widget class="QToolBar" name="toolBar">
@@ -84,6 +84,31 @@
    </attribute>
    <addaction name="actionShow_Grid"/>
   </widget>
+  <widget class="QDockWidget" name="dockWidget">
+   <property name="features">
+    <set>QDockWidget::DockWidgetFeature::DockWidgetFeatureMask</set>
+   </property>
+   <property name="windowTitle">
+    <string>Output Log</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>8</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_2">
+    <layout class="QHBoxLayout" name="horizontalLayout_3">
+     <item>
+      <widget class="QPlainTextEdit" name="logView">
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
+       <property name="plainText">
+        <string/>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
   <action name="action_Open">
    <property name="text">
     <string>&amp;Open</string>
@@ -93,12 +118,6 @@
    </property>
   </action>
   <action name="action_Quit">
-   <property name="enabled">
-    <bool>true</bool>
-   </property>
-   <property name="icon">
-    <iconset theme="QIcon::ThemeIcon::WindowClose"/>
-   </property>
    <property name="text">
     <string>&amp;Quit</string>
    </property>
@@ -122,9 +141,12 @@
     <enum>QAction::MenuRole::NoRole</enum>
    </property>
   </action>
-  <action name="actionLogger">
+  <action name="actionLog">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
-    <string>Logger</string>
+    <string>Log</string>
    </property>
   </action>
  </widget>
