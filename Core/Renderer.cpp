@@ -87,28 +87,38 @@ void Renderer::initVulkan()
     createColorResources();
     createDepthResources();
     createFramebuffers();
-    //createTextureImage();
+    //();
     //createTextureImageView();
     //createTextureSampler();
-    importObjects();
-    filesImported=true;
+
+    //importObjects();
+    //filesImported=true;
     //loadModel();
-    createVertexBuffer();
-    createIndexBuffer();
-    //for (size_t i = 0; i < mTextures.size(); i++) {
-    //    createTextureImage(&mTextures[i]);
-    //}
-    //for (size_t i = 0; i < mMeshes.size(); i++) {
-    //    createVertexBuffer(&mMeshes[i]);
-    //}
-    //for (size_t i = 0; i < mMeshes.size(); i++) {
-    //    createIndexBuffer(&mMeshes[i]);
-    //}
+
+    //createVertexBuffer();
+    //createIndexBuffer();
+    for (size_t i = 0; i < mTextures.size(); i++) {
+        //createTextureImage(mTextures[i]); //this has moved to the Texture class
+
+        createTextureResource(mTextures[i]);
+    }
+    // for(gea::Mesh* it: *mMeshes){
+    //     createVertexBuffer(it);
+    // }
+    // for(gea::Mesh* it: *mMeshes){
+    //     createIndexBuffer(it);
+    // }
+    for (size_t i = 0; i < mMeshes.size(); i++) {
+        createVertexBuffer(mMeshes[i]);
+    }
+    for (size_t i = 0; i < mMeshes.size(); i++) {
+        createIndexBuffer(mMeshes[i]);
+    }
     createUniformBuffers();
     createDescriptorPool();
-    //for (size_t i = 0; i < mTextures.size(); i++) {
-    //    createDescriptorSets(mTextures[i]);
-    //}
+    for (size_t i = 0; i < mTextures.size(); i++) {
+        createDescriptorSets(*mTextures[i]);
+    }
     createCommandBuffers();
     createSyncObjects();
 
@@ -156,20 +166,20 @@ void Renderer::cleanup()
 {
     cleanupSwapChain();
 
-    for (gea::Texture texture : mTextures) {
-        vkDestroySampler(device, texture.mTextureSampler, nullptr);
-        vkDestroyImageView(device, texture.mTextureImageView, nullptr);
-        vkDestroyImage(device, texture.mTextureImage, nullptr);
-        vkFreeMemory(device, texture.mTextureImageMemory, nullptr);
+    for (gea::Texture* texture : mTextures) {
+        vkDestroySampler(device, texture->mTextureSampler, nullptr);
+        vkDestroyImageView(device, texture->mTextureImageView, nullptr);
+        vkDestroyImage(device, texture->mTextureImage, nullptr);
+        vkFreeMemory(device, texture->mTextureImageMemory, nullptr);
 	}
 
     vkDestroyDescriptorSetLayout(device, descriptorSetLayout, nullptr);
 
-	for (gea::Mesh mesh : mMeshes) {
-		vkDestroyBuffer(device, mesh.mIndexBuffer, nullptr);
-		vkFreeMemory(device, mesh.mIndexBufferMemory, nullptr);
-		vkDestroyBuffer(device, mesh.mVertexBuffer, nullptr);
-		vkFreeMemory(device, mesh.mVertexBufferMemory, nullptr);
+    for (gea::Mesh* mesh : mMeshes) {
+        vkDestroyBuffer(device, mesh->mIndexBuffer, nullptr);
+        vkFreeMemory(device, mesh->mIndexBufferMemory, nullptr);
+        vkDestroyBuffer(device, mesh->mVertexBuffer, nullptr);
+        vkFreeMemory(device, mesh->mVertexBufferMemory, nullptr);
 	}
 
     for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
@@ -219,7 +229,11 @@ void Renderer::recreateSwapChain()
     createFramebuffers();
     createUniformBuffers();
     createDescriptorPool();
-    createDescriptorSets();
+    
+	for (size_t i = 0; i < mTextures.size(); i++) {
+        createDescriptorSets(*mTextures[i]);
+	}
+
     RecreateTextureDescriptors();
     createCommandBuffers();
 
@@ -886,51 +900,77 @@ bool Renderer::hasStencilComponent(VkFormat format) {
     return format == VK_FORMAT_D32_SFLOAT_S8_UINT || format == VK_FORMAT_D24_UNORM_S8_UINT;
 }
 
-void Renderer::createTextureImage(gea::Texture* texture)
+void Renderer:: createTextureResource(gea::Texture *texture)
 {
-    int texWidth, texHeight, texChannels;
-    stbi_uc* pixels = stbi_load(texture->mTexturePath.c_str(), &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
-    VkDeviceSize imageSize = texWidth * texHeight * 4;
-    texture->mMipLevels = static_cast<uint32_t>(std::floor(std::log2(std::max(texWidth, texHeight)))) + 1;
+    VkDeviceSize imageSize = texture->mTexWidth * texture->mTexHeight * 4;
 
-    if (!pixels) {
-        throw std::runtime_error("failed to load texture image!");
-    }
 
     VkBuffer stagingBuffer;
-    VkDeviceMemory stagingBufferMemory;
-    createBuffer(imageSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
-                 VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
-                 stagingBuffer, stagingBufferMemory);
-
+    VkDeviceMemory stagingBufferMemory; //  texture->mTextureImageMemory?
+    createBuffer(imageSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory);
+    //copy pixels from texture to staging buffer
     void* data;
     vkMapMemory(device, stagingBufferMemory, 0, imageSize, 0, &data);
-    memcpy(data, pixels, static_cast<size_t>(imageSize));
+    memcpy(data, texture->mPixels, static_cast<size_t>(imageSize));
     vkUnmapMemory(device, stagingBufferMemory);
 
-    stbi_image_free(pixels);
-
-    createImage(texWidth, texHeight, texture->mMipLevels,
-                VK_SAMPLE_COUNT_1_BIT, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_TILING_OPTIMAL,
-                VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT,
-                VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
-                texture->mTextureImage, texture->mTextureImageMemory);
-
+    //MAKE VULKAN IMAGE
+    createImage(texture->mTexWidth, texture->mTexHeight, texture->mMipLevels, VK_SAMPLE_COUNT_1_BIT, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, texture->mTextureImage, stagingBufferMemory);
+    stbi_image_free(texture->mPixels);
     transitionImageLayout(texture->mTextureImage, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, texture->mMipLevels);
-    copyBufferToImage(stagingBuffer, texture->mTextureImage, static_cast<uint32_t>(texWidth), static_cast<uint32_t>(texHeight));
+    copyBufferToImage(stagingBuffer,texture->mTextureImage, static_cast<uint32_t>(texture->mTexWidth), static_cast<uint32_t>(texture->mTexHeight));
     //transitioned to VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL while generating mipmaps
 
-    vkDestroyBuffer(device, stagingBuffer, nullptr);
-    vkFreeMemory(device, stagingBufferMemory, nullptr);
-
-    generateMipmaps(texture->mTextureImage, VK_FORMAT_R8G8B8A8_SRGB, texWidth, texHeight, texture->mMipLevels);
+    generateMipmaps(texture->mTextureImage, VK_FORMAT_R8G8B8A8_SRGB, texture->mTexWidth, texture->mTexHeight, texture->mMipLevels);
 
     /* Create View */
     texture->mTextureImageView = createImageView(texture->mTextureImage, VK_FORMAT_R8G8B8A8_SRGB,
                                                  VK_IMAGE_ASPECT_COLOR_BIT, texture->mMipLevels);
     //createTextureImageView(texture);
     createTextureSampler(texture);
+
+    //clean up staging buffer
+    vkDestroyBuffer(device, stagingBuffer, nullptr);
+    vkFreeMemory(device, stagingBufferMemory, nullptr); //comment this out?: no. in cleanup()where mTextureImageMemory is VkDeviceMemory it should be its own thing
+
 }
+
+// void Renderer::createTextureImage(gea::Texture* texture)
+// {
+//     int texWidth, texHeight, texChannels;
+//     stbi_uc* pixels = stbi_load(texture->mTexturePath.c_str(), &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
+//     VkDeviceSize imageSize = texWidth * texHeight * 4;
+//     texture->mMipLevels = static_cast<uint32_t>(std::floor(std::log2(std::max(texWidth, texHeight)))) + 1;
+
+//     if (!pixels) {
+//         throw std::runtime_error("failed to load texture image!");
+//     }
+
+//     VkBuffer stagingBuffer;
+//     VkDeviceMemory stagingBufferMemory;
+//     createBuffer(imageSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory);
+
+//     void* data;
+//     vkMapMemory(device, stagingBufferMemory, 0, imageSize, 0, &data);
+//     memcpy(data, pixels, static_cast<size_t>(imageSize));
+//     vkUnmapMemory(device, stagingBufferMemory);
+
+//     stbi_image_free(pixels);
+
+//     createImage(texWidth, texHeight, texture->mMipLevels, VK_SAMPLE_COUNT_1_BIT, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, texture->mTextureImage, stagingBufferMemory);
+
+//     transitionImageLayout(texture->mTextureImage, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, texture->mMipLevels);
+//     copyBufferToImage(stagingBuffer, texture->mTextureImage, static_cast<uint32_t>(texWidth), static_cast<uint32_t>(texHeight));
+//     //transitioned to VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL while generating mipmaps
+
+//     vkDestroyBuffer(device, stagingBuffer, nullptr);
+//     vkFreeMemory(device, stagingBufferMemory, nullptr);
+
+//     generateMipmaps(texture->mTextureImage, VK_FORMAT_R8G8B8A8_SRGB, texWidth, texHeight, texture->mMipLevels);
+
+//     createTextureImageView(texture);
+//     createTextureSampler(texture);
+// }
 
 void Renderer::generateMipmaps(VkImage image, VkFormat imageFormat, int32_t texWidth, int32_t texHeight, uint32_t mipLevels)
 {
@@ -1199,115 +1239,115 @@ void Renderer::copyBufferToImage(VkBuffer buffer, VkImage image, uint32_t width,
     endSingleTimeCommands(commandBuffer);
 }
 
-void Renderer::loadModel(QString MODEL_PATH)
-{
-    tinyobj::attrib_t attrib;
-    std::vector<tinyobj::shape_t> shapes;
-    std::vector<tinyobj::material_t> materials;
-    std::string warn, err;
+// void Renderer::loadModel(QString MODEL_PATH)
+// {
+//     tinyobj::attrib_t attrib;
+//     std::vector<tinyobj::shape_t> shapes;
+//     std::vector<tinyobj::material_t> materials;
+//     std::string warn, err;
 
-    if (!tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, MODEL_PATH.toStdString().c_str())) {
-        throw std::runtime_error(warn + err);
-    }
+//     if (!tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, MODEL_PATH.toStdString().c_str())) {
+//         throw std::runtime_error(warn + err);
+//     }
 
-    std::unordered_map<Vertex, uint32_t> uniqueVertices{};
+//     std::unordered_map<Vertex, uint32_t> uniqueVertices{};
 
-    obj_asset=new ObjAsset();
-    for (const auto& shape : shapes) {
-        for (const auto& index : shape.mesh.indices) {
-            Vertex vertex{};
+//     obj_asset=new ObjAsset();
+//     for (const auto& shape : shapes) {
+//         for (const auto& index : shape.mesh.indices) {
+//             Vertex vertex{};
 
-            vertex.pos = {
-                attrib.vertices[3 * index.vertex_index + 0],
-                attrib.vertices[3 * index.vertex_index + 1],
-                attrib.vertices[3 * index.vertex_index + 2]
-            };
+//             vertex.pos = {
+//                 attrib.vertices[3 * index.vertex_index + 0],
+//                 attrib.vertices[3 * index.vertex_index + 1],
+//                 attrib.vertices[3 * index.vertex_index + 2]
+//             };
 
-            vertex.texCoord = {
-                attrib.texcoords[2 * index.texcoord_index + 0],
-                1.0f - attrib.texcoords[2 * index.texcoord_index + 1]
-            };
+//             vertex.texCoord = {
+//                 attrib.texcoords[2 * index.texcoord_index + 0],
+//                 1.0f - attrib.texcoords[2 * index.texcoord_index + 1]
+//             };
 
-            vertex.color = {1.0f, 1.0f, 1.0f};
-
-
-            if (uniqueVertices.count(vertex) == 0) {
-                uniqueVertices[vertex] = static_cast<uint32_t>(vertices.size());
-                obj_asset->mVertices.push_back(vertex);
-                vertices.push_back(vertex);
-            }
-
-            obj_asset->mIndices.push_back(uniqueVertices[vertex]);
-            indices.push_back(uniqueVertices[vertex]);
+//             vertex.color = {1.0f, 1.0f, 1.0f};
 
 
-        }
-    }
+//             if (uniqueVertices.count(vertex) == 0) {
+//                 uniqueVertices[vertex] = static_cast<uint32_t>(vertices.size());
+//                 obj_asset->mVertices.push_back(vertex);
+//                 vertices.push_back(vertex);
+//             }
 
-    objManager->mAssets.push_back(obj_asset);
-}
+//             obj_asset->mIndices.push_back(uniqueVertices[vertex]);
+//             indices.push_back(uniqueVertices[vertex]);
 
-void Renderer::importObjects()
-{
-    QDirIterator it(QString(PATH.c_str()) + "Assets/Models/",QStringList()<<"*.obj", QDir::NoFilter,QDirIterator::Subdirectories );
-    while(it.hasNext())
-    {
-        QString path=it.next();
-        QFileInfo fileInfo(path);
-        QString name=fileInfo.baseName();
-        //qDebug()<<fileInfo.filePath()<<" "<<fileInfo.absoluteFilePath()<<"\n";
-        objManager->mFilesNamesSet.insert(name);
-        objManager->mFilesNamesStack.push_back(path);
-        //objManager->filesNamesSet.insert(name);
-    }
 
-    for(auto it: objManager->mFilesNamesStack)
-    {
-        loadModel(it);
-    }
-}
+//         }
+//     }
 
-void Renderer::createVertexBuffer()
-{
-    VkDeviceSize bufferSize = sizeof(vertices[0]) * vertices.size();
+//     objManager->mAssets.push_back(obj_asset);
+// }
 
-    VkBuffer stagingBuffer;
-    VkDeviceMemory stagingBufferMemory;
-    createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory);
+// void Renderer::importObjects()
+// {
+//     QDirIterator it(QString(PATH.c_str()) + "Assets/Models/",QStringList()<<"*.obj", QDir::NoFilter,QDirIterator::Subdirectories );
+//     while(it.hasNext())
+//     {
+//         QString path=it.next();
+//         QFileInfo fileInfo(path);
+//         QString name=fileInfo.baseName();
+//         //qDebug()<<fileInfo.filePath()<<" "<<fileInfo.absoluteFilePath()<<"\n";
+//         objManager->mFilesNamesSet.insert(name);
+//         objManager->mFilesNamesStack.push_back(path);
+//         //objManager->filesNamesSet.insert(name);
+//     }
 
-    void* data;
-    vkMapMemory(device, stagingBufferMemory, 0, bufferSize, 0, &data);
-    memcpy(data, vertices.data(), (size_t) bufferSize);
-    vkUnmapMemory(device, stagingBufferMemory);
+//     for(auto it: objManager->mFilesNamesStack)
+//     {
+//         loadModel(it);
+//     }
+// }
 
-    createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, vertexBuffer, vertexBufferMemory);
+// void Renderer::createVertexBuffer()
+// {
+//     VkDeviceSize bufferSize = sizeof(vertices[0]) * vertices.size();
 
-    copyBuffer(stagingBuffer, vertexBuffer, bufferSize);
+//     VkBuffer stagingBuffer;
+//     VkDeviceMemory stagingBufferMemory;
+//     createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory);
 
-    vkDestroyBuffer(device, stagingBuffer, nullptr);
-    vkFreeMemory(device, stagingBufferMemory, nullptr);
-}
+//     void* data;
+//     vkMapMemory(device, stagingBufferMemory, 0, bufferSize, 0, &data);
+//     memcpy(data, vertices.data(), (size_t) bufferSize);
+//     vkUnmapMemory(device, stagingBufferMemory);
 
-void Renderer::createIndexBuffer()
-{
-    VkDeviceSize bufferSize = sizeof(indices[0]) * indices.size();
+//     createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, vertexBuffer, vertexBufferMemory);
 
-    VkBuffer stagingBuffer;
-    VkDeviceMemory stagingBufferMemory;
-    createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory);
+//     copyBuffer(stagingBuffer, vertexBuffer, bufferSize);
 
-    void* data;
-    vkMapMemory(device, stagingBufferMemory, 0, bufferSize, 0, &data);
-    memcpy(data, indices.data(), (size_t) bufferSize);
-    vkUnmapMemory(device, stagingBufferMemory);
+//     vkDestroyBuffer(device, stagingBuffer, nullptr);
+//     vkFreeMemory(device, stagingBufferMemory, nullptr);
+// }
 
-    createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_INDEX_BUFFER_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, indexBuffer, indexBufferMemory);
+// void Renderer::createIndexBuffer()
+// {
+//     VkDeviceSize bufferSize = sizeof(indices[0]) * indices.size();
 
-    copyBuffer(stagingBuffer, indexBuffer, bufferSize);
+//     VkBuffer stagingBuffer;
+//     VkDeviceMemory stagingBufferMemory;
+//     createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory);
 
-    vkDestroyBuffer(device, stagingBuffer, nullptr);
-    vkFreeMemory(device, stagingBufferMemory, nullptr);
-}
+//     void* data;
+//     vkMapMemory(device, stagingBufferMemory, 0, bufferSize, 0, &data);
+//     memcpy(data, indices.data(), (size_t) bufferSize);
+//     vkUnmapMemory(device, stagingBufferMemory);
+
+//     createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_INDEX_BUFFER_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, indexBuffer, indexBufferMemory);
+
+//     copyBuffer(stagingBuffer, indexBuffer, bufferSize);
+
+//     vkDestroyBuffer(device, stagingBuffer, nullptr);
+//     vkFreeMemory(device, stagingBufferMemory, nullptr);
+// }
 
 void Renderer::createUniformBuffers()
 {
@@ -1555,15 +1595,14 @@ void Renderer::createCommandBuffers()
 
         vkCmdBindPipeline(staticCommandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline);
 
-        // VH: For loop not in in use? Why do we make the distinction for dynamic/static objects for rendering?
-        for (size_t j = 0; j < mStaticRenderComponents.size(); j++)
-        {
-            gea::RenderComponent renderComponent = mStaticRenderComponents[j];
-            gea::Mesh mesh = mMeshes[renderComponent.meshIndex];
-            VkBuffer vertexBuffer = mesh.mVertexBuffer;
-            VkBuffer indexBuffer = mesh.mIndexBuffer;
-            std::vector<uint32_t> indices = mesh.mIndices;
-            VkDeviceSize offsets[] = { 0 };
+		for (size_t j = 0; j < mStaticRenderComponents.size(); j++)
+		{
+			gea::RenderComponent renderComponent = mStaticRenderComponents[j];
+            gea::Mesh* mesh = mMeshes[renderComponent.meshIndex];
+            VkBuffer vertexBuffer = mesh->mVertexBuffer;
+            VkBuffer indexBuffer = mesh->mIndexBuffer;
+            std::vector<uint32_t> indices = mesh->mIndices;
+			VkDeviceSize offsets[] = { 0 };
 
             glm::mat4 model = glm::mat4(1.0f);
             model = glm::translate(model, mStaticTransformComponents[j].mPosition);
@@ -1698,11 +1737,10 @@ void Renderer::drawFrame()
     for (size_t j = 0; j < mDynamicRenderComponents.size(); j++)
     {
         gea::RenderComponent renderComponent = mDynamicRenderComponents[j];
-        gea::Mesh mesh = mMeshes[renderComponent.meshIndex];
-        gea::Texture texture = mTextures[renderComponent.textureIndex]; //
-        VkBuffer vertexBuffer = mesh.mVertexBuffer;
-        VkBuffer indexBuffer = mesh.mIndexBuffer;
-        std::vector<uint32_t> indices = mesh.mIndices;
+        gea::Mesh* mesh = mMeshes[renderComponent.meshIndex];
+        VkBuffer vertexBuffer = mesh->mVertexBuffer;
+        VkBuffer indexBuffer = mesh->mIndexBuffer;
+        std::vector<uint32_t> indices = mesh->mIndices;
         VkDeviceSize offsets[] = { 0 };
 
         glm::mat4 model = glm::mat4(1.0f);
@@ -1817,7 +1855,7 @@ void Renderer::drawFrame()
 }
 
 void Renderer::initComponents(std::vector<gea::RenderComponent> staticComponents, std::vector<gea::TransformComponent> staticTransformComponents,
-                              std::vector<gea::Mesh> meshes, std::vector<gea::Texture> textures)
+                              std::vector<gea::Mesh*> meshes, std::vector<gea::Texture*> textures)
 {
     mStaticRenderComponents = staticComponents;
     mStaticTransformComponents = staticTransformComponents;

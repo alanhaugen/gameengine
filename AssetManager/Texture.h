@@ -1,7 +1,12 @@
 #ifndef TEXTURE_H
 #define TEXTURE_H
 
+// #define STB_IMAGE_IMPLEMENTATION
+#include "External/stb_image.h"
+
 #include "Core/Utilities.h"
+#include <QString>
+#include <stdexcept>
 
 namespace gea
 {
@@ -9,15 +14,24 @@ namespace gea
 class Texture
 {
 public:
-    Texture();
+    //Texture();
+    Texture(QString MODEL_PATH);
 
-    std::string mTexturePath;
+    QString mPath;
+
+    int mTexWidth{0}, mTexHeight{0}, mTexChannels{0};
     uint32_t mMipLevels;
     VkImage mTextureImage;
     VkDeviceMemory mTextureImageMemory;
     VkImageView mTextureImageView;
     VkSampler mTextureSampler;
+
     VkDescriptorSet textureDescriptor{};
+
+    stbi_uc* mPixels;
+    bool isUsed=false;
+    void createTextureImage(QString MODEL_PATH);
+
 };
 
 } //namespace gea

@@ -2,10 +2,10 @@
 #include "Core/Engine.h"
 #include "Core/Renderer.h"
 
-void gea::RenderSystem::initialize(std::vector<gea::TransformComponent> staticTransformComponents,
-                                   std::vector<gea::Mesh> meshes, std::vector<gea::Texture> textures)
+void gea::RenderSystem::initialize(std::vector<gea::RenderComponent> staticComponents, std::vector<gea::TransformComponent> staticTransformComponents,
+                                   std::vector<gea::Mesh*> meshes, std::vector<gea::Texture*> textures)
 {
-    mRenderer->initComponents(mRenderer->mRenderComponents, staticTransformComponents, meshes, textures);
+    mRenderer->initComponents(staticComponents, staticTransformComponents, meshes, textures);
 	mRenderer->initVulkan();
 }
 

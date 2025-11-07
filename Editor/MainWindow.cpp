@@ -33,7 +33,7 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
     messageLogWidget->setReadOnly(true);
 
     //MainWindow size:
-    resize(1300, 940);
+    resize(1000, 740); //1300, 940
 
     setWindowTitle("INNgine");  //Main app title
 
@@ -42,7 +42,7 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
     mVulkanWindow->mMainWindow = this;      //VulkanWindow can now refer to this instance
 
     //Have to set the size of the Vulkan window here, otherwise it can not set up the swapchain correctly
-    mVulkanWindow->setWidth(1100);
+    mVulkanWindow->setWidth(700);//1100
     mVulkanWindow->setHeight(700);
 
     //Do we have to make the Engine here to let that make the RenderSystem - to make the VulkanRenderer ?
@@ -51,7 +51,7 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
 
     // Wrap VulkanRenderer (QWindow) into a QWidget
     QWidget* mVulkanWidget = QWidget::createWindowContainer(mVulkanWindow, this);
-    mVulkanWidget->setMinimumSize(1100, 700);
+    mVulkanWidget->setMinimumSize(400, 400); //
 
     // Put the mVulkanWidget into the VulkanLayout spot, made in the MainWindow.ui file
     mUi->VulkanLayout->addWidget(mVulkanWidget);
@@ -81,17 +81,17 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
     this->setFocus();
 
     //-------------------------------------------file system widget-------------------------------------------------------
-    // need to get asset manager from renderer itself, since manager that holds assets is created there
-    //AssetManager<ObjAsset>* objManager=new AssetManager<ObjAsset>();
+    // new: need to create asset manager in the "engine" and call it here
 
-    if (mVulkanWindow->filesImported==true)
-    {
-        //FilesWindow<ObjAsset> filesWidget(mVulkanWindow->objManager);
-        mFilesWidget= new FilesWindow(mVulkanWindow->objManager);
-        addDockWidget(Qt::BottomDockWidgetArea, mFilesWidget); //add files window as a docker at the bottom
-        //docker can float by itself and be moved out or in main window
-        mFilesWidget->setFeatures(QDockWidget::DockWidgetFloatable | QDockWidget::DockWidgetMovable);
-    }
+    mFilesWidget= new FilesWindow<gea::Mesh>(mEngine->mMeshManager);
+    addDockWidget(Qt::BottomDockWidgetArea,mFilesWidget); //add files window as a docker at the bottom
+    //docker can float by itself and be moved out or in main window
+    mFilesWidget->setFeatures(QDockWidget::DockWidgetFloatable | QDockWidget::DockWidgetMovable);
+
+    mTextureWidget= new FilesWindow<gea::Texture>(mEngine->mTextureManager);
+    addDockWidget(Qt::BottomDockWidgetArea,mTextureWidget); //add files window as a docker at the bottom
+    //docker can float by itself and be moved out or in main window
+    mTextureWidget->setFeatures(QDockWidget::DockWidgetFloatable | QDockWidget::DockWidgetMovable);
 
     mCamera = &(mVulkanWindow->mCamera);
 

@@ -22,6 +22,10 @@ public:
     void initialize(std::vector<gea::TransformComponent> staticTransformComponents,
                     std::vector<gea::Mesh> meshes, std::vector<gea::Texture> textures);
     void update(std::vector<gea::TransformComponent> dynamicTransformComponents);
+    
+    void initialize(std::vector<gea::RenderComponent> staticComponents, std::vector<gea::TransformComponent> staticTransformComponents,
+                    std::vector<gea::Mesh*> meshes, std::vector<gea::Texture*> textures);
+    void update(std::vector<gea::RenderComponent> dynamicComponents, std::vector<gea::TransformComponent> dynamicTransformComponents);
 
     // to print position
     void update(float) override;

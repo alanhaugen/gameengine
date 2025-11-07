@@ -10,7 +10,8 @@ namespace gea
 
 Engine::Engine(Renderer* renderer, MainWindow *mainWindow) : mVulkanRenderer{renderer}, mMainWindow{mainWindow}
 {
-    setupRenderSystem();
+//old    
+setupRenderSystem();
 
     mScriptSystem = new ScriptingSystem(mainWindow, this);
 
@@ -21,6 +22,59 @@ Engine::Engine(Renderer* renderer, MainWindow *mainWindow) : mVulkanRenderer{ren
     mTransformComponents.push_back(t1);
 
     mVulkanRenderer->CreateComponent(PATH + "Assets/Models/ball.obj", PATH + "Assets/Textures/orange.jpg", 1);
+    //new
+    mMeshManager=new AssetManager<gea::Mesh>();
+    mMeshManager->importObjects();
+    //should make 2 objects "visible"
+    // mMeshManager->mAssets.at(4)->isUsed=true;
+    // mMeshManager->mAssets.at(1)->isUsed=true;
+    // mMeshManager->mAssets.at(2)->isUsed=true;
+    // for(gea::Mesh*& it: mMeshManager->mAssets){
+    //     if(it->isUsed){
+    //          mMeshs.push_back(it);
+    //     }
+    // }
+
+    mTextureManager=new AssetManager<gea::Texture>();
+    mTextureManager->importObjects();
+    mTextureManager->mAssets.at(3)->isUsed=true;
+    //mTextureManager->mAssets.at(19)->isUsed=true;
+    for(gea::Texture*& it: mTextureManager->mAssets){
+        if(it->isUsed){
+            mTextures.push_back(it);
+        }
+
+    }
+
+    //mMeshs.push_back(gea::Mesh());
+    //mTextures.push_back(gea::Texture());
+
+    //make this into a funciton? checks if we are trying to render mesh number thats not in assets
+    short meshIndex=3; //do an array of these "active" indexes
+    short textureIndex=5;
+    if(meshIndex<mMeshManager->mAssets.size()){
+        if (textureIndex<mTextureManager->mAssets.size()){   //dont know how to access meshIndex
+         mRenderComponents.push_back(gea::RenderComponent{meshIndex, textureIndex, 0});
+         gea::TransformComponent t1 = gea::TransformComponent(0);
+         t1.mPosition = glm::vec3(1.0f, 0.0f, 0.0f);
+        mTransformComponents.push_back(t1);
+        }
+        else
+            //qWarning() << "Texture number "<<textureIndex<< " doesn't exist.";
+            qDebug() << "Texture number "<<textureIndex<< " doesn't exist.";
+    }
+    else
+        //qWarning() << "Asset number " << meshIndex <<" doesn't exist.";
+        qDebug() << "Asset number " << meshIndex <<" doesn't exist.";
+
+
+    // mRenderComponents.push_back(gea::RenderComponent{1, 0, 0});
+    // gea::TransformComponent t1 = gea::TransformComponent(0);
+    // t1.mPosition = glm::vec3(1.0f, 0.0f, 0.0f);
+    // mTransformComponents.push_back(t1);
+
+    mStaticRenderComponents.push_back(gea::RenderComponent{0, 2, 1});
+    //new end
     gea::TransformComponent t2 = gea::TransformComponent(1);
     t2.mPosition = glm::vec3(-2.0f, 0.0f, 0.0f);
     mTransformComponents.push_back(t2);
@@ -30,6 +84,10 @@ Engine::Engine(Renderer* renderer, MainWindow *mainWindow) : mVulkanRenderer{ren
     t3.mPosition = glm::vec3(1.5f, 0.0f, 0.0f);
     mTransformComponents.push_back(t3);
 
+    setupRenderSystem();
+
+
+
     //mVulkanWindow->initVulkan();
     //updateRenderSystem();
 }
@@ -37,7 +95,7 @@ Engine::Engine(Renderer* renderer, MainWindow *mainWindow) : mVulkanRenderer{ren
 void Engine::setupRenderSystem()
 {
     mRenderSystem = new gea::RenderSystem(this, mVulkanRenderer);
-    mRenderSystem->initialize(mStaticTransformComponents, mMeshs, mTextures);
+    mRenderSystem->initialize(mStaticRenderComponents, mStaticTransformComponents, mMeshManager->mAssets, mTextures);
 }
 
 void Engine::updateRenderSystem()

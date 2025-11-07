@@ -6,7 +6,7 @@
 #include <string>
 #include <vector>
 #include "Editor/MainWindow.h"
-#include "QDirIterator"
+//#include "QDirIterator"
 #include "AssetManager/AssetManager.h"
 #include "AssetManager/Texture.h"
 #include "AssetManager/Mesh.h"
@@ -26,12 +26,12 @@ public:
     ~Renderer();
 
     void initVulkan();
-    ObjAsset* obj_asset{nullptr};
-    AssetManager<ObjAsset>* objManager=new AssetManager<ObjAsset>();
-    bool filesImported=false;
+    // ObjAsset* obj_asset{nullptr};
+    // AssetManager<ObjAsset>* objManager=new AssetManager<ObjAsset>();
+    // bool filesImported=false;
     void drawFrame();
     void initComponents(std::vector<gea::RenderComponent> staticComponents, std::vector<gea::TransformComponent> staticTransformComponents,
-                        std::vector<gea::Mesh> meshes, std::vector<gea::Texture> textures);
+                        std::vector<gea::Mesh*> meshes, std::vector<gea::Texture*> textures);
     void updateCompoments(std::vector<gea::RenderComponent> renderComponents, std::vector<gea::TransformComponent> transformComponents);
     gea::RenderComponent CreateComponent(std::string, std::string, int);
 
@@ -125,8 +125,8 @@ private:
     VkBuffer indexBuffer;
     VkDeviceMemory indexBufferMemory;
     //QSet<QString> filesSet=objManager->filesNamesSet;
-    std::vector<gea::Mesh> mMeshes;
-    std::vector<gea::Texture> mTextures;
+    std::vector<gea::Mesh*> mMeshes;
+    std::vector<gea::Texture*> mTextures;
     //this is done for testing sake. in the real ecs there would only be one vector of transform components
     std::vector<gea::TransformComponent> mDynamicTransformComponents;
     std::vector<gea::TransformComponent> mStaticTransformComponents;
@@ -160,7 +160,8 @@ private:
     VkFormat findSupportedFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features);
     VkFormat findDepthFormat();
     bool hasStencilComponent(VkFormat format);
-    void createTextureImage(gea::Texture* texture);
+    //void createTextureImage(gea::Texture* texture);//moved to Texture
+    void createTextureResource(gea::Texture* texture);
     void generateMipmaps(VkImage image, VkFormat imageFormat, int32_t texWidth, int32_t texHeight, uint32_t mipLevels);
     VkSampleCountFlagBits getMaxUsableSampleCount();
     void createTextureImageView(gea::Texture* texture);
@@ -171,10 +172,10 @@ private:
                      VkImage& image, VkDeviceMemory& imageMemory);
     void transitionImageLayout(VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout, uint32_t mipLevels);
     void copyBufferToImage(VkBuffer buffer, VkImage image, uint32_t width, uint32_t height);
-    void loadModel(QString MODEL_PATH);
-    void importObjects();;
-    void createVertexBuffer();
-    void createIndexBuffer();
+    //void loadModel(QString MODEL_PATH);
+    //void importObjects();;
+    // void createVertexBuffer();
+    // void createIndexBuffer();
     void createVertexBuffer(gea::Mesh* mesh);
     void createIndexBuffer(gea::Mesh* mesh);
     void createUniformBuffers();

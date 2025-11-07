@@ -4,6 +4,7 @@
 #include "ECS/Entity.h"
 #include "ECS/Components.h"
 #include "ECS/RenderSystem.h"
+#include "AssetManager/AssetManager.h"
 #include "AssetManager/Mesh.h"
 #include "AssetManager/Texture.h"
 #include "Editor/MainWindow.h"
@@ -72,8 +73,11 @@ public:
 
     //These are the ACTUAL meshes and Textures, and is used by Entities from a
     //RenderComponent
-    std::vector<Mesh> mMeshs;
-    std::vector<Texture> mTextures;
+    // std::vector<Mesh*> mMeshs;
+    std::vector<Texture*> mTextures;
+
+    AssetManager<gea::Mesh>* mMeshManager{nullptr}; //vector<Mesh*>*
+    AssetManager<gea::Texture>* mTextureManager{nullptr};
 
     //The plan is that the systems can use these vectors containing all components of the different types
     //The components should be sorted by EntityID when added to the vectors.
