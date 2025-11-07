@@ -16,6 +16,7 @@ add_executable(TowerDefense
     source/mainmenu.h
     source/victory.cpp
     source/victory.h
+    source/splash.h source/splash.cpp
 )
 
 target_link_libraries(TowerDefense PRIVATE

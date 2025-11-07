@@ -6,8 +6,6 @@
 #include "systems/renderer/renderer.h"
 #include "core/x-platform/editor.h"
 
-static bool isAlive = true;
-
 class QtApplication
 {
 private:
@@ -20,6 +18,8 @@ protected:
 
 public:
     QtApplication(int argc, char* argv[], const char* windowTitle, int windowWidth, int windowHeight);
+    static void NextScene();
+    static void Quit();
     int Run();
 
     Renderer* renderer;

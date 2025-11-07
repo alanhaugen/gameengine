@@ -11,13 +11,12 @@ Debug::Debug()
 
 void Debug::Write(std::string log)
 {
-    //std::cout << log;
     Locator::editor->AddLogMessage(log.c_str());
 }
 
 void Debug::Warning(std::string log)
 {
-    //std::cout << log;
+    Locator::editor->AddLogMessage("Warning:");
     Locator::editor->AddLogMessage(log.c_str());
 }
 

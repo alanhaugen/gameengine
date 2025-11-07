@@ -37,7 +37,6 @@ void VikingScene::Update()
 
     if(input.Held(input.Key.ESCAPE))
     {
-        Log("Quitting");
         Application::Quit();
     }
 

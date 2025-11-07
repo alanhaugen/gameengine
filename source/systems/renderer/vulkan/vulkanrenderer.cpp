@@ -1896,11 +1896,13 @@ bool VulkanRenderer::checkValidationLayerSupport() {
     return true;
 }
 
-std::vector<char> VulkanRenderer::readFile(const std::string &filename) {
+std::vector<char> VulkanRenderer::readFile(const std::string &filename)
+{
     std::ifstream file(filename, std::ios::ate | std::ios::binary);
 
     if (!file.is_open()) {
-        throw std::runtime_error("failed to open file!");
+        LogError("Failed to open file " + filename + "\nTry changing the working directory");
+        exit(0);
     }
 
     size_t fileSize = (size_t) file.tellg();

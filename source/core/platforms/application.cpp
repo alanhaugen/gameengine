@@ -40,12 +40,12 @@ void Application::AddScene(Scene *scene)
 
 void Application::NextScene()
 {
-    //currentScene = nullptr;
+    PLATFORM::NextScene();
 }
 
 void Application::Quit()
 {
-    isAlive = false;
+    PLATFORM::Quit();
 }
 
 int Application::Run()

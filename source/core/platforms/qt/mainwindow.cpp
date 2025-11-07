@@ -5,6 +5,7 @@
 #include "core/components/mesh.h"
 #include "core/components/cube.h"
 #include <QTimer>
+#include <QApplication>
 #include "core/components/gameobject.h"
 #include <qinputdialog.h>
 #include "core/x-platform/locator.h"
@@ -200,11 +201,6 @@ void MainWindow::OnRightClickGameObjectWidget(const QPoint &ClickedOn)
                 obj->SetName(newName);
             }
         }
-    }
-
-    if (isAlive == false)
-    {
-        close();
     }
 }
 
