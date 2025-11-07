@@ -11,13 +11,14 @@ void Splash::Init()
     logo->SetPosition(glm::vec3(posX,posY,0));
 
     renderer->SetClearColor(1,1,1);
+    audio->PlaySound("Assets/Sounds/brick-hit-2.wav");
 }
 
 void Splash::Update()
 {
     i++;
 
-    if (i > 500)
+    if (i > 200)
     {
         Application::NextScene();
     }

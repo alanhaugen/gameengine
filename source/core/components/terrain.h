@@ -13,8 +13,9 @@ private:
 public:
     Terrain();
     Terrain(const char* filePath,
-         const char* vertexShaderPath = "shaders/color.vert.spv",
-         const char* fragmentShaderPath = "shaders/color.frag.spv");
+            const char* texturePath = "",
+            const char* vertexShaderPath = "shaders/color.vert.spv",
+            const char* fragmentShaderPath = "shaders/color.frag.spv");
     void Update();
 
     float GetHeightAt(float x, float z) const;

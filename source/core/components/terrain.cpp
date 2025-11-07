@@ -36,8 +36,9 @@ Terrain::Terrain()
 }
 
 Terrain::Terrain(const char *filePath,
-           const char* vertexShaderPath,
-           const char* fragmentShaderPath)
+                 const char* texturePath,
+                 const char* vertexShaderPath,
+                 const char* fragmentShaderPath)
 {
     std::ifstream infile(filePath);
 
@@ -55,7 +56,7 @@ Terrain::Terrain(const char *filePath,
         vertices.push_back(Vertex(pos.x, pos.y, pos.z, color));
     }
 
-    drawable = &renderer->CreateDrawable(vertices, indices, vertexShaderPath, fragmentShaderPath, Renderer::POINTS);
+    drawable = &renderer->CreateDrawable(vertices, indices, vertexShaderPath, fragmentShaderPath, Renderer::POINTS, texturePath);
 }
 
 void Terrain::Update()
