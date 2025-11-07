@@ -9,3 +9,8 @@ void MainMenu::Update()
 {
 
 }
+
+void MainMenu::Clean()
+{
+
+}

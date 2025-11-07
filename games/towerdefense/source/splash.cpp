@@ -23,3 +23,7 @@ void Splash::Update()
     }
 }
 
+void Splash::Clean()
+{
+    delete logo;
+}

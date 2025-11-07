@@ -11,10 +11,13 @@ private:
     Mesh* vikingCamp;
     Mesh* ball;
     Audio::AudioComponent* music;
+    GameObject* first;
+    GameObject* second;
     //SphereCollision* ballCollider;
     //BoxCollision* vikingCampCollider;
 
 public:
     void Init();
     void Update();
+    void Clean();
 };

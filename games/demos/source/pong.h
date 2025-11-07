@@ -8,11 +8,7 @@
 
 class Pong : public Scene
 {
-public:
-    Pong();
-    void Init();
-    void Update();
-
+private:
     Sphere* ball;
     Cube* paddle1;
     Cube* paddle2;
@@ -41,6 +37,12 @@ public:
 
     Text* win1;
     Text* win2;
+
+public:
+    Pong();
+    void Init();
+    void Update();
+    void Clean();
 };
 
 #endif // PONG_H

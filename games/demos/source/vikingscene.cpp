@@ -5,8 +5,8 @@
 
 void VikingScene::Init()
 {
-    GameObject* first  = new GameObject("Viking room");
-    GameObject* second = new GameObject("Ball");
+    first  = new GameObject("Viking room");
+    second = new GameObject("Ball");
     vikingCamp = new Mesh("Assets/Models/viking_room.obj");
     ball = new Mesh("Assets/Models/ball.obj", "shaders/shader.vert.spv", "shaders/shader.frag.spv");
 
@@ -69,4 +69,12 @@ void VikingScene::Update()
 
     vikingCamp->drawable->ubo.model = glm::rotate(vikingCamp->drawable->ubo.model, glm::radians(1.0f), glm::vec3(0,0,1));
     ball->drawable->ubo.model = glm::rotate(ball->drawable->ubo.model, glm::radians(-1.0f), glm::vec3(0,0,1));
+}
+
+void VikingScene::Clean()
+{
+    delete first;
+    delete second;
+    delete vikingCamp;
+    delete ball;
 }

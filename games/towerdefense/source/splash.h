@@ -13,6 +13,7 @@ private:
 public:
     void Init();
     void Update();
+    void Clean();
 };
 
 #endif // SPLASH_H

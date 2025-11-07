@@ -9,3 +9,8 @@ void Victory::Update()
 {
 
 }
+
+void Victory::Clean()
+{
+
+}

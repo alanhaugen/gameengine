@@ -7,6 +7,7 @@ class Game : public Scene
 {
     void Init();
     void Update();
+    void Clean();
 };
 
 #endif

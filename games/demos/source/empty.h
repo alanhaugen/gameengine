@@ -9,6 +9,7 @@ public:
     Empty();
     void Init();
     void Update();
+    void Clean();
 };
 
 #endif // EMPTY_H

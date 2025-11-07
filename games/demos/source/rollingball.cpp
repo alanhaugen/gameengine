@@ -36,3 +36,7 @@ void RollingBall::Update()
 
     ballMesh->SetPosition(pos);
 }
+
+void RollingBall::Clean()
+{
+}

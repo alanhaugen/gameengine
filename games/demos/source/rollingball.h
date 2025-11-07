@@ -66,6 +66,7 @@ public:
     RollingBall();
     void Init();
     void Update();
+    void Clean();
 
     BSplineCurve curve;
 
