@@ -1929,8 +1929,6 @@ bool Renderer::event(QEvent* ev)
     return QWindow::event(ev);
 }
 
-
-
 void Renderer::keyPressEvent(QKeyEvent* event)
 {
     if (event->key() == Qt::Key_Escape) {
@@ -1946,7 +1944,7 @@ void Renderer::keyPressEvent(QKeyEvent* event)
         BBLHub::resourceManager->clickSound();
     }
     if (event->key() == Qt::Key_Q) {
-
+        BBLHub::resourceManager->toggleBackgroundMusic();
     }
 
 }
