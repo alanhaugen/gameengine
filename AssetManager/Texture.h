@@ -3,8 +3,8 @@
 
 // #define STB_IMAGE_IMPLEMENTATION
 #include "External/stb_image.h"
+#include <vulkan/vulkan_core.h>
 
-#include "Core/Utilities.h"
 #include <QString>
 #include <stdexcept>
 

@@ -10,18 +10,18 @@ namespace gea
 
 Engine::Engine(Renderer* renderer, MainWindow *mainWindow) : mVulkanRenderer{renderer}, mMainWindow{mainWindow}
 {
-//old    
-setupRenderSystem();
+    //old
+    // setupRenderSystem();
 
-    mScriptSystem = new ScriptingSystem(mainWindow, this);
+    // mScriptSystem = new ScriptingSystem(mainWindow, this);
 
-    mVulkanRenderer->CreateComponent(PATH + "Assets/Models/viking_room.obj", PATH + "Assets/Textures/viking_room.png", 0);//mRenderComponents.push_back(gea::RenderComponent{0, 0, 0});
-    gea::TransformComponent t1 = gea::TransformComponent(0);
-    t1.mPosition = glm::vec3(0.0f, 0.0f, 0.0f);
-    t1.mRotation = glm::vec3(-90.0f, 0.0f, 0.0f);
-    mTransformComponents.push_back(t1);
+    // mVulkanRenderer->CreateComponent(PATH + "Assets/Models/viking_room.obj", PATH + "Assets/Textures/viking_room.png", 0);//mRenderComponents.push_back(gea::RenderComponent{0, 0, 0});
+    // gea::TransformComponent t1 = gea::TransformComponent(0);
+    // t1.mPosition = glm::vec3(0.0f, 0.0f, 0.0f);
+    // t1.mRotation = glm::vec3(-90.0f, 0.0f, 0.0f);
+    // mTransformComponents.push_back(t1);
 
-    mVulkanRenderer->CreateComponent(PATH + "Assets/Models/ball.obj", PATH + "Assets/Textures/orange.jpg", 1);
+    // mVulkanRenderer->CreateComponent(PATH + "Assets/Models/ball.obj", PATH + "Assets/Textures/orange.jpg", 1);
     //new
     mMeshManager=new AssetManager<gea::Mesh>();
     mMeshManager->importObjects();
@@ -52,19 +52,19 @@ setupRenderSystem();
     //make this into a funciton? checks if we are trying to render mesh number thats not in assets
     short meshIndex=3; //do an array of these "active" indexes
     short textureIndex=5;
-    if(meshIndex<mMeshManager->mAssets.size()){
-        if (textureIndex<mTextureManager->mAssets.size()){   //dont know how to access meshIndex
-         mRenderComponents.push_back(gea::RenderComponent{meshIndex, textureIndex, 0});
-         gea::TransformComponent t1 = gea::TransformComponent(0);
-         t1.mPosition = glm::vec3(1.0f, 0.0f, 0.0f);
-        mTransformComponents.push_back(t1);
+    if(meshIndex<mMeshManager->mAssets.size())
+    {
+        if (textureIndex<mTextureManager->mAssets.size())
+        {   //dont know how to access meshIndex
+            mRenderComponents.push_back(gea::RenderComponent{meshIndex, textureIndex, 0});
+            gea::TransformComponent t1 = gea::TransformComponent(0);
+            t1.mPosition = glm::vec3(1.0f, 0.0f, 0.0f);
+            mTransformComponents.push_back(t1);
         }
         else
-            //qWarning() << "Texture number "<<textureIndex<< " doesn't exist.";
             qDebug() << "Texture number "<<textureIndex<< " doesn't exist.";
     }
     else
-        //qWarning() << "Asset number " << meshIndex <<" doesn't exist.";
         qDebug() << "Asset number " << meshIndex <<" doesn't exist.";
 
 
@@ -79,17 +79,12 @@ setupRenderSystem();
     t2.mPosition = glm::vec3(-2.0f, 0.0f, 0.0f);
     mTransformComponents.push_back(t2);
 
-    mVulkanRenderer->CreateComponent(PATH + "Assets/Models/cylinder.obj", PATH + "Assets/Textures/pink.jpg", 2);
-    gea::TransformComponent t3 = gea::TransformComponent(2);
-    t3.mPosition = glm::vec3(1.5f, 0.0f, 0.0f);
-    mTransformComponents.push_back(t3);
+    //mVulkanRenderer->CreateComponent(PATH + "Assets/Models/cylinder.obj", PATH + "Assets/Textures/pink.jpg", 2);
+    //gea::TransformComponent t3 = gea::TransformComponent(2);
+    //t3.mPosition = glm::vec3(1.5f, 0.0f, 0.0f);
+    //mTransformComponents.push_back(t3);
 
     setupRenderSystem();
-
-
-
-    //mVulkanWindow->initVulkan();
-    //updateRenderSystem();
 }
 
 void Engine::setupRenderSystem()

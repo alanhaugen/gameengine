@@ -119,11 +119,12 @@ void Renderer::initVulkan()
     for (size_t i = 0; i < mTextures.size(); i++) {
         createDescriptorSets(*mTextures[i]);
     }
+    RecreateTextureDescriptors();
+
     createCommandBuffers();
     createSyncObjects();
 
-    createDescriptorSets();
-    RecreateTextureDescriptors();
+
 
     qDebug() << "Window size:" << this->size().width() << "x" << this->size().height();
 }
@@ -1381,7 +1382,7 @@ void Renderer::createDescriptorPool()
     }
 }
 
-void Renderer::createDescriptorSets()
+void Renderer::createDescriptorSets(gea::Texture texture)
 {
     std::vector<VkDescriptorSetLayout> layouts(swapChainImages.size(), descriptorSetLayout);
     VkDescriptorSetAllocateInfo allocInfo{};
@@ -1405,28 +1406,28 @@ void Renderer::createDescriptorSets()
 
         VkDescriptorImageInfo imageInfo{};
         imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-        //imageInfo.imageView = texture.mTextureImageView;
-        //imageInfo.sampler = texture.mTextureSampler;
+        imageInfo.imageView = texture.mTextureImageView;
+        imageInfo.sampler = texture.mTextureSampler;
 
-        VkWriteDescriptorSet descriptorWrites{};
+        std::array<VkWriteDescriptorSet, 2> descriptorWrites{};
 
-        descriptorWrites.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-        descriptorWrites.dstSet = descriptorSets[i];
-        descriptorWrites.dstBinding = 0;
-        descriptorWrites.dstArrayElement = 0;
-        descriptorWrites.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-        descriptorWrites.descriptorCount = 1;
-        descriptorWrites.pBufferInfo = &bufferInfo;
+        descriptorWrites[0].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+        descriptorWrites[0].dstSet = descriptorSets[i];
+        descriptorWrites[0].dstBinding = 0;
+        descriptorWrites[0].dstArrayElement = 0;
+        descriptorWrites[0].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+        descriptorWrites[0].descriptorCount = 1;
+        descriptorWrites[0].pBufferInfo = &bufferInfo;
 
-        //descriptorWrites[1].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-        //descriptorWrites[1].dstSet = descriptorSets[i];
-        //descriptorWrites[1].dstBinding = 1;
-        //descriptorWrites[1].dstArrayElement = 0;
-        //descriptorWrites[1].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-        //descriptorWrites[1].descriptorCount = 1;
-        //descriptorWrites[1].pImageInfo = &imageInfo;
+        descriptorWrites[1].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+        descriptorWrites[1].dstSet = descriptorSets[i];
+        descriptorWrites[1].dstBinding = 1;
+        descriptorWrites[1].dstArrayElement = 0;
+        descriptorWrites[1].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+        descriptorWrites[1].descriptorCount = 1;
+        descriptorWrites[1].pImageInfo = &imageInfo;
 
-        vkUpdateDescriptorSets(device, 1, &descriptorWrites, 0, nullptr);
+        vkUpdateDescriptorSets(device, static_cast<uint32_t>(descriptorWrites.size()), descriptorWrites.data(), 0, nullptr);
     }
 }
 
@@ -1755,7 +1756,7 @@ void Renderer::drawFrame()
         vkCmdBindVertexBuffers(dynamicCommandBuffer, 0, 1, &vertexBuffer, offsets);
         vkCmdBindIndexBuffer(dynamicCommandBuffer, indexBuffer, 0, VK_INDEX_TYPE_UINT32);
         vkCmdBindDescriptorSets(dynamicCommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, &descriptorSets[imageIndex], 0, nullptr);
-        vkCmdBindDescriptorSets(dynamicCommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 1, 1, &texture.textureDescriptor, 0, nullptr);
+        // vkCmdBindDescriptorSets(dynamicCommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 1, 1, &texture.textureDescriptor, 0, nullptr);
 
 
         vkCmdBindPipeline(dynamicCommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline);
@@ -1854,14 +1855,14 @@ void Renderer::drawFrame()
     currentFrame = (currentFrame + 1) % MAX_FRAMES_IN_FLIGHT;
 }
 
-void Renderer::initComponents(std::vector<gea::RenderComponent> staticComponents, std::vector<gea::TransformComponent> staticTransformComponents,
-                              std::vector<gea::Mesh*> meshes, std::vector<gea::Texture*> textures)
-{
-    mStaticRenderComponents = staticComponents;
-    mStaticTransformComponents = staticTransformComponents;
-    mMeshes = meshes;
-    mTextures = textures;
-}
+//void Renderer::initComponents(std::vector<gea::RenderComponent> staticComponents, std::vector<gea::TransformComponent> staticTransformComponents,
+//                              std::vector<gea::Mesh*> meshes, std::vector<gea::Texture*> textures)
+//{
+//    mStaticRenderComponents = staticComponents;
+//    mStaticTransformComponents = staticTransformComponents;
+//    mMeshes = meshes;
+//    mTextures = textures;
+//}
 
 void Renderer::updateCompoments(std::vector<gea::RenderComponent> renderComponents, std::vector<gea::TransformComponent> transformComponents)
 {
@@ -1869,22 +1870,22 @@ void Renderer::updateCompoments(std::vector<gea::RenderComponent> renderComponen
     mDynamicTransformComponents = transformComponents;
 }
 
-gea::RenderComponent Renderer::CreateComponent(std::string mesh_path, std::string texture_path, int ID)
-{
-    gea::Texture texture;
-    texture.mTexturePath = texture_path;
-    gea::Mesh mesh(mesh_path);
-    createVertexBuffer(&mesh);
-    createIndexBuffer(&mesh);
-    mMeshes.push_back(mesh);
-    createTextureImage(&texture);
-    texture.textureDescriptor = createTextureDescriptor(texture);
-    mTextures.push_back(texture);
+// gea::RenderComponent Renderer::CreateComponent(std::string mesh_path, std::string texture_path, int ID)
+// {
+//     gea::Texture texture;
+//     texture.mTexturePath = texture_path;
+//     gea::Mesh mesh(mesh_path);
+//     createVertexBuffer(&mesh);
+//     createIndexBuffer(&mesh);
+//     mMeshes.push_back(mesh);
+//     createTextureImage(&texture);
+//     texture.textureDescriptor = createTextureDescriptor(texture);
+//     mTextures.push_back(texture);
 
-    gea::RenderComponent new_component = gea::RenderComponent{static_cast<int>(mMeshes.size()-1), static_cast<int>(mTextures.size()-1), ID};
-    mDynamicRenderComponents.push_back(new_component);
-    return new_component;
-}
+//     gea::RenderComponent new_component = gea::RenderComponent{static_cast<int>(mMeshes.size()-1), static_cast<int>(mTextures.size()-1), ID};
+//     mDynamicRenderComponents.push_back(new_component);
+//     return new_component;
+// }
 
 VkShaderModule Renderer::createShaderModule(const std::vector<char> &code)
 {
@@ -2175,11 +2176,11 @@ void Renderer::RecreateTextureDescriptors()
 {
     // Recreate texture descriptor sets after descriptorPool is recreated.
     // Safe even if mTextures is empty.
-    for (size_t i = 0; i < mTextures.size(); ++i) {
-        // Re-allocate and update descriptor for this texture from the current descriptorPool
-        mTextures[i].textureDescriptor = createTextureDescriptor(mTextures[i]);
-        qDebug() << "Recreated texture descriptor for index" << (int)i << "desc=" << mTextures[i].textureDescriptor;
-    }
+    // for (size_t i = 0; i < mTextures.size(); ++i) {
+    //     // Re-allocate and update descriptor for this texture from the current descriptorPool
+    //     mTextures[i].textureDescriptor = createTextureDescriptor(mTextures[i]);
+    //     qDebug() << "Recreated texture descriptor for index" << (int)i << "desc=" << mTextures[i].textureDescriptor;
+    // }
 }
 
 void Renderer::exposeEvent(QExposeEvent* event)

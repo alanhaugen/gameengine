@@ -18,11 +18,12 @@
 #include "AssetManager/Texture.h"
 #include "AssetManager/Sound.h"
 #include <type_traits>
+
 template <typename T>
 class FilesWindow: public QDockWidget // public QFrame for drag and drop
 {
 public:
-    FilesWindow(AssetManager<T>* manager, QWidget* parent=nullptr); // T
+    FilesWindow(AssetManager<T>* manager, const QString& name = QStringLiteral("Files"), QWidget* parent=nullptr); // T
 
     std::vector<QPushButton*> mDisplayAssets; //based on assets input vector size
     AssetManager<T>* mAssetsPtr{nullptr};
@@ -32,6 +33,7 @@ public:
     QVBoxLayout* mScrollingLayout{nullptr};
     QVBoxLayout* mMainLayout{nullptr};
     QStatusBar* mStatus{nullptr};
+
     void mHandleButton(int index);
     void dragEnterEvent(QDragEnterEvent* event) override;
     void dropEvent(QDropEvent* event) override;
@@ -57,30 +59,32 @@ public:
 
     // void createButtons(AssetManager<gea::Mesh>* assets_);
 };
+
 template<typename T>
-FilesWindow<T>::FilesWindow(AssetManager<T> *manager, QWidget *parent)
+FilesWindow<T>::FilesWindow(AssetManager<T>* manager, const QString& name, QWidget* parent)
 {
-    setWindowTitle("Files");
+    setWindowTitle(name);
     setMinimumHeight(100);
     setMinimumWidth(500);
     setAcceptDrops(true);
 
-    mAssetsPtr= manager;
+    mAssetsPtr = manager;
 
-    mCentralWidget=new QWidget(this);  //main parent, which is a docker window
-    mMainLayout=new QVBoxLayout(mCentralWidget); //central widget (parent) contains main layout(child)
+    mCentralWidget = new QWidget(this);  //main parent, which is a docker window
+    mMainLayout = new QVBoxLayout(mCentralWidget); //central widget (parent) contains main layout(child)
 
     //main layout contains: a status bar and a scroller (with its children)
-    mScrolling=new QScrollArea(mCentralWidget); //main layout holds the scroller, but layouts cant be parents, so the central widget is
-    mScrollingWidget=new QWidget(mScrolling); //scroller (parent) has scrolling widget(child)
-    mScrollingLayout=new QVBoxLayout(mScrollingWidget); //scrolling widget (parent) has layout (child) for future buttons
+    mScrolling = new QScrollArea(mCentralWidget); //main layout holds the scroller, but layouts cant be parents, so the central widget is
+    mScrollingWidget = new QWidget(mScrolling); //scroller (parent) has scrolling widget(child)
+    mScrollingLayout = new QVBoxLayout(mScrollingWidget); //scrolling widget (parent) has layout (child) for future buttons
+
     mScrollingWidget->setLayout(mScrollingLayout);
     mScrolling->setWidget(mScrollingWidget); //scrollers content is scrolling widget with the future buttons
     mScrolling->setWidgetResizable(true);
 
     mMainLayout->addWidget(mScrolling); //main layout has scroller
 
-    mStatus=new QStatusBar(mCentralWidget);
+    mStatus = new QStatusBar(mCentralWidget);
     mStatus->showMessage(" Drop new files in this window ");
 
     mMainLayout->addWidget(mStatus); //main layout has status
@@ -89,15 +93,15 @@ FilesWindow<T>::FilesWindow(AssetManager<T> *manager, QWidget *parent)
     setWidget(mCentralWidget); //docker window content is the central widget parent that contains all the children: main layout->scroller, -->status, etc
 
     createButtons(manager);
-    show();
 
+    show();
 }
 
 template<typename T>
 void FilesWindow<T>::mHandleButton(int index)
 {
     //QString new_text=QString::number(assets_ptr->int_assets[index]);
-    QString new_text="test";
+    QString new_text = "test";
     // change the text
     mDisplayAssets[index]->setText(new_text);
     // resize button
@@ -107,9 +111,8 @@ void FilesWindow<T>::mHandleButton(int index)
 template<typename T>
 void FilesWindow<T>::dragEnterEvent(QDragEnterEvent *event)
 {
-    if(event->mimeData()->hasUrls()){
+    if(event->mimeData()->hasUrls())
         event->acceptProposedAction();
-    }
 }
 
 template<typename T>
@@ -117,27 +120,31 @@ void FilesWindow<T>::dropEvent(QDropEvent *event)
 {
     //can import multiple files with list
     QList<QUrl> urls=event->mimeData()->urls(); //mimedata is the draggable object
-    for(const QUrl &it: urls){
-        QString path=it.toLocalFile();
-        QString name=QFileInfo(path).baseName();
+    for(const QUrl &it: urls)
+    {
+        QString path = it.toLocalFile();
+        QString name = QFileInfo(path).baseName();
         //looking up an element in QSet is faster than iterating over a stack
         //------------------------add mesh-------------------
-        if constexpr (std::is_same<T,gea::Mesh>::value){ //if window is mesh window
-            if (path.endsWith(".obj")){
-                if(!mAssetsPtr->mFilesNamesSet.contains(name)){ //file has not been imported allready
-                mAssetsPtr->mFilesNamesSet.insert(name);
-                mAssetsPtr->mFilesNamesStack.push_back(path);
-                int i=mAssetsPtr->mFilesNamesSet.size();
-                //gea::Mesh* newMesh=new gea::Mesh(path);
-                T* newMesh=new T(path);
-                mAssetsPtr->addNewAsset(newMesh); //actually import a new object with its vertices&indices
-                QPushButton* new_button=new QPushButton(name, mScrollingWidget);
-                mDisplayAssets.push_back(new_button);
-                mScrollingLayout->addWidget(new_button);
+        if constexpr (std::is_same<T,gea::Mesh>::value)
+        { //if window is mesh window
+            if (path.endsWith(".obj"))
+            {
+                if(!mAssetsPtr->mFilesNamesSet.contains(name))
+                { //file has not been imported allready
+                    mAssetsPtr->mFilesNamesSet.insert(name);
+                    mAssetsPtr->mFilesNamesStack.push_back(path);
+                    int i=mAssetsPtr->mFilesNamesSet.size();
+                    //gea::Mesh* newMesh=new gea::Mesh(path);
+                    T* newMesh=new T(path);
+                    mAssetsPtr->addNewAsset(newMesh); //actually import a new object with its vertices&indices
+                    QPushButton* new_button = new QPushButton(name, mScrollingWidget);
+                    mDisplayAssets.push_back(new_button);
+                    mScrollingLayout->addWidget(new_button);
 
-                //connect buttons to the objects
-                connect(mDisplayAssets.back(), &QPushButton::released, this,[this, i]{ mHandleButton(i-1); });
-                mStatus->showMessage(" Drop new files in this window ");
+                    //connect buttons to the objects
+                    connect(mDisplayAssets.back(), &QPushButton::released, this,[this, i]{ mHandleButton(i-1); });
+                    mStatus->showMessage(" Drop new files in this window ");
                 }
                 else
                     mStatus->showMessage(" File is already imported. ");
@@ -147,13 +154,16 @@ void FilesWindow<T>::dropEvent(QDropEvent *event)
         }
 
         //-----------add texture----------------------
-        else if constexpr (std::is_same<T,gea::Texture>::value){ //if window is textures window
-            if(path.endsWith(".png") || path.endsWith(".jpg")){ //if correct type,check if already has been imported
-                if(!mAssetsPtr->mFilesNamesSet.contains(name)){
+        else if constexpr (std::is_same<T,gea::Texture>::value)
+        { //if window is textures window
+            if(path.endsWith(".png") || path.endsWith(".jpg"))
+            { //if correct type,check if already has been imported
+                if(!mAssetsPtr->mFilesNamesSet.contains(name))
+                {
                     mAssetsPtr->mFilesNamesSet.insert(name);
                     int i=mAssetsPtr->mFilesNamesSet.size();
                     //gea::Texture* newTexture=new gea::Texture(path);
-                    T* newTexture=new T(path);
+                    T* newTexture = new T(path);
                     mAssetsPtr->addNewAsset(newTexture);//actually importing new texture
                     QPushButton* new_button=new QPushButton(name, mScrollingWidget);
                     mDisplayAssets.push_back(new_button);
@@ -171,27 +181,28 @@ void FilesWindow<T>::dropEvent(QDropEvent *event)
         }
         //-----------------------add sound---------------
         //TODO
-        else{
+        else
             qDebug()<<"weird stuff-------------------------------------------------";
-        }
     }
 }
 
 template<typename T>
 void FilesWindow<T>::createButtons(AssetManager<T> *assets_)
 {
-    for(int i=0; i<assets_->mAssets.size(); i++){
+    for(int i = 0; i < assets_->mAssets.size(); i++)
+    {
         //create button
         //should never run this, but in case we have more paths than objects
-        if(assets_->mFilesNamesSet.size()!=assets_->mAssets.size() || assets_->mFilesNamesSet.size()<1){
+        if(assets_->mFilesNamesSet.size()!= assets_->mAssets.size() || assets_->mFilesNamesSet.size()<1)
+        {
             //assets_ptr->filesNamesSet.resize(assets_ptr->assets.size());
             qDebug()<<"names "<<assets_->mFilesNamesSet.size()
                      <<" assets: "<<assets_->mAssets.size();
             break;
         }
 
-        QString name_=QFileInfo(assets_->mFilesNamesStack[i]).baseName();
-        QPushButton* new_button=new QPushButton(name_, mScrollingWidget);
+        QString name_ = QFileInfo(assets_->mFilesNamesStack[i]).baseName();
+        QPushButton* new_button = new QPushButton(name_, mScrollingWidget);
         mDisplayAssets.push_back(new_button);
         mScrollingLayout->addWidget(new_button);
         //set size

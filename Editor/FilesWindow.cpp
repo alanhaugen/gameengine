@@ -1,7 +1,7 @@
-#include "FilesWindow.h"
+// #include "FilesWindow.h"
 
-#include <QString>
-#include <QDebug>
+// #include <QString>
+// #include <QDebug>
 
 //"If parent is nullptr, the new widget becomes a window. If parent is another widget, this widget becomes a child window inside parent.
 // template<typename T>

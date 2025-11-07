@@ -47,7 +47,7 @@ set(SOURCES
     Core/Input.h
     Core/Renderer.h Core/Renderer.cpp
     Core/Utilities.h
-    Core/Vertex.h
+    Core/Vertex.h Core/Vertex.cpp
     ECS/Components.h
     ECS/Entity.h ECS/Entity.cpp
     ECS/RenderSystem.h ECS/RenderSystem.cpp

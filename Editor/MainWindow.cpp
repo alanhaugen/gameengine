@@ -33,7 +33,7 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
     messageLogWidget->setReadOnly(true);
 
     //MainWindow size:
-    resize(1000, 740); //1300, 940
+    resize(1300, 940); //(1000, 740);
 
     setWindowTitle("INNgine");  //Main app title
 
@@ -83,15 +83,20 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
     //-------------------------------------------file system widget-------------------------------------------------------
     // new: need to create asset manager in the "engine" and call it here
 
-    mFilesWidget= new FilesWindow<gea::Mesh>(mEngine->mMeshManager);
+    mFilesWidget= new FilesWindow<gea::Mesh>(mEngine->mMeshManager, "Meshes");
     addDockWidget(Qt::BottomDockWidgetArea,mFilesWidget); //add files window as a docker at the bottom
     //docker can float by itself and be moved out or in main window
     mFilesWidget->setFeatures(QDockWidget::DockWidgetFloatable | QDockWidget::DockWidgetMovable);
 
-    mTextureWidget= new FilesWindow<gea::Texture>(mEngine->mTextureManager);
+    mTextureWidget= new FilesWindow<gea::Texture>(mEngine->mTextureManager, "Textures");
     addDockWidget(Qt::BottomDockWidgetArea,mTextureWidget); //add files window as a docker at the bottom
     //docker can float by itself and be moved out or in main window
     mTextureWidget->setFeatures(QDockWidget::DockWidgetFloatable | QDockWidget::DockWidgetMovable);
+
+    // Enable tabbed docks and make the texture dock a tab of the files dock
+    setDockOptions(dockOptions() | QMainWindow::AllowTabbedDocks);
+    tabifyDockWidget(mFilesWidget, mTextureWidget); // mTextureWidget becomes a tab in the same area
+    mFilesWidget->raise(); // show the Files tab initially
 
     mCamera = &(mVulkanWindow->mCamera);
 

@@ -10,12 +10,17 @@
 #include "AssetManager/Texture.h"
 //#include "AssetManager/Sound.h"
 #include "WavfileReader.h"
+#include "Core/Utilities.h"
 #include <type_traits>
+
 template <typename T>
 class AssetManager{
 public:
-    AssetManager<T>()=default;
-    void initialize(){importObjects();};
+    AssetManager<T>() = default;
+    void initialize()
+    {
+        importObjects();
+    };
 
     std::vector<T*> mAssets;
     //std::vector<gea::Texture*> mTextures;
@@ -57,7 +62,8 @@ void AssetManager<T>::importAssets(QString folder, QString object_type, QString 
 
     //thought this is needed because we probably dont want to limit to either .jpg or .png, so we read both
     //maybe we use it for different sounds formats later too
-    if(object_type2!=nullptr){
+    if(object_type2!=nullptr)
+    {
         QDirIterator it2(QString(PATH.c_str()) + "Assets/"+folder+"/",QStringList()<<object_type2, QDir::NoFilter,QDirIterator::Subdirectories );
         while(it2.hasNext())
         {
@@ -80,10 +86,11 @@ void AssetManager<T>::importAssets(QString folder, QString object_type, QString 
     });
 
 
-    for(QFileInfo& it: files){
-        QString path=it.filePath();
-        QString name=it.baseName();
-        qDebug()<<"files: \n"<< it.lastModified()<<" \n"; //<<fileInfo.absoluteFilePath()<<"\n";
+    for(QFileInfo& it: files)
+    {
+        QString path = it.filePath();
+        QString name = it.baseName();
+        qDebug() << "files: \n"<< it.lastModified() << " \n"; //<<fileInfo.absoluteFilePath()<<"\n";
         mFilesNamesSet.insert(name); //for future check if mesh has been imported in the engine before
         mFilesNamesStack.push_back(path); //for loading in all meshes when we start engine
     }
@@ -102,38 +109,37 @@ void AssetManager<T>::addNewAsset(T *newAsset)
 {
     mAssets.push_back(newAsset);
     //move new asset to correct folder
-    if constexpr (std::is_same<T,gea::Mesh>::value){
+    if constexpr (std::is_same<T,gea::Mesh>::value)
+    {
         QString correctFolder=QString(PATH.c_str()) + "Assets/Models/"; //folder we are copying new file to
         // if(newAsset->mPath){
         changeFilePath(newAsset, correctFolder);
-
     }
-    else if constexpr (std::is_same<T,gea::Texture>::value){
+    else if constexpr (std::is_same<T,gea::Texture>::value)
+    {
         QString correctFolder=QString(PATH.c_str()) + "Assets/Textures/";
         changeFilePath(newAsset, correctFolder);
-
     }
-    else if constexpr (std::is_same<T,wave_t>::value){
+    else if constexpr (std::is_same<T,wave_t>::value)
+    {
         QString correctFolder=QString(PATH.c_str()) + "Assets/Sounds/";
         changeFilePath(newAsset, correctFolder);
     }
-    else{
+    else
         qDebug()<<"WRONG: not reading objects";
-    }
-
-
 }
 
 template<typename T>
 inline void AssetManager<T>::changeFilePath(T* newAsset, QString correctFolder)
 {
     QFileInfo fileInfo(newAsset->mPath); //get new file path, so we can change it
-    QString new_path=correctFolder+fileInfo.fileName();
+    QString new_path = correctFolder+fileInfo.fileName();
     QFile::copy(newAsset->mPath,new_path);
-    newAsset->mPath=new_path;
+    newAsset->mPath = new_path;
     //change time to sort by "added to folder" date
     QFile importedFile(new_path);
-    if(importedFile.open(QIODevice::ReadWrite)){//this is supposed to "open" the file without opening it to change modification date
+    if(importedFile.open(QIODevice::ReadWrite))
+    {//this is supposed to "open" the file without opening it to change modification date
         importedFile.setFileTime(QDateTime::currentDateTime(),QFileDevice::FileModificationTime); //set last modified to the time when we import this to correct folder
         importedFile.close();
     }
@@ -147,27 +153,29 @@ inline void AssetManager<T>::changeFilePath(T* newAsset, QString correctFolder)
 // }
 
 template<typename T>
-void AssetManager<T>::importObjects(){
-
-    if constexpr (std::is_same<T,gea::Mesh>::value){ //const expression comparisson, check if T is Mesh, call import Assets with mesh
+void AssetManager<T>::importObjects()
+{
+    if constexpr (std::is_same<T,gea::Mesh>::value)
+    { //const expression comparisson, check if T is Mesh, call import Assets with mesh
         QString folder="Models";
         QString object_type="*.obj";
         importAssets(folder, object_type, nullptr);
     }
-    else if constexpr (std::is_same<T,gea::Texture>::value){
+    else if constexpr (std::is_same<T,gea::Texture>::value)
+    {
         QString folder="Textures";
         QString object_type="*.jpg";
         QString object_type2="*.png";
         importAssets(folder, object_type,object_type2);
     }
-    else if constexpr (std::is_same<T,wave_t>::value){
+    else if constexpr (std::is_same<T,wave_t>::value)
+    {
         QString folder="Sounds";
         QString object_type="*.wav"; //or mp3
         importAssets(folder, object_type,nullptr);
     }
-    else{
+    else
         qDebug()<<"WRONG: not reading objects";
-    }
 };
 
 #endif // ASSETMANAGER_H

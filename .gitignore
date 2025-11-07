@@ -102,3 +102,4 @@ CMakeUserPresets.json
 
 glm/
 /Assets/*/*.txt
+/html

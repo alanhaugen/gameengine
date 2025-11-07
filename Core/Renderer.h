@@ -30,10 +30,11 @@ public:
     // AssetManager<ObjAsset>* objManager=new AssetManager<ObjAsset>();
     // bool filesImported=false;
     void drawFrame();
-    void initComponents(std::vector<gea::RenderComponent> staticComponents, std::vector<gea::TransformComponent> staticTransformComponents,
-                        std::vector<gea::Mesh*> meshes, std::vector<gea::Texture*> textures);
+    //void initComponents(std::vector<gea::RenderComponent> staticComponents, std::vector<gea::TransformComponent> staticTransformComponents,
+                        //std::vector<gea::Mesh*> meshes, std::vector<gea::Texture*> textures);
     void updateCompoments(std::vector<gea::RenderComponent> renderComponents, std::vector<gea::TransformComponent> transformComponents);
-    gea::RenderComponent CreateComponent(std::string, std::string, int);
+
+    //gea::RenderComponent CreateComponent(std::string, std::string, int);
 
     std::vector<gea::RenderComponent> mRenderComponents;
     std::vector<gea::RenderComponent> mDynamicRenderComponents;
@@ -180,7 +181,7 @@ private:
     void createIndexBuffer(gea::Mesh* mesh);
     void createUniformBuffers();
     void createDescriptorPool();
-    void createDescriptorSets();
+    void createDescriptorSets(gea::Texture texture);
     void createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory);
     VkCommandBuffer beginSingleTimeCommands();
     void endSingleTimeCommands(VkCommandBuffer commandBuffer);
