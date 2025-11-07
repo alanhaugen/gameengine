@@ -8,6 +8,7 @@ class Splash : public Scene
 {
 private:
     Sprite* logo;
+    int i = 0;
 
 public:
     void Init();

@@ -1,15 +1,13 @@
 #ifndef SPRITE_H
 #define SPRITE_H
 
-#include "component.h"
+#include "visualobject.h"
 
-class Sprite : public Component
+class Sprite : public VisualObject
 {
 public:
     Sprite(const char* texture, float x = 0.0f, float y = 0.0f, float scaleX = 1.0f, float scaleY = 1.0f, int width = 0, int height = 0, const char* glyphs = "");
     void Update();
-
-    Renderer::Drawable* drawable;
 };
 
 #endif // SPRITE_H
