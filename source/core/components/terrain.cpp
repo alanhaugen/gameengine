@@ -1,5 +1,5 @@
 #include "terrain.h"
-#include <fstream>
+#include "stb_image.h"
 
 void Terrain::Init()
 {
@@ -38,25 +38,58 @@ Terrain::Terrain()
 Terrain::Terrain(const char *filePath,
                  const char* texturePath,
                  const char* vertexShaderPath,
-                 const char* fragmentShaderPath)
+                 const char* fragmentShaderPath,
+                 bool isCloud)
 {
-    std::ifstream infile(filePath);
+    int width,height,n;
+    unsigned char *data = stbi_load(filePath, &width, &height, &n, 0);
 
-    float x, y, z;
-    while (infile >> x >> z >> y) // Notice z and y are swapped
+    if (n != 1)
     {
-        static glm::vec3 offset = glm::vec3(x, y, z);
-
-        glm::vec3 pos = glm::vec3(x, y, z) - offset;
-        pos /= 50.0f;
-
-        glm::vec3 color(0.0f);
-        color.g = pos.y / pos.length() * 50.0f;
-
-        vertices.push_back(Vertex(pos.x, pos.y, pos.z, color));
+        LogError("The texture used for the terrain has to many colour channles. Only images with one 8-bit grayscale channel are supported");
+        exit(0);
     }
 
-    drawable = &renderer->CreateDrawable(vertices, indices, vertexShaderPath, fragmentShaderPath, Renderer::POINTS, texturePath);
+    int index = 0;
+    for (int y = 0; y < height - 1; y++)
+    {
+        for (int x = 0; x < width - 1; x++)
+        {
+            glm::vec3 topLeft     = glm::vec3(x, data[x + y * width], y);
+            glm::vec3 topRight    = glm::vec3(x + 1, data[(x + 1) + y * width], y);
+            glm::vec3 bottomLeft  = glm::vec3(x, data[x + (y + 1) * width], y + 1);
+            glm::vec3 bottomRight = glm::vec3(x + 1, data[(x + 1) + (y + 1) * width], y + 1);
+
+            Vertex v1 = Vertex(bottomLeft,  glm::vec2(0, 0));
+            Vertex v2 = Vertex(bottomRight, glm::vec2(0, 0));
+            Vertex v3 = Vertex(topRight,    glm::vec2(0, 0));
+            Vertex v4 = Vertex(topLeft,     glm::vec2(0, 0));
+
+            vertices.push_back(v1);
+            vertices.push_back(v2);
+            vertices.push_back(v3);
+            vertices.push_back(v4);
+
+            indices.push_back(0 + index);
+            indices.push_back(1 + index);
+            indices.push_back(2 + index);
+
+            indices.push_back(2 + index);
+            indices.push_back(3 + index);
+            indices.push_back(0 + index);
+
+            index += 4;
+        }
+    }
+
+    if (isCloud)
+    {
+        drawable = &renderer->CreateDrawable(vertices, indices, vertexShaderPath, fragmentShaderPath, Renderer::POINTS, texturePath);
+    }
+    else
+    {
+        drawable = &renderer->CreateDrawable(vertices, indices, vertexShaderPath, fragmentShaderPath, Renderer::TRIANGLES, texturePath);
+    }
 }
 
 void Terrain::Update()
@@ -156,107 +189,3 @@ glm::vec3 Terrain::GetNormal(const glm::vec3 position) const
     }
     return glm::vec3();
 }
-
-/*
-#include "HeightMap.h"
-#include "Vertex.h"
-#include "stb_image.h"
-
-HeightMap::HeightMap()
-{ }
-
-void HeightMap::makeTerrain(std::string heightMapImage)
-{
-    //Load the heightmap image
-    //Using stb_image to load the image
-    stbi_uc* pixelData = stbi_load(heightMapImage.c_str(), &mWidth, &mHeight, &mChannels, STBI_rgb_alpha);
-    if (pixelData == nullptr)
-    {
-        qDebug() << "Failed to load heightmap image!";
-        return;
-    }
-    //Make the terrain from the pixel data
-    makeTerrain(pixelData, mWidth, mHeight);
-    stbi_image_free(pixelData);
-
-}
-
-//Function that makes a terrain grid from a heightmap, using the values in the heightmap as height.
-//This function will crash if the width and height of the heightmap is not set correct!
-//The size of the textureData array is widthIn * heightIn.
-// The function is not tested in this codebase, and is provided as an example.
-void HeightMap::makeTerrain(unsigned char* textureData, int widthIn, int heightIn)
-{
-    //Default normal pointing straight up - should be calculated correctly for lights to work!!!
-    float normal[3]{0.f, 1.f, 0.f};
-
-    //How many meters between each vertex in both x and z direction
-    //This should be sent in as a parameter!
-    float horisontalSpacing{.2f};
-
-    //Scaling the height read from the heightmap. 0 -> 255 meters if this is set to 1
-    //This should be sent in as a parameter!
-    float heightSpacing{.02f};
-
-    //Offset the whole terrain in y (height) axis
-    //Moves the terrain mesh up or down
-    //Because of Barycentric calculations, we want the terrain to be in World coordinates!
-    //So we don't want to move the terrain up or down in the Y axis after it is made
-    float heightPlacement{-10.f};
-
-    //Getting the scale of the heightmap
-    //Using depth as the name of texture height, to not confuse with terrain height
-    unsigned short width = widthIn;       //Width == x-axis
-    unsigned short depth = heightIn;      //Depth == z-axis
-
-    //Temp variables for creating the mesh
-    //Adding offset so the middle of the terrain will be in World origo
-    float vertexXStart{ 0.f - width * horisontalSpacing / 2 };            // if world origo should be at center use: {0.f - width * horisontalSpacing / 2};
-    float vertexZStart{ 0.f + depth * horisontalSpacing / 2 };            // if world origo should be at center use: {0.f + depth * horisontalSpacing / 2};
-
-    //Loop to make the mesh from the values read from the heightmap (textureData)
-    //Double for-loop to make the depth and the width of the terrain in one go
-    for(int d{0}; d < depth; ++d)       //depth loop
-    {
-        for(int w{0}; w < width; ++w)   //width loop
-        {
-            //Heightmap image is actually stored as an one dimentional array - so calculating the correct index for column and row
-            //and scale it according to variables
-            // Calculate the correct index for the R value of each pixel
-            int index = (w + d * width) * 4; // Each pixel has 4 bytes (RGBA)
-            float heightFromBitmap = static_cast<float>(textureData[index]) * heightSpacing + heightPlacement;
-            //                                          x - value                      y-value               z-value
-            mVertices.emplace_back(Vertex{vertexXStart + (w * horisontalSpacing), heightFromBitmap, vertexZStart - (d * horisontalSpacing),
-                //  dummy normal=0,1,0                  Texture coordinates
-                normal[0],normal[1],normal[2],           w / (width - 1.f), d / (depth - 1.f)});
-        }
-    }
-
-    // The mesh(grid) is drawn in quads with diagonals from lower left to upper right
-    //          _ _
-    //         |/|/|
-    //          - -
-    //         |/|/|
-    //          - -
-    //Making the indices for this mesh:
-    for(int d{0}; d < depth-1; ++d)        //depth - 1 because we draw the last quad from depth - 1 and in negative z direction
-    {
-        for(int w{0}; w < width-1; ++w)    //width - 1 because we draw the last quad from width - 1 and in positive x direction
-        {
-            //Indices for one quad:
-            mIndices.emplace_back(w + d * width);               // 0 + 0 * mWidth               = 0
-            mIndices.emplace_back(w + d * width + width + 1);   // 0 + 0 * mWidth + mWidth + 1  = mWidth + 1
-            mIndices.emplace_back(w + d * width + width);       // 0 + 0 * mWidth + mWidth      = mWidth
-            mIndices.emplace_back(w + d * width);               // 0 + 0 * mWidth               = 0
-            mIndices.emplace_back(w + d * width + 1);           // 0 + 0 * mWidth + 1           = 1
-            mIndices.emplace_back(w + d * width + width + 1);   // 0 + 0 * mWidth + mWidth + 1  = mWidth + 1
-        }
-    }
-
-
-    //Calculating the normals for the mesh
-    //Function not made yet:
-    //calculateHeighMapNormals();
-}
-
-*/

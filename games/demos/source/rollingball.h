@@ -73,7 +73,15 @@ public:
     glm::vec3 velocity;
     glm::vec3 gravity = glm::vec3(0, -0.98, 0);
 
+    float acceleration = 1.0f;
+    float mass = 1.0f;
+
+    Renderer::Drawable* splineDrawable;
+
+    int index = 0;
+
     Terrain* terrainMesh;
+    Terrain* terrainMeshPoints;
     Mesh* ballMesh;
 };
 

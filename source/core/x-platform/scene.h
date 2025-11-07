@@ -1,8 +1,8 @@
 #pragma once
 
 #include <vector>
-#include "../components/gameobject.h"
-#include "../components/camera.h"
+#include "core/components/gameobject.h"
+#include "core/components/camera.h"
 #include "locator.h"
 
 class Scene : public Locator

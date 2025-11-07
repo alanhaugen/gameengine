@@ -1,7 +1,7 @@
 #pragma once
 
 #include <qobject.h>
-#include "../x-platform/locator.h"
+#include "core/x-platform/locator.h"
 
 class GameObject;
 
