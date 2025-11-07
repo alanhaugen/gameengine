@@ -8,6 +8,7 @@
 #include <QString>
 #include "Core/Vertex.h"
 #include <vulkan/vulkan_core.h>
+#include "Core/Utilities.h"
 
 namespace gea
 {

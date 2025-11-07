@@ -2223,28 +2223,3 @@ bool Renderer::event(QEvent* ev)
 
     return QWindow::event(ev);
 }
-<<<<<<< HEAD:Core/Renderer.cpp
-=======
-
-
-
-void Renderer::keyPressEvent(QKeyEvent* event)
-{
-    if (event->key() == Qt::Key_Escape) {
-        BBLHub::mainWindow->close();
-    }
-    if (event->key() == Qt::Key_Space) {
-        BBLHub::mainWindow->start();
-    }
-    if (event->key() == Qt::Key_W) {
-        qWarning("MARVIN");
-    }
-    if (event->key() == Qt::Key_A) {
-        BBLHub::resourceManager->clickSound();
-    }
-    if (event->key() == Qt::Key_Q) {
-
-    }
-
-}
->>>>>>> parent of 86b8fec (Fixed conflicting code from another branch.):Renderer.cpp
