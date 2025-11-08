@@ -84,8 +84,8 @@ FilesWindow<T>::FilesWindow(AssetManager<T>* manager, const QString& name, QWidg
 
     mMainLayout->addWidget(mScrolling); //main layout has scroller
 
-    mStatus = new QStatusBar(mCentralWidget);
-    mStatus->showMessage(" Drop new files in this window ");
+    // mStatus = new QStatusBar(mCentralWidget);
+    // mStatus->showMessage(" Drop new files in this window ");
 
     mMainLayout->addWidget(mStatus); //main layout has status
 

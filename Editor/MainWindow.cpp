@@ -12,7 +12,7 @@
 #include <QDebug>
 #include <QPointer>
 #include <QPlainTextEdit>
-#include "ECS/ScriptingSystem.h"
+#include <QMessageBox>
 #include "ECS/SoundSystem.h"
 #include "ECS/RenderSystem.h"
 #include "Editor/OutlinerDock.h"
@@ -23,8 +23,7 @@
 //Extern declaration of logger variable from main
 extern QPointer<QPlainTextEdit> messageLogWidget;
 
-MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
-    , mUi(new Ui::MainWindow)
+MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent), mUi(new Ui::MainWindow)
 {
     mUi->setupUi(this);
 
@@ -108,6 +107,7 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
     //gea::ScriptingSystem* testScript = new gea::ScriptingSystem(this, mEngine);
 
     //statusBar()->showMessage(" put something cool here! ");
+
 }
 
 MainWindow::~MainWindow()
@@ -263,3 +263,23 @@ void MainWindow::handleInput()
             mCamera->mCameraMovement.y += mCameraSpeed; //up
     }
 }
+
+void MainWindow::on_action_Quit_triggered()
+{
+    QApplication::quit();
+}
+
+
+void MainWindow::on_actionGeneral_info_triggered()
+{
+    QString msg
+    {   "\
+        Esc Quits the application. \n\n\
+        You can drag appropriate files into the Mesh and Texture tabs.\n\n\
+        Use RMB and use mouse and WASD QE(down/up) to move the camera.\n\
+        "
+    };
+
+     QMessageBox::information (nullptr, "Help", msg);
+}
+

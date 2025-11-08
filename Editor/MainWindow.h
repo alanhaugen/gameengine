@@ -70,6 +70,10 @@ protected:
 
     friend class Renderer;    //so renderer can access protected methods
 
+private slots:
+    //most of these are auto-made from Qts auto generation from the UI editor
+    void on_action_Quit_triggered();
+    void on_actionGeneral_info_triggered();
 };
 
 #endif // MAINWINDOW_H
