@@ -16,8 +16,11 @@ void gea::RenderSystem::update(std::vector<gea::TransformComponent> dynamicTrans
     mRenderer->requestUpdate();     //ask for the next fram to be drawn - will call engine->update()
 }
 
-void gea::RenderSystem::update(float) {
+void gea::RenderSystem::update(float deltaTime)
+{
     for (const auto& tr : mEngine->mTransformComponents)
+    {
         qDebug() << "Entity " << tr.mEntityID << " Position:("
                   << tr.mPosition.x << ", " << tr.mPosition.y << ", " << tr.mPosition.z << ")\n";
+    }
 }

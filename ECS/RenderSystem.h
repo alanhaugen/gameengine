@@ -19,16 +19,17 @@ class RenderSystem : public SystemBase
 public:
     RenderSystem(class Engine* engineInstance, Renderer* r) : SystemBase(engineInstance), mRenderer(r) {};
 
-    void initialize(std::vector<gea::TransformComponent> staticTransformComponents,
-                    std::vector<gea::Mesh> meshes, std::vector<gea::Texture> textures);
+    void initialize(std::vector<gea::TransformComponent> staticTransformComponents, std::vector<gea::Mesh> meshes, std::vector<gea::Texture> textures);
+
     void update(std::vector<gea::TransformComponent> dynamicTransformComponents);
     
     void initialize(std::vector<gea::RenderComponent> staticComponents, std::vector<gea::TransformComponent> staticTransformComponents,
                     std::vector<gea::Mesh*> meshes, std::vector<gea::Texture*> textures);
+
     void update(std::vector<gea::RenderComponent> dynamicComponents, std::vector<gea::TransformComponent> dynamicTransformComponents);
 
     // to print position
-    void update(float) override;
+    void update(float deltaTime) override;
 
     Renderer* mRenderer{nullptr};
 };

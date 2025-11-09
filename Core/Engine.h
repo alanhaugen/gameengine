@@ -29,8 +29,10 @@ public:
     void updateRenderSystem();
     void setupRenderSystem();
 
+    // Rendering
     gea::RenderSystem* mRenderSystem{nullptr};
     Renderer* mVulkanRenderer{nullptr};
+
     class ScriptingSystem* mScriptSystem{nullptr};
 
     MainWindow* mMainWindow{nullptr};
@@ -38,14 +40,6 @@ public:
     // to Add/Remove entity
     Entity* createEntity();
     void destroyEntity(std::size_t entityID);
-
-    // to add component
-    TransformComponent* addTransform(Entity* entity);
-    MovementComponent* addMovement(Entity* entity);
-    HealthComponent* addHealth(Entity* entity);
-    TowerComponent* addTower(Entity* entity);
-    EnemyComponent* addEnemy(Entity* entity);
-    ProjectileComponent* addProjectile(Entity* entity);
 
     // It sort all component vectors by EntityID
     void sortComponents();
@@ -68,24 +62,33 @@ public:
 
     //RenderTesting
     std::vector<gea::RenderComponent> mRenderComponents;
-    std::vector<gea::RenderComponent> mStaticRenderComponents;
+    std::vector<gea::RenderComponent> mStaticRenderComponents;    //interesting for physics and batch rendering purposes
 
     //this is done for testing sake. in the real ecs there would only be one vector of transform components
     std::vector<gea::TransformComponent> mStaticTransformComponents;
 
     //These are the ACTUAL meshes and Textures, and is used by Entities from a
     //RenderComponent
-    // std::vector<Mesh*> mMeshs;
+    std::vector<Mesh*> mMeshs;
     std::vector<Texture*> mTextures;
 
     AssetManager<gea::Mesh>* mMeshManager{nullptr}; //vector<Mesh*>*
     AssetManager<gea::Texture>* mTextureManager{nullptr};
+    //AssetManager<gea::Sound>* mSoundManager{nullptr};
 
     //The plan is that the systems can use these vectors containing all components of the different types
     //The components should be sorted by EntityID when added to the vectors.
     //A Render system then might need many vectors, but a Move system might only need one or two.
     //Each system just access the ones they need, and iterates through them and do their job.
     //Since the components are sorted by EntityID, the iteration should go well and we should get DOD benefits.
+
+    // to add component
+    TransformComponent* addTransform(Entity* entity);
+    MovementComponent* addMovement(Entity* entity);
+    HealthComponent* addHealth(Entity* entity);
+    TowerComponent* addTower(Entity* entity);
+    EnemyComponent* addEnemy(Entity* entity);
+    ProjectileComponent* addProjectile(Entity* entity);
 
 signals:
     void itemAppended(int newIndex);

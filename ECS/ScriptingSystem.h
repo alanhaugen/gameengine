@@ -27,6 +27,7 @@ class ScriptingSystem : public SystemBase
 {
 public:
     ScriptingSystem(class MainWindow *mainwindow, class Engine* engineInstance);
+
     void update(float deltaTime) override {};
 
     void outerLoop();

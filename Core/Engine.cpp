@@ -22,28 +22,30 @@ Engine::Engine(Renderer* renderer, MainWindow *mainWindow) : mVulkanRenderer{ren
     // mTransformComponents.push_back(t1);
 
     // mVulkanRenderer->CreateComponent(PATH + "Assets/Models/ball.obj", PATH + "Assets/Textures/orange.jpg", 1);
+
     //new
     mMeshManager=new AssetManager<gea::Mesh>();
     mMeshManager->importObjects();
-    //should make 2 objects "visible"
-    // mMeshManager->mAssets.at(4)->isUsed=true;
+
+    //testing rendering
+    mMeshManager->mAssets.at(0)->isUsed=true;
     // mMeshManager->mAssets.at(1)->isUsed=true;
     // mMeshManager->mAssets.at(2)->isUsed=true;
-    // for(gea::Mesh*& it: mMeshManager->mAssets){
-    //     if(it->isUsed){
-    //          mMeshs.push_back(it);
-    //     }
-    // }
+    for(gea::Mesh*& it: mMeshManager->mAssets)
+    {
+        if(it->isUsed)
+             mMeshs.push_back(it);       
+    }
 
     mTextureManager=new AssetManager<gea::Texture>();
     mTextureManager->importObjects();
-    mTextureManager->mAssets.at(3)->isUsed=true;
-    //mTextureManager->mAssets.at(19)->isUsed=true;
-    for(gea::Texture*& it: mTextureManager->mAssets){
-        if(it->isUsed){
-            mTextures.push_back(it);
-        }
 
+    //testing rendering
+    mTextureManager->mAssets.at(0)->isUsed=true;
+    for(gea::Texture*& it: mTextureManager->mAssets)
+    {
+        if(it->isUsed)
+            mTextures.push_back(it);
     }
 
     //mMeshs.push_back(gea::Mesh());
@@ -73,7 +75,7 @@ Engine::Engine(Renderer* renderer, MainWindow *mainWindow) : mVulkanRenderer{ren
     // t1.mPosition = glm::vec3(1.0f, 0.0f, 0.0f);
     // mTransformComponents.push_back(t1);
 
-    mStaticRenderComponents.push_back(gea::RenderComponent{0, 2, 1});
+    // mStaticRenderComponents.push_back(gea::RenderComponent{0, 2, 1});
     //new end
     gea::TransformComponent t2 = gea::TransformComponent(1);
     t2.mPosition = glm::vec3(-2.0f, 0.0f, 0.0f);
@@ -85,6 +87,7 @@ Engine::Engine(Renderer* renderer, MainWindow *mainWindow) : mVulkanRenderer{ren
     //mTransformComponents.push_back(t3);
 
     setupRenderSystem();
+    mScriptSystem = new ScriptingSystem(mainWindow, this);
 }
 
 void Engine::setupRenderSystem()
@@ -105,23 +108,56 @@ Entity* Engine::createEntity()
     return &mEntityVector.back();
 }
 
+void Engine::sortComponents()
+{
+    std::sort(mTransformComponents.begin(), mTransformComponents.end(),
+              [](const TransformComponent& a, const TransformComponent& b){ return a.mEntityID < b.mEntityID; });
+    std::sort(mMovementComponents.begin(), mMovementComponents.end(),
+              [](const MovementComponent& a, const MovementComponent& b){ return a.mEntityID < b.mEntityID; });
+}
+
+void Engine::update()
+{
+    // ***** Calculate deltaTime
+    auto clockNow = std::chrono::high_resolution_clock::now();
+    auto timeSinceLastFrame = clockNow - mClockLastFrame;
+    float deltaTimeSeconds = std::chrono::duration_cast<std::chrono::duration<float>>(timeSinceLastFrame).count();
+    mClockLastFrame = clockNow;
+    //qDebug("DeltaTime %.6f", deltaTimeSeconds);    //prints float with 6 decimal places
+
+
+    // ***** Update systems and other stuff each frame
+    mMainWindow->handleInput();         //maybe put into its own class or system?
+    mVulkanRenderer->mCamera.update();  //needs some propper cleanup
+
+
+    updateRenderSystem();   //calls drawFrame()
+
+
+    // to call all systems
+    // i am listing Example:
+    //   MovementSystem::Update()
+    //   TowerSystem::Update()
+    //   ProjectileSystem::Update()
+    //   HealthSystem::Update()
+}
+
 void Engine::destroyEntity(std::size_t entityID)
 {
-
     mEntityVector.erase(std::remove_if(mEntityVector.begin(), mEntityVector.end(),
-                          [entityID](const Entity& e){ return e.mEntityID == entityID; }), mEntityVector.end());
+                                       [entityID](const Entity& e){ return e.mEntityID == entityID; }), mEntityVector.end());
     mTransformComponents.erase(std::remove_if(mTransformComponents.begin(), mTransformComponents.end(),
-                          [entityID](const TransformComponent& c){ return c.mEntityID == entityID; }), mTransformComponents.end());
+                                              [entityID](const TransformComponent& c){ return c.mEntityID == entityID; }), mTransformComponents.end());
     mMovementComponents.erase(std::remove_if(mMovementComponents.begin(), mMovementComponents.end(),
-                          [entityID](const MovementComponent& c){ return c.mEntityID == entityID; }), mMovementComponents.end());
+                                             [entityID](const MovementComponent& c){ return c.mEntityID == entityID; }), mMovementComponents.end());
     mHealthComponents.erase(std::remove_if(mHealthComponents.begin(), mHealthComponents.end(),
-                          [entityID](const HealthComponent& c){ return c.mEntityID == entityID; }), mHealthComponents.end());
+                                           [entityID](const HealthComponent& c){ return c.mEntityID == entityID; }), mHealthComponents.end());
     mTowerComponents.erase(std::remove_if(mTowerComponents.begin(), mTowerComponents.end(),
-                          [entityID](const TowerComponent& c){ return c.mEntityID == entityID; }), mTowerComponents.end());
+                                          [entityID](const TowerComponent& c){ return c.mEntityID == entityID; }), mTowerComponents.end());
     mEnemyComponents.erase(std::remove_if(mEnemyComponents.begin(), mEnemyComponents.end(),
-                          [entityID](const EnemyComponent& c){ return c.mEntityID == entityID; }), mEnemyComponents.end());
+                                          [entityID](const EnemyComponent& c){ return c.mEntityID == entityID; }), mEnemyComponents.end());
     mProjectileComponents.erase(std::remove_if(mProjectileComponents.begin(), mProjectileComponents.end(),
-                          [entityID](const ProjectileComponent& c){ return c.mEntityID == entityID; }), mProjectileComponents.end());
+                                               [entityID](const ProjectileComponent& c){ return c.mEntityID == entityID; }), mProjectileComponents.end());
 }
 
 TransformComponent* Engine::addTransform(Entity* entity)
@@ -183,38 +219,5 @@ ProjectileComponent* Engine::addProjectile(Entity* entity)
     return &mProjectileComponents.back();
 }
 
-void Engine::sortComponents()
-{
-    std::sort(mTransformComponents.begin(), mTransformComponents.end(),
-              [](const TransformComponent& a, const TransformComponent& b){ return a.mEntityID < b.mEntityID; });
-    std::sort(mMovementComponents.begin(), mMovementComponents.end(),
-              [](const MovementComponent& a, const MovementComponent& b){ return a.mEntityID < b.mEntityID; });
-}
-
-void Engine::update()
-{
-    // ***** Calculate deltaTime
-    auto clockNow = std::chrono::high_resolution_clock::now();
-    auto timeSinceLastFrame = clockNow - mClockLastFrame;
-    float deltaTimeSeconds = std::chrono::duration_cast<std::chrono::duration<float>>(timeSinceLastFrame).count();
-    mClockLastFrame = clockNow;
-    //qDebug("DeltaTime %.6f", deltaTimeSeconds);    //prints float with 6 decimal places
-
-
-    // ***** Update systems and other stuff each frame
-    mMainWindow->handleInput();         //maybe put into its own class or system?
-    mVulkanRenderer->mCamera.update();  //needs some propper cleanup
-
-
-    updateRenderSystem();   //calls drawFrame()
-
-
-    // to call all systems
-    // i am listing Example:
-    //   MovementSystem::Update()
-    //   TowerSystem::Update()
-    //   ProjectileSystem::Update()
-    //   HealthSystem::Update()
-}
 
 } //gea namespace
