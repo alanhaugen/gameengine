@@ -53,4 +53,14 @@ public:
         glm::vec3 translation(x, y, z);
         drawable->ubo.model = glm::translate(drawable->ubo.model, translation);
     }
+
+    void Show()
+    {
+        drawable->isVisible = true;
+    }
+
+    void Hide()
+    {
+        drawable->isVisible = false;
+    }
 };

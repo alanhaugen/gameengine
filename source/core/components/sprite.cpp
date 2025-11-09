@@ -81,6 +81,17 @@ bool Sprite::IsPressed()
         return false;
     }
 
+    if (input.mouse.Down)
+    {
+        if (input.mouse.x * 2 > GetPosition().x &&
+            input.mouse.x * 2 < GetPosition().x + (drawable->textureWidth * drawable->ubo.scaleX.x) &&
+            input.mouse.y * 2 > GetPosition().y &&
+            input.mouse.y * 2 < GetPosition().y + (drawable->textureHeight * drawable->ubo.scaleY.x))
+        {
+            return true;
+        }
+    }
+
     return false;
 }
 

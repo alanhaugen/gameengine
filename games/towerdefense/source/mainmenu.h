@@ -3,6 +3,7 @@
 
 #include <core/components/sprite.h>
 #include <core/components/terrain.h>
+#include <core/components/sphere.h>
 #include <core/x-platform/scene.h>
 
 class MainMenu : public Scene
@@ -17,6 +18,10 @@ private:
     Terrain* mountainsEast;
     Terrain* mountainsSouth;
     Terrain* mountainsWest;
+
+    Sphere* ball;
+    glm::vec3 velocity;
+    glm::vec3 pos;
 
 public:
     void Init();

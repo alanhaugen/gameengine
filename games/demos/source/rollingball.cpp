@@ -25,13 +25,13 @@ void RollingBall::Update()
 
     if (input.Held(input.Key.SPACE))
     {
-        pos = glm::vec3();
-        velocity = glm::vec3();
+        pos = camera.position;
+        velocity = glm::vec3(camera.forward / 90.0f);
     }
 
-    velocity += glm::vec3();
+    velocity += terrainMesh->GetNormal(pos) / 5000.0f;
 
-    pos += velocity / 60.0f;
+    pos += velocity;
     pos.y = terrainMesh->GetHeightAt(pos) + 0.1f;
 
     ballMesh->SetPosition(pos);
