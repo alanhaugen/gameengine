@@ -125,8 +125,8 @@ private:
     VkBuffer indexBuffer;
     VkDeviceMemory indexBufferMemory;
     //QSet<QString> filesSet=objManager->filesNamesSet;
-    std::vector<gea::Mesh*> mMeshes;
-    std::vector<gea::Texture*> mTextures;
+    //std::vector<gea::Mesh*> mMeshes;
+    //std::vector<gea::Texture*> mTextures;
     //this is done for testing sake. in the real ecs there would only be one vector of transform components
     std::vector<gea::TransformComponent> mDynamicTransformComponents;
     std::vector<gea::TransformComponent> mStaticTransformComponents;

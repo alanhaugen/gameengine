@@ -205,15 +205,15 @@ void FilesWindow<T>::createButtons(AssetManager<T> *assets_)
     {
         //create button
         //should never run this, but in case we have more paths than objects
-        if(assets_->mFilesNamesSet.size()!= assets_->mAssets.size() || assets_->mFilesNamesSet.size()<1)
+        if(assets_->mFilesNamesSet.size() != assets_->mAssets.size() || assets_->mFilesNamesSet.size()<1)
         {
             //assets_ptr->filesNamesSet.resize(assets_ptr->assets.size());
-            qDebug()<<"names "<<assets_->mFilesNamesSet.size()
-                     <<" assets: "<<assets_->mAssets.size();
+            qDebug() << "names " << assets_->mFilesNamesSet.size()
+                     << " assets: "<< assets_->mAssets.size();
             break;
         }
 
-        QString name_ = QFileInfo(assets_->mFilesNamesStack[i]).baseName();
+        QString name_ = QString::number(i) + ": " +  QFileInfo(assets_->mFilesNamesStack[i]).baseName();
         QPushButton* new_button = new QPushButton(name_, mScrollingWidget);
         mDisplayAssets.push_back(new_button);
         mScrollingLayout->addWidget(new_button);

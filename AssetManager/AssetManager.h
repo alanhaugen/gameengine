@@ -46,8 +46,8 @@ public:
 template<typename T>
 void AssetManager<T>::importAssets(QString folder, QString object_type, QString object_type2)
 {
-    qDebug() << "AssetManager reading " << object_type << " files";
-    QDirIterator it(QString(PATH.c_str()) + "Assets/"+folder+"/",QStringList()<<object_type, QDir::NoFilter,QDirIterator::Subdirectories );
+    qDebug() << "AssetManager reading " << object_type << " " << object_type2 << " files";
+    QDirIterator it(QString(PATH.c_str()) + "Assets/" + folder + "/", QStringList()<<object_type, QDir::NoFilter, QDirIterator::Subdirectories );
     std::vector<QFileInfo> files; //temporary storing files, so we can sort them by modification date or it messes up order of indexes for next time qt starts
     while(it.hasNext())
     {
@@ -65,7 +65,7 @@ void AssetManager<T>::importAssets(QString folder, QString object_type, QString 
     //maybe we use it for different sounds formats later too
     if(object_type2!=nullptr)
     {
-        QDirIterator it2(QString(PATH.c_str()) + "Assets/"+folder+"/",QStringList()<<object_type2, QDir::NoFilter,QDirIterator::Subdirectories );
+        QDirIterator it2(QString(PATH.c_str()) + "Assets/" + folder + "/", QStringList()<<object_type2, QDir::NoFilter,QDirIterator::Subdirectories );
         while(it2.hasNext())
         {
             files.push_back(QFileInfo(it2.next()));
@@ -79,12 +79,13 @@ void AssetManager<T>::importAssets(QString folder, QString object_type, QString 
     }
 
     //reorder assets in a folder based on how recently they have been added, newest last
-    std::sort(files.begin(), files.end(), [](const QFileInfo& newestFile, const QFileInfo& oldFile){
+    std::sort(files.begin(), files.end(), [](const QFileInfo& newestFile, const QFileInfo& oldFile) {
         // if ( oldFile.birthTime()>newestFile.birthTime())
         //     return oldFile;
         //return oldFile.birthTime()>newestFile.birthTime();
         return oldFile.lastModified()>newestFile.lastModified();
-    });
+        }
+    );
 
 
     for(QFileInfo& it: files)

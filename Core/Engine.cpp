@@ -39,10 +39,17 @@ void Engine::setupRenderSystem()
 
 void Engine::sceneSetup()
 {
+	// OEF: This is pretty crap at the moment. Way to hardcoded.
+	// Would be nice if I could ask the AssetManagers for meshes and textures by name
+    // 
     //Make entities with at least MeshComponent and TransformComponent
     Entity tempEntity;
-    RenderComponent tempRenderComp(3, 0, tempEntity.mEntityID);
+	tempEntity.mName = "VikingRoom";
+
+    // first and second parameter is the mesh and texture index!
+    RenderComponent tempRenderComp(3, 3, tempEntity.mEntityID);
     TransformComponent tempTransformComp(tempEntity.mEntityID);
+	tempTransformComp.mRotation = glm::vec3(-90.0f, 0.0f, -100.0f);
 
     // Push components to vectors:
     mDynamicRenderComponents.push_back(tempRenderComp);
@@ -53,6 +60,42 @@ void Engine::sceneSetup()
     tempEntity.mComponents.push_back(&mTransformComponents.back());
 
     // Push Entity
+    mEntities.push_back(tempEntity);
+
+	//2nd entity:
+	tempEntity = Entity();
+    tempEntity.mName = "Box";
+    tempRenderComp = RenderComponent(1, 12, tempEntity.mEntityID);
+    tempTransformComp = TransformComponent(tempEntity.mEntityID);
+	tempTransformComp.mPosition = glm::vec3(2.0f, 0.0f, 0.0f);
+
+    // Push components to vectors:
+    mDynamicRenderComponents.push_back(tempRenderComp);
+    mTransformComponents.push_back(tempTransformComp);
+
+    // Update Entity 2:
+    tempEntity.mComponents.push_back(&mDynamicRenderComponents.back());
+    tempEntity.mComponents.push_back(&mTransformComponents.back());
+
+    // Push Entity 2
+    mEntities.push_back(tempEntity);
+
+    //3rd entity:
+    tempEntity = Entity();
+    tempEntity.mName = "Suzanne";
+    tempRenderComp = RenderComponent(2, 9, tempEntity.mEntityID);
+    tempTransformComp = TransformComponent(tempEntity.mEntityID);
+    tempTransformComp.mPosition = glm::vec3(-2.0f, 0.0f, 0.0f);
+
+    // Push components to vectors:
+    mDynamicRenderComponents.push_back(tempRenderComp);
+    mTransformComponents.push_back(tempTransformComp);
+
+    // Update Entity 2:
+    tempEntity.mComponents.push_back(&mDynamicRenderComponents.back());
+    tempEntity.mComponents.push_back(&mTransformComponents.back());
+
+    // Push Entity 2
     mEntities.push_back(tempEntity);
 }
 

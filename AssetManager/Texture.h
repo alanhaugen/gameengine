@@ -26,12 +26,12 @@ public:
     VkImageView mTextureImageView;
     VkSampler mTextureSampler;
 
-    VkDescriptorSet textureDescriptor{};
+    VkDescriptorSet textureDescriptor;
+    VkDescriptorSetLayout textureDescriptorSetLayout;
 
-    stbi_uc* mPixels;
-    bool isUsed=false;
+    stbi_uc* mPixels{ nullptr };
+    bool isUsed{ false };
     void createTextureImage(QString MODEL_PATH);
-
 };
 
 } //namespace gea
