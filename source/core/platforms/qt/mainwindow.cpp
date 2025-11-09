@@ -75,13 +75,12 @@ MainWindow::MainWindow(QWidget *parent, const char* windowTitle, int windowWidth
 
     lastTime = std::chrono::high_resolution_clock::now();
 
-    //OpenALAudio* openAL = new OpenALAudio();
-    QtMultimediaAudio* qtAudio = new QtMultimediaAudio();
-    AAPhysics* aaphysics = new AAPhysics();
+    AUDIO* audio = new AUDIO();
+    PHYSICS* physics = new PHYSICS();
 
     //Locator::SetAudio(openAL);
-    Locator::SetAudio(qtAudio);
-    Locator::SetPhysics(aaphysics);
+    Locator::SetAudio(audio);
+    Locator::SetPhysics(physics);
     Locator::SetRenderer(renderer);
 
     Locator::audio->Init();

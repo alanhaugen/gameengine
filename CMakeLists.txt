@@ -10,19 +10,30 @@ project(Core LANGUAGES CXX)
 ##
 #############################################################
 
-#set(RENDERER VulkanRenderer)
+set(RENDERER VulkanRenderer)
 #set(RENDERER OpenGLRenderer)
 #set(RENDERER NullRenderer)
-#set(AUDIO OpenALAudio)
-#set(AUDIO NullAudio)
-#set(AUDIO QtMulimediaAudio)
+if(DEFINED ENV{OPENAL_HOME})
+    set(AUDIO OpenALAudio)
+else()
+    #set(AUDIO NullAudio)
+    set(AUDIO QtMultimediaAudio)
+endif()
 #set(SCRIPT LuaScript)
-#set(SCRIPT NullScript)
+set(SCRIPT NullScript)
 #set(FILESYSTEM STDFilesystem)
-#set(FILESYSTEM NullFilesystem)
-#set(PHYSICS AAPhysics)
+set(FILESYSTEM NullFilesystem)
+set(PHYSICS AAPhysics)
 #set(PHYSICS Bullet3Physics)
 #set(PHYSICS NullPhysics)
+
+add_compile_definitions(RENDERER=${RENDERER})
+add_compile_definitions(AUDIO=${AUDIO})
+add_compile_definitions(SCRIPT=${SCRIPT})
+add_compile_definitions(FILESYSTEM=${FILESYSTEM})
+add_compile_definitions(PHYSICS=${PHYSICS})
+add_compile_definitions(AUDIO=${AUDIO})
+add_compile_definitions(AI=${AI})
 
 #############################################################
 ##
@@ -106,9 +117,11 @@ add_library(Core STATIC
 target_include_directories(Core PRIVATE "source")
 
 #OpenAL
-if(DEFINED AUDIO)
-    message("Will try to use " AUDIO)
+if(AUDIO STREQUAL "OpenALAudio")
+    #message("Will try to use " AUDIO)
 if(DEFINED ENV{OPENAL_HOME})
+    set(AUDIO OpenALAudio)
+
     add_subdirectory(source/systems/audio/openal)
     target_include_directories(Core PRIVATE $ENV{OPENAL_HOME}/include)
 
