@@ -72,3 +72,15 @@ Sprite::Sprite(const char* texture, float x, float y, float scaleX, float scaleY
 void Sprite::Update()
 {
 }
+
+
+bool Sprite::IsPressed()
+{
+    if (drawable->isVisible == false)
+    {
+        return false;
+    }
+
+    return false;
+}
+

@@ -60,10 +60,15 @@ Terrain::Terrain(const char *filePath,
             glm::vec3 bottomLeft  = glm::vec3(x, data[x + (y + 1) * width], y + 1);
             glm::vec3 bottomRight = glm::vec3(x + 1, data[(x + 1) + (y + 1) * width], y + 1);
 
-            Vertex v1 = Vertex(bottomLeft,  glm::vec2(0, 0));
-            Vertex v2 = Vertex(bottomRight, glm::vec2(0, 0));
-            Vertex v3 = Vertex(topRight,    glm::vec2(0, 0));
-            Vertex v4 = Vertex(topLeft,     glm::vec2(0, 0));
+            glm::vec2 uvTopLeft(x / float(width), y / float(height));
+            glm::vec2 uvTopRight((x + 1) / float(width), y / float(height));
+            glm::vec2 uvBottomLeft(x / float(width), (y + 1) / float(height));
+            glm::vec2 uvBottomRight((x + 1) / float(width), (y + 1) / float(height));
+
+            Vertex v1 = Vertex(bottomLeft, uvBottomLeft);
+            Vertex v2 = Vertex(bottomRight, uvBottomRight);
+            Vertex v3 = Vertex(topRight, uvTopRight);
+            Vertex v4 = Vertex(topLeft, uvBottomLeft);
 
             vertices.push_back(v1);
             vertices.push_back(v2);
