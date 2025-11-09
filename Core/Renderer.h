@@ -32,13 +32,12 @@ public:
     void drawFrame();
     //void initComponents(std::vector<gea::RenderComponent> staticComponents, std::vector<gea::TransformComponent> staticTransformComponents,
                         //std::vector<gea::Mesh*> meshes, std::vector<gea::Texture*> textures);
-    void updateCompoments(std::vector<gea::RenderComponent> renderComponents, std::vector<gea::TransformComponent> transformComponents);
 
-    //gea::RenderComponent CreateComponent(std::string, std::string, int);
+    // void updateCompoments(std::vector<gea::RenderComponent> renderComponents, std::vector<gea::TransformComponent> transformComponents);
 
-    std::vector<gea::RenderComponent> mRenderComponents;
-    std::vector<gea::RenderComponent> mDynamicRenderComponents;
-    std::vector<gea::RenderComponent> mStaticRenderComponents;
+    // std::vector<gea::RenderComponent> mRenderComponents;
+    // std::vector<gea::RenderComponent> mDynamicRenderComponents;
+    // std::vector<gea::RenderComponent> mStaticRenderComponents;
 
     gea::Engine* mEngine{nullptr};
     Camera mCamera; //probably should be a pointer to this
@@ -181,7 +180,7 @@ private:
     void createIndexBuffer(gea::Mesh* mesh);
     void createUniformBuffers();
     void createDescriptorPool();
-    void createDescriptorSets(gea::Texture texture);
+    void createDescriptorSets(gea::Texture &texture);
     void createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory);
     VkCommandBuffer beginSingleTimeCommands();
     void endSingleTimeCommands(VkCommandBuffer commandBuffer);

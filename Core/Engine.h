@@ -45,11 +45,14 @@ public:
     Entity* createEntity();
     void destroyEntity(std::size_t entityID);
 
-    // It sort all component vectors by EntityID
+    RenderComponent* createRenderComponent(std::string, std::string, int);
+
+    // Sort all component vectors by EntityID
+    // This can maybe make the systems run faster?
     void sortComponents();
 
     // Vector that holds all the Entities in our game:
-    std::vector<Entity> mEntityVector;
+    std::vector<Entity> mEntities;
 
     // Vectors that holds all the Components
     // should sorted by EntityID for DOD performance?
@@ -65,16 +68,11 @@ public:
     std::vector<SoundComponent> mSoundComponents;
 
     //RenderTesting
-    std::vector<gea::RenderComponent> mRenderComponents;
-    std::vector<gea::RenderComponent> mStaticRenderComponents;    //interesting for physics and batch rendering purposes
+    std::vector<RenderComponent> mDynamicRenderComponents;
+    std::vector<RenderComponent> mStaticRenderComponents;    //interesting for physics and batch rendering purposes
 
     //this is done for testing sake. in the real ecs there would only be one vector of transform components
     std::vector<gea::TransformComponent> mStaticTransformComponents;
-
-    //These are the ACTUAL meshes and Textures, and is used by Entities from a
-    //RenderComponent
-    std::vector<Mesh*> mMeshs;
-    std::vector<Texture*> mTextures;
 
     AssetManager<gea::Mesh>* mMeshManager{nullptr}; //vector<Mesh*>*
     AssetManager<gea::Texture>* mTextureManager{nullptr};

@@ -1,7 +1,7 @@
 #include "EntityModel.h"
 
 
-gea::EntityModel::EntityModel(Engine *owner, QObject *parent) : QAbstractListModel(parent), mContainer(&owner->mEntityVector)
+gea::EntityModel::EntityModel(Engine *owner, QObject *parent) : QAbstractListModel(parent), mContainer(&owner->mEntities)
 {
     connect(owner, &Engine::itemAppended, this, &EntityModel::handleNewEntity);
 }

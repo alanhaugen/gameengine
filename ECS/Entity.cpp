@@ -10,7 +10,8 @@ namespace gea {
 
     Entity::~Entity()
     {
-        //should probably clean up the components this entity has.
+        // Should probably clean up the components this entity has.
+        // Since the components are stored in vectors in the Engine class, it needs to be done there
     }
 
     bool Entity::hasComponent(ComponentTypes::Components type) const

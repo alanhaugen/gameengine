@@ -38,6 +38,17 @@ struct ComponentBase
     ComponentTypes::Components mComponentType{ComponentTypes::None};
 };
 
+// MeshIndex, TextureIndex, EntityID
+// This will actually result in the Renderer have to follow the meshIndex to fetch the data it needs
+// So this should probably be refactored
+struct RenderComponent : public ComponentBase
+{
+    int meshIndex{-1};
+    int textureIndex{-1};
+    RenderComponent(int meshIndexIn, int textureIndexIn, short id) : meshIndex{meshIndexIn}, textureIndex{textureIndexIn},
+        ComponentBase{id, ComponentTypes::Render} {};
+};
+
 struct TransformComponent : public ComponentBase
 {
     glm::vec3 mPosition{ 0.0f, 0.0f, 0.0f };
@@ -57,14 +68,6 @@ struct TransformComponent : public ComponentBase
         model = glm::scale(model, mScale);
         return model;
     }
-};
-
-//MeshIndex, TextureIndex, EntityID
-struct RenderComponent : public ComponentBase
-{
-    int meshIndex{-1};
-    int textureIndex{-1};
-    RenderComponent(int meshIndexIn, int textureIndexIn, short id) : ComponentBase{id, ComponentTypes::Render} {};
 };
 
 //Below are examples of actual components

@@ -1,32 +1,32 @@
-#include "Systems.h"
-#include "Core/Engine.h"
-#include <algorithm>
-#include <iostream>
+// #include "Systems.h"
+// #include "Core/Engine.h"
+// #include <algorithm>
+// #include <iostream>
 
-namespace gea
-{
+// namespace gea
+// {
 
-glm::vec3 getPlayerPosition()
-{
-    return glm::vec3(0.0f, 5.0f, 0.0f); // starting point for player lets suppose hilltop
-}
+// glm::vec3 getPlayerPosition()
+// {
+//     return glm::vec3(0.0f, 5.0f, 0.0f); // starting point for player lets suppose hilltop
+// }
 
 // movement
-void MovementSystem::update(float deltaTime)
-{
-    for (auto& movement : mEngine->mMovementComponents) {
-        auto transIt = std::find_if(mEngine->mTransformComponents.begin(), mEngine->mTransformComponents.end(),
-            [&movement](const TransformComponent& t){ return t.mEntityID == movement.mEntityID;});
-        if (transIt != mEngine->mTransformComponents.end()) {
-            glm::vec3 direction = getPlayerPosition() - transIt->mPosition;
-            float dist = glm::length(direction);
-            if (dist > 1.5f) { // Not at center yet
-                movement.mDirection = glm::normalize(direction);
-                transIt->mPosition += movement.mDirection * movement.mSpeed * deltaTime;
-            }
-        }
-    }
-}
+// void MovementSystem::update(float deltaTime)
+// {
+//     for (auto& movement : mEngine->mMovementComponents) {
+//         auto transIt = std::find_if(mEngine->mTransformComponents.begin(), mEngine->mTransformComponents.end(),
+//             [&movement](const TransformComponent& t){ return t.mEntityID == movement.mEntityID;});
+//         if (transIt != mEngine->mTransformComponents.end()) {
+//             glm::vec3 direction = getPlayerPosition() - transIt->mPosition;
+//             float dist = glm::length(direction);
+//             if (dist > 1.5f) { // Not at center yet
+//                 movement.mDirection = glm::normalize(direction);
+//                 transIt->mPosition += movement.mDirection * movement.mSpeed * deltaTime;
+//             }
+//         }
+//     }
+// }
 
 // // for towersystem
 // void TowerSystem::update(float deltaTime)
@@ -140,4 +140,4 @@ void MovementSystem::update(float deltaTime)
 // // work in progress, not completed yet?Akash?
 // void AISystem::update(float) {}
 
-} // namespace gea
+// } // namespace gea

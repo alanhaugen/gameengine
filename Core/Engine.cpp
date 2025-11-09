@@ -10,96 +10,50 @@ namespace gea
 
 Engine::Engine(Renderer* renderer, MainWindow *mainWindow) : mVulkanRenderer{renderer}, mMainWindow{mainWindow}
 {
-    //old
-    // setupRenderSystem();
-
-    // mScriptSystem = new ScriptingSystem(mainWindow, this);
-
-    // mVulkanRenderer->CreateComponent(PATH + "Assets/Models/viking_room.obj", PATH + "Assets/Textures/viking_room.png", 0);//mRenderComponents.push_back(gea::RenderComponent{0, 0, 0});
-    // gea::TransformComponent t1 = gea::TransformComponent(0);
-    // t1.mPosition = glm::vec3(0.0f, 0.0f, 0.0f);
-    // t1.mRotation = glm::vec3(-90.0f, 0.0f, 0.0f);
-    // mTransformComponents.push_back(t1);
-
-    // mVulkanRenderer->CreateComponent(PATH + "Assets/Models/ball.obj", PATH + "Assets/Textures/orange.jpg", 1);
-
-    //new
-    mMeshManager=new AssetManager<gea::Mesh>();
+    // Set up Asset Managers for different assets:
+    mMeshManager = new AssetManager<gea::Mesh>();
     mMeshManager->importObjects();
 
-    //testing rendering
-    mMeshManager->mAssets.at(0)->isUsed=true;
-    // mMeshManager->mAssets.at(1)->isUsed=true;
-    // mMeshManager->mAssets.at(2)->isUsed=true;
-    for(gea::Mesh*& it: mMeshManager->mAssets)
-    {
-        if(it->isUsed)
-             mMeshs.push_back(it);       
-    }
-
-    mTextureManager=new AssetManager<gea::Texture>();
+    mTextureManager = new AssetManager<gea::Texture>();
     mTextureManager->importObjects();
 
-    //testing rendering
-    mTextureManager->mAssets.at(0)->isUsed=true;
-    for(gea::Texture*& it: mTextureManager->mAssets)
-    {
-        if(it->isUsed)
-            mTextures.push_back(it);
-    }
-
-    //mMeshs.push_back(gea::Mesh());
-    //mTextures.push_back(gea::Texture());
-
-    //make this into a funciton? checks if we are trying to render mesh number thats not in assets
-    short meshIndex=3; //do an array of these "active" indexes
-    short textureIndex=5;
-    if(meshIndex<mMeshManager->mAssets.size())
-    {
-        if (textureIndex<mTextureManager->mAssets.size())
-        {   //dont know how to access meshIndex
-            mRenderComponents.push_back(gea::RenderComponent{meshIndex, textureIndex, 0});
-            gea::TransformComponent t1 = gea::TransformComponent(0);
-            t1.mPosition = glm::vec3(1.0f, 0.0f, 0.0f);
-            mTransformComponents.push_back(t1);
-        }
-        else
-            qDebug() << "Texture number "<<textureIndex<< " doesn't exist.";
-    }
-    else
-        qDebug() << "Asset number " << meshIndex <<" doesn't exist.";
+    // and something like this for sound files:
+    //mSoundFileManager=new AssetManager<gea::Sound>();
+    //mSoundFileManager->importObjects();
 
 
-    // mRenderComponents.push_back(gea::RenderComponent{1, 0, 0});
-    // gea::TransformComponent t1 = gea::TransformComponent(0);
-    // t1.mPosition = glm::vec3(1.0f, 0.0f, 0.0f);
-    // mTransformComponents.push_back(t1);
-
-    // mStaticRenderComponents.push_back(gea::RenderComponent{0, 2, 1});
-    //new end
-    gea::TransformComponent t2 = gea::TransformComponent(1);
-    t2.mPosition = glm::vec3(-2.0f, 0.0f, 0.0f);
-    mTransformComponents.push_back(t2);
-
-    //mVulkanRenderer->CreateComponent(PATH + "Assets/Models/cylinder.obj", PATH + "Assets/Textures/pink.jpg", 2);
-    //gea::TransformComponent t3 = gea::TransformComponent(2);
-    //t3.mPosition = glm::vec3(1.5f, 0.0f, 0.0f);
-    //mTransformComponents.push_back(t3);
-
+    // Set up different systems:
     setupRenderSystem();
     mScriptSystem = new ScriptingSystem(mainWindow, this);
+
+    // Set up the scene to be rendered:
+    sceneSetup();
 }
 
 void Engine::setupRenderSystem()
 {
+    mVulkanRenderer->mEngine = this; // must be done before the renderSystem is setup
     mRenderSystem = new gea::RenderSystem(this, mVulkanRenderer);
-    mRenderSystem->initialize(mStaticRenderComponents, mStaticTransformComponents, mMeshManager->mAssets, mTextures);
+    mRenderSystem->initialize(mStaticRenderComponents, mStaticTransformComponents, mMeshManager->mAssets, mTextureManager->mAssets);
 }
 
 void Engine::sceneSetup()
 {
     //Make entities with at least MeshComponent and TransformComponent
+    Entity tempEntity;
+    RenderComponent tempRenderComp(3, 0, tempEntity.mEntityID);
+    TransformComponent tempTransformComp(tempEntity.mEntityID);
 
+    // Push components to vectors:
+    mDynamicRenderComponents.push_back(tempRenderComp);
+    mTransformComponents.push_back(tempTransformComp);
+
+    // Update Entity:
+    tempEntity.mComponents.push_back(&mDynamicRenderComponents.back());
+    tempEntity.mComponents.push_back(&mTransformComponents.back());
+
+    // Push Entity
+    mEntities.push_back(tempEntity);
 }
 
 void Engine::updateRenderSystem()
@@ -109,9 +63,9 @@ void Engine::updateRenderSystem()
 
 Entity* Engine::createEntity()
 {
-    mEntityVector.emplace_back();
-    emit itemAppended(mEntityVector.size() - 1);
-    return &mEntityVector.back();
+    mEntities.emplace_back();
+    emit itemAppended(mEntities.size() - 1);
+    return &mEntities.back();
 }
 
 void Engine::sortComponents()
@@ -150,8 +104,8 @@ void Engine::update()
 
 void Engine::destroyEntity(std::size_t entityID)
 {
-    mEntityVector.erase(std::remove_if(mEntityVector.begin(), mEntityVector.end(),
-                                       [entityID](const Entity& e){ return e.mEntityID == entityID; }), mEntityVector.end());
+    mEntities.erase(std::remove_if(mEntities.begin(), mEntities.end(),
+                                       [entityID](const Entity& e){ return e.mEntityID == entityID; }), mEntities.end());
     mTransformComponents.erase(std::remove_if(mTransformComponents.begin(), mTransformComponents.end(),
                                               [entityID](const TransformComponent& c){ return c.mEntityID == entityID; }), mTransformComponents.end());
     mMovementComponents.erase(std::remove_if(mMovementComponents.begin(), mMovementComponents.end(),
@@ -164,6 +118,13 @@ void Engine::destroyEntity(std::size_t entityID)
                                           [entityID](const EnemyComponent& c){ return c.mEntityID == entityID; }), mEnemyComponents.end());
     mProjectileComponents.erase(std::remove_if(mProjectileComponents.begin(), mProjectileComponents.end(),
                                                [entityID](const ProjectileComponent& c){ return c.mEntityID == entityID; }), mProjectileComponents.end());
+}
+
+RenderComponent* Engine::createRenderComponent(std::string, std::string, int)
+{
+    RenderComponent tempComponent(1, 1, 1); // = gea::RenderComponent{static_cast<int>(mMeshes.size()-1), static_cast<int>(mTextures.size()-1), ID};
+    mDynamicRenderComponents.push_back(tempComponent);
+    return &mDynamicRenderComponents.back();
 }
 
 TransformComponent* Engine::addTransform(Entity* entity)

@@ -46,7 +46,6 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent), mUi(new Ui::MainW
 
     //Do we have to make the Engine here to let that make the RenderSystem - to make the VulkanRenderer ?
     mEngine = new gea::Engine(mVulkanWindow, this);
-    mVulkanWindow->mEngine = mEngine;   //tell the renderer of the engine
 
     // Wrap VulkanRenderer (QWindow) into a QWidget
     QWidget* mVulkanWidget = QWidget::createWindowContainer(mVulkanWindow, this);
@@ -64,12 +63,12 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent), mUi(new Ui::MainW
     gea::OutlinerDock* outlinerDock = new gea::OutlinerDock(mEntityModel,this);
 
     //Testing the layout
-    mEngine->createEntity();
-    mEngine->mEntityVector.at(0).mName = "Primus";
-    mEngine->createEntity();
-    mEngine->mEntityVector.at(1).mName = "Octigon";
-    mEngine->createEntity();
-    mEngine->mEntityVector.at(2).mName = "Tertius";
+    // mEngine->createEntity();
+    // mEngine->mEntities.at(0).mName = "Primus";
+    // mEngine->createEntity();
+    // mEngine->mEntities.at(1).mName = "Octigon";
+    // mEngine->createEntity();
+    // mEngine->mEntities.at(2).mName = "Tertius";
 
 	// Add the outliner dock to the main window right side
     addDockWidget(Qt::RightDockWidgetArea, outlinerDock);

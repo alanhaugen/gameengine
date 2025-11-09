@@ -16,12 +16,12 @@ public:
     Entity();
     ~Entity();
 
-    QString mName{"Nemo"};
+    QString mName{"NoName"};
 
     std::size_t mEntityID;                      //unique ID for each Entity
-    std::vector<ComponentBase*> mComponents;  //holds the components for this Entity
+    std::vector<ComponentBase*> mComponents;    //holds the components for this Entity
 
-    static std::size_t mStaticNextID;  // should be increased by 1 for each entity made
+    static std::size_t mStaticNextID;           // should be increased by 1 for each entity made
 
 
     // Helper methods for component management

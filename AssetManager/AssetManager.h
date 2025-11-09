@@ -46,6 +46,7 @@ public:
 template<typename T>
 void AssetManager<T>::importAssets(QString folder, QString object_type, QString object_type2)
 {
+    qDebug() << "AssetManager reading " << object_type << " files";
     QDirIterator it(QString(PATH.c_str()) + "Assets/"+folder+"/",QStringList()<<object_type, QDir::NoFilter,QDirIterator::Subdirectories );
     std::vector<QFileInfo> files; //temporary storing files, so we can sort them by modification date or it messes up order of indexes for next time qt starts
     while(it.hasNext())
@@ -90,7 +91,7 @@ void AssetManager<T>::importAssets(QString folder, QString object_type, QString 
     {
         QString path = it.filePath();
         QString name = it.baseName();
-        qDebug() << "files: \n"<< it.lastModified() << " \n"; //<<fileInfo.absoluteFilePath()<<"\n";
+        qDebug() << "   " << name; //<<fileInfo.absoluteFilePath()<<"\n";
         mFilesNamesSet.insert(name); //for future check if mesh has been imported in the engine before
         mFilesNamesStack.push_back(path); //for loading in all meshes when we start engine
     }

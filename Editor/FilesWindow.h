@@ -32,7 +32,7 @@ public:
     QWidget* mScrollingWidget{nullptr};
     QVBoxLayout* mScrollingLayout{nullptr};
     QVBoxLayout* mMainLayout{nullptr};
-    QStatusBar* mStatus{nullptr};
+    //QStatusBar* mStatus{nullptr};
 
     void mHandleButton(int index);
     void dragEnterEvent(QDragEnterEvent* event) override;
@@ -87,7 +87,7 @@ FilesWindow<T>::FilesWindow(AssetManager<T>* manager, const QString& name, QWidg
     // mStatus = new QStatusBar(mCentralWidget);
     // mStatus->showMessage(" Drop new files in this window ");
 
-    mMainLayout->addWidget(mStatus); //main layout has status
+    //mMainLayout->addWidget(mStatus); //main layout has status
 
     mCentralWidget->setLayout(mMainLayout);
     setWidget(mCentralWidget); //docker window content is the central widget parent that contains all the children: main layout->scroller, -->status, etc
@@ -144,13 +144,19 @@ void FilesWindow<T>::dropEvent(QDropEvent *event)
 
                     //connect buttons to the objects
                     connect(mDisplayAssets.back(), &QPushButton::released, this,[this, i]{ mHandleButton(i-1); });
-                    mStatus->showMessage(" Drop new files in this window ");
+                    //mStatus->showMessage(" Drop new files in this window ");
                 }
                 else
-                    mStatus->showMessage(" File is already imported. ");
+                {
+                    //mStatus->showMessage(" File is already imported. ");
+                    qDebug() << " Incorrect file type. ";
+                }
             }
             else
-                mStatus->showMessage(" Incorrect file type. ");
+            {
+                //mStatus->showMessage(" Incorrect file type. ");
+                qDebug() << " Incorrect file type. ";
+            }
         }
 
         //-----------add texture----------------------
@@ -171,13 +177,19 @@ void FilesWindow<T>::dropEvent(QDropEvent *event)
 
                     //connect buttons to the objects
                     connect(mDisplayAssets.back(), &QPushButton::released, this,[this, i]{ mHandleButton(i-1); });
-                    mStatus->showMessage(" Drop new files in this window ");
+                    //mStatus->showMessage(" Drop new files in this window ");
                 }
                 else
-                    mStatus->showMessage(" File is already imported. ");
+                {
+                    //mStatus->showMessage(" File is already imported. ");
+					qDebug() << " File is already imported. ";
+                }
             }
             else
-                mStatus->showMessage(" Incorrect file type. ");
+            {
+                //mStatus->showMessage(" Incorrect file type. ");
+                qDebug() << " Incorrect file type. ";
+            }
         }
         //-----------------------add sound---------------
         //TODO
