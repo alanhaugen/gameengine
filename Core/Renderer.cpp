@@ -1390,7 +1390,7 @@ void Renderer::createDescriptorSets(gea::Texture &texture)
         bufferInfo.offset = 0;
         bufferInfo.range = sizeof(UniformBufferObject);
 
-		// Write descriptor set for uniform buffer - only UBO for now - OEF: quick fix
+        // Write descriptor set for uniform buffer - only UBO for now - OEF: quick fix
         VkWriteDescriptorSet descriptorWrite{};
         descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
         descriptorWrite.dstSet = descriptorSets[i];
@@ -1752,12 +1752,14 @@ void Renderer::drawFrame()
         vkCmdBindVertexBuffers(dynamicCommandBuffer, 0, 1, &vertexBuffer, offsets);
         vkCmdBindIndexBuffer(dynamicCommandBuffer, indexBuffer, 0, VK_INDEX_TYPE_UINT32);
         vkCmdBindDescriptorSets(dynamicCommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, &descriptorSets[imageIndex], 0, nullptr);
-        
-        gea::Texture* tempTexture = mEngine->mTextureManager->mAssets[renderComponent.textureIndex];
+
+
+
+
+        gea::Texture* tempTexture = mEngine->mTextureManager->mAssets[renderComponent.textureIndex]; //renderComponent.textureIndex
 
         if (tempTexture && tempTexture->textureDescriptor != VK_NULL_HANDLE)
             vkCmdBindDescriptorSets(dynamicCommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 1, 1, &tempTexture->textureDescriptor, 0, nullptr);
-
 
         vkCmdBindPipeline(dynamicCommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline);
         vkCmdDrawIndexed(dynamicCommandBuffer, noOfIndices, 1, 0, 0, 0);
@@ -2157,12 +2159,12 @@ VkDescriptorSet Renderer::createTextureDescriptor(gea::Texture &texture)
 void Renderer::RecreateTextureDescriptors()
 {
     // Recreate texture descriptor sets after descriptorPool is recreated.
-    // Safe even if mTextures is empty.
-    // for (size_t i = 0; i < mTextures.size(); ++i) {
-    //     // Re-allocate and update descriptor for this texture from the current descriptorPool
-    //     mTextures[i].textureDescriptor = createTextureDescriptor(mTextures[i]);
-    //     qDebug() << "Recreated texture descriptor for index" << (int)i << "desc=" << mTextures[i].textureDescriptor;
-    // }
+     //Safe even if mTextures is empty.
+     for (size_t i = 0; i < mEngine->mTextureManager->mAssets.size(); ++i) {
+         // Re-allocate and update descriptor for this texture from the current descriptorPool
+         mEngine->mTextureManager->mAssets[i]->textureDescriptor = createTextureDescriptor(*mEngine->mTextureManager->mAssets[i]);
+         qDebug() << "Recreated texture descriptor for index" << (int)i << "desc=" << mEngine->mTextureManager->mAssets[i]->textureDescriptor;
+     }
 }
 
 void Renderer::exposeEvent(QExposeEvent* event)
