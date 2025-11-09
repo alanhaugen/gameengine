@@ -29,6 +29,10 @@ public:
     void updateRenderSystem();
     void setupRenderSystem();
 
+    // This is where the Entities for the scene is added
+    // Should be read from a file for more flexibility
+    void sceneSetup();
+
     // Rendering
     gea::RenderSystem* mRenderSystem{nullptr};
     Renderer* mVulkanRenderer{nullptr};
@@ -44,11 +48,11 @@ public:
     // It sort all component vectors by EntityID
     void sortComponents();
 
-    //Vector that holds all the Entities in our game:
+    // Vector that holds all the Entities in our game:
     std::vector<Entity> mEntityVector;
 
-    //Vectors that holds all the Components
-    //should sorted by EntityID for DOD performance
+    // Vectors that holds all the Components
+    // should sorted by EntityID for DOD performance?
     std::vector<TransformComponent> mTransformComponents;
     std::vector<MovementComponent> mMovementComponents;
     std::vector<HealthComponent> mHealthComponents;
@@ -85,10 +89,10 @@ public:
     // to add component
     TransformComponent* addTransform(Entity* entity);
     MovementComponent* addMovement(Entity* entity);
-    HealthComponent* addHealth(Entity* entity);
-    TowerComponent* addTower(Entity* entity);
-    EnemyComponent* addEnemy(Entity* entity);
-    ProjectileComponent* addProjectile(Entity* entity);
+    // HealthComponent* addHealth(Entity* entity);
+    // TowerComponent* addTower(Entity* entity);
+    // EnemyComponent* addEnemy(Entity* entity);
+    // ProjectileComponent* addProjectile(Entity* entity);
 
 signals:
     void itemAppended(int newIndex);

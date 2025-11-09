@@ -13,24 +13,24 @@ namespace gea {
         //should probably clean up the components this entity has.
     }
 
-    bool Entity::hasComponent(ComponentTypes type) const
+    bool Entity::hasComponent(ComponentTypes::Components type) const
     {
         for (const auto& comp : mComponents)
         {
-            if (comp.mComponentType == type)
+            if (comp->mComponentType == type)
                 return true;
         }
         return false;
     }
 
-    short Entity::getComponentIndex(ComponentTypes type) const
-    {
-        for (const auto& comp : mComponents)
-        {
-            if (comp.mComponentType == type)
-                return comp.mComponentIndex;
-        }
-        return -1;
-    }
+    // short Entity::getComponentIndex(ComponentTypes::Components type) const
+    // {
+    //     for (const auto& comp : mComponents)
+    //     {
+    //         if (comp.mComponentType == type)
+    //             return comp.mComponentIndex;
+    //     }
+    //     return -1;
+    // }
 
 } // namespace gea

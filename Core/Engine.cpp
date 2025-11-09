@@ -96,6 +96,12 @@ void Engine::setupRenderSystem()
     mRenderSystem->initialize(mStaticRenderComponents, mStaticTransformComponents, mMeshManager->mAssets, mTextures);
 }
 
+void Engine::sceneSetup()
+{
+    //Make entities with at least MeshComponent and TransformComponent
+
+}
+
 void Engine::updateRenderSystem()
 {
     mRenderSystem->update(mTransformComponents);
@@ -162,62 +168,64 @@ void Engine::destroyEntity(std::size_t entityID)
 
 TransformComponent* Engine::addTransform(Entity* entity)
 {
-    TransformComponent t(entity->mEntityID);
-    mTransformComponents.push_back(t);
-    entity->mComponents.push_back({ComponentTypes::Transform, (short)(mTransformComponents.size()-1)});
-    sortComponents();
+    TransformComponent tempTransform(entity->mEntityID);
+    mTransformComponents.push_back(tempTransform);
+    entity->mComponents.push_back(&tempTransform);  // entity only has pointers to its components
+
+    // sortComponents();    //commented out. Then the return statement will be valid. Sorting components at the end of all additions.
+
     return &mTransformComponents.back();
 }
 
-MovementComponent* Engine::addMovement(Entity* entity)
-{
-    MovementComponent m;
-    m.mEntityID = entity->mEntityID;
-    mMovementComponents.push_back(m);
-    entity->mComponents.push_back({ComponentTypes::Movement, (short)(mMovementComponents.size()-1)});
-    sortComponents();
-    return &mMovementComponents.back();
-}
+// MovementComponent* Engine::addMovement(Entity* entity)
+// {
+//     MovementComponent tempMovement;
+//     tempMovement.mEntityID = entity->mEntityID;
+//     mMovementComponents.push_back(tempMovement);
+//     entity->mComponents.push_back({ComponentTypes::Movement, (short)(mMovementComponents.size()-1)});
+//     sortComponents();
+//     return &mMovementComponents.back();
+// }
 
-HealthComponent* Engine::addHealth(Entity* entity)
-{
-    HealthComponent h;
-    h.mEntityID = entity->mEntityID;
-    mHealthComponents.push_back(h);
-    entity->mComponents.push_back({ComponentTypes::Health, (short)(mHealthComponents.size()-1)});
-    sortComponents();
-    return &mHealthComponents.back();
-}
+// HealthComponent* Engine::addHealth(Entity* entity)
+// {
+//     HealthComponent h;
+//     h.mEntityID = entity->mEntityID;
+//     mHealthComponents.push_back(h);
+//     entity->mComponents.push_back({ComponentTypes::Health, (short)(mHealthComponents.size()-1)});
+//     sortComponents();
+//     return &mHealthComponents.back();
+// }
 
-TowerComponent* Engine::addTower(Entity* entity)
-{
-    TowerComponent t;
-    t.mEntityID = entity->mEntityID;
-    mTowerComponents.push_back(t);
-    entity->mComponents.push_back({ComponentTypes::Tower, (short)(mTowerComponents.size()-1)});
-    sortComponents();
-    return &mTowerComponents.back();
-}
+// TowerComponent* Engine::addTower(Entity* entity)
+// {
+//     TowerComponent t;
+//     t.mEntityID = entity->mEntityID;
+//     mTowerComponents.push_back(t);
+//     entity->mComponents.push_back({ComponentTypes::Tower, (short)(mTowerComponents.size()-1)});
+//     sortComponents();
+//     return &mTowerComponents.back();
+// }
 
-EnemyComponent* Engine::addEnemy(Entity* entity)
-{
-    EnemyComponent e;
-    e.mEntityID = entity->mEntityID;
-    mEnemyComponents.push_back(e);
-    entity->mComponents.push_back({ComponentTypes::Enemy, (short)(mEnemyComponents.size()-1)});
-    sortComponents();
-    return &mEnemyComponents.back();
-}
+// EnemyComponent* Engine::addEnemy(Entity* entity)
+// {
+//     EnemyComponent e;
+//     e.mEntityID = entity->mEntityID;
+//     mEnemyComponents.push_back(e);
+//     entity->mComponents.push_back({ComponentTypes::Enemy, (short)(mEnemyComponents.size()-1)});
+//     sortComponents();
+//     return &mEnemyComponents.back();
+// }
 
-ProjectileComponent* Engine::addProjectile(Entity* entity)
-{
-    ProjectileComponent p;
-    p.mEntityID = entity->mEntityID;
-    mProjectileComponents.push_back(p);
-    entity->mComponents.push_back({ComponentTypes::Projectile, (short)(mProjectileComponents.size()-1)});
-    sortComponents();
-    return &mProjectileComponents.back();
-}
+// ProjectileComponent* Engine::addProjectile(Entity* entity)
+// {
+//     ProjectileComponent p;
+//     p.mEntityID = entity->mEntityID;
+//     mProjectileComponents.push_back(p);
+//     entity->mComponents.push_back({ComponentTypes::Projectile, (short)(mProjectileComponents.size()-1)});
+//     sortComponents();
+//     return &mProjectileComponents.back();
+// }
 
 
 } //gea namespace
