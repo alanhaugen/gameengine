@@ -101,7 +101,7 @@ void Renderer::initVulkan()
 	createDescriptorPool(); // Descriptor pool must be created before createTextureResource
     
     for (size_t i = 0; i < mEngine->mTextureManager->mAssets.size(); i++)
-        createTextureResource(mEngine->mTextureManager->mAssets[i]);
+        createTextureImageResource(mEngine->mTextureManager->mAssets[i]);
 
     for (size_t i = 0; i < mEngine->mMeshManager->mAssets.size(); i++) 
         createVertexBuffer(mEngine->mMeshManager->mAssets[i]);
@@ -886,25 +886,43 @@ bool Renderer::hasStencilComponent(VkFormat format) {
     return format == VK_FORMAT_D32_SFLOAT_S8_UINT || format == VK_FORMAT_D24_UNORM_S8_UINT;
 }
 
-void Renderer:: createTextureResource(gea::Texture *texture)
+
+void Renderer::createTextureImageResource(gea::Texture* texture)
 {
+    //int texWidth, texHeight, texChannels;
+    stbi_uc* pixels = texture->mPixels;
     VkDeviceSize imageSize = texture->mTexWidth * texture->mTexHeight * 4;
+    texture->mMipLevels = static_cast<uint32_t>(std::floor(std::log2(std::max(texture->mTexWidth, texture->mTexHeight)))) + 1;
+
+    if (!pixels) {
+        throw std::runtime_error("failed to load texture image!");
+    }
 
     VkBuffer stagingBuffer;
-    VkDeviceMemory stagingBufferMemory; //  texture->mTextureImageMemory?
-    createBuffer(imageSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory);
-    //copy pixels from texture to staging buffer
+    VkDeviceMemory stagingBufferMemory;
+    createBuffer(imageSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
+                 VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
+                 stagingBuffer, stagingBufferMemory);
+
     void* data;
     vkMapMemory(device, stagingBufferMemory, 0, imageSize, 0, &data);
-    memcpy(data, texture->mPixels, static_cast<size_t>(imageSize));
+    memcpy(data, pixels, static_cast<size_t>(imageSize));
     vkUnmapMemory(device, stagingBufferMemory);
 
-    //MAKE VULKAN IMAGE
-    createImage(texture->mTexWidth, texture->mTexHeight, texture->mMipLevels, VK_SAMPLE_COUNT_1_BIT, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, texture->mTextureImage, stagingBufferMemory);
-    stbi_image_free(texture->mPixels);
+    stbi_image_free(pixels);
+
+    createImage(texture->mTexWidth, texture->mTexHeight, texture->mMipLevels,
+                VK_SAMPLE_COUNT_1_BIT, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_TILING_OPTIMAL,
+                VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT,
+                VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
+                texture->mTextureImage, texture->mTextureImageMemory);
+
     transitionImageLayout(texture->mTextureImage, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, texture->mMipLevels);
-    copyBufferToImage(stagingBuffer,texture->mTextureImage, static_cast<uint32_t>(texture->mTexWidth), static_cast<uint32_t>(texture->mTexHeight));
+    copyBufferToImage(stagingBuffer, texture->mTextureImage, static_cast<uint32_t>(texture->mTexWidth), static_cast<uint32_t>(texture->mTexHeight));
     //transitioned to VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL while generating mipmaps
+
+    vkDestroyBuffer(device, stagingBuffer, nullptr);
+    vkFreeMemory(device, stagingBufferMemory, nullptr);
 
     generateMipmaps(texture->mTextureImage, VK_FORMAT_R8G8B8A8_SRGB, texture->mTexWidth, texture->mTexHeight, texture->mMipLevels);
 
@@ -913,52 +931,7 @@ void Renderer:: createTextureResource(gea::Texture *texture)
                                                  VK_IMAGE_ASPECT_COLOR_BIT, texture->mMipLevels);
     //createTextureImageView(texture);
     createTextureSampler(texture);
-
-    // Create and store the texture descriptor set (set 1 layout)
-    texture->textureDescriptor = createTextureDescriptor(*texture);
-
-    //clean up staging buffer
-    vkDestroyBuffer(device, stagingBuffer, nullptr);
-    vkFreeMemory(device, stagingBufferMemory, nullptr); //comment this out?: no. in cleanup()where mTextureImageMemory is VkDeviceMemory it should be its own thing
-
 }
-
-// void Renderer::createTextureImage(gea::Texture* texture)
-// {
-//     int texWidth, texHeight, texChannels;
-//     stbi_uc* pixels = stbi_load(texture->mTexturePath.c_str(), &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
-//     VkDeviceSize imageSize = texWidth * texHeight * 4;
-//     texture->mMipLevels = static_cast<uint32_t>(std::floor(std::log2(std::max(texWidth, texHeight)))) + 1;
-
-//     if (!pixels) {
-//         throw std::runtime_error("failed to load texture image!");
-//     }
-
-//     VkBuffer stagingBuffer;
-//     VkDeviceMemory stagingBufferMemory;
-//     createBuffer(imageSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory);
-
-//     void* data;
-//     vkMapMemory(device, stagingBufferMemory, 0, imageSize, 0, &data);
-//     memcpy(data, pixels, static_cast<size_t>(imageSize));
-//     vkUnmapMemory(device, stagingBufferMemory);
-
-//     stbi_image_free(pixels);
-
-//     createImage(texWidth, texHeight, texture->mMipLevels, VK_SAMPLE_COUNT_1_BIT, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, texture->mTextureImage, stagingBufferMemory);
-
-//     transitionImageLayout(texture->mTextureImage, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, texture->mMipLevels);
-//     copyBufferToImage(stagingBuffer, texture->mTextureImage, static_cast<uint32_t>(texWidth), static_cast<uint32_t>(texHeight));
-//     //transitioned to VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL while generating mipmaps
-
-//     vkDestroyBuffer(device, stagingBuffer, nullptr);
-//     vkFreeMemory(device, stagingBufferMemory, nullptr);
-
-//     generateMipmaps(texture->mTextureImage, VK_FORMAT_R8G8B8A8_SRGB, texWidth, texHeight, texture->mMipLevels);
-
-//     createTextureImageView(texture);
-//     createTextureSampler(texture);
-// }
 
 void Renderer::generateMipmaps(VkImage image, VkFormat imageFormat, int32_t texWidth, int32_t texHeight, uint32_t mipLevels)
 {

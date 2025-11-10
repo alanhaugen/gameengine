@@ -160,8 +160,7 @@ private:
     VkFormat findSupportedFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features);
     VkFormat findDepthFormat();
     bool hasStencilComponent(VkFormat format);
-    //void createTextureImage(gea::Texture* texture);//moved to Texture
-    void createTextureResource(gea::Texture* texture);
+    void createTextureImageResource(gea::Texture* texture);
     void generateMipmaps(VkImage image, VkFormat imageFormat, int32_t texWidth, int32_t texHeight, uint32_t mipLevels);
     VkSampleCountFlagBits getMaxUsableSampleCount();
     void createTextureImageView(gea::Texture* texture);
