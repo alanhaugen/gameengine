@@ -14,21 +14,21 @@ void MainMenu::Init()
     renderer->SetLightPos(glm::vec3(-50, -150, -50));
 
     mountainsNorth = new Terrain("Assets/HeightMaps/volcano01.png",
-                          "Assets/Textures/forrest_ground_01_diff_1k.jpg",
+                          "Assets/Textures/aerial_rocks_04_diff_1k.jpg", //forrest_ground_01_diff_1k
                           "Shaders/phong.vert.spv", "Shaders/phong.frag.spv");
     mountainsNorth->SetPosition(glm::vec3(-1050,-150,970));
     mountainsNorth->Scale(glm::vec3(3,1,1));
     mountainsEast = new Terrain("Assets/HeightMaps/volcano02.png",
-                          "Assets/Textures/forrest_ground_01_diff_1k.jpg",
+                          "Assets/Textures/aerial_rocks_04_diff_1k.jpg",
                           "Shaders/phong.vert.spv", "Shaders/phong.frag.spv");
     mountainsEast->SetPosition(glm::vec3(970,-150,-50));
     mountainsSouth = new Terrain("Assets/HeightMaps/volcano03.png",
-                          "Assets/Textures/forrest_ground_01_diff_1k.jpg",
+                          "Assets/Textures/aerial_rocks_04_diff_1k.jpg",
                           "Shaders/phong.vert.spv", "Shaders/phong.frag.spv");
     mountainsSouth->SetPosition(glm::vec3(-1050,-150,-1050));
     mountainsSouth->Scale(glm::vec3(3,1,1));
     mountainsWest = new Terrain("Assets/HeightMaps/volcano04.png",
-                          "Assets/Textures/forrest_ground_01_diff_1k.jpg",
+                          "Assets/Textures/aerial_rocks_04_diff_1k.jpg",
                           "Shaders/phong.vert.spv", "Shaders/phong.frag.spv");
     mountainsWest->SetPosition(glm::vec3(-1050,-150,-50));
 
