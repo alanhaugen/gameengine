@@ -47,7 +47,7 @@ void Engine::sceneSetup()
 	tempEntity.mName = "VikingRoom";
 
     // first and second parameter is the mesh and texture index!
-    RenderComponent tempRenderComp(3, 11, tempEntity.mEntityID);
+    RenderComponent tempRenderComp(3, 2, tempEntity.mEntityID);
     TransformComponent tempTransformComp(tempEntity.mEntityID);
 	tempTransformComp.mRotation = glm::vec3(-90.0f, 0.0f, -100.0f);
     tempTransformComp.mPosition = glm::vec3(2.0f, 0.0f, 0.0f);
@@ -85,7 +85,7 @@ void Engine::sceneSetup()
     //3rd entity:
     tempEntity = Entity();
     tempEntity.mName = "Suzanne";
-    tempRenderComp = RenderComponent(2, 9, tempEntity.mEntityID);
+    tempRenderComp = RenderComponent(2, 0, tempEntity.mEntityID);
     tempTransformComp = TransformComponent(tempEntity.mEntityID);
     tempTransformComp.mPosition = glm::vec3(-2.0f, 0.0f, 0.0f);
 
