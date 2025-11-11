@@ -56,6 +56,12 @@ void Engine::sceneSetup()
         QMessageBox::critical(nullptr, "Error", msg);
         return;
     }
+    if (!mTextureManager->mFilesNamesSet.contains("viking_room"))
+    {
+        QString msg = "Could not load texture viking_room";
+        QMessageBox::critical(nullptr, "Error", msg);
+        return;
+    }
 
     int meshIndex = mMeshManager->mFilesNamesSet.value("viking_room");
     int textureIndex = mTextureManager->mFilesNamesSet.value("viking_room");
