@@ -171,10 +171,7 @@ private:
                      VkImage& image, VkDeviceMemory& imageMemory);
     void transitionImageLayout(VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout, uint32_t mipLevels);
     void copyBufferToImage(VkBuffer buffer, VkImage image, uint32_t width, uint32_t height);
-    //void loadModel(QString MODEL_PATH);
     //void importObjects();;
-    // void createVertexBuffer();
-    // void createIndexBuffer();
     void createVertexBuffer(gea::Mesh* mesh);
     void createIndexBuffer(gea::Mesh* mesh);
     void createUniformBuffers();
