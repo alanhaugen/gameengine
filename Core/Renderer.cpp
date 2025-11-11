@@ -1313,6 +1313,10 @@ void Renderer::createUniformBuffers()
 {
     VkDeviceSize bufferSize = sizeof(UniformBufferObject);
 
+    if (swapChainImages.empty()) {
+        throw std::runtime_error("createUniformBuffers failed: swapChainImages is empty.");
+    }
+
     uniformBuffers.resize(swapChainImages.size());
     uniformBuffersMemory.resize(swapChainImages.size());
 
@@ -1340,6 +1344,8 @@ void Renderer::createDescriptorPool()
     if (vkCreateDescriptorPool(device, &poolInfo, nullptr, &descriptorPool) != VK_SUCCESS) {
         throw std::runtime_error("failed to create descriptor pool!");
     }
+    else
+        qDebug("Successfully created Descriptor Pool");
 }
 
 void Renderer::createDescriptorSets(gea::Texture &texture)
