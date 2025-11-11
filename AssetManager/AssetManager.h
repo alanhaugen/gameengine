@@ -9,6 +9,7 @@
 #include "QDirIterator"
 #include "AssetManager/Mesh.h"
 #include "AssetManager/Texture.h"
+#include "AssetManager/Scene.h"
 //#include "AssetManager/Sound.h"
 #include "WavfileReader.h"
 #include "Core/Utilities.h"
@@ -129,6 +130,11 @@ void AssetManager<T>::addNewAsset(T *newAsset)
         QString correctFolder=QString(PATH.c_str()) + "Assets/Sounds/";
         changeFilePath(newAsset, correctFolder);
     }
+    else if constexpr (std::is_same<T,gea::Scene>::value)
+    {
+        QString correctFolder=QString(PATH.c_str()) + "Assets/Scenes/";
+        changeFilePath(newAsset, correctFolder);
+    }
     else
         qDebug()<<"WRONG: not reading objects";
 }
@@ -177,6 +183,12 @@ void AssetManager<T>::importObjects()
         QString folder="Sounds";
         QString object_type="*.wav"; //or mp3
         importAssets(folder, object_type,nullptr);
+    }
+    else if constexpr (std::is_same<T,gea::Scene>::value)
+    {
+        QString folder="Scenes";
+        QString object_type="*.json";
+        importAssets(folder, object_type, nullptr);
     }
     else
         qDebug()<<"WRONG: not reading objects";

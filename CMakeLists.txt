@@ -42,18 +42,22 @@ set(SOURCES
     AssetManager/Sound.h AssetManager/Sound.cpp
     AssetManager/Texture.h AssetManager/Texture.cpp
     AssetManager/WavfileReader.h AssetManager/WavfileReader.cpp
+    AssetManager/Scene.h AssetManager/Scene.cpp
+
     Core/Camera.h Core/Camera.cpp
     Core/Engine.h Core/Engine.cpp
     Core/Input.h
     Core/Renderer.h Core/Renderer.cpp
     Core/Utilities.h
     Core/Vertex.h Core/Vertex.cpp
+
     ECS/Components.h
     ECS/Entity.h ECS/Entity.cpp
     ECS/RenderSystem.h ECS/RenderSystem.cpp
     ECS/ScriptingSystem.h ECS/ScriptingSystem.cpp
     ECS/SoundSystem.h ECS/SoundSystem.cpp
     ECS/Systems.h ECS/Systems.cpp
+
     Editor/DisplayWidget.cpp
     Editor/DraggableButton.h Editor/DraggableButton.cpp
     Editor/FilesWindow.h Editor/FilesWindow.cpp
