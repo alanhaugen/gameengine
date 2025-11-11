@@ -2136,7 +2136,7 @@ void Renderer::RecreateTextureDescriptors()
      for (size_t i = 0; i < mEngine->mTextureManager->mAssets.size(); ++i) {
          // Re-allocate and update descriptor for this texture from the current descriptorPool
          mEngine->mTextureManager->mAssets[i]->textureDescriptor = createTextureDescriptor(*mEngine->mTextureManager->mAssets[i]);
-         qDebug() << "Recreated texture descriptor for index" << (int)i << "desc=" << mEngine->mTextureManager->mAssets[i]->textureDescriptor;
+         //qDebug() << "Recreated texture descriptor for index" << (int)i << "desc=" << mEngine->mTextureManager->mAssets[i]->textureDescriptor;
      }
 }
 

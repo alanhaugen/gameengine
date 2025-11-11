@@ -50,7 +50,9 @@ void Engine::sceneSetup()
 	tempEntity.mName = "VikingRoom";
 
     // first and second parameter is the mesh and texture index!
-    RenderComponent tempRenderComp(3, 2, tempEntity.mEntityID);
+    RenderComponent tempRenderComp(mMeshManager->mFilesNamesSet.value("viking_room"),
+                                   mTextureManager->mFilesNamesSet.value("viking_room"),
+                                   tempEntity.mEntityID);
     TransformComponent tempTransformComp(tempEntity.mEntityID);
 	tempTransformComp.mRotation = glm::vec3(-90.0f, 0.0f, -100.0f);
     tempTransformComp.mPosition = glm::vec3(2.0f, 0.0f, 0.0f);
