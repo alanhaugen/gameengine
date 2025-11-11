@@ -124,7 +124,8 @@ void FilesWindow<T>::dropEvent(QDropEvent *event)
         if constexpr (std::is_same<T,gea::Mesh>::value){ //if window is mesh window
             if (path.endsWith(".obj")){
                 if(!mAssetsPtr->mFilesNamesSet.contains(name)){ //file has not been imported allready
-                mAssetsPtr->mFilesNamesSet.insert(name);
+                int value= mAssetsPtr->mFilesNamesSet.size();
+                mAssetsPtr->mFilesNamesSet.insert(name,value);
                 mAssetsPtr->mFilesNamesStack.push_back(path);
                 int i=mAssetsPtr->mFilesNamesSet.size();
                 //gea::Mesh* newMesh=new gea::Mesh(path);
@@ -147,9 +148,11 @@ void FilesWindow<T>::dropEvent(QDropEvent *event)
 
         //-----------add texture----------------------
         else if constexpr (std::is_same<T,gea::Texture>::value){ //if window is textures window
+
             if(path.endsWith(".png") || path.endsWith(".jpg")){ //if correct type,check if already has been imported
                 if(!mAssetsPtr->mFilesNamesSet.contains(name)){
-                    mAssetsPtr->mFilesNamesSet.insert(name);
+                    int value= mAssetsPtr->mFilesNamesSet.size();
+                    mAssetsPtr->mFilesNamesSet.insert(name,value);
                     int i=mAssetsPtr->mFilesNamesSet.size();
                     //gea::Texture* newTexture=new gea::Texture(path);
                     T* newTexture=new T(path);

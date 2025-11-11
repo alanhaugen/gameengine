@@ -4,6 +4,7 @@
 #include <vector>
 #include <QString>
 #include <QSet>
+#include <QHash>
 #include <QStack>
 #include "QDirIterator"
 #include "AssetManager/Mesh.h"
@@ -21,7 +22,8 @@ public:
     //std::vector<gea::Texture*> mTextures;
     //std::vector<wave_t> mSounds;
 
-    QSet<QString> mFilesNamesSet;
+    //QSet<QString> mFilesNamesSet;
+    QHash<QString, int> mFilesNamesSet;
     QStack<QString> mFilesNamesStack;
 
     void addNewAsset(T* newAsset);
@@ -79,12 +81,13 @@ void AssetManager<T>::importAssets(QString folder, QString object_type, QString 
         return oldFile.lastModified()>newestFile.lastModified();
     });
 
-
+    int value=0;
     for(QFileInfo& it: files){
         QString path=it.filePath();
         QString name=it.baseName();
         qDebug()<<"files: \n"<< it.lastModified()<<" \n"; //<<fileInfo.absoluteFilePath()<<"\n";
-        mFilesNamesSet.insert(name); //for future check if mesh has been imported in the engine before
+        mFilesNamesSet.insert(name, value); //for future check if mesh has been imported in the engine before
+        value+=1;
         mFilesNamesStack.push_back(path); //for loading in all meshes when we start engine
     }
 

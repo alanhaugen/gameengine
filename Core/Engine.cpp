@@ -11,6 +11,8 @@ Engine::Engine(Renderer* renderer, MainWindow *mainWindow) : mVulkanRenderer{ren
 {
     mMeshManager=new AssetManager<gea::Mesh>();
     mMeshManager->importObjects();
+    qDebug()<<"suzanne----------"<<mMeshManager->mFilesNamesSet.value("suzanne")<<"\n";
+    qDebug()<<"cube----------"<<mMeshManager->mFilesNamesSet.value("cube");
     //should make 2 objects "visible"
     // mMeshManager->mAssets.at(4)->isUsed=true;
     // mMeshManager->mAssets.at(1)->isUsed=true;
