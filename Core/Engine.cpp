@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <chrono>
 #include <qlogging.h>
+#include <QMessageBox>
 
 namespace gea
 {
@@ -49,13 +50,27 @@ void Engine::sceneSetup()
     Entity tempEntity;
 	tempEntity.mName = "VikingRoom";
 
+    if (!mMeshManager->mFilesNamesSet.contains("viking_room"))
+    {
+        QString msg = "Could not load model viking_room";
+        QMessageBox::critical(nullptr, "Error", msg);
+        return;
+    }
+    if (!mTextureManager->mFilesNamesSet.contains("viking_room"))
+    {
+        QString msg = "Could not load texture viking_room";
+        QMessageBox::critical(nullptr, "Error", msg);
+        return;
+    }
+
+    int meshIndex = mMeshManager->mFilesNamesSet.value("viking_room");
+    int textureIndex = mTextureManager->mFilesNamesSet.value("viking_room");
+
     // first and second parameter is the mesh and texture index!
-    RenderComponent tempRenderComp(mMeshManager->mFilesNamesSet.value("viking_room"),
-                                   mTextureManager->mFilesNamesSet.value("viking_room"),
-                                   tempEntity.mEntityID);
+    RenderComponent tempRenderComp(meshIndex, textureIndex, tempEntity.mEntityID);
     TransformComponent tempTransformComp(tempEntity.mEntityID);
 	tempTransformComp.mRotation = glm::vec3(-90.0f, 0.0f, -100.0f);
-    tempTransformComp.mPosition = glm::vec3(2.0f, 0.0f, 0.0f);
+    tempTransformComp.mPosition = glm::vec3(0.0f, 0.0f, 0.0f);
 
     // Push components to vectors:
     mDynamicRenderComponents.push_back(tempRenderComp);
@@ -69,41 +84,41 @@ void Engine::sceneSetup()
     mEntities.push_back(tempEntity);
 
 	//2nd entity:
-	tempEntity = Entity();
-    tempEntity.mName = "Box";
-    tempRenderComp = RenderComponent(1, 1, tempEntity.mEntityID);
-    tempTransformComp = TransformComponent(tempEntity.mEntityID);
-    tempTransformComp.mRotation = glm::vec3(45.0f, 0.0f, 0.f);
-    tempTransformComp.mPosition = glm::vec3(0.0f, 0.0f, 0.0f);
+    // tempEntity = Entity();
+ //    tempEntity.mName = "Box";
+ //    tempRenderComp = RenderComponent(1, 1, tempEntity.mEntityID);
+ //    tempTransformComp = TransformComponent(tempEntity.mEntityID);
+ //    tempTransformComp.mRotation = glm::vec3(45.0f, 0.0f, 0.f);
+ //    tempTransformComp.mPosition = glm::vec3(0.0f, 0.0f, 0.0f);
 
-    // Push components to vectors:
-    mDynamicRenderComponents.push_back(tempRenderComp);
-    mTransformComponents.push_back(tempTransformComp);
+ //    // Push components to vectors:
+ //    mDynamicRenderComponents.push_back(tempRenderComp);
+ //    mTransformComponents.push_back(tempTransformComp);
 
-    // Update Entity 2:
-    tempEntity.mComponents.push_back(&mDynamicRenderComponents.back());
-    tempEntity.mComponents.push_back(&mTransformComponents.back());
+ //    // Update Entity 2:
+ //    tempEntity.mComponents.push_back(&mDynamicRenderComponents.back());
+ //    tempEntity.mComponents.push_back(&mTransformComponents.back());
 
-    // Push Entity 2
-    mEntities.push_back(tempEntity);
+ //    // Push Entity 2
+ //    mEntities.push_back(tempEntity);
 
-    //3rd entity:
-    tempEntity = Entity();
-    tempEntity.mName = "Suzanne";
-    tempRenderComp = RenderComponent(2, 0, tempEntity.mEntityID);
-    tempTransformComp = TransformComponent(tempEntity.mEntityID);
-    tempTransformComp.mPosition = glm::vec3(-2.0f, 0.0f, 0.0f);
+ //    //3rd entity:
+ //    tempEntity = Entity();
+ //    tempEntity.mName = "Suzanne";
+ //    tempRenderComp = RenderComponent(2, 0, tempEntity.mEntityID);
+ //    tempTransformComp = TransformComponent(tempEntity.mEntityID);
+ //    tempTransformComp.mPosition = glm::vec3(-2.0f, 0.0f, 0.0f);
 
-    // Push components to vectors:
-    mDynamicRenderComponents.push_back(tempRenderComp);
-    mTransformComponents.push_back(tempTransformComp);
+ //    // Push components to vectors:
+ //    mDynamicRenderComponents.push_back(tempRenderComp);
+ //    mTransformComponents.push_back(tempTransformComp);
 
-    // Update Entity 2:
-    tempEntity.mComponents.push_back(&mDynamicRenderComponents.back());
-    tempEntity.mComponents.push_back(&mTransformComponents.back());
+ //    // Update Entity 2:
+ //    tempEntity.mComponents.push_back(&mDynamicRenderComponents.back());
+ //    tempEntity.mComponents.push_back(&mTransformComponents.back());
 
-    // Push Entity 2
-    mEntities.push_back(tempEntity);
+ //    // Push Entity 2
+ //    mEntities.push_back(tempEntity);
 }
 
 void Engine::updateRenderSystem()
