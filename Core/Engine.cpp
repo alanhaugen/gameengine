@@ -13,6 +13,9 @@ Engine::Engine(Renderer* renderer, MainWindow *mainWindow) : mVulkanRenderer{ren
     // Set up Asset Managers for different assets:
     mMeshManager = new AssetManager<gea::Mesh>();
     mMeshManager->importObjects();
+    qDebug()<<"suzanne----------"<<mMeshManager->mFilesNamesSet.value("suzanne")<<"\n";
+    qDebug()<<"cube----------"<<mMeshManager->mFilesNamesSet.value("cube");
+ 
 
     mTextureManager = new AssetManager<gea::Texture>();
     mTextureManager->importObjects();

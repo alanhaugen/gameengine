@@ -126,21 +126,19 @@ void FilesWindow<T>::dropEvent(QDropEvent *event)
         QString name = QFileInfo(path).baseName();
         //looking up an element in QSet is faster than iterating over a stack
         //------------------------add mesh-------------------
-        if constexpr (std::is_same<T,gea::Mesh>::value)
-        { //if window is mesh window
-            if (path.endsWith(".obj"))
-            {
-                if(!mAssetsPtr->mFilesNamesSet.contains(name))
-                { //file has not been imported allready
-                    mAssetsPtr->mFilesNamesSet.insert(name);
-                    mAssetsPtr->mFilesNamesStack.push_back(path);
-                    int i=mAssetsPtr->mFilesNamesSet.size();
-                    //gea::Mesh* newMesh=new gea::Mesh(path);
-                    T* newMesh=new T(path);
-                    mAssetsPtr->addNewAsset(newMesh); //actually import a new object with its vertices&indices
-                    QPushButton* new_button = new QPushButton(name, mScrollingWidget);
-                    mDisplayAssets.push_back(new_button);
-                    mScrollingLayout->addWidget(new_button);
+        if constexpr (std::is_same<T,gea::Mesh>::value){ //if window is mesh window
+            if (path.endsWith(".obj")){
+                if(!mAssetsPtr->mFilesNamesSet.contains(name)){ //file has not been imported allready
+                int value= mAssetsPtr->mFilesNamesSet.size();
+                mAssetsPtr->mFilesNamesSet.insert(name,value);
+                mAssetsPtr->mFilesNamesStack.push_back(path);
+                int i=mAssetsPtr->mFilesNamesSet.size();
+                //gea::Mesh* newMesh=new gea::Mesh(path);
+                T* newMesh=new T(path);
+                mAssetsPtr->addNewAsset(newMesh); //actually import a new object with its vertices&indices
+                QPushButton* new_button=new QPushButton(name, mScrollingWidget);
+                mDisplayAssets.push_back(new_button);
+                mScrollingLayout->addWidget(new_button);
 
                     //connect buttons to the objects
                     connect(mDisplayAssets.back(), &QPushButton::released, this,[this, i]{ mHandleButton(i-1); });
@@ -160,13 +158,12 @@ void FilesWindow<T>::dropEvent(QDropEvent *event)
         }
 
         //-----------add texture----------------------
-        else if constexpr (std::is_same<T,gea::Texture>::value)
-        { //if window is textures window
-            if(path.endsWith(".png") || path.endsWith(".jpg"))
-            { //if correct type,check if already has been imported
-                if(!mAssetsPtr->mFilesNamesSet.contains(name))
-                {
-                    mAssetsPtr->mFilesNamesSet.insert(name);
+        else if constexpr (std::is_same<T,gea::Texture>::value){ //if window is textures window
+
+            if(path.endsWith(".png") || path.endsWith(".jpg")){ //if correct type,check if already has been imported
+                if(!mAssetsPtr->mFilesNamesSet.contains(name)){
+                    int value= mAssetsPtr->mFilesNamesSet.size();
+                    mAssetsPtr->mFilesNamesSet.insert(name,value);
                     int i=mAssetsPtr->mFilesNamesSet.size();
                     //gea::Texture* newTexture=new gea::Texture(path);
                     T* newTexture = new T(path);
