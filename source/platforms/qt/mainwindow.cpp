@@ -4,6 +4,7 @@
 #include "../../components/mesh.h"
 #include <QTimer>
 #include "../../components/gameobject.h"
+#include "../../components/AssetManager.h"
 #include <qinputdialog.h>
 #include "../../x-platform/locator.h"
 #include "../../modules/audio/openal/openalaudio.h"
@@ -61,6 +62,11 @@ MainWindow::MainWindow(QWidget *parent, const char* windowTitle, int windowWidth
 
     timer->start(8); // 120 Hz
 
+    //assetManager
+    mAssetManager = new AssetManager;
+
+
+
     //allow the spinBox go to negative numbers
     ui->PosXSpin->setMinimum(-990);
     ui->PosYSpin->setMinimum(-990);
@@ -94,7 +100,14 @@ MainWindow::MainWindow(QWidget *parent, const char* windowTitle, int windowWidth
 
 
 
+    //MeshAvailables
 
+    QStringList names = mAssetManager->GetMeshNames();
+    ui->Mesh_Combo->clear();
+    ui->Mesh_Combo->addItems(names);
+    qDebug() <<"Hereitis" << ui->Mesh_Combo->count() << "/n";
+
+    connect(ui->Mesh_Combo, &QComboBox::currentTextChanged, this, &MainWindow::AvailableMeshes);
 
     ui->Inspectorwidget->setHidden(true);
 
@@ -370,7 +383,6 @@ void MainWindow::AddVikingRoom()
     qDebug() << "Connected VikingRoom action";
     GameObject* gameobj = new GameObject("VikingRoom");
 
-    gameobj-> UpdateTransform(glm::vec3(0.0,0.0,0.0),glm::vec3(0.0, 0.0, 0.0),glm::vec3(1.0, 1.0, 1.0));
     Mesh* mesh = new Mesh("Assets/Models/viking_room.obj");
 
     gameobj->AddComponent(mesh);
@@ -420,6 +432,13 @@ void MainWindow::AddSphere()
     MainObj->setExpanded(true);
     //scene->components.push_back(new Mesh("Assets/Models/viking_room.obj", renderer, scene->editor));
     qDebug() << "Sphere";
+}
+
+void MainWindow::AvailableMeshes()
+{
+    ui->Mesh_Combo->clear();
+    QStringList meshNames = mAssetManager->GetMeshNames();
+    ui->Mesh_Combo->addItems(meshNames);
 }
 
 void MainWindow::PosObj(double)

@@ -61,6 +61,7 @@ add_executable(QtVulkan
     source/x-platform/input.h
     source/x-platform/input.cpp
     source/modules/physics/aaphysics/aaphysics.h source/modules/physics/aaphysics/aaphysics.cpp
+    source/components/AssetManager.h source/components/AssetManager.cpp
 )
 
 #OpenAL

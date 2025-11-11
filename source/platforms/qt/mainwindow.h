@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <qtreewidget.h>
+#include "../../components/AssetManager.h"
 #include "../../modules/renderer/vulkan/vulkanrenderer.h"
 
 QT_BEGIN_NAMESPACE
@@ -65,8 +66,14 @@ private:
     void AddSphere();
 
 
+
+    void AvailableMeshes();
+
+
     void PosObj(double);
 
     QTimer* timer;
+
+    AssetManager* mAssetManager;
 };
 #endif // MAINWINDOW_H
