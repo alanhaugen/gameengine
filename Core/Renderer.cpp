@@ -125,6 +125,11 @@ void Renderer::initVulkan()
 
 void Renderer::cleanupSwapChain()
 {
+
+    for (size_t i = 0; i < swapChainImages.size(); i++) {
+        vkFreeDescriptorSets(device, descriptorPool, 1, &descriptorSets[i]);
+    }
+
     vkDestroyImageView(device, depthImageView, nullptr);
     vkDestroyImage(device, depthImage, nullptr);
     vkFreeMemory(device, depthImageMemory, nullptr);
@@ -1340,6 +1345,8 @@ void Renderer::createDescriptorPool()
     poolInfo.poolSizeCount = static_cast<uint32_t>(poolSizes.size());
     poolInfo.pPoolSizes = poolSizes.data();
     poolInfo.maxSets = MAX_TEXTURES + static_cast<uint32_t>(swapChainImages.size());
+    poolInfo.flags = VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT;
+
 
     if (vkCreateDescriptorPool(device, &poolInfo, nullptr, &descriptorPool) != VK_SUCCESS) {
         throw std::runtime_error("failed to create descriptor pool!");
