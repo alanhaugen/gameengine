@@ -43,7 +43,7 @@ private:
     std::chrono::time_point<std::chrono::steady_clock> lastTime;
 
     //right click the object in gameobjectWidget
-   void OnRightClickGameObjectWidget(const QPoint& ClickedOn);
+    void OnRightClickGameObjectWidget(const QPoint& ClickedOn);
 
     //for the Menuadd
     //add Objects to the scene and to the gameobject

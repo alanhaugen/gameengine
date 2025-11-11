@@ -16,8 +16,8 @@ set(RENDERER VulkanRenderer)
 if(DEFINED ENV{OPENAL_HOME})
     set(AUDIO OpenALAudio)
 else()
-    #set(AUDIO NullAudio)
-    set(AUDIO QtMultimediaAudio)
+    set(AUDIO NullAudio)
+    #set(AUDIO QtMultimediaAudio)
 endif()
 #set(SCRIPT LuaScript)
 set(SCRIPT NullScript)
@@ -145,7 +145,7 @@ if(MSVC)
     target_include_directories(Core PRIVATE
         "C:/VulkanSDK/1.4.321.1/Include"
     )
-    target_link_libraries(QtVulkan PRIVATE
+    target_link_libraries(Core PRIVATE
         Qt::Core
         Qt::Widgets
         Qt::Multimedia
