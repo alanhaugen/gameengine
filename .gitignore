@@ -42,6 +42,7 @@ Thumbs.db
 *.pro.user*
 *.qbs.user*
 CMakeLists.txt.user*
+.qtcreator/
 
 # xemacs temporary files
 *.flc
@@ -103,3 +104,10 @@ CMakeUserPresets.json
 *.ttf
 
 glm/
+/Assets/*/*.txt
+/html
+*.blend
+*.glb
+*.exr
+*.docx
+Assets/HeightMaps/README.md

@@ -41,7 +41,7 @@ int main(int argc, char *argv[])
     QLoggingCategory::setFilterRules(QStringLiteral("qt.vulkan=true"));
 
     MainWindow mainWindow = MainWindow(nullptr);
-    mainWindow.move(200, 100);
+    mainWindow.move(200, 0);//100
     mainWindow.show();
     mainWindow.start();
 

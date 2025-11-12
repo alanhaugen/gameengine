@@ -3,21 +3,24 @@
 #include "Core/Renderer.h"
 
 void gea::RenderSystem::initialize(std::vector<gea::RenderComponent> staticComponents, std::vector<gea::TransformComponent> staticTransformComponents,
-                                   std::vector<gea::Mesh> meshes, std::vector<gea::Texture> textures)
+                                   std::vector<gea::Mesh*> meshes, std::vector<gea::Texture*> textures)
 {
-	mRenderer->initComponents(staticComponents, staticTransformComponents, meshes, textures);
+    //mRenderer->initComponents(staticComponents, staticTransformComponents, meshes, textures);
 	mRenderer->initVulkan();
 }
 
-void gea::RenderSystem::update(std::vector<gea::RenderComponent> dynamicComponents, std::vector<gea::TransformComponent> dynamicTransformComponents)
+void gea::RenderSystem::update(std::vector<gea::TransformComponent> dynamicTransformComponents)
 {
-	mRenderer->updateCompoments(dynamicComponents, dynamicTransformComponents);
+    // mRenderer->updateCompoments(mRenderer->mDynamicRenderComponents, dynamicTransformComponents);
     mRenderer->drawFrame();         //draw one frame
     mRenderer->requestUpdate();     //ask for the next fram to be drawn - will call engine->update()
 }
 
-void gea::RenderSystem::update(float) {
+void gea::RenderSystem::update(float deltaTime)
+{
     for (const auto& tr : mEngine->mTransformComponents)
+    {
         qDebug() << "Entity " << tr.mEntityID << " Position:("
                   << tr.mPosition.x << ", " << tr.mPosition.y << ", " << tr.mPosition.z << ")\n";
+    }
 }

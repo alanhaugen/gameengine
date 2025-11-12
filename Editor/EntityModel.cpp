@@ -1,26 +1,25 @@
 #include "EntityModel.h"
 
 
-gea::EntityModel::EntityModel(EntityContainer *entityData, QObject *parent) : QAbstractListModel(parent), mContainer(entityData)
+gea::EntityModel::EntityModel(Engine *owner, QObject *parent) : QAbstractListModel(parent), mContainer(&owner->mEntities)
 {
-    connect(mContainer, &EntityContainer::itemAppended, this, &EntityModel::handleNewEntity);
+    connect(owner, &Engine::itemAppended, this, &EntityModel::handleNewEntity);
 }
 
 int gea::EntityModel::rowCount(const QModelIndex &parent) const
 {
-    if (parent.isValid()) return 0;
-    return mContainer->count();
+    if (parent.isValid())
+            return 0;
+    return mContainer->size();
 }
 
 QVariant gea::EntityModel::data(const QModelIndex &index, int role) const
 {
-    if (!index.isValid() || index.row() >= mContainer->count())
+    if (!index.isValid() || index.row() >= mContainer->size())
         return QVariant();
 
-    if (role == Qt::DisplayRole) {
-        //had to explicitly return a QVariant on Mac - mEntityID is size_t
-        return QVariant::fromValue(mContainer->getItem(index.row()).mEntityID);
-    }
+    if (role == Qt::DisplayRole)
+        return QVariant::fromValue(mContainer->at(index.row()).mName);
 
     return QVariant();
 }

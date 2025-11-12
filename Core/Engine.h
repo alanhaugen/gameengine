@@ -4,6 +4,7 @@
 #include "ECS/Entity.h"
 #include "ECS/Components.h"
 #include "ECS/RenderSystem.h"
+#include "AssetManager/AssetManager.h"
 #include "AssetManager/Mesh.h"
 #include "AssetManager/Texture.h"
 #include "Editor/MainWindow.h"
@@ -12,8 +13,9 @@
 namespace gea
 {
 
-class Engine
+class Engine : public QObject
 {
+    Q_OBJECT
 public:
     Engine(Renderer* renderer, MainWindow* mainWindow);
 
@@ -27,8 +29,15 @@ public:
     void updateRenderSystem();
     void setupRenderSystem();
 
+    // This is where the Entities for the scene is added
+    // Should be read from a file for more flexibility
+    void sceneSetup();
+
+    // Rendering
     gea::RenderSystem* mRenderSystem{nullptr};
     Renderer* mVulkanRenderer{nullptr};
+
+    class ScriptingSystem* mScriptSystem{nullptr};
 
     MainWindow* mMainWindow{nullptr};
 
@@ -36,22 +45,17 @@ public:
     Entity* createEntity();
     void destroyEntity(std::size_t entityID);
 
-    // to add component
-    TransformComponent* addTransform(Entity* entity);
-    MovementComponent* addMovement(Entity* entity);
-    HealthComponent* addHealth(Entity* entity);
-    TowerComponent* addTower(Entity* entity);
-    EnemyComponent* addEnemy(Entity* entity);
-    ProjectileComponent* addProjectile(Entity* entity);
+    RenderComponent* createRenderComponent(std::string, std::string, int);
 
-    // It sort all component vectors by EntityID
+    // Sort all component vectors by EntityID
+    // This can maybe make the systems run faster?
     void sortComponents();
 
-    //Vector that holds all the Entities in our game:
-    std::vector<Entity> mEntityVector;
+    // Vector that holds all the Entities in our game:
+    std::vector<Entity> mEntities;
 
-    //Vectors that holds all the Components
-    //should sorted by EntityID for DOD performance
+    // Vectors that holds all the Components
+    // should sorted by EntityID for DOD performance?
     std::vector<TransformComponent> mTransformComponents;
     std::vector<MovementComponent> mMovementComponents;
     std::vector<HealthComponent> mHealthComponents;
@@ -64,21 +68,32 @@ public:
     std::vector<SoundComponent> mSoundComponents;
 
     //RenderTesting
-    std::vector<gea::RenderComponent> mRenderComponents;
-    std::vector<gea::RenderComponent> mStaticRenderComponents;
+    std::vector<RenderComponent> mDynamicRenderComponents;
+    std::vector<RenderComponent> mStaticRenderComponents;    //interesting for physics and batch rendering purposes
+
     //this is done for testing sake. in the real ecs there would only be one vector of transform components
     std::vector<gea::TransformComponent> mStaticTransformComponents;
 
-    //These are the ACTUAL meshes and Textures, and is used by Entities from a
-    //RenderComponent
-    std::vector<Mesh> mMeshs;
-    std::vector<Texture> mTextures;
+    AssetManager<gea::Mesh>* mMeshManager{nullptr}; //vector<Mesh*>*
+    AssetManager<gea::Texture>* mTextureManager{nullptr};
+    //AssetManager<gea::Sound>* mSoundManager{nullptr};
 
     //The plan is that the systems can use these vectors containing all components of the different types
     //The components should be sorted by EntityID when added to the vectors.
     //A Render system then might need many vectors, but a Move system might only need one or two.
     //Each system just access the ones they need, and iterates through them and do their job.
     //Since the components are sorted by EntityID, the iteration should go well and we should get DOD benefits.
+
+    // to add component
+    TransformComponent* addTransform(Entity* entity);
+    MovementComponent* addMovement(Entity* entity);
+    // HealthComponent* addHealth(Entity* entity);
+    // TowerComponent* addTower(Entity* entity);
+    // EnemyComponent* addEnemy(Entity* entity);
+    // ProjectileComponent* addProjectile(Entity* entity);
+
+signals:
+    void itemAppended(int newIndex);
 };
 
 } //namespace gea

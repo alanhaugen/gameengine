@@ -1,6 +1,5 @@
 #include "MainWindow.h"
 #include "Core/Engine.h"
-#include "EntityContainer.h"
 #include "EntityModel.h"
 #include "Core/Renderer.h"
 #include <QKeyEvent>
@@ -13,9 +12,10 @@
 #include <QDebug>
 #include <QPointer>
 #include <QPlainTextEdit>
-#include "ECS/ScriptingSystem.h"
+#include <QMessageBox>
 #include "ECS/SoundSystem.h"
 #include "ECS/RenderSystem.h"
+#include "Editor/OutlinerDock.h"
 #include "ui_MainWindow.h"
 #include <QKeyEvent>
 
@@ -23,8 +23,7 @@
 //Extern declaration of logger variable from main
 extern QPointer<QPlainTextEdit> messageLogWidget;
 
-MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
-    , mUi(new Ui::MainWindow)
+MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent), mUi(new Ui::MainWindow)
 {
     mUi->setupUi(this);
 
@@ -33,7 +32,7 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
     messageLogWidget->setReadOnly(true);
 
     //MainWindow size:
-    resize(1300, 940);
+    resize(1300, 940); //(1000, 740);
 
     setWindowTitle("INNgine");  //Main app title
 
@@ -42,69 +41,60 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
     mVulkanWindow->mMainWindow = this;      //VulkanWindow can now refer to this instance
 
     //Have to set the size of the Vulkan window here, otherwise it can not set up the swapchain correctly
-    mVulkanWindow->setWidth(1100);
+    mVulkanWindow->setWidth(700);//1100
     mVulkanWindow->setHeight(700);
 
     //Do we have to make the Engine here to let that make the RenderSystem - to make the VulkanRenderer ?
     mEngine = new gea::Engine(mVulkanWindow, this);
-    mVulkanWindow->mEngine = mEngine;   //tell the renderer of the engine
 
     // Wrap VulkanRenderer (QWindow) into a QWidget
     QWidget* mVulkanWidget = QWidget::createWindowContainer(mVulkanWindow, this);
-    mVulkanWidget->setMinimumSize(1100, 700);
+    mVulkanWidget->setMinimumSize(400, 400); //
 
     // Put the mVulkanWidget into the VulkanLayout spot, made in the MainWindow.ui file
     mUi->VulkanLayout->addWidget(mVulkanWidget);
 
-    mEntityContainer = new gea::EntityContainer(this);
-    mEntityModel = new gea::EntityModel(mEntityContainer, this);
 
-    //Testing the layout - showing only number for now
-    mEntityContainer->appendItem(gea::Entity());
+	// Show the entity outliner dock
+    // This could probably be a local variable and not a class variable?
+    mEntityModel = new gea::EntityModel(mEngine, this);
 
-    mUi->entityList->setModel(mEntityModel);
+    // Making it a dock widget with the Entity list:
+    gea::OutlinerDock* outlinerDock = new gea::OutlinerDock(mEntityModel,this);
+
+    //Testing the layout
+    // mEngine->createEntity();
+    // mEngine->mEntities.at(0).mName = "Primus";
+    // mEngine->createEntity();
+    // mEngine->mEntities.at(1).mName = "Octigon";
+    // mEngine->createEntity();
+    // mEngine->mEntities.at(2).mName = "Tertius";
+
+	// Add the outliner dock to the main window right side
+    addDockWidget(Qt::RightDockWidgetArea, outlinerDock);
+
+    //mUi->entityList->setModel(mEntityModel);
 
     //sets the keyboard input focus to the MainWindow when program starts
     this->setFocus();
 
     //-------------------------------------------file system widget-------------------------------------------------------
-    // need to get asset manager from renderer itself, since manager that holds assets is created there
-    //AssetManager<ObjAsset>* objManager=new AssetManager<ObjAsset>();
+    // new: need to create asset manager in the "engine" and call it here
 
-    if (mVulkanWindow->filesImported==true)
-    {
-        //FilesWindow<ObjAsset> filesWidget(mVulkanWindow->objManager);
-        mFilesWidget= new FilesWindow(mVulkanWindow->objManager);
-    }
+    mFilesWidget= new FilesWindow<gea::Mesh>(mEngine->mMeshManager, "Meshes");
+    addDockWidget(Qt::BottomDockWidgetArea,mFilesWidget); //add files window as a docker at the bottom
+    //docker can float by itself and be moved out or in main window
+    mFilesWidget->setFeatures(QDockWidget::DockWidgetFloatable | QDockWidget::DockWidgetMovable);
 
-    //////////////model view test/////////
-    // QWidget window;
-    // QHBoxLayout* layout=new QHBoxLayout(&*vulkanWidget);
+    mTextureWidget= new FilesWindow<gea::Texture>(mEngine->mTextureManager, "Textures");
+    addDockWidget(Qt::BottomDockWidgetArea,mTextureWidget); //add files window as a docker at the bottom
+    //docker can float by itself and be moved out or in main window
+    mTextureWidget->setFeatures(QDockWidget::DockWidgetFloatable | QDockWidget::DockWidgetMovable);
 
-    // QFileSystemModel* model= new QFileSystemModel;
-    // model->setRootPath(QDir::homePath());
-    // model ->setNameFilters({"*.obj","*.png","*.jpg"});
-    // model->setNameFilterDisables(false);
-    // QModelIndex tree_root= model->index(QDir::homePath());
-
-    // QTreeView* tree=new QTreeView;
-    // tree->setModel(model);
-    // tree->setRootIndex(tree_root);
-
-    // //preview
-
-    // displayWidget* displayIcons= new displayWidget;
-    // //
-
-    // layout->addWidget(tree);
-    // layout->addWidget(displayIcons);
-
-    // QObject::connect(tree,&QTreeView::clicked,[&](const QModelIndex &index) {
-    //     QString path=model->filePath(index);
-    //     displayIcons->previewFile(path);
-    // });
-    // window.resize(1000,200);
-    // window.show();
+    // Enable tabbed docks and make the texture dock a tab of the files dock
+    setDockOptions(dockOptions() | QMainWindow::AllowTabbedDocks);
+    tabifyDockWidget(mFilesWidget, mTextureWidget); // mTextureWidget becomes a tab in the same area
+    mFilesWidget->raise(); // show the Files tab initially
 
     mCamera = &(mVulkanWindow->mCamera);
 
@@ -113,9 +103,10 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
     testSound->setMainWindow(this);
     // testSound->playSound("Test Drive.mp3");
 
-    gea::ScriptingSystem* testScript = new gea::ScriptingSystem(this, mEngine);
+    //gea::ScriptingSystem* testScript = new gea::ScriptingSystem(this, mEngine);
 
     //statusBar()->showMessage(" put something cool here! ");
+
 }
 
 MainWindow::~MainWindow()
@@ -133,12 +124,6 @@ void MainWindow::setStatusBarMessage(const char* message)
 {
     statusBar()->showMessage(message);
 }
-
-// void MainWindow::AddToolbar(const char* name, const char* action)
-// {
-//     QToolBar* toolbar = addToolBar(QString(name));
-//     toolbar->addAction(QString(action));
-// }
 
 void MainWindow::start()
 {
@@ -277,3 +262,23 @@ void MainWindow::handleInput()
             mCamera->mCameraMovement.y += mCameraSpeed; //up
     }
 }
+
+void MainWindow::on_action_Quit_triggered()
+{
+    QApplication::quit();
+}
+
+
+void MainWindow::on_actionGeneral_info_triggered()
+{
+    QString msg
+    {   "\
+        Esc Quits the application. \n\n\
+        You can drag appropriate files into the Mesh and Texture tabs.\n\n\
+        Use RMB and use mouse and WASD QE(down/up) to move the camera.\n\
+        "
+    };
+
+     QMessageBox::information (nullptr, "Help", msg);
+}
+

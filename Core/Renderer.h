@@ -6,7 +6,7 @@
 #include <string>
 #include <vector>
 #include "Editor/MainWindow.h"
-#include "QDirIterator"
+//#include "QDirIterator"
 #include "AssetManager/AssetManager.h"
 #include "AssetManager/Texture.h"
 #include "AssetManager/Mesh.h"
@@ -18,7 +18,6 @@
 struct SwapChainSupportDetails;
 struct QueueFamilyIndices;
 
-
 class Renderer : public QWindow
 {
     Q_OBJECT
@@ -27,13 +26,18 @@ public:
     ~Renderer();
 
     void initVulkan();
-    ObjAsset* obj_asset{nullptr};
-    AssetManager<ObjAsset>* objManager=new AssetManager<ObjAsset>();
-    bool filesImported=false;
+    // ObjAsset* obj_asset{nullptr};
+    // AssetManager<ObjAsset>* objManager=new AssetManager<ObjAsset>();
+    // bool filesImported=false;
     void drawFrame();
-    void initComponents(std::vector<gea::RenderComponent> staticComponents, std::vector<gea::TransformComponent> staticTransformComponents,
-                        std::vector<gea::Mesh> meshes, std::vector<gea::Texture> textures);
-    void updateCompoments(std::vector<gea::RenderComponent> renderComponents, std::vector<gea::TransformComponent> transformComponents);
+    //void initComponents(std::vector<gea::RenderComponent> staticComponents, std::vector<gea::TransformComponent> staticTransformComponents,
+                        //std::vector<gea::Mesh*> meshes, std::vector<gea::Texture*> textures);
+
+    // void updateCompoments(std::vector<gea::RenderComponent> renderComponents, std::vector<gea::TransformComponent> transformComponents);
+
+    // std::vector<gea::RenderComponent> mRenderComponents;
+    // std::vector<gea::RenderComponent> mDynamicRenderComponents;
+    // std::vector<gea::RenderComponent> mStaticRenderComponents;
 
     gea::Engine* mEngine{nullptr};
     Camera mCamera; //probably should be a pointer to this
@@ -83,6 +87,7 @@ private:
 
     VkRenderPass renderPass;
     VkDescriptorSetLayout descriptorSetLayout;
+    VkDescriptorSetLayout textureSetLayout;
     VkPipelineLayout pipelineLayout;
     VkPipeline graphicsPipeline;
 
@@ -120,13 +125,13 @@ private:
     VkBuffer indexBuffer;
     VkDeviceMemory indexBufferMemory;
     //QSet<QString> filesSet=objManager->filesNamesSet;
-    std::vector<gea::Mesh> mMeshes;
-    std::vector<gea::Texture> mTextures;
+    //std::vector<gea::Mesh*> mMeshes;
+    //std::vector<gea::Texture*> mTextures;
     //this is done for testing sake. in the real ecs there would only be one vector of transform components
     std::vector<gea::TransformComponent> mDynamicTransformComponents;
     std::vector<gea::TransformComponent> mStaticTransformComponents;
-    std::vector<gea::RenderComponent> mDynamicRenderComponents;
-    std::vector<gea::RenderComponent> mStaticRenderComponents;
+
+
 
     // void initWindow();
 
@@ -155,7 +160,7 @@ private:
     VkFormat findSupportedFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features);
     VkFormat findDepthFormat();
     bool hasStencilComponent(VkFormat format);
-    void createTextureImage(gea::Texture* texture);
+    void createTextureImageResource(gea::Texture* texture);
     void generateMipmaps(VkImage image, VkFormat imageFormat, int32_t texWidth, int32_t texHeight, uint32_t mipLevels);
     VkSampleCountFlagBits getMaxUsableSampleCount();
     void createTextureImageView(gea::Texture* texture);
@@ -166,15 +171,15 @@ private:
                      VkImage& image, VkDeviceMemory& imageMemory);
     void transitionImageLayout(VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout, uint32_t mipLevels);
     void copyBufferToImage(VkBuffer buffer, VkImage image, uint32_t width, uint32_t height);
-    void loadModel(QString MODEL_PATH);
-    void importObjects();;
-    void createVertexBuffer();
-    void createIndexBuffer();
+    //void loadModel(QString MODEL_PATH);
+    //void importObjects();;
+    // void createVertexBuffer();
+    // void createIndexBuffer();
     void createVertexBuffer(gea::Mesh* mesh);
     void createIndexBuffer(gea::Mesh* mesh);
     void createUniformBuffers();
     void createDescriptorPool();
-    void createDescriptorSets(gea::Texture texture);
+    void createDescriptorSets(gea::Texture &texture);
     void createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory);
     VkCommandBuffer beginSingleTimeCommands();
     void endSingleTimeCommands(VkCommandBuffer commandBuffer);
@@ -195,6 +200,8 @@ private:
     bool checkValidationLayerSupport();
     static std::vector<char> readFile(const std::string& filename);
     static VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity, VkDebugUtilsMessageTypeFlagsEXT messageType, const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData, void* pUserData);
+    VkDescriptorSet createTextureDescriptor(gea::Texture &);
+    void RecreateTextureDescriptors();
 };
 
 

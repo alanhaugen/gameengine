@@ -10,27 +10,28 @@ namespace gea {
 
     Entity::~Entity()
     {
-        //should probably clean up the components this entity has.
+        // Should probably clean up the components this entity has.
+        // Since the components are stored in vectors in the Engine class, it needs to be done there
     }
 
-    bool Entity::hasComponent(ComponentTypes type) const
+    bool Entity::hasComponent(ComponentTypes::Components type) const
     {
         for (const auto& comp : mComponents)
         {
-            if (comp.mComponentType == type)
+            if (comp->mComponentType == type)
                 return true;
         }
         return false;
     }
 
-    short Entity::getComponentIndex(ComponentTypes type) const
-    {
-        for (const auto& comp : mComponents)
-        {
-            if (comp.mComponentType == type)
-                return comp.mComponentIndex;
-        }
-        return -1;
-    }
+    // short Entity::getComponentIndex(ComponentTypes::Components type) const
+    // {
+    //     for (const auto& comp : mComponents)
+    //     {
+    //         if (comp.mComponentType == type)
+    //             return comp.mComponentIndex;
+    //     }
+    //     return -1;
+    // }
 
 } // namespace gea

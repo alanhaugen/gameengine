@@ -1,125 +1,136 @@
 #include "Engine.h"
 #include "Core/Renderer.h"
+#include "ECS/ScriptingSystem.h"
 #include <algorithm>
 #include <chrono>
 #include <qlogging.h>
+#include <QMessageBox>
 
 namespace gea
 {
 
 Engine::Engine(Renderer* renderer, MainWindow *mainWindow) : mVulkanRenderer{renderer}, mMainWindow{mainWindow}
 {
-    mMeshs.push_back(gea::Mesh());
-    mTextures.push_back(gea::Texture());
+    // Set up Asset Managers for different assets:
+    mMeshManager = new AssetManager<gea::Mesh>();
+    mMeshManager->importObjects();
+    qDebug()<<"suzanne----------"<<mMeshManager->mFilesNamesSet.value("suzanne")<<"\n";
+    qDebug()<<"cube----------"<<mMeshManager->mFilesNamesSet.value("cube");
+ 
 
-    mRenderComponents.push_back(gea::RenderComponent{0, 0, 0});
-    gea::TransformComponent t1 = gea::TransformComponent(0);
-    t1.mPosition = glm::vec3(1.0f, 0.0f, 0.0f);
-    mTransformComponents.push_back(t1);
+    mTextureManager = new AssetManager<gea::Texture>();
+    mTextureManager->importObjects();
 
-    mStaticRenderComponents.push_back(gea::RenderComponent{0, 0, 1});
-    gea::TransformComponent t2 = gea::TransformComponent(1);
-    t2.mPosition = glm::vec3(-1.0f, 0.0f, 0.0f);
-    mStaticTransformComponents.push_back(t2);
+    // and something like this for sound files:
+    //mSoundFileManager=new AssetManager<gea::Sound>();
+    //mSoundFileManager->importObjects();
 
+
+    // Set up different systems:
     setupRenderSystem();
-    //mVulkanWindow->initVulkan();
-    //updateRenderSystem();
+    mScriptSystem = new ScriptingSystem(mainWindow, this);
+
+    // Set up the scene to be rendered:
+    sceneSetup();
 }
 
 void Engine::setupRenderSystem()
 {
+    mVulkanRenderer->mEngine = this; // must be done before the renderSystem is setup
     mRenderSystem = new gea::RenderSystem(this, mVulkanRenderer);
-    mRenderSystem->initialize(mStaticRenderComponents, mStaticTransformComponents, mMeshs, mTextures);
+    mRenderSystem->initialize(mStaticRenderComponents, mStaticTransformComponents, mMeshManager->mAssets, mTextureManager->mAssets);
+}
+
+void Engine::sceneSetup()
+{
+	// OEF: This is pretty crap at the moment. Way to hardcoded.
+	// Would be nice if I could ask the AssetManagers for meshes and textures by name
+    // 
+    //Make entities with at least MeshComponent and TransformComponent
+    Entity tempEntity;
+	tempEntity.mName = "VikingRoom";
+
+    if (!mMeshManager->mFilesNamesSet.contains("viking_room"))
+    {
+        QString msg = "Could not load model viking_room";
+        QMessageBox::critical(nullptr, "Error", msg);
+        return;
+    }
+    if (!mTextureManager->mFilesNamesSet.contains("viking_room"))
+    {
+        QString msg = "Could not load texture viking_room";
+        QMessageBox::critical(nullptr, "Error", msg);
+        return;
+    }
+
+    int meshIndex = mMeshManager->mFilesNamesSet.value("viking_room");
+    int textureIndex = mTextureManager->mFilesNamesSet.value("viking_room");
+
+    // first and second parameter is the mesh and texture index!
+    RenderComponent tempRenderComp(meshIndex, textureIndex, tempEntity.mEntityID);
+    TransformComponent tempTransformComp(tempEntity.mEntityID);
+	tempTransformComp.mRotation = glm::vec3(-90.0f, 0.0f, -100.0f);
+    tempTransformComp.mPosition = glm::vec3(0.0f, 0.0f, 0.0f);
+
+    // Push components to vectors:
+    mDynamicRenderComponents.push_back(tempRenderComp);
+    mTransformComponents.push_back(tempTransformComp);
+
+    // Update Entity:
+    tempEntity.mComponents.push_back(&mDynamicRenderComponents.back());
+    tempEntity.mComponents.push_back(&mTransformComponents.back());
+
+    // Push Entity
+    mEntities.push_back(tempEntity);
+
+	//2nd entity:
+    // tempEntity = Entity();
+ //    tempEntity.mName = "Box";
+ //    tempRenderComp = RenderComponent(1, 1, tempEntity.mEntityID);
+ //    tempTransformComp = TransformComponent(tempEntity.mEntityID);
+ //    tempTransformComp.mRotation = glm::vec3(45.0f, 0.0f, 0.f);
+ //    tempTransformComp.mPosition = glm::vec3(0.0f, 0.0f, 0.0f);
+
+ //    // Push components to vectors:
+ //    mDynamicRenderComponents.push_back(tempRenderComp);
+ //    mTransformComponents.push_back(tempTransformComp);
+
+ //    // Update Entity 2:
+ //    tempEntity.mComponents.push_back(&mDynamicRenderComponents.back());
+ //    tempEntity.mComponents.push_back(&mTransformComponents.back());
+
+ //    // Push Entity 2
+ //    mEntities.push_back(tempEntity);
+
+ //    //3rd entity:
+ //    tempEntity = Entity();
+ //    tempEntity.mName = "Suzanne";
+ //    tempRenderComp = RenderComponent(2, 0, tempEntity.mEntityID);
+ //    tempTransformComp = TransformComponent(tempEntity.mEntityID);
+ //    tempTransformComp.mPosition = glm::vec3(-2.0f, 0.0f, 0.0f);
+
+ //    // Push components to vectors:
+ //    mDynamicRenderComponents.push_back(tempRenderComp);
+ //    mTransformComponents.push_back(tempTransformComp);
+
+ //    // Update Entity 2:
+ //    tempEntity.mComponents.push_back(&mDynamicRenderComponents.back());
+ //    tempEntity.mComponents.push_back(&mTransformComponents.back());
+
+ //    // Push Entity 2
+ //    mEntities.push_back(tempEntity);
 }
 
 void Engine::updateRenderSystem()
 {
-    mRenderSystem->update(mRenderComponents, mTransformComponents);
+    mRenderSystem->update(mTransformComponents);
 }
 
 Entity* Engine::createEntity()
 {
-    mEntityVector.emplace_back();
-    return &mEntityVector.back();
-}
-
-void Engine::destroyEntity(std::size_t entityID)
-{
-
-    mEntityVector.erase(std::remove_if(mEntityVector.begin(), mEntityVector.end(),
-                          [entityID](const Entity& e){ return e.mEntityID == entityID; }), mEntityVector.end());
-    mTransformComponents.erase(std::remove_if(mTransformComponents.begin(), mTransformComponents.end(),
-                          [entityID](const TransformComponent& c){ return c.mEntityID == entityID; }), mTransformComponents.end());
-    mMovementComponents.erase(std::remove_if(mMovementComponents.begin(), mMovementComponents.end(),
-                          [entityID](const MovementComponent& c){ return c.mEntityID == entityID; }), mMovementComponents.end());
-    mHealthComponents.erase(std::remove_if(mHealthComponents.begin(), mHealthComponents.end(),
-                          [entityID](const HealthComponent& c){ return c.mEntityID == entityID; }), mHealthComponents.end());
-    mTowerComponents.erase(std::remove_if(mTowerComponents.begin(), mTowerComponents.end(),
-                          [entityID](const TowerComponent& c){ return c.mEntityID == entityID; }), mTowerComponents.end());
-    mEnemyComponents.erase(std::remove_if(mEnemyComponents.begin(), mEnemyComponents.end(),
-                          [entityID](const EnemyComponent& c){ return c.mEntityID == entityID; }), mEnemyComponents.end());
-    mProjectileComponents.erase(std::remove_if(mProjectileComponents.begin(), mProjectileComponents.end(),
-                          [entityID](const ProjectileComponent& c){ return c.mEntityID == entityID; }), mProjectileComponents.end());
-}
-
-TransformComponent* Engine::addTransform(Entity* entity)
-{
-    TransformComponent t(entity->mEntityID);
-    mTransformComponents.push_back(t);
-    entity->mComponents.push_back({ComponentTypes::Transform, (short)(mTransformComponents.size()-1)});
-    sortComponents();
-    return &mTransformComponents.back();
-}
-
-MovementComponent* Engine::addMovement(Entity* entity)
-{
-    MovementComponent m;
-    m.mEntityID = entity->mEntityID;
-    mMovementComponents.push_back(m);
-    entity->mComponents.push_back({ComponentTypes::Movement, (short)(mMovementComponents.size()-1)});
-    sortComponents();
-    return &mMovementComponents.back();
-}
-
-HealthComponent* Engine::addHealth(Entity* entity)
-{
-    HealthComponent h;
-    h.mEntityID = entity->mEntityID;
-    mHealthComponents.push_back(h);
-    entity->mComponents.push_back({ComponentTypes::Health, (short)(mHealthComponents.size()-1)});
-    sortComponents();
-    return &mHealthComponents.back();
-}
-
-TowerComponent* Engine::addTower(Entity* entity)
-{
-    TowerComponent t;
-    t.mEntityID = entity->mEntityID;
-    mTowerComponents.push_back(t);
-    entity->mComponents.push_back({ComponentTypes::Tower, (short)(mTowerComponents.size()-1)});
-    sortComponents();
-    return &mTowerComponents.back();
-}
-
-EnemyComponent* Engine::addEnemy(Entity* entity)
-{
-    EnemyComponent e;
-    e.mEntityID = entity->mEntityID;
-    mEnemyComponents.push_back(e);
-    entity->mComponents.push_back({ComponentTypes::Enemy, (short)(mEnemyComponents.size()-1)});
-    sortComponents();
-    return &mEnemyComponents.back();
-}
-
-ProjectileComponent* Engine::addProjectile(Entity* entity)
-{
-    ProjectileComponent p;
-    p.mEntityID = entity->mEntityID;
-    mProjectileComponents.push_back(p);
-    entity->mComponents.push_back({ComponentTypes::Projectile, (short)(mProjectileComponents.size()-1)});
-    sortComponents();
-    return &mProjectileComponents.back();
+    mEntities.emplace_back();
+    emit itemAppended(mEntities.size() - 1);
+    return &mEntities.back();
 }
 
 void Engine::sortComponents()
@@ -137,7 +148,7 @@ void Engine::update()
     auto timeSinceLastFrame = clockNow - mClockLastFrame;
     float deltaTimeSeconds = std::chrono::duration_cast<std::chrono::duration<float>>(timeSinceLastFrame).count();
     mClockLastFrame = clockNow;
-    qDebug("DeltaTime %.6f", deltaTimeSeconds);    //prints float with 6 decimal places
+    //qDebug("DeltaTime %.6f", deltaTimeSeconds);    //prints float with 6 decimal places
 
 
     // ***** Update systems and other stuff each frame
@@ -155,5 +166,92 @@ void Engine::update()
     //   ProjectileSystem::Update()
     //   HealthSystem::Update()
 }
+
+void Engine::destroyEntity(std::size_t entityID)
+{
+    mEntities.erase(std::remove_if(mEntities.begin(), mEntities.end(),
+                                       [entityID](const Entity& e){ return e.mEntityID == entityID; }), mEntities.end());
+    mTransformComponents.erase(std::remove_if(mTransformComponents.begin(), mTransformComponents.end(),
+                                              [entityID](const TransformComponent& c){ return c.mEntityID == entityID; }), mTransformComponents.end());
+    mMovementComponents.erase(std::remove_if(mMovementComponents.begin(), mMovementComponents.end(),
+                                             [entityID](const MovementComponent& c){ return c.mEntityID == entityID; }), mMovementComponents.end());
+    mHealthComponents.erase(std::remove_if(mHealthComponents.begin(), mHealthComponents.end(),
+                                           [entityID](const HealthComponent& c){ return c.mEntityID == entityID; }), mHealthComponents.end());
+    mTowerComponents.erase(std::remove_if(mTowerComponents.begin(), mTowerComponents.end(),
+                                          [entityID](const TowerComponent& c){ return c.mEntityID == entityID; }), mTowerComponents.end());
+    mEnemyComponents.erase(std::remove_if(mEnemyComponents.begin(), mEnemyComponents.end(),
+                                          [entityID](const EnemyComponent& c){ return c.mEntityID == entityID; }), mEnemyComponents.end());
+    mProjectileComponents.erase(std::remove_if(mProjectileComponents.begin(), mProjectileComponents.end(),
+                                               [entityID](const ProjectileComponent& c){ return c.mEntityID == entityID; }), mProjectileComponents.end());
+}
+
+RenderComponent* Engine::createRenderComponent(std::string, std::string, int)
+{
+    RenderComponent tempComponent(1, 1, 1); // = gea::RenderComponent{static_cast<int>(mMeshes.size()-1), static_cast<int>(mTextures.size()-1), ID};
+    mDynamicRenderComponents.push_back(tempComponent);
+    return &mDynamicRenderComponents.back();
+}
+
+TransformComponent* Engine::addTransform(Entity* entity)
+{
+    TransformComponent tempTransform(entity->mEntityID);
+    mTransformComponents.push_back(tempTransform);
+    entity->mComponents.push_back(&tempTransform);  // entity only has pointers to its components
+
+    // sortComponents();    //commented out. Then the return statement will be valid. Sorting components at the end of all additions.
+
+    return &mTransformComponents.back();
+}
+
+// MovementComponent* Engine::addMovement(Entity* entity)
+// {
+//     MovementComponent tempMovement;
+//     tempMovement.mEntityID = entity->mEntityID;
+//     mMovementComponents.push_back(tempMovement);
+//     entity->mComponents.push_back({ComponentTypes::Movement, (short)(mMovementComponents.size()-1)});
+//     sortComponents();
+//     return &mMovementComponents.back();
+// }
+
+// HealthComponent* Engine::addHealth(Entity* entity)
+// {
+//     HealthComponent h;
+//     h.mEntityID = entity->mEntityID;
+//     mHealthComponents.push_back(h);
+//     entity->mComponents.push_back({ComponentTypes::Health, (short)(mHealthComponents.size()-1)});
+//     sortComponents();
+//     return &mHealthComponents.back();
+// }
+
+// TowerComponent* Engine::addTower(Entity* entity)
+// {
+//     TowerComponent t;
+//     t.mEntityID = entity->mEntityID;
+//     mTowerComponents.push_back(t);
+//     entity->mComponents.push_back({ComponentTypes::Tower, (short)(mTowerComponents.size()-1)});
+//     sortComponents();
+//     return &mTowerComponents.back();
+// }
+
+// EnemyComponent* Engine::addEnemy(Entity* entity)
+// {
+//     EnemyComponent e;
+//     e.mEntityID = entity->mEntityID;
+//     mEnemyComponents.push_back(e);
+//     entity->mComponents.push_back({ComponentTypes::Enemy, (short)(mEnemyComponents.size()-1)});
+//     sortComponents();
+//     return &mEnemyComponents.back();
+// }
+
+// ProjectileComponent* Engine::addProjectile(Entity* entity)
+// {
+//     ProjectileComponent p;
+//     p.mEntityID = entity->mEntityID;
+//     mProjectileComponents.push_back(p);
+//     entity->mComponents.push_back({ComponentTypes::Projectile, (short)(mProjectileComponents.size()-1)});
+//     sortComponents();
+//     return &mProjectileComponents.back();
+// }
+
 
 } //gea namespace

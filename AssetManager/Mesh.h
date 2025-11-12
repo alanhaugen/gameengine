@@ -1,24 +1,35 @@
 #ifndef MESH_H
 #define MESH_H
 
+
+// #define TINYOBJLOADER_IMPLEMENTATION
+#include "External/tiny_obj_loader.h"
+
+#include <QString>
+#include "Core/Vertex.h"
+#include <vulkan/vulkan_core.h>
 #include "Core/Utilities.h"
 
 namespace gea
 {
+
 class Mesh
 {
 public:
     Mesh();
-    void loadModel();
+    Mesh(QString MODEL_PATH);
 
-    std::string mModelPath = PATH + "Assets/Models/viking_room.obj";
+    Mesh* loadModel(QString MODEL_PATH);
     std::vector<Vertex> mVertices;
     std::vector<uint32_t> mIndices;
     VkBuffer mVertexBuffer;
     VkBuffer mIndexBuffer;
     VkDeviceMemory mVertexBufferMemory;
     VkDeviceMemory mIndexBufferMemory;
-protected:
+    QString mPath;
+
+    bool isUsed=false;
+
 };
 
 } // namespace gea

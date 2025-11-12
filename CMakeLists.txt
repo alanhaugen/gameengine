@@ -2,6 +2,10 @@ cmake_minimum_required(VERSION 3.19)
 project(QtVulkan LANGUAGES CXX)
 
 # Find Qt (Widgets implies Core)
+# #import QtMultimedia
+# target_include_directories(Sound PRIVATE $ENV{OPENAL_HOME}/include)
+# # Add lib directory
+# target_link_libraries(Sound PRIVATE $ENV{OPENAL_HOME}/libs/Win64/libOpenAL32.dll.a)
 find_package(Qt6 6.5 REQUIRED COMPONENTS Core Gui Widgets Multimedia)
 
 # Keep qt helper (optional but useful)
@@ -43,7 +47,7 @@ set(SOURCES
     Core/Input.h
     Core/Renderer.h Core/Renderer.cpp
     Core/Utilities.h
-    Core/Vertex.h
+    Core/Vertex.h Core/Vertex.cpp
     ECS/Components.h
     ECS/Entity.h ECS/Entity.cpp
     ECS/RenderSystem.h ECS/RenderSystem.cpp
@@ -53,10 +57,10 @@ set(SOURCES
     Editor/DisplayWidget.cpp
     Editor/DraggableButton.h Editor/DraggableButton.cpp
     Editor/FilesWindow.h Editor/FilesWindow.cpp
-    Editor/EntityContainer.h Editor/EntityContainer.cpp
     Editor/EntityModel.h Editor/EntityModel.cpp
     Editor/MainWindow.h Editor/MainWindow.cpp
     Editor/MainWindow.ui
+    Editor/OutlinerDock.h Editor/OutlinerDock.cpp
     main.cpp
 )
 

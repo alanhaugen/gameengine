@@ -1,5 +1,5 @@
 #version 450
-layout(binding = 0) uniform UniformBufferObject {
+layout(set = 0, binding = 0) uniform UniformBufferObject {
     mat4 model;
     mat4 view;
     mat4 proj;
@@ -30,5 +30,5 @@ void main()
     outTexCoords = aTexCoords;
     outLightPos = ubo.lightPos;
     outViewPos = ubo.viewPos;
-    gl_Position = ubo.proj * ubo.view * pc.model * vec4(aPos, 1.0);
+    gl_Position = ubo.proj * ubo.view * (pc.model * vec4(aPos, 1.0));
 }
