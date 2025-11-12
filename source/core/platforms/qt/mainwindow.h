@@ -7,6 +7,7 @@
 
 class Scene;
 class GameObject;
+#include "../../components/AssetManager.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -47,13 +48,20 @@ private:
 
     //for the Menuadd
     //add Objects to the scene and to the gameobject
-    void AddVikingRoom();
-    void AddCube();
-    void AddSphere();
+   void AddNewObj(const QString& ObjectName);
+    // void AddVikingRoom();
+    // void AddCube();
+    // void AddSphere();
+
+
+
+    void AvailableMeshes();
 
 
     void PosObj(double);
 
     QTimer* timer;
+
+    AssetManager* mAssetManager;
 };
 #endif // MAINWINDOW_H
