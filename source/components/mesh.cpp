@@ -104,8 +104,8 @@ void Mesh::UpdateTransform()
     Neutral  = glm::rotate(Neutral, glm::radians(mTransform.mRotation.x),  glm::vec3(1,0,0));
     Neutral  = glm::rotate(Neutral, glm::radians(mTransform.mRotation.y),  glm::vec3(0,1,0));
     Neutral = glm::rotate(Neutral, glm::radians(mTransform.mRotation.z),  glm::vec3(0,0,1));
-   //scale
-   Neutral = glm::scale(Neutral,mTransform.mScale);
+    //scale
+    Neutral = glm::scale(Neutral,mTransform.mScale);
 
     drawable->ubo.model = Neutral;
 

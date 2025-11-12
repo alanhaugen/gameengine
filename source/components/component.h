@@ -17,11 +17,10 @@ struct Transform
 class Component : public Locator
 {
 protected:
-     QString Name;
-  GameObject* gameobjOwner = nullptr;
+    QString Name;
+    GameObject* gameobjOwner = nullptr;
+
 public:
-
-
 
     Transform mTransform;
 
@@ -38,7 +37,6 @@ public:
     virtual void OnAttach(){};
 
     virtual void UpdateTransform(){};
-
 
 };
 

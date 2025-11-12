@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.19)
 project(QtVulkan LANGUAGES CXX)
 
-find_package(Qt6 6.5 REQUIRED COMPONENTS Core Widgets Multimedia)
+find_package(Qt6 6.10.0 REQUIRED COMPONENTS Core Widgets Multimedia)
 
 qt_standard_project_setup()
 
@@ -78,6 +78,7 @@ add_executable(QtVulkan
     source/demos/flappybird.cpp source/demos/flappybird.h
     source/demos/breakout.cpp source/demos/breakout.h
     source/towerdefense/game.cpp source/towerdefense/game.h source/towerdefense/gameover.cpp source/towerdefense/gameover.h source/towerdefense/mainmenu.cpp source/towerdefense/mainmenu.h source/towerdefense/victory.cpp source/towerdefense/victory.h
+    source/demos/physicstestscene.h source/demos/physicstestscene.cpp
 )
 #OpenAL
 if(DEFINED ENV{OPENAL_HOME})
@@ -87,7 +88,7 @@ if(DEFINED ENV{OPENAL_HOME})
 
     add_custom_command(TARGET QtVulkan POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_if_different
-            $ENV{OPENAL_HOME}/bin/Win64/OpenAL32.dll
+            $ENV{OPENAL_HOME}/bin/Win64/soft_oal.dll
             $<TARGET_FILE_DIR:QtVulkan>
     )
 endif()

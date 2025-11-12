@@ -14,6 +14,8 @@ private:
         BOUNCE
     };
 
+    Physics::Collider* collider;
+
 public:
     SphereCollider(float innR = 1.0f, int collisionResponse = NONE);
     void Update();

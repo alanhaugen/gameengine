@@ -31,7 +31,8 @@ Terrain::Terrain()
 {
     Init();
 
-    drawable = &renderer->CreateDrawable(vertices, indices, "shaders/color.vert.spv", "shaders/color.frag.spv");
+    drawable = &renderer->CreateDrawable(vertices, indices, "shaders/color.vert.spv",
+                                         "shaders/color.frag.spv");
 }
 
 Terrain::Terrain(const char *filePath,

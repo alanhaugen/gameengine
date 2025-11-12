@@ -3,6 +3,7 @@
 
 #include <glm/glm.hpp>
 #include "../physics.h"
+#include "vector"
 
 class AAPhysics : public Physics
 {
@@ -11,7 +12,10 @@ public:
 
     bool Init() override;
     void Update() override;
-    Collider CreateCollider(int response) override;
+
+    Collider* CreateCollider(int response) override;
+
+    std::vector<Collider*> sceneColliders;
 
 private:
     void SetGravity(const glm::vec3& gravity) { mGravity = gravity; }

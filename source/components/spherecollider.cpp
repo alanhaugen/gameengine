@@ -8,4 +8,5 @@ SphereCollider::SphereCollider(float innR, int response)
 
 void SphereCollider::Update()
 {
+    //collider->SetPosition(id);
 }

@@ -217,7 +217,7 @@ void MainWindow::AddCube()
 {
     GameObject* gameobj = new GameObject("Cube");
 
-    Cube* cube = new Cube();
+    Cube* cube = new Cube(0.0f, 0.0f, 0.0f, glm::vec3{1.0f,1.0f,1.0f}, glm::vec3{1.0f,1.0f,1.0f});
 
     gameobj->AddComponent(cube);
 
