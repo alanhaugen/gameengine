@@ -112,8 +112,8 @@ add_library(Core STATIC
     source/core/x-platform/locator.cpp
     source/core/x-platform/locator.h
     source/core/x-platform/scene.h
-    source/components/AssetManager.h
-    source/components/AssetManager.cpp
+    source/core/components/AssetManager.h
+    source/core/components/AssetManager.cpp)
 
 target_include_directories(Core PRIVATE "source")
 
