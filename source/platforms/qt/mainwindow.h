@@ -62,9 +62,9 @@ private:
     //for the Menuadd
     //add Objects to the scene and to the gameobject
    void AddNewObj(const QString& ObjectName);
-    void AddVikingRoom();
-    void AddCube();
-    void AddSphere();
+    // void AddVikingRoom();
+    // void AddCube();
+    // void AddSphere();
 
 
 

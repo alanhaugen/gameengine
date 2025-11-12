@@ -33,8 +33,6 @@ protected:
 
 public:
 
-    void FindObject();
-
     void ImportMesh(const QString& AssethPath);
 
     QStringList GetMeshNames()const;

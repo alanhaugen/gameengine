@@ -395,49 +395,14 @@ void MainWindow::AddNewObj(const QString &ObjectName)
     GameObject* gameobj = new GameObject(ObjectName);
     std::string path = FilePath.toStdString();
 
-    //Mesh* mesh = new Mesh(path.c_str());
+    Mesh* mesh = new Mesh(path.c_str());
 
-    try {
-        Mesh* mesh = new Mesh(path.c_str());
-        gameobj->AddComponent(mesh);
-    } catch (const std::exception& e) {
-        qDebug() << "Failed to load mesh:" << e.what();
-    }
-    //gameobj->AddComponent(mesh);
-
-
-
-
-
-    scene->gameObjects.push_back(gameobj);
-
-    QTreeWidgetItem * MainObj = new QTreeWidgetItem(ui->treeGameObjects);
-
-    MainObj->setText(0,gameobj->GetName());
-    MainObj->setData(0, Qt::UserRole, QVariant::fromValue((void*)gameobj));
-    MainObj->setData(0,Qt::UserRole +1,"GameObject");
-    MainObj->setExpanded(true);
-
-    // QTreeWidgetItem * ObjItem = new QTreeWidgetItem(MainObj);
-    // ObjItem->setText(0,"mesh");
-    // ObjItem->setData(0, Qt::UserRole, QVariant::fromValue((void*)mesh));
-    // ObjItem->setData(0,Qt::UserRole +1,"Component");
-
-    // MainObj->addChild(ObjItem);
-
-}
-
-
-
-
-
-void MainWindow::AddVikingRoom()
-{
-    qDebug() << "Connected VikingRoom action";
-    GameObject* gameobj = new GameObject("VikingRoom");
-
-    Mesh* mesh = new Mesh("Assets/Models/viking_room.obj");
-
+    // try {
+    //     Mesh* mesh = new Mesh(path.c_str());
+    //     gameobj->AddComponent(mesh);
+    // } catch (const std::exception& e) {
+    //     qDebug() << "Failed to load mesh:" << e.what();
+    // }
     gameobj->AddComponent(mesh);
 
 
@@ -459,33 +424,68 @@ void MainWindow::AddVikingRoom()
     ObjItem->setData(0,Qt::UserRole +1,"Component");
 
     MainObj->addChild(ObjItem);
+
 }
 
-void MainWindow::AddCube()
-{
-    GameObject* gameobj = new GameObject("Cube");
-    QTreeWidgetItem * MainObj = new QTreeWidgetItem(ui->treeGameObjects);
 
-    MainObj->setText(0,gameobj->GetName());
-    MainObj->setData(0, Qt::UserRole, QVariant::fromValue((void*)gameobj));
-    MainObj->setData(0,Qt::UserRole +1,"GameObject");
-    MainObj->setExpanded(true);
-    //scene->components.push_back(new Mesh("Assets/Models/viking_room.obj", renderer, scene->editor));
-    qDebug() << "Cube";
-}
 
-void MainWindow::AddSphere()
-{
-    GameObject* gameobj = new GameObject("Sphere");
-    QTreeWidgetItem * MainObj = new QTreeWidgetItem(ui->treeGameObjects);
 
-    MainObj->setText(0,gameobj->GetName());
-    MainObj->setData(0, Qt::UserRole, QVariant::fromValue((void*)gameobj));
-    MainObj->setData(0,Qt::UserRole +1,"GameObject");
-    MainObj->setExpanded(true);
-    //scene->components.push_back(new Mesh("Assets/Models/viking_room.obj", renderer, scene->editor));
-    qDebug() << "Sphere";
-}
+
+// void MainWindow::AddVikingRoom()
+// {
+//     qDebug() << "Connected VikingRoom action";
+//     GameObject* gameobj = new GameObject("VikingRoom");
+
+//     Mesh* mesh = new Mesh("Assets/Models/viking_room.obj");
+
+//     gameobj->AddComponent(mesh);
+
+
+
+
+
+//     scene->gameObjects.push_back(gameobj);
+
+//     QTreeWidgetItem * MainObj = new QTreeWidgetItem(ui->treeGameObjects);
+
+//     MainObj->setText(0,gameobj->GetName());
+//     MainObj->setData(0, Qt::UserRole, QVariant::fromValue((void*)gameobj));
+//     MainObj->setData(0,Qt::UserRole +1,"GameObject");
+//     MainObj->setExpanded(true);
+
+//     QTreeWidgetItem * ObjItem = new QTreeWidgetItem(MainObj);
+//     ObjItem->setText(0,"mesh");
+//     ObjItem->setData(0, Qt::UserRole, QVariant::fromValue((void*)mesh));
+//     ObjItem->setData(0,Qt::UserRole +1,"Component");
+
+//     MainObj->addChild(ObjItem);
+// }
+
+// void MainWindow::AddCube()
+// {
+//     GameObject* gameobj = new GameObject("Cube");
+//     QTreeWidgetItem * MainObj = new QTreeWidgetItem(ui->treeGameObjects);
+
+//     MainObj->setText(0,gameobj->GetName());
+//     MainObj->setData(0, Qt::UserRole, QVariant::fromValue((void*)gameobj));
+//     MainObj->setData(0,Qt::UserRole +1,"GameObject");
+//     MainObj->setExpanded(true);
+//     //scene->components.push_back(new Mesh("Assets/Models/viking_room.obj", renderer, scene->editor));
+//     qDebug() << "Cube";
+// }
+
+// void MainWindow::AddSphere()
+// {
+//     GameObject* gameobj = new GameObject("Sphere");
+//     QTreeWidgetItem * MainObj = new QTreeWidgetItem(ui->treeGameObjects);
+
+//     MainObj->setText(0,gameobj->GetName());
+//     MainObj->setData(0, Qt::UserRole, QVariant::fromValue((void*)gameobj));
+//     MainObj->setData(0,Qt::UserRole +1,"GameObject");
+//     MainObj->setExpanded(true);
+//     //scene->components.push_back(new Mesh("Assets/Models/viking_room.obj", renderer, scene->editor));
+//     qDebug() << "Sphere";
+// }
 
 void MainWindow::AvailableMeshes()
 {
