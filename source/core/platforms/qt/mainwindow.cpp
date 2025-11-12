@@ -66,9 +66,9 @@ MainWindow::MainWindow(QWidget *parent, const char* windowTitle, int windowWidth
 
 
     //Connections to functions
-    connect(ui->actionViking_Room, &QAction::triggered, this, &MainWindow::AddVikingRoom);
-    connect(ui->actionCube, &QAction::triggered, this, &MainWindow::AddCube);
-    connect(ui->actionSphere, &QAction::triggered, this, &MainWindow::AddSphere);
+    //connect(ui->actionViking_Room, &QAction::triggered, this, &MainWindow::AddVikingRoom);
+    //connect(ui->actionCube, &QAction::triggered, this, &MainWindow::AddCube);
+    //connect(ui->actionSphere, &QAction::triggered, this, &MainWindow::AddSphere);
 
     //
     connect(ui->treeGameObjects, &QTreeWidget::customContextMenuRequested, this, &MainWindow::OnRightClickGameObjectWidget);
@@ -203,7 +203,7 @@ void MainWindow::OnRightClickGameObjectWidget(const QPoint &ClickedOn)
     }
 }
 
-void MainWindow::AddVikingRoom()
+/*void MainWindow::AddVikingRoom()
 {
     GameObject* gameobj = new GameObject("VikingRoom");
 
@@ -234,7 +234,7 @@ void MainWindow::AddSphere()
     gameobj->AddComponent(mesh);
 
     scene->gameObjects.push_back(gameobj);
-}
+}*/
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
