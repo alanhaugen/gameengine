@@ -84,41 +84,75 @@ void Engine::sceneSetup()
     mEntities.push_back(tempEntity);
 
 	//2nd entity:
-    // tempEntity = Entity();
- //    tempEntity.mName = "Box";
- //    tempRenderComp = RenderComponent(1, 1, tempEntity.mEntityID);
- //    tempTransformComp = TransformComponent(tempEntity.mEntityID);
- //    tempTransformComp.mRotation = glm::vec3(45.0f, 0.0f, 0.f);
- //    tempTransformComp.mPosition = glm::vec3(0.0f, 0.0f, 0.0f);
+     tempEntity = Entity();
+     tempEntity.mName = "Box";
+     tempRenderComp = RenderComponent(1, 1, tempEntity.mEntityID);
+     tempTransformComp = TransformComponent(tempEntity.mEntityID);
+     tempTransformComp.mRotation = glm::vec3(45.0f, 0.0f, 0.f);
+     tempTransformComp.mPosition = glm::vec3(0.0f, 0.0f, 0.0f);
 
  //    // Push components to vectors:
- //    mDynamicRenderComponents.push_back(tempRenderComp);
- //    mTransformComponents.push_back(tempTransformComp);
+     mDynamicRenderComponents.push_back(tempRenderComp);
+     mTransformComponents.push_back(tempTransformComp);
 
  //    // Update Entity 2:
- //    tempEntity.mComponents.push_back(&mDynamicRenderComponents.back());
- //    tempEntity.mComponents.push_back(&mTransformComponents.back());
+     tempEntity.mComponents.push_back(&mDynamicRenderComponents.back());
+     tempEntity.mComponents.push_back(&mTransformComponents.back());
 
  //    // Push Entity 2
- //    mEntities.push_back(tempEntity);
+     mEntities.push_back(tempEntity);
 
  //    //3rd entity:
- //    tempEntity = Entity();
- //    tempEntity.mName = "Suzanne";
- //    tempRenderComp = RenderComponent(2, 0, tempEntity.mEntityID);
- //    tempTransformComp = TransformComponent(tempEntity.mEntityID);
- //    tempTransformComp.mPosition = glm::vec3(-2.0f, 0.0f, 0.0f);
+     tempEntity = Entity();
+     tempEntity.mName = "Suzanne";
+     tempRenderComp = RenderComponent(2, 0, tempEntity.mEntityID);
+     tempTransformComp = TransformComponent(tempEntity.mEntityID);
+     tempTransformComp.mPosition = glm::vec3(-2.0f, 0.0f, 0.0f);
 
  //    // Push components to vectors:
- //    mDynamicRenderComponents.push_back(tempRenderComp);
- //    mTransformComponents.push_back(tempTransformComp);
+     mDynamicRenderComponents.push_back(tempRenderComp);
+     mTransformComponents.push_back(tempTransformComp);
 
  //    // Update Entity 2:
- //    tempEntity.mComponents.push_back(&mDynamicRenderComponents.back());
- //    tempEntity.mComponents.push_back(&mTransformComponents.back());
+     tempEntity.mComponents.push_back(&mDynamicRenderComponents.back());
+     tempEntity.mComponents.push_back(&mTransformComponents.back());
 
  //    // Push Entity 2
- //    mEntities.push_back(tempEntity);
+     mEntities.push_back(tempEntity);
+
+     tempEntity = Entity();
+     tempEntity.mName = "Suzanne 2";
+     tempRenderComp = RenderComponent(2, 0, tempEntity.mEntityID);
+     tempTransformComp = TransformComponent(tempEntity.mEntityID);
+     tempTransformComp.mPosition = glm::vec3(-5.0f, 0.0f, 0.0f);
+
+ //    // Push components to vectors:
+     mDynamicRenderComponents.push_back(tempRenderComp);
+     mTransformComponents.push_back(tempTransformComp);
+
+ //    // Update Entity 2:
+     tempEntity.mComponents.push_back(&mDynamicRenderComponents.back());
+     tempEntity.mComponents.push_back(&mTransformComponents.back());
+
+ //    // Push Entity 2
+     mEntities.push_back(tempEntity);
+
+     tempEntity = Entity();
+     tempEntity.mName = "Suzanne 3";
+     tempRenderComp = RenderComponent(2, 0, tempEntity.mEntityID);
+     tempTransformComp = TransformComponent(tempEntity.mEntityID);
+     tempTransformComp.mPosition = glm::vec3(-10.0f, 0.0f, 0.0f);
+
+ //    // Push components to vectors:
+     mDynamicRenderComponents.push_back(tempRenderComp);
+     mTransformComponents.push_back(tempTransformComp);
+
+ //    // Update Entity 2:
+     tempEntity.mComponents.push_back(&mDynamicRenderComponents.back());
+     tempEntity.mComponents.push_back(&mTransformComponents.back());
+
+ //    // Push Entity 2
+     mEntities.push_back(tempEntity);
 }
 
 void Engine::updateRenderSystem()
