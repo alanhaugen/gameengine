@@ -49,10 +49,6 @@
     <property name="title">
      <string>Add</string>
     </property>
-    <addaction name="actionCube"/>
-    <addaction name="actionTriangle"/>
-    <addaction name="actionSphere"/>
-    <addaction name="actionViking_Room"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
@@ -306,9 +302,9 @@
            <property name="geometry">
             <rect>
              <x>0</x>
-             <y>0</y>
+             <y>-358</y>
              <width>239</width>
-             <height>521</height>
+             <height>689</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -485,13 +481,6 @@
                     </property>
                    </widget>
                   </item>
-                  <item row="0" column="1">
-                   <widget class="QPushButton" name="pushButton">
-                    <property name="text">
-                     <string>Button</string>
-                    </property>
-                   </widget>
-                  </item>
                   <item row="1" column="0">
                    <widget class="QLabel" name="Material_Label">
                     <property name="text">
@@ -499,12 +488,11 @@
                     </property>
                    </widget>
                   </item>
+                  <item row="0" column="1">
+                   <widget class="QComboBox" name="Mesh_Combo"/>
+                  </item>
                   <item row="1" column="1">
-                   <widget class="QPushButton" name="pushButton_2">
-                    <property name="text">
-                     <string>PushButton</string>
-                    </property>
-                   </widget>
+                   <widget class="QComboBox" name="Material_box"/>
                   </item>
                  </layout>
                 </widget>
@@ -527,9 +515,82 @@
                   <item row="0" column="0">
                    <widget class="QLabel" name="label">
                     <property name="text">
-                     <string>imcomplete</string>
+                     <string>ColliderType</string>
                     </property>
                    </widget>
+                  </item>
+                  <item row="0" column="1">
+                   <widget class="QComboBox" name="Collider_Combo">
+                    <property name="editable">
+                     <bool>false</bool>
+                    </property>
+                    <property name="maxVisibleItems">
+                     <number>1000</number>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="0">
+                   <widget class="QLabel" name="ColliderXPos">
+                    <property name="text">
+                     <string>ColliderXPos</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="2" column="0">
+                   <widget class="QLabel" name="ColliderYPos">
+                    <property name="text">
+                     <string>ColliderYPos</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="3" column="0">
+                   <widget class="QLabel" name="ColliderZPos">
+                    <property name="frameShape">
+                     <enum>QFrame::Shape::NoFrame</enum>
+                    </property>
+                    <property name="text">
+                     <string>ColliderZPos</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="1">
+                   <widget class="QDoubleSpinBox" name="doubleSpinBox"/>
+                  </item>
+                  <item row="2" column="1">
+                   <widget class="QDoubleSpinBox" name="doubleSpinBox_2"/>
+                  </item>
+                  <item row="3" column="1">
+                   <widget class="QDoubleSpinBox" name="doubleSpinBox_3"/>
+                  </item>
+                  <item row="4" column="0">
+                   <widget class="QLabel" name="ColliderXscale">
+                    <property name="text">
+                     <string>ColliderXscale</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="5" column="0">
+                   <widget class="QLabel" name="ColliderZscale">
+                    <property name="text">
+                     <string>ColliderZscale</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="6" column="0">
+                   <widget class="QLabel" name="ColliderZscale_2">
+                    <property name="text">
+                     <string>ColliderZscale</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="4" column="1">
+                   <widget class="QDoubleSpinBox" name="doubleSpinBox_4"/>
+                  </item>
+                  <item row="5" column="1">
+                   <widget class="QDoubleSpinBox" name="doubleSpinBox_5"/>
+                  </item>
+                  <item row="6" column="1">
+                   <widget class="QDoubleSpinBox" name="doubleSpinBox_6"/>
                   </item>
                  </layout>
                 </widget>
