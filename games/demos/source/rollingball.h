@@ -1,0 +1,88 @@
+#ifndef ROLLINGBALL_H
+#define ROLLINGBALL_H
+
+#include "core/x-platform/scene.h"
+
+class Mesh;
+class Terrain;
+
+class BSplineCurve
+{
+public:
+    // Determines how many control points influence each segment and
+    // how smooth the curve is
+    // f. ex. d = 3 would mean a cubic B-spline.
+    int degree = 3;
+    std::vector<float> t; // knot vector, the length of t should be n + d + 2
+    std::vector<glm::vec3> controlPoints;
+
+private:
+    float findKnotInterval(float x)
+    {
+        int my = controlPoints.size() - 1; // indekstilsistekontrollpunkt
+
+        while (x < t[my])
+        {
+            my--;
+        }
+
+        return my;
+    }
+
+public:
+    glm::vec3 EvaluateBSplineSimple(float x)
+    {
+        int my = findKnotInterval(x);
+        std::vector<glm::vec3> a;
+
+        a.resize(degree+1);
+
+        for (int i = 0; i <= degree; i++)
+        {
+            a[degree-i] = controlPoints[my-i];
+        }
+
+        for (int k = degree; k > 0; k--)
+        {
+            int j = my - k;
+
+            for (int i = 0; i < k; i++)
+            {
+                j++;
+
+                float w = (x - t[j])/(t[j+k] - t[j]);
+
+                a[i] = a[i] * (1-w) + a[i+1] * w;
+            }
+        }
+
+        return a[0];
+    }
+};
+
+class RollingBall : public Scene
+{
+public:
+    RollingBall();
+    void Init();
+    void Update();
+    void Clean();
+
+    BSplineCurve curve;
+
+    glm::vec3 velocity;
+    glm::vec3 gravity = glm::vec3(0, -0.98, 0);
+
+    float acceleration = 1.0f;
+    float mass = 1.0f;
+
+    Renderer::Drawable* splineDrawable;
+
+    int index = 0;
+
+    Terrain* terrainMesh;
+    Terrain* terrainMeshPoints;
+    Mesh* ballMesh;
+};
+
+#endif // ROLLINGBALL_H

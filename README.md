@@ -5,17 +5,34 @@ Code for Game Engine Architecture 2025
 
 [https://drive.google.com/drive/folders/1fOzgci2yONdo4kGF_0fjPAl83TqqWe1H](https://drive.google.com/drive/folders/1fOzgci2yONdo4kGF_0fjPAl83TqqWe1H)
 
-## Working directory
-
-To test the program, set the working directory to this folder (the root foler).
-
-You change the working directory in Projects -> Run -> Working directory
-
 ## Coding conventions
 
 Variables start with lowercase, camelCase
 
 Methods/Functions and Classes/Structs start with uppercase, PascalCase.
+
+## Architecture
+
+The engine is modular and has a core, consisting of components and platform specific code, and modules
+
+Applications made with the engine are found in games
+
+Here is a birdseye's view of the project:
+
+* games
+* source/core
+* source/modules
+
+The following modules (systems) are supported and can be swapped out:
+
+* ai
+* audio
+* filesystem
+* physics
+* renderer
+* script
+
+There are already multiple implementations of some of the modules, and there are also null implementations of each module for disabling a system
 
 ## Sources
 

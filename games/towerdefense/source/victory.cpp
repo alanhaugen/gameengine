@@ -1,0 +1,16 @@
+#include "victory.h"
+
+void Victory::Init()
+{
+
+}
+
+void Victory::Update()
+{
+
+}
+
+void Victory::Clean()
+{
+
+}

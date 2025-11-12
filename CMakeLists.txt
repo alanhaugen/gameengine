@@ -1,111 +1,157 @@
 cmake_minimum_required(VERSION 3.19)
-project(QtVulkan LANGUAGES CXX)
+project(Core LANGUAGES CXX)
+
 
 find_package(Qt6 6.10.0 REQUIRED COMPONENTS Core Widgets Multimedia)
+
+#############################################################
+##
+## Project configuration
+## You can set modules here
+##
+## If you do not set anything, these are set automatically
+##
+#############################################################
+
+set(RENDERER VulkanRenderer)
+#set(RENDERER OpenGLRenderer)
+#set(RENDERER NullRenderer)
+if(DEFINED ENV{OPENAL_HOME})
+    set(AUDIO OpenALAudio)
+else()
+    set(AUDIO NullAudio)
+    #set(AUDIO QtMultimediaAudio)
+endif()
+#set(SCRIPT LuaScript)
+set(SCRIPT NullScript)
+#set(FILESYSTEM STDFilesystem)
+set(FILESYSTEM NullFilesystem)
+set(PHYSICS AAPhysics)
+#set(PHYSICS Bullet3Physics)
+#set(PHYSICS NullPhysics)
+
+add_compile_definitions(RENDERER=${RENDERER})
+add_compile_definitions(AUDIO=${AUDIO})
+add_compile_definitions(SCRIPT=${SCRIPT})
+add_compile_definitions(FILESYSTEM=${FILESYSTEM})
+add_compile_definitions(PHYSICS=${PHYSICS})
+add_compile_definitions(AUDIO=${AUDIO})
+add_compile_definitions(AI=${AI})
+
+#############################################################
+##
+##  You do not need to change any code beyond this point
+##
+#############################################################
+
+# Asset Conditioning Pipeline (ACP)
+
+#############################################################
+
+add_subdirectory(source/systems/ai/null)
+add_subdirectory(source/systems/audio/null)
+add_subdirectory(source/systems/script/null)
+add_subdirectory(source/systems/renderer/null)
+add_subdirectory(source/systems/physics/null)
+add_subdirectory(source/systems/filesystem/null)
+
+add_subdirectory(source/systems/audio/qtaudio)
+add_subdirectory(source/systems/physics/aaphysics)
+add_subdirectory(source/systems/renderer/vulkan)
+add_subdirectory(source/systems/renderer/opengl)
+
+add_subdirectory(games/demos)
+add_subdirectory(games/rpg)
+add_subdirectory(games/towerdefense)
+
+find_package(Qt6 REQUIRED COMPONENTS Core Widgets Multimedia)
 
 qt_standard_project_setup()
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-add_executable(QtVulkan
-    source/modules/renderer/vulkan/vulkanrenderer.cpp
-    source/modules/renderer/vulkan/vulkanrenderer.h
-    source/platforms/qt/mainwindow.h
-    source/platforms/qt/mainwindow.cpp
-    source/modules/renderer/vulkan/utilities.h
-    source/modules/renderer/vertex.h
-    source/main.cpp
-    CMakeLists.txt
-    source/platforms/application.cpp
-    source/platforms/application.h
-    source/platforms/qt/MainWindow.ui
-    source/platforms/qt/qtapplication.cpp
-    source/platforms/qt/qtapplication.h
-    source/x-platform/scene.h
-    source/x-platform/locator.h
-    source/demos/vikingscene.cpp
-    source/demos/vikingscene.h
-    source/components/component.h
-    source/components/mesh.cpp
-    source/components/mesh.h
-    source/modules/renderer/renderer.h
-    shaders/phong.frag
-    shaders/phong.vert
-    shaders/shader.frag
-    shaders/shader.vert
-    shaders/color.frag
-    shaders/color.vert
-    shaders/gui.frag
-    shaders/gui.vert
-    source/x-platform/editor.h
-    source/platforms/qt/qteditor.h source/platforms/qt/qteditor.cpp
-    source/demos/empty.h source/demos/empty.cpp
-    source/components/fpscamera.h source/components/fpscamera.cpp
-    source/modules/ai/null/nullai.cpp source/modules/ai/null/nullai.h
-    source/modules/filesystem/null/nullfilesystem.cpp source/modules/filesystem/null/nullfilesystem.h
-    source/modules/physics/null/nullphysics.cpp source/modules/physics/null/nullphysics.h
-    source/modules/renderer/null/nullrenderer.cpp source/modules/renderer/null/nullrenderer.h
-    source/modules/script/null/nullscript.cpp source/modules/script/null/nullscript.h
-    source/components/gameobject.h source/components/gameobject.cpp
-    source/components/camera.h source/components/camera.cpp
-    source/modules/audio/audio.h
-    source/modules/ai/ai.h
-    source/modules/filesystem/filesystem.h
-    source/modules/physics/physics.h
-    source/modules/audio/openal/openalaudio.h source/modules/audio/openal/openalaudio.cpp
-    source/modules/audio/null/nullaudio.h source/modules/audio/null/nullaudio.cpp
-    source/modules/system.h
-    source/x-platform/locator.cpp
-    source/x-platform/debug.h source/x-platform/debug.cpp
-    source/demos/rollingball.cpp source/demos/rollingball.h
-    source/components/terrain.cpp source/components/terrain.h
-    source/components/trianglecollider.cpp source/components/trianglecollider.h
-    source/components/spherecollider.cpp source/components/spherecollider.h
-    source/x-platform/input.h
-    source/x-platform/input.cpp
-    source/modules/renderer/vulkan/vulkantexture.h
-    source/modules/audio/openal/soundsource.h source/modules/audio/openal/soundsource.cpp
-    source/modules/audio/openal/wavfilereader.h source/modules/audio/openal/wavfilereader.cpp
-    source/modules/physics/aaphysics/aaphysics.h source/modules/physics/aaphysics/aaphysics.cpp
-    source/components/sprite.h source/components/sprite.cpp
-    source/demos/pong.h
-    source/demos/pong.cpp
-    source/components/cube.h source/components/cube.cpp
-    source/components/text.h source/components/text.cpp
-    source/components/sphere.h source/components/sphere.cpp
-    source/modules/audio/qtaudio/qtmultimediaaudio.cpp source/modules/audio/qtaudio/qtmultimediaaudio.h
-    source/demos/flappybird.cpp source/demos/flappybird.h
-    source/demos/breakout.cpp source/demos/breakout.h
-    source/towerdefense/game.cpp source/towerdefense/game.h source/towerdefense/gameover.cpp source/towerdefense/gameover.h source/towerdefense/mainmenu.cpp source/towerdefense/mainmenu.h source/towerdefense/victory.cpp source/towerdefense/victory.h
-    source/demos/physicstestscene.h source/demos/physicstestscene.cpp
+add_library(Core STATIC
+    source/core/components/camera.cpp
+    source/core/components/camera.h
+    source/core/components/component.h
+    source/core/components/cube.cpp
+    source/core/components/cube.h
+    source/core/components/fpscamera.cpp
+    source/core/components/fpscamera.h
+    source/core/components/gameobject.cpp
+    source/core/components/gameobject.h
+    source/core/components/gameobject.cpp
+    source/core/components/gameobject.h
+    source/core/components/mesh.cpp
+    source/core/components/mesh.h
+    source/core/components/sphere.cpp
+    source/core/components/sphere.h
+    source/core/components/spherecollider.cpp
+    source/core/components/spherecollider.h
+    source/core/components/sprite.cpp
+    source/core/components/sprite.h
+    source/core/components/terrain.cpp
+    source/core/components/terrain.h
+    source/core/components/text.cpp
+    source/core/components/text.h
+    source/core/components/trianglecollider.cpp
+    source/core/components/trianglecollider.h
+    source/core/components/visualobject.h
+    source/core/platforms/application.cpp
+    source/core/platforms/application.h
+    source/core/platforms/qt/mainwindow.cpp
+    source/core/platforms/qt/mainwindow.h
+    source/core/platforms/qt/MainWindow.ui
+    source/core/platforms/qt/qtapplication.cpp
+    source/core/platforms/qt/qtapplication.h
+    source/core/platforms/qt/qteditor.cpp
+    source/core/platforms/qt/qteditor.h
+    source/core/x-platform/debug.cpp
+    source/core/x-platform/debug.h
+    source/core/x-platform/editor.h
+    source/core/x-platform/input.cpp
+    source/core/x-platform/input.h
+    source/core/x-platform/locator.cpp
+    source/core/x-platform/locator.h
+    source/core/x-platform/scene.h
 )
+
+target_include_directories(Core PRIVATE "source")
+
 #OpenAL
+if(AUDIO STREQUAL "OpenALAudio")
+    #message("Will try to use " AUDIO)
 if(DEFINED ENV{OPENAL_HOME})
-    target_include_directories(QtVulkan PRIVATE $ENV{OPENAL_HOME}/include)
+    set(AUDIO OpenALAudio)
 
-    target_link_libraries(QtVulkan PRIVATE $ENV{OPENAL_HOME}/libs/Win64/OpenAL32.lib)
+    add_subdirectory(source/systems/audio/openal)
+    target_include_directories(Core PRIVATE $ENV{OPENAL_HOME}/include)
 
-    add_custom_command(TARGET QtVulkan POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different
-            $ENV{OPENAL_HOME}/bin/Win64/soft_oal.dll
-            $<TARGET_FILE_DIR:QtVulkan>
-    )
+    target_link_libraries(Core PRIVATE $ENV{OPENAL_HOME}/libs/Win64/OpenAL32.lib)
+
+    #add_custom_command(Core TARGET POST_BUILD
+        #COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            #$ENV{OPENAL_HOME}/bin/Win64/soft_oal.dll
+            #$<TARGET_FILE_DIR:Core>
+    #)
+else()
+
+endif()
 endif()
 
-target_include_directories(QtVulkan PRIVATE include)
+target_include_directories(Core PRIVATE include)
 
 if(MSVC)
     # Required for proper C++ exception handling with MSVC
-    target_compile_options(QtVulkan PRIVATE /EHsc)
-    target_include_directories(QtVulkan PRIVATE
+    target_compile_options(Core PRIVATE /EHsc)
+    target_include_directories(Core PRIVATE
         "C:/VulkanSDK/1.4.321.1/Include"
     )
-    target_link_libraries(QtVulkan PRIVATE
+    target_link_libraries(Core PRIVATE
         Qt::Core
         Qt::Widgets
-        Qt6::Widgets
-        Qt6::Multimedia
+        Qt::Multimedia
         "C:/VulkanSDK/1.4.321.1/Lib/vulkan-1.lib"
     )
 else()
@@ -113,10 +159,10 @@ else()
     # It stops Validation layers from being used - needs to be fixed!!!
     add_compile_definitions(NDEBUG)
 
-    target_link_libraries(QtVulkan PRIVATE
+    target_link_libraries(Core PRIVATE
         Qt::Core
         Qt::Widgets
-        Qt6::Multimedia
+        Qt::Multimedia
         "-framework QuartzCore"
         "-framework Metal"
         "-framework Foundation"
@@ -126,7 +172,7 @@ else()
         "-framework AppKit"
         #Hardcoded path for Oles Macs for now:
         #"/Users/ole/VulkanSDK/1.4.321.0/macOS/lib/MoltenVK.xcframework/macos-arm64_x86_64/libMoltenVK.a"
-    	${CMAKE_SOURCE_DIR}/lib/darwin/arm64/libMoltenVK.a
+        ${CMAKE_SOURCE_DIR}/lib/darwin/arm64/libMoltenVK.a
     )
 endif()
 
@@ -134,7 +180,7 @@ endif()
 #file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/Assets" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
 
 include(GNUInstallDirs)
-install(TARGETS QtVulkan
+install(TARGETS Core
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
