@@ -150,6 +150,7 @@ if(MSVC)
         Qt::Core
         Qt::Widgets
         Qt::Multimedia
+        OpenALAudio
         "C:/VulkanSDK/1.4.321.1/Lib/vulkan-1.lib"
     )
 else()
