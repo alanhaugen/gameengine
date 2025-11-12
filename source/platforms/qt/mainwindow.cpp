@@ -78,9 +78,22 @@ MainWindow::MainWindow(QWidget *parent, const char* windowTitle, int windowWidth
 
 
     //Connections to functions
-    connect(ui->actionViking_Room, &QAction::triggered, this, &MainWindow::AddVikingRoom);
-    connect(ui->actionCube, &QAction::triggered, this, &MainWindow::AddCube);
-    connect(ui->actionSphere, &QAction::triggered, this, &MainWindow::AddSphere);
+
+    // connect(ui->actionViking_Room, &QAction::triggered, this, &MainWindow::AddVikingRoom);
+    // connect(ui->actionCube, &QAction::triggered, this, &MainWindow::AddCube);
+    // connect(ui->actionSphere, &QAction::triggered, this, &MainWindow::AddSphere);
+
+    //new version
+
+
+    for (const QString& Objects : mAssetManager->GetMeshNames())
+    {
+        QAction* action =ui->menuAdd->addAction(Objects);
+
+
+        connect(action,&QAction::triggered, this, [this, Objects](){AddNewObj(Objects);});
+    }
+
 
     //SpinBoxes
     //Position
@@ -101,13 +114,7 @@ MainWindow::MainWindow(QWidget *parent, const char* windowTitle, int windowWidth
 
 
     //MeshAvailables
-
-    QStringList names = mAssetManager->GetMeshNames();
-    ui->Mesh_Combo->clear();
-    ui->Mesh_Combo->addItems(names);
-    qDebug() <<"Hereitis" << ui->Mesh_Combo->count() << "/n";
-
-    connect(ui->Mesh_Combo, &QComboBox::currentTextChanged, this, &MainWindow::AvailableMeshes);
+    AvailableMeshes();
 
     ui->Inspectorwidget->setHidden(true);
 
@@ -353,24 +360,70 @@ void MainWindow::UpdateInspector()
     ui->ScaleZSpin->setValue(ObjSelected->mTransform.mScale.z);
 
 
-   // qDebug() <<"helllllll"<<ObjSelected->mTransform.mScale.y;
+  // qDebug() <<"helllllll"<<ObjSelected->mTransform.mScale.y;
     //when it get completed the editor this will attach the info of the components to the inspector
-    // if(!ObjSelected->components.empty())
-    // {
-    //     for (Component* comp: ObjSelected->components)
-    //     {
-    //         QString typeName = comp->GetName();
+    if(!ObjSelected->components.empty())
+    {
+        for (Component* comp: ObjSelected->components)
+        {
+            qDebug()<<"found componentes" <<"/n";
+            QString typeName = comp->GetName();
 
-    //         if(typeName == "mesh")
-    //         {
-
-    //         }
-    //     }
-    // }
+            if(typeName == "Mesh")
+            {
+                qDebug()<<"Has Mesh" <<"/n";
+                Mesh* mesh = dynamic_cast<Mesh*>(comp);
+                QString currentMeshName = QFileInfo(mesh->FilePath).baseName();
+                qDebug()<<"info here:"<<currentMeshName <<"/n";
+                int index = ui->Mesh_Combo->findText(currentMeshName);
+                ui->Mesh_Combo->setCurrentIndex(index);
+            }
+        }
+    }
 
 
     IsInspectorUpdated = false;
 
+
+}
+
+void MainWindow::AddNewObj(const QString &ObjectName)
+{
+
+    QString FilePath = mAssetManager->FindMesh(ObjectName);
+    qDebug() << "Connected action" << FilePath;
+    GameObject* gameobj = new GameObject(ObjectName);
+    std::string path = FilePath.toStdString();
+
+    //Mesh* mesh = new Mesh(path.c_str());
+
+    try {
+        Mesh* mesh = new Mesh(path.c_str());
+        gameobj->AddComponent(mesh);
+    } catch (const std::exception& e) {
+        qDebug() << "Failed to load mesh:" << e.what();
+    }
+    //gameobj->AddComponent(mesh);
+
+
+
+
+
+    scene->gameObjects.push_back(gameobj);
+
+    QTreeWidgetItem * MainObj = new QTreeWidgetItem(ui->treeGameObjects);
+
+    MainObj->setText(0,gameobj->GetName());
+    MainObj->setData(0, Qt::UserRole, QVariant::fromValue((void*)gameobj));
+    MainObj->setData(0,Qt::UserRole +1,"GameObject");
+    MainObj->setExpanded(true);
+
+    // QTreeWidgetItem * ObjItem = new QTreeWidgetItem(MainObj);
+    // ObjItem->setText(0,"mesh");
+    // ObjItem->setData(0, Qt::UserRole, QVariant::fromValue((void*)mesh));
+    // ObjItem->setData(0,Qt::UserRole +1,"Component");
+
+    // MainObj->addChild(ObjItem);
 
 }
 
@@ -439,6 +492,7 @@ void MainWindow::AvailableMeshes()
     ui->Mesh_Combo->clear();
     QStringList meshNames = mAssetManager->GetMeshNames();
     ui->Mesh_Combo->addItems(meshNames);
+    //qDebug() <<"Hereitis" << ui->Mesh_Combo->count() << "/n";
 }
 
 void MainWindow::PosObj(double)

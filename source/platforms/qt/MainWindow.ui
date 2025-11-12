@@ -49,10 +49,6 @@
     <property name="title">
      <string>Add</string>
     </property>
-    <addaction name="actionCube"/>
-    <addaction name="actionTriangle"/>
-    <addaction name="actionSphere"/>
-    <addaction name="actionViking_Room"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>

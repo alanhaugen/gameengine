@@ -21,11 +21,14 @@ protected:
     //Path to the folder
     QString AssethPath = "Assets/Models";
 
+    QString FileType = "*.obj";
     //contains all meshes
     std::vector<std::unique_ptr<Mesh>> mMesh;
 
     //Stores a mesh name, for quick check
     QHash<QString, int> mFilesNames;
+    //Stores all filepaths to objects
+     QHash<QString, QString> mFilesPath;
 
 
 public:
@@ -36,7 +39,7 @@ public:
 
     QStringList GetMeshNames()const;
 
-
+    QString FindMesh(const QString& Name);
 
 
 };

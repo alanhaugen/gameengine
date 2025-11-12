@@ -12,6 +12,8 @@ Mesh::Mesh(const char *filePath,
            const char* vertexShaderPath,
            const char* fragmentShaderPath)
 {
+    SetName("Mesh");
+    FilePath =filePath;
     std::vector<Vertex> vertices;
     std::vector<uint32_t> indices;
 
