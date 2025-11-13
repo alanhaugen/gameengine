@@ -19,7 +19,7 @@ void Empty::Init()
     cube3->Scale(0.1f);
 
     Cube* cube4 = new Cube();
-    cube4->SetPosition(glm::vec3(-1,1,-3));
+    cube4->SetPosition(glm::vec3(0,1,-3));
     cube4->Scale(0.1f);
 }
 
