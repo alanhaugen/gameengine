@@ -14,7 +14,7 @@ void VikingScene::Init()
     //first->AddComponent(ballCollider);
 
     audio->updateListener(glm::vec3(0.0f, 0.0f, 0.0f));
-    music = audio->PlaySound("Music", "Assets/Audio/Caravan_mono.wav", true, 0.5f);
+    music = audio->PlaySound("Music", "Assets/Sounds/Caravan_mono.wav", true, 0.5f);
     camera.position = glm::vec3(.6,0,3);
 
     vikingCamp->Scale(glm::vec3(1.0, 1.0, 1.0));

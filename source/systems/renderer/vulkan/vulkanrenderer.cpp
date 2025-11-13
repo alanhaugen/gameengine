@@ -1578,7 +1578,7 @@ void VulkanRenderer::Render() {
         vkCmdBindVertexBuffers(commandBuffers[imageIndex], 0, 1, &drawable.vertexBuffer, &offset);
 
         // Bind descriptor set (shader uniforms)
-        uint32_t uniformOffset = PadUniformBufferSize(sizeof(Drawable::UniformBufferObject) * drawable.offset);
+        uint32_t uniformOffset = static_cast<uint32_t>(PadUniformBufferSize(sizeof(Drawable::UniformBufferObject)) * drawable.offset);
 
         // Descriptor set 0 has the uniforms
         vkCmdBindDescriptorSets(commandBuffers[imageIndex], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, &descriptorSets[0], 1, &uniformOffset);
@@ -1662,7 +1662,7 @@ void VulkanRenderer::Render() {
         throw std::runtime_error("failed to present swap chain image!");
     }*/
 
-    //vkQueueWaitIdle(presentQueue); // debugging only
+    vkQueueWaitIdle(presentQueue); // debugging only
 
     currentFrame = (currentFrame + 1) % MAX_FRAMES_IN_FLIGHT;
 }

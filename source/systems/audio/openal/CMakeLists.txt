@@ -10,4 +10,6 @@ add_library(OpenALAudio STATIC
     wavfilereader.h
 )
 
+target_link_libraries(OpenALAudio PRIVATE $ENV{OPENAL_HOME}/libs/Win64/OpenAL32.lib)
+
 target_include_directories(OpenALAudio PRIVATE ../../../../include)
