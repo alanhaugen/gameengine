@@ -8,9 +8,6 @@
 
 class Empty : public Scene
 {
-private:
-    Mesh* mesh;
-    //Text* text;
 public:
     Empty();
     void Init();

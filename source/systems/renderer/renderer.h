@@ -1,6 +1,7 @@
 #pragma once
 
 #include "vertex.h" // TODO: Figure out if vulkan can be decoupled from vertex.h
+#include <string>
 
 class Renderer
 {
@@ -54,6 +55,9 @@ public:
 
         bool isVisible  = true;
         bool isTextured = false;
+
+        std::string textureFilePath;
+        int textureId;
 
         int offset = 0;
 

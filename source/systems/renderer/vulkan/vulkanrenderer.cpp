@@ -121,6 +121,8 @@ Renderer::Drawable& VulkanRenderer::CreateDrawable(std::vector<Vertex> vertices,
     if (texture[0] != '\0') // C string check if empty
     {
         drawable.isTextured = true;
+        drawable.textureFilePath = texture;
+        drawable.textureId = texturesQuantity;
         drawable.textureDescriptor = createTextureDescriptor(texture, texturesQuantity);
         drawable.textureWidth = textures[texturesQuantity].width;
         drawable.textureHeight = textures[texturesQuantity].height;
@@ -149,7 +151,8 @@ void VulkanRenderer::cleanupSwapChain() {
     vkDestroyImage(device, colorImage, nullptr);
     vkFreeMemory(device, colorImageMemory, nullptr);
 
-    for (auto framebuffer : swapChainFramebuffers) {
+    for (auto framebuffer : swapChainFramebuffers)
+    {
         vkDestroyFramebuffer(device, framebuffer, nullptr);
     }
 
@@ -216,6 +219,8 @@ void VulkanRenderer::recreateSwapChain() {
     //     glfwWaitEvents();
     // }
 
+    //LogError("Recreating swapchains");
+
     vkDeviceWaitIdle(device);
 
     cleanupSwapChain();
@@ -230,6 +235,16 @@ void VulkanRenderer::recreateSwapChain() {
     createDescriptorPool();
     createDescriptorSets();
     createCommandBuffers();
+
+    for (int i = 0; i < drawablesQuantity; i++)
+    {
+        Drawable* drawable = &drawables[i];
+
+        if (drawable->isTextured)
+        {
+            drawable->textureDescriptor = createTextureDescriptor(drawable->textureFilePath, drawable->textureId);
+        }
+    }
 
     imagesInFlight.resize(swapChainImages.size(), VK_NULL_HANDLE);
 }
@@ -1581,7 +1596,7 @@ void VulkanRenderer::Render() {
         uint32_t uniformOffset = static_cast<uint32_t>(PadUniformBufferSize(sizeof(Drawable::UniformBufferObject)) * drawable.offset);
 
         // Descriptor set 0 has the uniforms
-        vkCmdBindDescriptorSets(commandBuffers[imageIndex], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, &descriptorSets[0], 1, &uniformOffset);
+        vkCmdBindDescriptorSets(commandBuffers[imageIndex], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, &descriptorSets[imageIndex], 1, &uniformOffset);
 
         // Descriptor set 1 has the texture
         if (drawable.isTextured)
