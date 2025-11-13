@@ -2,16 +2,16 @@
 #define QTMULTIMEDIAAUDIO_H
 
 #include "../null/nullaudio.h"
-#include <QMediaPlayer>
-#include <QAudioOutput>
-#include <QSoundEffect>
+//#include <QMediaPlayer>
+// #include <QAudioOutput>
+// #include <QSoundEffect>
 
 class QtMultimediaAudio : public NullAudio
 {
 private:
-    QMediaPlayer* player;
-    QAudioOutput* audioOutput;
-    QSoundEffect effect;
+    // QMediaPlayer* player;
+    // QAudioOutput* audioOutput;
+    // QSoundEffect effect;
 
 public:
     bool Init() override;

@@ -61,7 +61,7 @@ add_subdirectory(games/demos)
 add_subdirectory(games/rpg)
 add_subdirectory(games/towerdefense)
 
-find_package(Qt6 REQUIRED COMPONENTS Core Widgets Multimedia)
+find_package(Qt6 REQUIRED COMPONENTS Core Widgets)
 
 qt_standard_project_setup()
 
@@ -124,7 +124,10 @@ add_library(Core STATIC
     source/core/x-platform/locator.h
     source/core/x-platform/scene.h
     source/core/components/AssetManager.h
+
     source/core/components/AssetManager.cpp)
+)
+
 
 target_include_directories(Core PRIVATE "source")
 
@@ -165,6 +168,7 @@ if (WIN32)
         Qt::Widgets
         Qt::Multimedia
         $ENV{VULKAN_SDK}/Lib/vulkan-1.lib
+
     )
 else()
     # This will set NDEBUG for both debug and release build

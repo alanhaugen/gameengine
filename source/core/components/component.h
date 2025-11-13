@@ -18,7 +18,8 @@ class Component : public Locator
 {
 protected:
     QString Name;
-    GameObject* gameobjOwner = nullptr;
+    uint32_t entityOwner = 0;
+
 public:
 
     Transform mTransform;
@@ -29,13 +30,13 @@ public:
 
     virtual const QString GetName(){return Name;};
 
-    virtual GameObject* GetGameObjectOwner(){return gameobjOwner;}
+    uint32_t GetEntityOwner(){return entityOwner;}
 
-    virtual void SetGameObjOwner(GameObject* Owner){gameobjOwner = Owner;}
+    virtual void SetEntityOwner(uint32_t EntityOwner){entityOwner = EntityOwner;}
 
     virtual void OnAttach(){};
 
-    virtual void UpdateTransform(){};
+    virtual void UpdateTransform(Transform transform){};
 
 };
 
