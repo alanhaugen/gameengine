@@ -121,6 +121,7 @@ MainWindow::MainWindow(QWidget *parent, const char* windowTitle, int windowWidth
     //
     connect(ui->Mesh_Combo, &QComboBox::currentTextChanged, this,&MainWindow::ChangeMesh);
 
+
     lastTime = std::chrono::high_resolution_clock::now();
 
     AUDIO* audio = new AUDIO();
@@ -429,6 +430,7 @@ void MainWindow::AvailableMeshes()
     //qDebug() <<"Hereitis" << ui->Mesh_Combo->count() << "/n";
 }
 
+
 void MainWindow::ChangeMesh(const QString &meshname)
 {
     for (Component* comp: ObjSelected->components)
@@ -480,6 +482,7 @@ void MainWindow::PosObj(double)
     ObjSelected->UpdateTransform(Pos,Rotation,Scale);
     UpdateInspector();
 }
+
 
 
 
