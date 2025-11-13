@@ -71,7 +71,7 @@ MainWindow::MainWindow(QWidget *parent, const char* windowTitle, int windowWidth
     //connect(ui->actionSphere, &QAction::triggered, this, &MainWindow::AddSphere);
 
     //
-    connect(ui->treeGameObjects, &QTreeWidget::customContextMenuRequested, this, &MainWindow::OnRightClickGameObjectWidget);
+    //connect(ui->treeGameObjects, &QTreeWidget::customContextMenuRequested, this, &MainWindow::OnRightClickGameObjectWidget);
 
     AUDIO* audio = new AUDIO();
     PHYSICS* physics = new PHYSICS();
@@ -105,8 +105,8 @@ void MainWindow::cleanup()
 {
     if(renderer)
     {
-        delete renderer;
-        renderer = nullptr;
+        //delete renderer;
+        //renderer = nullptr;
     }
 
     if (ui)
@@ -230,12 +230,5 @@ void MainWindow::AddSphere()
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
-    if (renderer)
-    {
-        delete renderer;
-        renderer = nullptr;
-        close();
-    }
-
     timer->stop();
 }

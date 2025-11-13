@@ -1,9 +1,9 @@
 #ifndef CUBE_H
 #define CUBE_H
 
-#include "component.h"
+#include "visualobject.h"
 
-class Cube : public Component
+class Cube : public VisualObject
 {
 public:
     Cube(float x = 0.0f,
@@ -13,8 +13,6 @@ public:
          glm::vec3 color = glm::vec3(1.0f));
 
     void Update();
-
-    Renderer::Drawable* drawable;
 };
 
 #endif // CUBE_H
