@@ -158,13 +158,13 @@ if (WIN32)
     endif()
 
     target_include_directories(Core PRIVATE
-        ENV{VULKAN_SDK}/Include
+        $ENV{VULKAN_SDK}/Include
     )
     target_link_libraries(Core PRIVATE
         Qt::Core
         Qt::Widgets
         Qt::Multimedia
-        ENV{VULKAN_SDK}/vulkan-1.lib
+        $ENV{VULKAN_SDK}/Lib/vulkan-1.lib
     )
 else()
     # This will set NDEBUG for both debug and release build
