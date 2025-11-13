@@ -27,7 +27,7 @@ const std::vector<const char*> deviceExtensions = { VK_KHR_SWAPCHAIN_EXTENSION_N
 const bool enableValidationLayers = false;
 #else
 #ifdef _WIN32
-const bool enableValidationLayers = false;
+const bool enableValidationLayers = true;
 #else
 const bool enableValidationLayers = false; // MoltenVK has problems with validation layers
 #endif
