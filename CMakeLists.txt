@@ -137,7 +137,7 @@ if(DEFINED ENV{OPENAL_HOME})
     add_subdirectory(source/systems/audio/openal)
     target_include_directories(Core PRIVATE $ENV{OPENAL_HOME}/include)
 
-    target_link_libraries(Core PRIVATE $ENV{OPENAL_HOME}/libs/Win64/OpenAL32.lib)
+    target_link_libraries(Core PRIVATE OpenALAudio)
 
     add_custom_command(TARGET Core POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_if_different
