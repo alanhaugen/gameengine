@@ -21,6 +21,10 @@ void Empty::Init()
     Cube* cube4 = new Cube();
     cube4->SetPosition(glm::vec3(0,1,-3));
     cube4->Scale(0.1f);
+
+    Cube* cube5 = new Cube();
+    cube5->SetPosition(glm::vec3(-1,1,-3));
+    cube5->Scale(0.1f);
 }
 
 void Empty::Update()

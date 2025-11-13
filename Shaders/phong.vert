@@ -15,6 +15,7 @@ layout(location = 0) in vec3 inPosition;        // object space vertex position
 layout(location = 1) in vec3 inColor;	        // per-vertex colour
 layout(location = 2) in vec3 inNormal;	        // per-vertex normals
 layout(location = 3) in vec2 inTexcoord;	// per-vertex texcoord
+layout(location = 4) in float inGlyph;          // per-vertex text glyph
 
 #ifdef VULKAN
 layout(set = 0, binding = 0) uniform UniformBufferObject {

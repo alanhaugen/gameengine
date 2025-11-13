@@ -1662,7 +1662,7 @@ void VulkanRenderer::Render() {
         throw std::runtime_error("failed to present swap chain image!");
     }*/
 
-    //vkQueueWaitIdle(presentQueue); // debugging only
+    vkQueueWaitIdle(presentQueue); // debugging only
 
     currentFrame = (currentFrame + 1) % MAX_FRAMES_IN_FLIGHT;
 }
