@@ -11,5 +11,5 @@ public:
          const char* fragmentShaderPath = "shaders/phong.frag.spv");
     void Update() override;
     void OnAttach() override;
-    void UpdateTransform() override;
+    void UpdateTransform(Transform transform) override;
 };

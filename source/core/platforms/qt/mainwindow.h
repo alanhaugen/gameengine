@@ -41,22 +41,31 @@ public:
 private:
     QWidget* vulkanWidget;
 
+    //ObjectSelect
+    GameObject* ObjSelected = nullptr;
+
+
     std::chrono::time_point<std::chrono::steady_clock> lastTime;
 
     //right click the object in gameobjectWidget
     void OnRightClickGameObjectWidget(const QPoint& ClickedOn);
 
+    //Left click the object in gameobjectWidget
+    void OnLeftClickGameObjectWidget(QTreeWidgetItem* item, int column);
+    //deselect
+    bool eventFilter(QObject* obj,QEvent* event) override;
+
+    //Update inspector with values
+    void UpdateInspector();
+    //bool to prevent set value from changing values
+    bool IsInspectorUpdated = false;
+
     //for the Menuadd
     //add Objects to the scene and to the gameobject
    void AddNewObj(const QString& ObjectName);
-    // void AddVikingRoom();
-    // void AddCube();
-    // void AddSphere();
 
-
-
+   //Adds the meshes to the combobox of meshes
     void AvailableMeshes();
-
 
     void PosObj(double);
 

@@ -19,7 +19,7 @@ public:
 protected:
 
     //Path to the folder
-    QString AssethPath = "Assets/Models";
+    QString AssethPath = "Assets";
 
     QString FileType = "*.obj";
     //contains all meshes

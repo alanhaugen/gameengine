@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.19)
 project(RPG LANGUAGES CXX)
 
-find_package(Qt6 REQUIRED COMPONENTS Core Widgets Multimedia)
+find_package(Qt6 REQUIRED COMPONENTS Core Widgets)
 
 qt_standard_project_setup()
 
@@ -13,7 +13,7 @@ add_executable(RPG
 target_link_libraries(RPG PRIVATE
     Qt::Core
     Qt::Widgets
-    Qt::Multimedia
+   # Qt::Multimedia
     Core # The inn game engine
 
     NullAI

@@ -1,5 +1,4 @@
 #include "gameobject.h"
-#include "glm/gtc/matrix_transform.hpp"
 #include <qdebug.h>
 
 GameObject::GameObject(const QString name)
@@ -21,7 +20,7 @@ GameObject::GameObject(const QString name)
 
 void GameObject::AddComponent(Component *newComponent)
 {
-    newComponent->SetGameObjOwner(this);
+    //newComponent->SetGameObjOwner(this);
     components.push_back(newComponent);
     newComponent->OnAttach();
 }
@@ -54,15 +53,15 @@ void GameObject::Update()
 void GameObject::UpdateTransform(glm::vec3 Position, glm::vec3 Rotation, glm::vec3 Scale)
 {
 
+    //Updates all components transform
     mTransform.mPosition = Position;
     mTransform.mRotation = Rotation;
     mTransform.mScale = Scale;
 
-
     for (unsigned i = 0; i < components.size(); i++)
     {
 
-        components[i]->UpdateTransform();
+        components[i]->UpdateTransform(mTransform);
     }
 }
 
