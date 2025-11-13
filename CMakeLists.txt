@@ -139,10 +139,10 @@ if(DEFINED ENV{OPENAL_HOME})
 
     target_link_libraries(Core PRIVATE $ENV{OPENAL_HOME}/libs/Win64/OpenAL32.lib)
 
-    add_custom_command(TARGET Core POST_BUILD
+    add_custom_command(Core TARGET POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_if_different
             $ENV{OPENAL_HOME}/bin/Win64/OpenAL32.dll
-            $<TARGET_FILE_DIR:QtVulkan>
+            $<TARGET_FILE_DIR:Core>
     )
 else()
 
@@ -158,13 +158,13 @@ if (WIN32)
     endif()
 
     target_include_directories(Core PRIVATE
-        "C:/VulkanSDK/1.4.321.1/Include"
+        "ENV{VULKAN_SDK}/Include"
     )
     target_link_libraries(Core PRIVATE
         Qt::Core
         Qt::Widgets
         Qt::Multimedia
-        "C:/VulkanSDK/1.4.321.1/Lib/vulkan-1.lib"
+        "ENV{VULKAN_SDK}/vulkan-1.lib"
     )
 else()
     # This will set NDEBUG for both debug and release build
