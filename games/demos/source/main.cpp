@@ -11,7 +11,6 @@ int main(int argumentQuantity, char *argumentArray[])
     application.AddScene(new VikingScene);
     application.AddScene(new RollingBall);
     //application.AddScene(new Pong);
-
     application.AddScene(new Empty);
     return application.Run();
 }

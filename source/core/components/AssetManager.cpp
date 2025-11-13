@@ -11,7 +11,7 @@ AssetManager::AssetManager()
 
 void AssetManager::ImportMesh(const QString &AssethPath)
 {
-    //goes through the filesystem starting at assethPath. and finds all files with the filter .obj
+    //goes through the filesystem starting at assethPath. adn finds all files with the filter .obj
     QDirIterator it(AssethPath,QStringList() << FileType, QDir::Files,QDirIterator::Subdirectories);
 
 
@@ -48,5 +48,5 @@ QString AssetManager::FindMesh(const QString &Name)
         return QString();
     }
 
-    return mFilesPath.value(Name,QString());
+   return mFilesPath[Name];
 }

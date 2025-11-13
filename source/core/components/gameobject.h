@@ -22,7 +22,6 @@ public:
     GameObject(const QString name);
 
     Renderer::Drawable* drawable;
-
     Transform mTransform;
     // std::vector<GameObject*> children;
     std::vector<Component*> components;

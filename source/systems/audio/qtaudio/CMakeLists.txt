@@ -9,10 +9,10 @@ add_library(QtMultimediaAudio STATIC
     qtmultimediaaudio.h
 )
 
-#find_package(Qt6 REQUIRED COMPONENTS Multimedia)
+find_package(Qt6 REQUIRED COMPONENTS Multimedia)
 
-# target_link_libraries(QtMultimediaAudio PRIVATE
-#     Qt::Multimedia
-# )
+target_link_libraries(QtMultimediaAudio PRIVATE
+    Qt::Multimedia
+)
 
 target_include_directories(QtMultimediaAudio PRIVATE ../../../../include)
