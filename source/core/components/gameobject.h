@@ -26,11 +26,9 @@ public:
     // std::vector<GameObject*> children;
     std::vector<Component*> components;
 
-
     void AddComponent(Component* newComponent);
 
     void SetName(const QString NewName);
-
 
     const QString GetName();
 

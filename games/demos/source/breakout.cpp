@@ -69,8 +69,4 @@ void Breakout::Update()
 
     paddle->drawable->ubo.model[3].x = input.mouse.x * 2 - paddle->drawable->textureWidth / 2;
 
-    if (physics->Collision())
-    {
-        // Resolve collision
-    }
 }

@@ -4,14 +4,21 @@
 
 class SphereCollider : public Component
 {
+public:
+    float velocity;
+    void Init();
+
 private:
-    float r;
+    glm::vec3 center;
+    float mass;
+    float radius;
     int collisionResponse;
 
     enum
     {
         NONE,
-        BOUNCE
+        STATIC, // Wont receive force/impulse, but will affect other solid colliders
+        DYNAMIC // Will receive force/impulse and affect other solid colliders
     };
 
     Physics::Collider* collider;

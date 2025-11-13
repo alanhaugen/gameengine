@@ -7,6 +7,8 @@ FPSCamera::FPSCamera(Camera* innCamera)
 
 void FPSCamera::Update()
 {
+    UpdateCamera();
+
     if (input.mouse.Down)
     {
         if (input.Held(input.Key.W))

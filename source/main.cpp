@@ -13,6 +13,6 @@ int main(int argumentQuantity, char *argumentArray[])
     //application.AddScene(new Empty);
     //application.AddScene(new RollingBall);
     //application.AddScene(new Pong);
-    application.AddScene(new PhysicsTestScene);
+    //application.AddScene(new PhysicsTestScene);
     return application.Run();
 }

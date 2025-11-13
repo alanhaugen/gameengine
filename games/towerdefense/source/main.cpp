@@ -4,11 +4,12 @@
 #include "game.h"
 #include "victory.h"
 #include "gameover.h"
+#include "physicstest.h"
 
 int main(int argumentQuantity, char *argumentArray[])
 {
     Application application(argumentQuantity, argumentArray, "Tower Defense", 1100, 700);
-    //application.AddScene(new Splash);
+    application.AddScene(new physicstest);
     application.AddScene(new MainMenu);
     application.AddScene(new Game);
     application.AddScene(new Victory);

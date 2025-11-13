@@ -17,6 +17,8 @@ add_executable(TowerDefense
     source/victory.cpp
     source/victory.h
     source/splash.h source/splash.cpp
+    source/physicstest.h source/physicstest.cpp
+
 )
 
 target_link_libraries(TowerDefense PRIVATE

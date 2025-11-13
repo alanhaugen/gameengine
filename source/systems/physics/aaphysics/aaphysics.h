@@ -25,6 +25,8 @@ private:
 
     void ApplyGravity(float deltaTime = 1.0f);
     void CollisionDetection();
+    void CollisionResponse(Collider* colliderA, Collider* colliderB);
+    void CalculateImpulses(float massA, float massB, float speedA, float speedB);
 };
 
 #endif // AAPHYSICS_H

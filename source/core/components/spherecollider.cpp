@@ -2,10 +2,10 @@
 
 SphereCollider::SphereCollider(float innR, int response)
 {
-    r = innR;
+    radius = innR;
     collisionResponse = response;
 
-    //collider = physics->CreateSphereCollider();
+    collider = physics->CreateCollider(DYNAMIC);
 }
 
 void SphereCollider::Update()
