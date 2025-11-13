@@ -112,9 +112,9 @@ void Renderer::initVulkan()
     createUniformBuffers();
 
 
-    for (size_t i = 0; i < mEngine->mTextureManager->mAssets.size(); i++)
-        createDescriptorSets(*mEngine->mTextureManager->mAssets[i]);
-
+    //for (size_t i = 0; i < mEngine->mTextureManager->mAssets.size(); i++)
+    //    createDescriptorSets(*mEngine->mTextureManager->mAssets[i]);
+    createDescriptorSets();
     RecreateTextureDescriptors();
 
     createCommandBuffers();
@@ -225,8 +225,9 @@ void Renderer::recreateSwapChain()
     createUniformBuffers();
     createDescriptorPool();
     
-	for (size_t i = 0; i < mEngine->mTextureManager->mAssets.size(); i++)
-        createDescriptorSets(*mEngine->mTextureManager->mAssets[i]);
+    //for (size_t i = 0; i < mEngine->mTextureManager->mAssets.size(); i++)
+    //    createDescriptorSets(*mEngine->mTextureManager->mAssets[i]);
+    createDescriptorSets();
 
     RecreateTextureDescriptors();
     createCommandBuffers();
@@ -890,13 +891,13 @@ bool Renderer::hasStencilComponent(VkFormat format) {
 void Renderer::createTextureImageResource(gea::Texture* texture)
 {
     //int texWidth, texHeight, texChannels;
-    stbi_uc* pixels = texture->mPixels;
+    //stbi_uc* pixels = texture->mPixels;
     VkDeviceSize imageSize = texture->mTexWidth * texture->mTexHeight * 4;
-    texture->mMipLevels = static_cast<uint32_t>(std::floor(std::log2(std::max(texture->mTexWidth, texture->mTexHeight)))) + 1;
+    // texture->mMipLevels = static_cast<uint32_t>(std::floor(std::log2(std::max(texture->mTexWidth, texture->mTexHeight)))) + 1;
 
-    if (!pixels) {
-        throw std::runtime_error("failed to load texture image!");
-    }
+    // if (!pixels) {
+    //     throw std::runtime_error("failed to load texture image!");
+    // }
 
     VkBuffer stagingBuffer;
     VkDeviceMemory stagingBufferMemory;
@@ -906,10 +907,8 @@ void Renderer::createTextureImageResource(gea::Texture* texture)
 
     void* data;
     vkMapMemory(device, stagingBufferMemory, 0, imageSize, 0, &data);
-    memcpy(data, pixels, static_cast<size_t>(imageSize));
+    memcpy(data, texture->mPixels, static_cast<size_t>(imageSize));
     vkUnmapMemory(device, stagingBufferMemory);
-
-    stbi_image_free(pixels);
 
     createImage(texture->mTexWidth, texture->mTexHeight, texture->mMipLevels,
                 VK_SAMPLE_COUNT_1_BIT, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_TILING_OPTIMAL,
@@ -917,20 +916,21 @@ void Renderer::createTextureImageResource(gea::Texture* texture)
                 VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
                 texture->mTextureImage, texture->mTextureImageMemory);
 
+    stbi_image_free(texture->mPixels);
     transitionImageLayout(texture->mTextureImage, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, texture->mMipLevels);
     copyBufferToImage(stagingBuffer, texture->mTextureImage, static_cast<uint32_t>(texture->mTexWidth), static_cast<uint32_t>(texture->mTexHeight));
     //transitioned to VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL while generating mipmaps
 
-    vkDestroyBuffer(device, stagingBuffer, nullptr);
-    vkFreeMemory(device, stagingBufferMemory, nullptr);
-
     generateMipmaps(texture->mTextureImage, VK_FORMAT_R8G8B8A8_SRGB, texture->mTexWidth, texture->mTexHeight, texture->mMipLevels);
 
     /* Create View */
-    texture->mTextureImageView = createImageView(texture->mTextureImage, VK_FORMAT_R8G8B8A8_SRGB,
-                                                 VK_IMAGE_ASPECT_COLOR_BIT, texture->mMipLevels);
-    //createTextureImageView(texture);
+    //createImageView(texture->mTextureImage, VK_FORMAT_R8G8B8A8_SRGB,VK_IMAGE_ASPECT_COLOR_BIT, texture->mMipLevels);
+    createTextureImageView(texture);
     createTextureSampler(texture);
+
+    vkDestroyBuffer(device, stagingBuffer, nullptr);
+    vkFreeMemory(device, stagingBufferMemory, nullptr);
+
 }
 
 void Renderer::generateMipmaps(VkImage image, VkFormat imageFormat, int32_t texWidth, int32_t texHeight, uint32_t mipLevels)
@@ -1238,7 +1238,7 @@ void Renderer::createDescriptorPool()
         qDebug("Successfully created Descriptor Pool");
 }
 
-void Renderer::createDescriptorSets(gea::Texture &texture)
+void Renderer::createDescriptorSets()
 {
     std::vector<VkDescriptorSetLayout> layouts(swapChainImages.size(), descriptorSetLayout);
     VkDescriptorSetAllocateInfo allocInfo{};

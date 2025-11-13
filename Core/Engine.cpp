@@ -63,8 +63,8 @@ void Engine::sceneSetup()
         return;
     }
 
-    int meshIndex = mMeshManager->mFilesNamesSet.value("viking_room");
-    int textureIndex = mTextureManager->mFilesNamesSet.value("viking_room");
+    short meshIndex = mMeshManager->mFilesNamesSet.value("viking_room");
+    short textureIndex = mTextureManager->mFilesNamesSet.value("viking_room");
 
     // first and second parameter is the mesh and texture index!
     RenderComponent tempRenderComp(meshIndex, textureIndex, tempEntity.mEntityID);
