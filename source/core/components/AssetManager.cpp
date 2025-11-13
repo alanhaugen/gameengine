@@ -48,5 +48,5 @@ QString AssetManager::FindMesh(const QString &Name)
         return QString();
     }
 
-   return mFilesPath[Name];
+    return mFilesPath.value(Name,QString());
 }

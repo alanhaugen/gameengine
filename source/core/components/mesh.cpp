@@ -13,6 +13,14 @@ Mesh::Mesh(const char *filePath,
            const char* fragmentShaderPath)
 {
     SetName("Mesh");
+
+    loadMesh(filePath);
+}
+
+void Mesh::loadMesh(const char *filePath, const char *vertexShaderPath, const char *fragmentShaderPath)
+{
+//imcomplete
+
     FilePath =filePath;
     std::vector<Vertex> vertices;
     std::vector<uint32_t> indices;

@@ -67,6 +67,9 @@ private:
    //Adds the meshes to the combobox of meshes
     void AvailableMeshes();
 
+    //change mesh
+    void ChangeMesh(const QString &meshname);
+
     void PosObj(double);
 
     QTimer* timer;

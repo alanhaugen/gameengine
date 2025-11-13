@@ -118,7 +118,8 @@ MainWindow::MainWindow(QWidget *parent, const char* windowTitle, int windowWidth
     connect(ui->treeGameObjects, &QTreeWidget::itemClicked, this, &MainWindow::OnLeftClickGameObjectWidget);
 
 
-
+    //
+    connect(ui->Mesh_Combo, &QComboBox::currentTextChanged, this,&MainWindow::ChangeMesh);
 
     lastTime = std::chrono::high_resolution_clock::now();
 
@@ -426,6 +427,20 @@ void MainWindow::AvailableMeshes()
     QStringList meshNames = mAssetManager->GetMeshNames();
     ui->Mesh_Combo->addItems(meshNames);
     //qDebug() <<"Hereitis" << ui->Mesh_Combo->count() << "/n";
+}
+
+void MainWindow::ChangeMesh(const QString &meshname)
+{
+    for (Component* comp: ObjSelected->components)
+    {
+        if(comp->GetName() =="Mesh")
+        {
+            Mesh* mesh =dynamic_cast<Mesh*>(comp);
+
+            QString path = mAssetManager->FindMesh(meshname);
+            mesh->loadMesh( path.toStdString().c_str());
+        }
+    }
 }
 
 void MainWindow::PosObj(double)
