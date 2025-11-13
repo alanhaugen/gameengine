@@ -73,12 +73,9 @@ MainWindow::MainWindow(QWidget *parent, const char* windowTitle, int windowWidth
     //
     connect(ui->treeGameObjects, &QTreeWidget::customContextMenuRequested, this, &MainWindow::OnRightClickGameObjectWidget);
 
-    lastTime = std::chrono::high_resolution_clock::now();
-
     AUDIO* audio = new AUDIO();
     PHYSICS* physics = new PHYSICS();
 
-    //Locator::SetAudio(openAL);
     Locator::SetAudio(audio);
     Locator::SetPhysics(physics);
     Locator::SetRenderer(renderer);
@@ -121,11 +118,6 @@ void MainWindow::cleanup()
 // Fixed update time step
 void MainWindow::MainGameLoop()
 {
-    // Calculate delta time, this can be used for a variable time step
-    auto currentTime = std::chrono::high_resolution_clock::now();
-    float deltaTime = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - lastTime).count();
-    lastTime = std::chrono::high_resolution_clock::now();
-
     Locator::input.Update();
     scene->editor->UpdateStatusBar((std::string("(") + std::to_string(Locator::input.mouse.x) + ", " + std::to_string(Locator::input.mouse.y) + std::string(")")).c_str());
 

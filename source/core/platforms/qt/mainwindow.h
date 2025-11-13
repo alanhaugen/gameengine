@@ -41,8 +41,6 @@ public:
 private:
     QWidget* vulkanWidget;
 
-    std::chrono::time_point<std::chrono::steady_clock> lastTime;
-
     //right click the object in gameobjectWidget
     void OnRightClickGameObjectWidget(const QPoint& ClickedOn);
 

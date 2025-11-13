@@ -69,6 +69,17 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 add_library(Core STATIC
+    README.md
+    shaders/color.vert
+    shaders/color.frag
+    shaders/gui.vert
+    shaders/gui.frag
+    shaders/phong.vert
+    shaders/phong.frag
+    shaders/Shader.vert
+    shaders/Shader.frag
+    shaders/skinning.vert
+    shaders/skinning.frag
     source/core/components/camera.cpp
     source/core/components/camera.h
     source/core/components/component.h
@@ -140,9 +151,12 @@ endif()
 
 target_include_directories(Core PRIVATE include)
 
-if(MSVC)
-    # Required for proper C++ exception handling with MSVC
-    target_compile_options(Core PRIVATE /EHsc)
+if (WIN32)
+    if (MSVC)
+        # Required for proper C++ exception handling with MSVC
+        target_compile_options(Core PRIVATE /EHsc)
+    endif()
+
     target_include_directories(Core PRIVATE
         "C:/VulkanSDK/1.4.321.1/Include"
     )
@@ -150,7 +164,6 @@ if(MSVC)
         Qt::Core
         Qt::Widgets
         Qt::Multimedia
-        OpenALAudio
         "C:/VulkanSDK/1.4.321.1/Lib/vulkan-1.lib"
     )
 else()
