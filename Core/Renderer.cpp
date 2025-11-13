@@ -112,9 +112,9 @@ void Renderer::initVulkan()
     createUniformBuffers();
 
 
-    for (size_t i = 0; i < mEngine->mTextureManager->mAssets.size(); i++)
-        createDescriptorSets(*mEngine->mTextureManager->mAssets[i]);
-
+    //for (size_t i = 0; i < mEngine->mTextureManager->mAssets.size(); i++)
+    //    createDescriptorSets(*mEngine->mTextureManager->mAssets[i]);
+    createDescriptorSets();
     RecreateTextureDescriptors();
 
     createCommandBuffers();
@@ -225,8 +225,9 @@ void Renderer::recreateSwapChain()
     createUniformBuffers();
     createDescriptorPool();
     
-	for (size_t i = 0; i < mEngine->mTextureManager->mAssets.size(); i++)
-        createDescriptorSets(*mEngine->mTextureManager->mAssets[i]);
+    //for (size_t i = 0; i < mEngine->mTextureManager->mAssets.size(); i++)
+    //    createDescriptorSets(*mEngine->mTextureManager->mAssets[i]);
+    createDescriptorSets();
 
     RecreateTextureDescriptors();
     createCommandBuffers();
@@ -890,13 +891,13 @@ bool Renderer::hasStencilComponent(VkFormat format) {
 void Renderer::createTextureImageResource(gea::Texture* texture)
 {
     //int texWidth, texHeight, texChannels;
-    stbi_uc* pixels = texture->mPixels;
+    //stbi_uc* pixels = texture->mPixels;
     VkDeviceSize imageSize = texture->mTexWidth * texture->mTexHeight * 4;
-    texture->mMipLevels = static_cast<uint32_t>(std::floor(std::log2(std::max(texture->mTexWidth, texture->mTexHeight)))) + 1;
+    // texture->mMipLevels = static_cast<uint32_t>(std::floor(std::log2(std::max(texture->mTexWidth, texture->mTexHeight)))) + 1;
 
-    if (!pixels) {
-        throw std::runtime_error("failed to load texture image!");
-    }
+    // if (!pixels) {
+    //     throw std::runtime_error("failed to load texture image!");
+    // }
 
     VkBuffer stagingBuffer;
     VkDeviceMemory stagingBufferMemory;
@@ -906,10 +907,8 @@ void Renderer::createTextureImageResource(gea::Texture* texture)
 
     void* data;
     vkMapMemory(device, stagingBufferMemory, 0, imageSize, 0, &data);
-    memcpy(data, pixels, static_cast<size_t>(imageSize));
+    memcpy(data, texture->mPixels, static_cast<size_t>(imageSize));
     vkUnmapMemory(device, stagingBufferMemory);
-
-    stbi_image_free(pixels);
 
     createImage(texture->mTexWidth, texture->mTexHeight, texture->mMipLevels,
                 VK_SAMPLE_COUNT_1_BIT, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_TILING_OPTIMAL,
@@ -917,20 +916,21 @@ void Renderer::createTextureImageResource(gea::Texture* texture)
                 VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
                 texture->mTextureImage, texture->mTextureImageMemory);
 
+    stbi_image_free(texture->mPixels);
     transitionImageLayout(texture->mTextureImage, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, texture->mMipLevels);
     copyBufferToImage(stagingBuffer, texture->mTextureImage, static_cast<uint32_t>(texture->mTexWidth), static_cast<uint32_t>(texture->mTexHeight));
     //transitioned to VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL while generating mipmaps
 
-    vkDestroyBuffer(device, stagingBuffer, nullptr);
-    vkFreeMemory(device, stagingBufferMemory, nullptr);
-
     generateMipmaps(texture->mTextureImage, VK_FORMAT_R8G8B8A8_SRGB, texture->mTexWidth, texture->mTexHeight, texture->mMipLevels);
 
     /* Create View */
-    texture->mTextureImageView = createImageView(texture->mTextureImage, VK_FORMAT_R8G8B8A8_SRGB,
-                                                 VK_IMAGE_ASPECT_COLOR_BIT, texture->mMipLevels);
-    //createTextureImageView(texture);
+    //createImageView(texture->mTextureImage, VK_FORMAT_R8G8B8A8_SRGB,VK_IMAGE_ASPECT_COLOR_BIT, texture->mMipLevels);
+    createTextureImageView(texture);
     createTextureSampler(texture);
+
+    vkDestroyBuffer(device, stagingBuffer, nullptr);
+    vkFreeMemory(device, stagingBufferMemory, nullptr);
+
 }
 
 void Renderer::generateMipmaps(VkImage image, VkFormat imageFormat, int32_t texWidth, int32_t texHeight, uint32_t mipLevels)
@@ -1199,119 +1199,13 @@ void Renderer::copyBufferToImage(VkBuffer buffer, VkImage image, uint32_t width,
     endSingleTimeCommands(commandBuffer);
 }
 
-// void Renderer::loadModel(QString MODEL_PATH)
-// {
-//     tinyobj::attrib_t attrib;
-//     std::vector<tinyobj::shape_t> shapes;
-//     std::vector<tinyobj::material_t> materials;
-//     std::string warn, err;
-
-//     if (!tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, MODEL_PATH.toStdString().c_str())) {
-//         throw std::runtime_error(warn + err);
-//     }
-
-//     std::unordered_map<Vertex, uint32_t> uniqueVertices{};
-
-//     obj_asset=new ObjAsset();
-//     for (const auto& shape : shapes) {
-//         for (const auto& index : shape.mesh.indices) {
-//             Vertex vertex{};
-
-//             vertex.pos = {
-//                 attrib.vertices[3 * index.vertex_index + 0],
-//                 attrib.vertices[3 * index.vertex_index + 1],
-//                 attrib.vertices[3 * index.vertex_index + 2]
-//             };
-
-//             vertex.texCoord = {
-//                 attrib.texcoords[2 * index.texcoord_index + 0],
-//                 1.0f - attrib.texcoords[2 * index.texcoord_index + 1]
-//             };
-
-//             vertex.color = {1.0f, 1.0f, 1.0f};
-
-
-//             if (uniqueVertices.count(vertex) == 0) {
-//                 uniqueVertices[vertex] = static_cast<uint32_t>(vertices.size());
-//                 obj_asset->mVertices.push_back(vertex);
-//                 vertices.push_back(vertex);
-//             }
-
-//             obj_asset->mIndices.push_back(uniqueVertices[vertex]);
-//             indices.push_back(uniqueVertices[vertex]);
-
-
-//         }
-//     }
-
-//     objManager->mAssets.push_back(obj_asset);
-// }
-
-// void Renderer::importObjects()
-// {
-//     QDirIterator it(QString(PATH.c_str()) + "Assets/Models/",QStringList()<<"*.obj", QDir::NoFilter,QDirIterator::Subdirectories );
-//     while(it.hasNext())
-//     {
-//         QString path=it.next();
-//         QFileInfo fileInfo(path);
-//         QString name=fileInfo.baseName();
-//         //qDebug()<<fileInfo.filePath()<<" "<<fileInfo.absoluteFilePath()<<"\n";
-//         objManager->mFilesNamesSet.insert(name);
-//         objManager->mFilesNamesStack.push_back(path);
-//         //objManager->filesNamesSet.insert(name);
-//     }
-
-//     for(auto it: objManager->mFilesNamesStack)
-//     {
-//         loadModel(it);
-//     }
-// }
-
-// void Renderer::createVertexBuffer()
-// {
-//     VkDeviceSize bufferSize = sizeof(vertices[0]) * vertices.size();
-
-//     VkBuffer stagingBuffer;
-//     VkDeviceMemory stagingBufferMemory;
-//     createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory);
-
-//     void* data;
-//     vkMapMemory(device, stagingBufferMemory, 0, bufferSize, 0, &data);
-//     memcpy(data, vertices.data(), (size_t) bufferSize);
-//     vkUnmapMemory(device, stagingBufferMemory);
-
-//     createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, vertexBuffer, vertexBufferMemory);
-
-//     copyBuffer(stagingBuffer, vertexBuffer, bufferSize);
-
-//     vkDestroyBuffer(device, stagingBuffer, nullptr);
-//     vkFreeMemory(device, stagingBufferMemory, nullptr);
-// }
-
-// void Renderer::createIndexBuffer()
-// {
-//     VkDeviceSize bufferSize = sizeof(indices[0]) * indices.size();
-
-//     VkBuffer stagingBuffer;
-//     VkDeviceMemory stagingBufferMemory;
-//     createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory);
-
-//     void* data;
-//     vkMapMemory(device, stagingBufferMemory, 0, bufferSize, 0, &data);
-//     memcpy(data, indices.data(), (size_t) bufferSize);
-//     vkUnmapMemory(device, stagingBufferMemory);
-
-//     createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_INDEX_BUFFER_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, indexBuffer, indexBufferMemory);
-
-//     copyBuffer(stagingBuffer, indexBuffer, bufferSize);
-
-//     vkDestroyBuffer(device, stagingBuffer, nullptr);
-//     vkFreeMemory(device, stagingBufferMemory, nullptr);
-// }
-
 void Renderer::createUniformBuffers()
 {
     VkDeviceSize bufferSize = sizeof(UniformBufferObject);
+
+    if (swapChainImages.empty()) {
+        throw std::runtime_error("createUniformBuffers failed: swapChainImages is empty.");
+    }
 
     uniformBuffers.resize(swapChainImages.size());
     uniformBuffersMemory.resize(swapChainImages.size());
@@ -1340,9 +1234,11 @@ void Renderer::createDescriptorPool()
     if (vkCreateDescriptorPool(device, &poolInfo, nullptr, &descriptorPool) != VK_SUCCESS) {
         throw std::runtime_error("failed to create descriptor pool!");
     }
+    else
+        qDebug("Successfully created Descriptor Pool");
 }
 
-void Renderer::createDescriptorSets(gea::Texture &texture)
+void Renderer::createDescriptorSets()
 {
     std::vector<VkDescriptorSetLayout> layouts(swapChainImages.size(), descriptorSetLayout);
     VkDescriptorSetAllocateInfo allocInfo{};
@@ -2136,7 +2032,7 @@ void Renderer::RecreateTextureDescriptors()
      for (size_t i = 0; i < mEngine->mTextureManager->mAssets.size(); ++i) {
          // Re-allocate and update descriptor for this texture from the current descriptorPool
          mEngine->mTextureManager->mAssets[i]->textureDescriptor = createTextureDescriptor(*mEngine->mTextureManager->mAssets[i]);
-         qDebug() << "Recreated texture descriptor for index" << (int)i << "desc=" << mEngine->mTextureManager->mAssets[i]->textureDescriptor;
+         //qDebug() << "Recreated texture descriptor for index" << (int)i << "desc=" << mEngine->mTextureManager->mAssets[i]->textureDescriptor;
      }
 }
 
