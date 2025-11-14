@@ -14,7 +14,7 @@ Mesh::Mesh(const char *filePath,
 {
     SetName("Mesh");
 
-    loadMesh(filePath);
+    loadMesh(filePath, vertexShaderPath, fragmentShaderPath);
 }
 
 void Mesh::loadMesh(const char *filePath, const char *vertexShaderPath, const char *fragmentShaderPath)
@@ -40,6 +40,10 @@ void Mesh::loadMesh(const char *filePath, const char *vertexShaderPath, const ch
     if (materials.size() > 0)
     {
         texture = materials[0].diffuse_texname.c_str();
+    }
+    else
+    {
+        texture = "Assets/Textures/pink.jpg";
     }
 
     std::unordered_map<Vertex, uint32_t> uniqueVertices{};
