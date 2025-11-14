@@ -20,6 +20,7 @@ void AssetManager::ImportMesh(const QString &AssethPath)
     {
         QFileInfo File(it.next());
          qDebug()<<"Found:"<< File.filePath() <<" \n";
+        //Log("Found:"+ File.filePath().toStdString() +" \n");
 
         QString name = File.baseName();
 

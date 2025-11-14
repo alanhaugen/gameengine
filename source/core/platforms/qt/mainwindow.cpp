@@ -111,6 +111,9 @@ MainWindow::MainWindow(QWidget *parent, const char* windowTitle, int windowWidth
     connect(ui->treeGameObjects, &QTreeWidget::itemClicked, this, &MainWindow::OnLeftClickGameObjectWidget);
 
 
+    //
+    connect(ui->Mesh_Combo, &QComboBox::currentTextChanged, this,&MainWindow::ChangeMesh);
+
     //GameObject treewidget
     ui->treeGameObjects->setMinimumWidth(100);
 
@@ -440,7 +443,7 @@ void MainWindow::ChangeMesh(const QString &meshname)
             Mesh* mesh =dynamic_cast<Mesh*>(comp);
 
             QString path = mAssetManager->FindMesh(meshname);
-           //mesh->loadMesh( path.toStdString().c_str());
+           mesh->loadMesh( path.toStdString().c_str());
         }
     }
 }
