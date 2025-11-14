@@ -13,6 +13,14 @@ Mesh::Mesh(const char *filePath,
            const char* fragmentShaderPath)
 {
     SetName("Mesh");
+
+    loadMesh(filePath);
+}
+
+void Mesh::loadMesh(const char *filePath, const char *vertexShaderPath, const char *fragmentShaderPath)
+{
+    //imcomplete
+
     FilePath =filePath;
     std::vector<Vertex> vertices;
     std::vector<uint32_t> indices;
@@ -53,11 +61,11 @@ Mesh::Mesh(const char *filePath,
 
             vertex.color = {1.0f, 1.0f, 1.0f};
 
-            /*vertex.normal = {
-                attrib.normals[3 * index.vertex_index + 0],
-                attrib.normals[3 * index.vertex_index + 1],
-                attrib.normals[3 * index.vertex_index + 2]
-            };*/
+            // vertex.normal = {
+            //     attrib.normals[3 * index.vertex_index + 0],
+            //     attrib.normals[3 * index.vertex_index + 1],
+            //     attrib.normals[3 * index.vertex_index + 2]
+            // };
 
             if (uniqueVertices.count(vertex) == 0) {
                 uniqueVertices[vertex] = static_cast<uint32_t>(vertices.size());
@@ -74,12 +82,12 @@ Mesh::Mesh(const char *filePath,
 void Mesh::Update()
 {
 
-    if(!gameobjOwner || !drawable)
+    if(!entityOwner || !drawable)
     {
         return;
     }
 
-   mTransform = gameobjOwner->mTransform;
+
 
 
     //qDebug()<<"Meshpos: "<<mTransform.mPosition.x;
@@ -89,14 +97,15 @@ void Mesh::Update()
 void Mesh::OnAttach()
 {
     //attached the drawable to the gameobject
-    if(gameobjOwner)
-    {
-        gameobjOwner->drawable = drawable;
-    }
+    // if(gameobjOwner)
+    // {
+    //     gameobjOwner->drawable = drawable;
+    // }
 }
 
-void Mesh::UpdateTransform()
+void Mesh::UpdateTransform(Transform transform)
 {
+    mTransform = transform;
     //multiplies the value by 1 instead of zero
     glm::mat4 Neutral = glm::mat4(1.0f);
 
@@ -112,9 +121,9 @@ void Mesh::UpdateTransform()
 
     drawable->ubo.model = Neutral;
 
-    qDebug() << "Mesh Transform updated:"
-             << "Pos" << mTransform.mPosition.x << mTransform.mPosition.y << mTransform.mPosition.z
-             << "Rot" << mTransform.mRotation.x << mTransform.mRotation.y << mTransform.mRotation.z
-             << "Scale" << mTransform.mScale.x << mTransform.mScale.y << mTransform.mScale.z;
-
+    // qDebug() << "Mesh Transform updated:"
+    //          << "Pos" << mTransform.mPosition.x << mTransform.mPosition.y << mTransform.mPosition.z
+    //          << "Rot" << mTransform.mRotation.x << mTransform.mRotation.y << mTransform.mRotation.z
+    //          << "Scale" << mTransform.mScale.x << mTransform.mScale.y << mTransform.mScale.z;
 }
+

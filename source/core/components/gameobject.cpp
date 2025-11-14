@@ -21,7 +21,7 @@ GameObject::GameObject(const QString name)
 
 void GameObject::AddComponent(Component *newComponent)
 {
-    newComponent->SetGameObjOwner(this);
+
     components.push_back(newComponent);
     newComponent->OnAttach();
 }
@@ -62,7 +62,7 @@ void GameObject::UpdateTransform(glm::vec3 Position, glm::vec3 Rotation, glm::ve
     for (unsigned i = 0; i < components.size(); i++)
     {
 
-        components[i]->UpdateTransform();
+        components[i]->UpdateTransform(mTransform);
     }
 }
 
