@@ -228,6 +228,7 @@ void MainWindow::AddSphere()
     scene->gameObjects.push_back(gameobj);
 }*/
 
+
 void MainWindow::closeEvent(QCloseEvent *event)
 {
     timer->stop();
