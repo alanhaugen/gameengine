@@ -10,13 +10,13 @@
 class Application : public PLATFORM
 {
 private:
-    std::vector<Scene*> scenes;
+   // std::vector<Scene*> scenes;
 
 public:
     Application(int argc, char* argv[], const char* windowTitle, int windowWidth, int windowHeight);
     void SetScene(int scene);
-    void SetScene(Scene* scene);
-    void AddScene(Scene* scene);
+    // void SetScene(Scene* scene);
+    // void AddScene(Scene* scene);
     static void NextScene();
     static void Quit();
     int Run();

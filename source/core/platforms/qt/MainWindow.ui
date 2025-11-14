@@ -43,7 +43,7 @@
     <property name="title">
      <string>&amp;Edit</string>
     </property>
-    <addaction name="actionSomething"/>
+    <addaction name="actionNewScene"/>
    </widget>
    <widget class="QMenu" name="menuAdd">
     <property name="title">
@@ -643,7 +643,7 @@
     <string>Quit the application</string>
    </property>
   </action>
-  <action name="actionSomething">
+  <action name="actionNewScene">
    <property name="text">
     <string>New Scene</string>
    </property>

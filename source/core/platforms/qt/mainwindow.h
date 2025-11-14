@@ -76,6 +76,8 @@ private:
 
     void PosObj(double);
 
+    void NewScenes();
+
     QTimer* timer;
 
     AssetManager* mAssetManager;

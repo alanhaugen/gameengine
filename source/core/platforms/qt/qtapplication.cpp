@@ -26,6 +26,7 @@ void QtApplication::Quit()
 
 int QtApplication::Run()
 {
-    w.scene = currentScene;
+    qDebug()<<"oig" <<GetCurrentScene();
+    w.scene = GetCurrentScene();
     return a.exec();
 }

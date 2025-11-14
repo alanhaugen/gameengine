@@ -1,4 +1,5 @@
 #include "mainwindow.h"
+#include "core/platforms/application.h"
 #include "core/platforms/qt/qtapplication.h"
 #include "ui_MainWindow.h"
 #include "systems/renderer/vulkan/vulkanrenderer.h"
@@ -21,6 +22,7 @@ MainWindow::MainWindow(QWidget *parent, const char* windowTitle, int windowWidth
 
     //AssetManager
     mAssetManager = new AssetManager();
+
 
     ui->setupUi(this);
     ui->treeGameObjects->setContextMenuPolicy(Qt::CustomContextMenu);
@@ -76,6 +78,14 @@ MainWindow::MainWindow(QWidget *parent, const char* windowTitle, int windowWidth
     // connect(ui->actionViking_Room, &QAction::triggered, this, &MainWindow::AddVikingRoom);
     // connect(ui->actionCube, &QAction::triggered, this, &MainWindow::AddCube);
     // connect(ui->actionSphere, &QAction::triggered, this, &MainWindow::AddSphere);
+
+
+    //Scenes
+
+
+    connect(ui->actionNewScene,&QAction::triggered, this,&MainWindow::NewScenes);
+
+
 
     //new version
     for (const QString& Objects : mAssetManager->GetMeshNames())
@@ -500,39 +510,12 @@ void MainWindow::PosObj(double)
     UpdateInspector();
 }
 
-
-/*void MainWindow::AddVikingRoom()
+void MainWindow::NewScenes()
 {
-    GameObject* gameobj = new GameObject("VikingRoom");
+   // qDebug()<<"boingScene";
 
-    Mesh* mesh = new Mesh("Assets/Models/viking_room.obj");
 
-    gameobj->AddComponent(mesh);
-
-    scene->gameObjects.push_back(gameobj);
 }
-
-void MainWindow::AddCube()
-{
-    GameObject* gameobj = new GameObject("Cube");
-
-    Cube* cube = new Cube(0.0f, 0.0f, 0.0f, glm::vec3{1.0f,1.0f,1.0f}, glm::vec3{1.0f,1.0f,1.0f});
-
-    gameobj->AddComponent(cube);
-
-    scene->gameObjects.push_back(gameobj);
-}
-
-void MainWindow::AddSphere()
-{
-    GameObject* gameobj = new GameObject("Sphere");
-
-    Mesh* mesh = new Mesh("Assets/Models/ball.obj");
-
-    gameobj->AddComponent(mesh);
-
-    scene->gameObjects.push_back(gameobj);
-}*/
 
 
 void MainWindow::closeEvent(QCloseEvent *event)
