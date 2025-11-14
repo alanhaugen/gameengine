@@ -373,7 +373,7 @@ void MainWindow::UpdateInspector()
             {
                 qDebug()<<"Has Mesh" <<"/n";
                 Mesh* mesh = dynamic_cast<Mesh*>(comp);
-                QString currentMeshName = QFileInfo(mesh->FilePath).baseName();
+                QString currentMeshName = QFileInfo(QString(mesh->FilePath.c_str())).baseName();
                 qDebug()<<"info here:"<<currentMeshName <<"/n";
                 int index = ui->Mesh_Combo->findText(currentMeshName);
                 ui->Mesh_Combo->setCurrentIndex(index);
