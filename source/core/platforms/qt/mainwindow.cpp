@@ -379,6 +379,9 @@ void MainWindow::UpdateInspector()
                 QString currentMeshName = QFileInfo(QString(mesh->FilePath.c_str())).baseName();
                 qDebug()<<"info here:"<<currentMeshName <<"/n";
                 int index = ui->Mesh_Combo->findText(currentMeshName);
+
+                //block it from colling change mesh
+                QSignalBlocker blocker( ui->Mesh_Combo);
                 ui->Mesh_Combo->setCurrentIndex(index);
             }
         }
@@ -436,6 +439,7 @@ void MainWindow::AvailableMeshes()
 
 void MainWindow::ChangeMesh(const QString &meshname)
 {
+    //qDebug() << "Fucky";
     for (Component* comp: ObjSelected->components)
     {
         if(comp->GetName() =="Mesh")
