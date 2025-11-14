@@ -38,12 +38,16 @@ public:
 
     void mousePressed(QMouseEvent*event);
 
+
+
+
 private:
     QWidget* vulkanWidget;
 
     //ObjectSelect
     GameObject* ObjSelected = nullptr;
 
+    void resizeEvent(QResizeEvent* event) override;
 
     std::chrono::time_point<std::chrono::steady_clock> lastTime;
 

@@ -25,6 +25,7 @@ void AssetManager::ImportMesh(const QString &AssethPath)
         QString name = File.baseName();
 
         auto mesh = std::make_unique<Mesh>(File.filePath().toStdString().c_str());
+
         mMesh.push_back(std::move(mesh));
         mFilesNames.insert(name,mMesh.size()-1);
         mFilesPath.insert(name,File.filePath());
@@ -40,6 +41,7 @@ QStringList AssetManager::GetMeshNames() const
     return mFilesNames.keys();
 
 }
+
 
 QString AssetManager::FindMesh(const QString &Name)
 {

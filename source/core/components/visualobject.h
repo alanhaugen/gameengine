@@ -6,7 +6,7 @@
 class VisualObject : public Component
 {
 public:
-    Renderer::Drawable* drawable;
+    Renderer::Drawable* drawable = nullptr;
 
     void SetPosition(float x, float y, float z)
     {
@@ -56,11 +56,13 @@ public:
 
     void Show()
     {
+        if(drawable)
         drawable->isVisible = true;
     }
 
     void Hide()
     {
+        if(drawable)
         drawable->isVisible = false;
     }
 };

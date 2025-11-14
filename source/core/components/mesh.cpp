@@ -20,6 +20,10 @@ Mesh::Mesh(const char *filePath,
 void Mesh::loadMesh(const char *filePath, const char *vertexShaderPath, const char *fragmentShaderPath)
 {
     //imcomplete
+    if(drawable)
+    {
+        Hide();
+    }
 
     FilePath =filePath;
     std::vector<Vertex> vertices;

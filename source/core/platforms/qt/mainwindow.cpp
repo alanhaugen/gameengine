@@ -239,6 +239,16 @@ void MainWindow::MainGameLoop()
     }
 }
 
+void MainWindow::resizeEvent(QResizeEvent *event)
+{
+    QMainWindow::resizeEvent(event);
+
+   // qDebug() << "Bitch up";
+    QList<int>sizes;
+    sizes << height()*0.8 << height()*0.8 << height()*0.8 << height()*0.3;
+    resizeDocks({ui->dockGameObjects,ui->SceneDock,ui->DockInspector,ui->dockAssets},sizes,Qt::Vertical);
+}
+
 void MainWindow::OnRightClickGameObjectWidget(const QPoint &ClickedOn)
 {
     qDebug() << "Right-click detected at" << ClickedOn;
