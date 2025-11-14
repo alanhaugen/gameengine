@@ -99,7 +99,6 @@ Terrain::Terrain(const char *filePath,
 
 void Terrain::Update()
 {
-
 }
 
 float Terrain::GetHeightAt(float x, float z) const

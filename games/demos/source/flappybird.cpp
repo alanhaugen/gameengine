@@ -153,3 +153,7 @@ void FlappyBird::Update()
 
     force += 0.1f;
 }
+
+void FlappyBird::Clean()
+{
+}

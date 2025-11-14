@@ -3,25 +3,21 @@
 
 #include "core/x-platform/locator.h"
 #include "core/x-platform/scene.h"
+
 class Services : public Locator
 {
 public:
     Services();
 
 private:
-    std::vector<Scene*> scenes;
-    Scene* currentScene= nullptr;
+    static std::vector<Scene*> scenes;
 
 public:
+    static Scene* currentScene;
+
     void AddScene(Scene* scene);
     void SetScene(Scene* scene);
-   static void SetScene(int index);
-
-    Scene* GetCurrentScene();
-
-
-
-
+    static void SetScene(int index);
 };
 
 #endif // SERVICES_H

@@ -55,7 +55,7 @@ Sprite::Sprite(const char* texture, float x, float y, float scaleX, float scaleY
     }
     else
     {
-        drawable->ubo.width.x = width;
+        drawable->ubo.width.x  = width;
         drawable->ubo.height.x = height;
     }
 

@@ -125,7 +125,7 @@ add_library(Core STATIC
     source/core/x-platform/scene.h
     source/core/components/AssetManager.h
     source/core/components/AssetManager.cpp
-    source/core/x-platform/Services.h source/core/x-platform/Services.cpp)
+    source/core/x-platform/services.h source/core/x-platform/services.cpp)
 
 target_include_directories(Core PRIVATE "source")
 
