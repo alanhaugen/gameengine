@@ -7,6 +7,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 add_library(NullAudio STATIC
     nullaudio.cpp
     nullaudio.h
+    ../audio.h
 )
 
 target_include_directories(NullAudio PRIVATE ../../../../include)

@@ -8,8 +8,8 @@ Pong::Pong()
 void Pong::Init()
 {
     ball    = new Sphere(0, 0, -5, glm::vec3(0.1f));
-    paddle1 = new Cube(-5, 0, -5, glm::vec3(0.01, 0.05f, 0.01f));
-    paddle2 = new Cube( 5, 0, -5, glm::vec3(0.01, 0.05f, 0.01f));
+    paddle1 = new Cube(-5, 0, -5, glm::vec3(0.1, 0.5f, 0.1f));
+    paddle2 = new Cube( 5, 0, -5, glm::vec3(0.1, 0.5f, 0.1f));
 
     direction = glm::vec3(0.5f, 0.5f, 0.0f);
 
@@ -25,7 +25,7 @@ void Pong::Init()
     win2->drawable->isVisible = false;
 
     renderer->SetClearColor(0, 0, 0);
-    audio->PlaySound("Music", "Assets/Sounds/musicMono.wav", true, 0.01f, glm::vec3(0.0f,0.0f,0.0f));
+    audio->PlaySound("Assets/Sounds/musicMono.wav");
 }
 
 void Pong::Update()
@@ -120,7 +120,7 @@ void Pong::Update()
         if (ballMatrix[3].x < -4.6f && ballMatrix[3].x > -4.8f
         && playerMatrix[3].y < ballMatrix[3].y + 0.5f && playerMatrix[3].y > ballMatrix[3].y - 0.5f)
         {
-            audio->PlaySound("Paddle Hit", "Assets/Sounds/paddle_hit.wav");
+            audio->PlaySound("Assets/Sounds/paddle_hit.wav");
             direction.y = (ballMatrix[3].y - playerMatrix[3].y);
             goRight = true;
         }
@@ -130,7 +130,7 @@ void Pong::Update()
         if (ballMatrix[3].x > 4.6f && ballMatrix[3].x < 4.8f
         && aiMatrix[3].y < ballMatrix[3].y + 0.5f && aiMatrix[3].y > ballMatrix[3].y - 0.5f)
         {
-            audio->PlaySound("Paddle Hit", "Assets/Sounds/paddle_hit.wav");
+            audio->PlaySound("Assets/Sounds/paddle_hit.wav");
             direction.y = (ballMatrix[3].y - aiMatrix[3].y);
             goRight = false;
         }
@@ -140,7 +140,7 @@ void Pong::Update()
     if (ballMatrix[3].y < -3.0f || ballMatrix[3].y > 3.0f)
     {
         direction.y *= -1;
-        audio->PlaySound("Wall Hit", "Assets/Sounds/wall_hit.wav");
+        audio->PlaySound("Assets/Sounds/wall_hit.wav");
     }
 
     // Check score state
@@ -156,7 +156,7 @@ void Pong::Update()
         score1->drawable->isVisible = false;
         delete score1;
         score1 = new Text((std::string("Player 1: ") + std::to_string(playerOneScore)).c_str());
-        audio->PlaySound("Score", "Assets/Sounds/score.wav");
+        audio->PlaySound("Assets/Sounds/score.wav");
         if (playerOneScore >= 10)
         {
             state = WIN;
@@ -178,7 +178,7 @@ void Pong::Update()
         score2->drawable->isVisible = false;
         delete score2;
         score2 = new Text((std::string("Player 2: ") + std::to_string(playerTwoScore)).c_str(), 700.0f, 0.0f);
-        audio->PlaySound("Score", "Assets/Sounds/score.wav");
+        audio->PlaySound("Assets/Sounds/score.wav");
         if (playerTwoScore >= 10)
         {
             state = WIN;

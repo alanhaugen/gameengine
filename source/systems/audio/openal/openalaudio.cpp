@@ -35,13 +35,11 @@ bool OpenALAudio::Init()
     //ALint i;	//will hold the number of the preferred device
     //ALboolean bReturn = AL_FALSE;
 
-
     return true;
 }
 
 void OpenALAudio::Update()
 {
-
 }
 
 SoundSource* OpenALAudio::PlaySound(std::string name, std::string filepath, bool loop = false, float gain = 1.0f, glm::vec3 pos = glm::vec3())
@@ -55,17 +53,16 @@ SoundSource* OpenALAudio::PlaySound(std::string name, std::string filepath, bool
 
 void OpenALAudio::PlayMusic(std::string filename)
 {
-
+    PlaySound("Music", filename, true, 1.0f, glm::vec3());
 }
 
 void OpenALAudio::PlaySound(std::string filename, glm::vec3 pos)
 {
-
+    PlaySound("Sound Effect", filename, false, 1.0f, pos);
 }
 
 void OpenALAudio::cleanUp()
 {
-
     mContext = alcGetCurrentContext();
     mDevice = alcGetContextsDevice(mContext);
     alcMakeContextCurrent(NULL);
@@ -75,7 +72,6 @@ void OpenALAudio::cleanUp()
 
 bool OpenALAudio::checkError()
 {
-
     switch (alGetError())
     {
     case AL_NO_ERROR:
@@ -102,7 +98,6 @@ bool OpenALAudio::checkError()
 
 SoundSource* OpenALAudio::createSource(std::string name, glm::vec3 pos, std::string filePath, bool loop, float gain)
 {
-
     SoundSource* tempPtr = new SoundSource(name, loop, gain);
     tempPtr->setPosition(pos);
     if (filePath != "")
@@ -132,5 +127,4 @@ void OpenALAudio::updateListener(glm::vec3 pos, glm::vec3 vel, glm::vec3 dir, gl
     alListenerfv(AL_POSITION, posVec);
     alListenerfv(AL_VELOCITY, velVec);
     alListenerfv(AL_ORIENTATION, headVec);
-
 }

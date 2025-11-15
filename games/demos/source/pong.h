@@ -5,6 +5,7 @@
 #include "core/components/sphere.h"
 #include "core/components/cube.h"
 #include "core/components/text.h"
+#include "core/components/wiredcube.h"
 
 class Pong : public Scene
 {

@@ -125,7 +125,11 @@ add_library(Core STATIC
     source/core/x-platform/scene.h
     source/core/components/AssetManager.h
     source/core/components/AssetManager.cpp
-    source/core/x-platform/services.h source/core/x-platform/services.cpp)
+    source/core/x-platform/services.h
+    source/core/x-platform/services.cpp
+    source/core/components/wiredcube.cpp
+    source/core/components/wiredcube.h
+)
 
 target_include_directories(Core PRIVATE "source")
 
