@@ -35,7 +35,6 @@ void AAPhysics::CollisionDetection()
                     //Log("Collision");
                 }
             }
-
         }
     }
 }

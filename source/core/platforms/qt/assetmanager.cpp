@@ -1,4 +1,4 @@
-#include "AssetManager.h"
+#include "assetmanager.h"
 #include <qdiriterator.h>
 
 

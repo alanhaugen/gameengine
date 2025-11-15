@@ -7,7 +7,7 @@
 
 class Scene;
 class GameObject;
-#include "../../components/AssetManager.h"
+#include "assetmanager.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {

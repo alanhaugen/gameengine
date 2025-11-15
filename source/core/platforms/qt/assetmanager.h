@@ -1,7 +1,7 @@
 #ifndef ASSETMANAGER_H
 #define ASSETMANAGER_H
 
-#include "mesh.h"
+#include "../../components/mesh.h"
 
 #include <QHash>
 #include <qobject.h>

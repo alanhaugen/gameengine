@@ -123,8 +123,8 @@ add_library(Core STATIC
     source/core/x-platform/locator.cpp
     source/core/x-platform/locator.h
     source/core/x-platform/scene.h
-    source/core/components/AssetManager.h
-    source/core/components/AssetManager.cpp
+    source/core/platforms/qt/assetmanager.h
+    source/core/platforms/qt/assetmanager.cpp
     source/core/x-platform/services.h
     source/core/x-platform/services.cpp
     source/core/components/wiredcube.cpp
