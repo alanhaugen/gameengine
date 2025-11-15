@@ -1,5 +1,6 @@
 #include "terrain.h"
 #include "stb_image.h"
+#include <fstream>
 
 void Terrain::Init()
 {
@@ -41,6 +42,14 @@ Terrain::Terrain(const char *filePath,
                  const char* fragmentShaderPath,
                  bool isCloud)
 {
+    /*std::ifstream infile(filePath);
+
+    float x, y, z;
+    while (infile >> x >> z >> y)
+    {
+        static glm::vec3 offset = glm::vec3(x,y,z);
+        vertices.push_back(Vertex{x - offset.x, y - offset.y, z - offset.z});
+    }*/
     int width,height,n;
     unsigned char *data = stbi_load(filePath, &width, &height, &n, 0);
 

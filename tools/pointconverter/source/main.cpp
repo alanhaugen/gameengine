@@ -6,8 +6,8 @@
 #define STB_PERLIN_IMPLEMENTATION
 #include "stb_perlin.h"
 
-const int width = 256;
-const int height = 256;
+const int width = 512;
+const int height = 512;
 const int channels = 1;
 
 typedef uint8_t u8;
@@ -72,9 +72,12 @@ int main(int argc, char* argv[])
     }
 
     std::vector<vec3> points;
-    float largestX = -100000;
-    float largestY = -100000;
-    float largestZ = -100000;
+    long largestX = -100000;
+    long largestY = -100000;
+    long largestZ = -100000;
+    long smallestX = 999999;
+    long smallestY = 999999;
+    long smallestZ = 999999;
 
     float x, y, z;
     while (infile >> x >> z >> y) // Notice z and y are swapped
@@ -96,14 +99,27 @@ int main(int argc, char* argv[])
              largestZ = pos.z;
         }
 
+        if (smallestX > pos.x)
+        {
+             smallestX = pos.x;
+        }
+        if (smallestY > pos.y)
+        {
+             smallestY > pos.y;
+        }
+        if (smallestZ > pos.z)
+        {
+             smallestZ = pos.z;
+        }
+
         points.push_back(pos);
     }
 
     for (auto point : points)
     {
-        int x = abs((point.x / largestX) * 255);
-        int y = abs((point.y / largestY) * 255);
-        int z = abs((point.z / largestZ) * 255);
+        int x = abs((point.x / (largestX - smallestX)) * width);
+        int y = abs(point.y);
+        int z = abs((point.z / (largestX - smallestX)) * height);
 
         vertices[x][z] = y;
     }

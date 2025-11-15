@@ -14,8 +14,8 @@ public:
     Terrain();
     Terrain(const char* filePath,
             const char* texturePath = "",
-            const char* vertexShaderPath = "shaders/color.vert.spv",
-            const char* fragmentShaderPath = "shaders/color.frag.spv",
+            const char* vertexShaderPath = "shaders/phong.vert.spv",
+            const char* fragmentShaderPath = "shaders/phong.frag.spv",
             bool isCloud = false);
     void Update();
 

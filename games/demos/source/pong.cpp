@@ -91,14 +91,14 @@ void Pong::Update()
     {
         if (playerMatrix[3].y < 2.5f)
         {
-            playerMatrix = glm::translate(playerMatrix, glm::vec3(0, 1.0f, 0.0f));
+            playerMatrix = glm::translate(playerMatrix, glm::vec3(0, 0.1f, 0.0f));
         }
     }
     else if (input.Held(input.Key.DOWN) || input.Held(input.Key.S))
     {
         if (playerMatrix[3].y > -2.5f)
         {
-            playerMatrix = glm::translate(playerMatrix, glm::vec3(0, -1.0f, 0.0f));
+            playerMatrix = glm::translate(playerMatrix, glm::vec3(0, -0.1f, 0.0f));
         }
     }
 
@@ -107,11 +107,11 @@ void Pong::Update()
 
     if (aiMatrix[3].y < ballMatrix[3].y)
     {
-        aiMatrix = glm::translate(aiMatrix, glm::vec3(0, 0.5f, 0.0f));
+        aiMatrix = glm::translate(aiMatrix, glm::vec3(0, 0.05f, 0.0f));
     }
     else if (aiMatrix[3].y > ballMatrix[3].y)
     {
-        aiMatrix = glm::translate(aiMatrix, glm::vec3(0, -0.5f, 0.0f));
+        aiMatrix = glm::translate(aiMatrix, glm::vec3(0, -0.05f, 0.0f));
     }
 
     // Check collision with paddles
