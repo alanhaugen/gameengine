@@ -46,7 +46,8 @@ Sprite::Sprite(const char* texture, float x, float y, float scaleX, float scaleY
                                          "shaders/gui.vert.spv",
                                          "shaders/gui.frag.spv",
                                          Renderer::TRIANGLES,
-                                         texture);
+                                         texture,
+                                         false);
 
     if (width == 0 && height == 0)
     {

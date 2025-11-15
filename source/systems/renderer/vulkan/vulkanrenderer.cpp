@@ -110,13 +110,14 @@ Renderer::Drawable& VulkanRenderer::CreateDrawable(std::vector<Vertex> vertices,
                                                    const char* vertexShader,
                                                    const char* fragmentShader,
                                                    const int topology,
-                                                   const char* texture)
+                                                   const char* texture,
+                                                   const bool depthTesting)
 {
     Drawable drawable;
     drawable.offset = drawablesQuantity;
     drawable.indicesQuantity = indices.size();
     drawable.verticesQuantity = vertices.size();
-    drawable.graphicsPipeline = createGraphicsPipeline(vertexShader, fragmentShader, topology);
+    drawable.graphicsPipeline = createGraphicsPipeline(vertexShader, fragmentShader, topology, depthTesting);
 
     if (texture[0] != '\0') // C string check if empty
     {
@@ -681,7 +682,8 @@ VkDescriptorSet VulkanRenderer::createTextureDescriptor(std::string filePath, in
 
 VkPipeline VulkanRenderer::createGraphicsPipeline(const char* vertexShaderPath,
                                                   const char* fragmentShaderPath,
-                                                  const int topology)
+                                                  const int topology,
+                                                  const bool depthTesting)
 {
     auto vertShaderCode = readFile(vertexShaderPath);
     auto fragShaderCode = readFile(fragmentShaderPath);
@@ -770,7 +772,7 @@ VkPipeline VulkanRenderer::createGraphicsPipeline(const char* vertexShaderPath,
     rasterizer.rasterizerDiscardEnable = VK_FALSE;
     rasterizer.polygonMode = VK_POLYGON_MODE_FILL;
     rasterizer.lineWidth = 1.0f;
-    rasterizer.cullMode = VK_CULL_MODE_BACK_BIT;
+    rasterizer.cullMode = VK_CULL_MODE_NONE;//VK_CULL_MODE_BACK_BIT;
     rasterizer.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE;
     rasterizer.depthBiasEnable = VK_FALSE;
 
@@ -782,9 +784,18 @@ VkPipeline VulkanRenderer::createGraphicsPipeline(const char* vertexShaderPath,
 
     VkPipelineDepthStencilStateCreateInfo depthStencil{};
     depthStencil.sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
-    depthStencil.depthTestEnable = VK_TRUE;
-    depthStencil.depthWriteEnable = VK_TRUE;
-    depthStencil.depthCompareOp = VK_COMPARE_OP_LESS;
+    if (depthTesting)
+    {
+        depthStencil.depthTestEnable = VK_TRUE;
+        depthStencil.depthWriteEnable = VK_TRUE;
+        depthStencil.depthCompareOp = VK_COMPARE_OP_LESS;
+    }
+    else
+    {
+        depthStencil.depthTestEnable = VK_FALSE;
+        depthStencil.depthWriteEnable = VK_FALSE;
+        depthStencil.depthCompareOp = VK_COMPARE_OP_ALWAYS;
+    }
     depthStencil.depthBoundsTestEnable = VK_FALSE;
     depthStencil.stencilTestEnable = VK_FALSE;
 
@@ -793,8 +804,17 @@ VkPipeline VulkanRenderer::createGraphicsPipeline(const char* vertexShaderPath,
 
     //7.1 Blend attachment state
     VkPipelineColorBlendAttachmentState colorBlendAttachment{};
-    colorBlendAttachment.colorWriteMask = VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT;
-    colorBlendAttachment.blendEnable = VK_FALSE;
+    colorBlendAttachment.colorWriteMask =
+        VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT |
+        VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT;
+    colorBlendAttachment.blendEnable = VK_TRUE;
+    colorBlendAttachment.srcColorBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA;
+    colorBlendAttachment.dstColorBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
+    colorBlendAttachment.colorBlendOp = VK_BLEND_OP_ADD;
+    colorBlendAttachment.srcAlphaBlendFactor = VK_BLEND_FACTOR_ONE;
+    colorBlendAttachment.dstAlphaBlendFactor = VK_BLEND_FACTOR_ZERO;
+    colorBlendAttachment.alphaBlendOp = VK_BLEND_OP_ADD;
+
 
     //7.2 Blending state
     VkPipelineColorBlendStateCreateInfo colorBlending{};

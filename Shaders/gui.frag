@@ -45,7 +45,11 @@ void main ()
 {
     vec4 final;
 
+#ifdef VULKAN
+    vec2 coords = vec2(vSmoothTexcoord.x, 1.0 - vSmoothTexcoord.y);
+#else
     vec2 coords = vSmoothTexcoord;
+#endif
 
     // Calculate what area of the spritesheet to use
     // (or use entire sheet if width and height are equal to total width and height)

@@ -72,7 +72,8 @@ public:
                                      const char* vertexShader = "shaders/vert.spv",
                                      const char* fragmentShader = "shaders/frag.spv",
                                      const int topology = TRIANGLES,
-                                     const char* texture = "") = 0;
+                                     const char* texture = "",
+                                     const bool depthTesting = true) = 0;
 
     virtual void SetViewMatrix(glm::mat4 view) = 0;
     virtual void SetCameraPosition(glm::vec3 pos) = 0;

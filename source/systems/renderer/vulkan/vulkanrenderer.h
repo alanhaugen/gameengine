@@ -31,7 +31,8 @@ public:
                              const char* vertexShader,
                              const char* fragmentShader,
                              const int topology = TRIANGLES,
-                             const char* texture = "") override;
+                             const char* texture = "",
+                             const bool depthTesting = true) override;
 
     void Render();
 
@@ -126,7 +127,8 @@ private:
     VkDescriptorSet createTextureDescriptor(std::string filePath, int textureID);
     VkPipeline createGraphicsPipeline(const char *vertexShaderPath,
                                       const char *fragmentShaderPath,
-                                      const int topology = TRIANGLES);
+                                      const int topology = TRIANGLES,
+                                      const bool depthTesting = true);
     void createFramebuffers();
     void createCommandPool();
     void createColorResources();

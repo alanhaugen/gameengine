@@ -25,7 +25,7 @@ void Pong::Init()
     win2->drawable->isVisible = false;
 
     renderer->SetClearColor(0, 0, 0);
-    audio->PlaySound("Assets/Sounds/musicMono.wav");
+    audio->PlayMusic("Assets/Sounds/musicMono.wav");
 }
 
 void Pong::Update()
