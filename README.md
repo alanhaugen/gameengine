@@ -11,6 +11,8 @@ Variables start with lowercase, camelCase
 
 Methods/Functions and Classes/Structs start with uppercase, PascalCase.
 
+All files should be in lowercase for cross platform support.
+
 ## Architecture
 
 The engine is modular and has a core, consisting of components and platform specific code, and modules

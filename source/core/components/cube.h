@@ -8,7 +8,7 @@ class Cube : public VisualObject
 public:
     std::vector<Vertex> vertices;
     std::vector<uint32_t> indices;
-    void Init();
+    void Init(glm::vec3 color);
     Cube(float x = 0.0f,
          float y = 0.0f,
          float z = 0.0f,
