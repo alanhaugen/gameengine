@@ -1,4 +1,5 @@
 #include "rollingball.h"
+#include "core/platforms/application.h"
 #include "core/components/mesh.h"
 #include "core/components/terrain.h"
 #include <glm/gtc/matrix_transform.hpp>
@@ -14,7 +15,7 @@ void RollingBall::Init()
 
     terrainMesh = new Terrain();//("Assets/blurred.png", "Assets/Textures/forrest_ground_01_diff_1k.jpg");//("Assets/terrain.png");
 
-    camera.position = glm::vec3(0.0f, 150.0f, 0.0f);
+    camera.position = glm::vec3(0.0f, 0.0f, 4.0f);
 
     renderer->SetLightPos(glm::vec3(0,2,0));
 }
@@ -23,10 +24,15 @@ void RollingBall::Update()
 {
     glm::vec3 pos = ballMesh->GetPosition();
 
-    if (input.Held(input.Key.SPACE))
+    if (input.Held(input.Key.A))
     {
         pos = camera.position;
         velocity = glm::vec3(camera.forward / 90.0f);
+    }
+
+    if (input.Held(input.Key.SPACE))
+    {
+        Application::NextScene();
     }
 
     velocity += terrainMesh->GetNormal(pos) / 5000.0f;
@@ -39,4 +45,6 @@ void RollingBall::Update()
 
 void RollingBall::Clean()
 {
+    ballMesh->Hide();
+    terrainMesh->Hide();
 }

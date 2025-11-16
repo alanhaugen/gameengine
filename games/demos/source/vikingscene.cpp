@@ -36,6 +36,6 @@ void VikingScene::Update()
 
 void VikingScene::Clean()
 {
-    delete first;
-    delete second;
+    first->Show();
+    second->Show();
 }
