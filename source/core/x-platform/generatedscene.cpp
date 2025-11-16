@@ -24,14 +24,14 @@ void GeneratedScene::Init()
 
         for (size_t k = 0; k < j[i]["components"].size(); ++k)
         {
-            std::string type = j[i]["components"][k];
+            std::string type = j[i]["components"][k]["name"];
             if (type == "Mesh")
             {
                 newObj->AddComponent(new Sphere);
             }
-            else if (type == "Sphere Collider")
+            else if (type == "Sphere")
             {
-                newObj->AddComponent(new SphereCollider(newObj));
+                newObj->AddComponent(new Sphere);
             }
             else if (type == "Sphere Collider")
             {
