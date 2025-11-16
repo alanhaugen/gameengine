@@ -221,6 +221,14 @@ void MainWindow::MainGameLoop()
             {
                 Locator::editor->UpdateStatusBar((std::string("(") + std::to_string(Locator::input.mouse.x) + ", " + std::to_string(Locator::input.mouse.y) + std::string(")")).c_str());
 
+                if (Locator::input.Held(Locator::input.Key.F))
+                {
+                    if (ObjSelected)
+                    {
+                        scene->camera.position = ObjSelected->GetPosition();
+                    }
+                }
+
                 if (Locator::input.mouse.Down)
                 {
                     if (Locator::physics->isColliding(scene->camera.ScreenPointToRay(Locator::input.mouse.x, Locator::input.mouse.y), obj))

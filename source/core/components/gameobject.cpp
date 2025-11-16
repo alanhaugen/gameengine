@@ -14,6 +14,11 @@ GameObject::GameObject(const std::string innName)
     wiredCube->Hide();
 
     Services::currentScene->gameObjects.push_back(this);
+
+    if (Locator::editor)
+    {
+        Locator::editor->AddEntity(name.c_str());
+    }
 }
 
 void GameObject::AddComponent(Component* newComponent)
