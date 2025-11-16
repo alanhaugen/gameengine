@@ -19,6 +19,8 @@ public:
     void AddScene(Scene* scene);
     static void SetScene(Scene* scene);
     static void SetScene(int index);
+    static Scene* GetScenes();
+
 };
 
 #endif // SERVICES_H
