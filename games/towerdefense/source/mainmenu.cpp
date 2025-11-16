@@ -38,8 +38,8 @@ void MainMenu::Init()
     float logoOffsetX = ((renderer->windowWidth / 2) - (logo->drawable->textureWidth * 0.3) / 2);
     logo->SetPosition(glm::vec3(logoOffsetX, 0, 0));
     float playButtonOffsetX = ((renderer->windowWidth / 2) - (playGameButton->drawable->textureWidth * 0.2) / 2);
-    playGameButton->SetPosition(glm::vec3(playButtonOffsetX, 300, 0));
-    quitGameButton->SetPosition(glm::vec3(playButtonOffsetX, 500, 0));
+    playGameButton->SetPosition(glm::vec3(playButtonOffsetX - 200, 300, 0));
+    quitGameButton->SetPosition(glm::vec3(playButtonOffsetX + 200, 300, 0));
 
     ball = new Sphere(0,0,0);
     ball->Hide();
@@ -74,6 +74,8 @@ void MainMenu::Update()
         ball->Show();
         pos = camera.position;
         velocity = glm::vec3(camera.forward / 90.0f);
+
+        audio->PlaySound("Assets/Sounds/no-select.wav");
     }
 
     //velocity += terrain->GetNormal(pos) / 5000.0f;
