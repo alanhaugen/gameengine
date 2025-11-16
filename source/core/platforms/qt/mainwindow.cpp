@@ -24,7 +24,7 @@ MainWindow::MainWindow(QWidget *parent, const char* windowTitle, int windowWidth
     ui->setupUi(this);
     ui->treeGameObjects->setContextMenuPolicy(Qt::CustomContextMenu);
     //MainWindow size:
-    resize((1300 - 1100) + windowWidth, (850 - 700) + windowHeight);
+    resize(windowWidth, windowHeight);
 
     setWindowTitle(windowTitle);  //Main app title
 
@@ -42,8 +42,11 @@ MainWindow::MainWindow(QWidget *parent, const char* windowTitle, int windowWidth
     vulkanWidget = QWidget::createWindowContainer(renderer, this);
     //vulkanWidget->setMinimumSize(windowWidth, windowHeight);
 
-    vulkanWidget->sizePolicy().setHorizontalPolicy(QSizePolicy::Expanding);
-    vulkanWidget->sizePolicy().setVerticalPolicy(QSizePolicy::Expanding);
+    vulkanWidget->setMinimumWidth(windowWidth);
+    vulkanWidget->setMinimumHeight(windowHeight);
+
+    vulkanWidget->sizePolicy().setHorizontalPolicy(QSizePolicy::Fixed);
+    vulkanWidget->sizePolicy().setVerticalPolicy(QSizePolicy::Fixed);
 
     vulkanWidget->setFocusPolicy(Qt::StrongFocus);
 
