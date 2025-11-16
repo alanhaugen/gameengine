@@ -10,3 +10,4 @@ add_library(AAPhysics STATIC
 )
 
 target_include_directories(AAPhysics PRIVATE ../../../../include)
+target_include_directories(AAPhysics PRIVATE ../../../../source)

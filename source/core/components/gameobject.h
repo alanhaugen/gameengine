@@ -1,41 +1,25 @@
 #ifndef GAMEOBJECT_H
 #define GAMEOBJECT_H
 
-#include "component.h"
-#include <cstdint>
-#include <qstring.h>
 #include <glm/glm.hpp>
 #include <vector>
 
-
-
-static unsigned int ID_TOP = 0;
+class Component;
 
 class GameObject
 {
-protected:
-    unsigned int ID;
-    QString Name;
-
-
 public:
-    GameObject(const QString name);
+    GameObject(std::string innName = "GameObject");
+    unsigned id;
 
-    Transform mTransform;
-    // std::vector<GameObject*> children;
+    glm::mat4 matrix;
     std::vector<Component*> components;
+
+    std::string name;
 
     void AddComponent(Component* newComponent);
 
-    void SetName(const QString NewName);
-
-    const QString GetName();
-
-    const uint32_t GetEntityId();
-
     void Update();
-    void UpdateTransform(glm::vec3 Position,glm::vec3 Rotation,glm::vec3 Scale);
-
 };
 
 #endif // GAMEOBJECT_H

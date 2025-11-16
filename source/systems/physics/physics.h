@@ -3,6 +3,8 @@
 #include <glm/glm.hpp>
 #include "../system.h"
 
+class GameObject;
+
 class Physics : public System
 {
 public:
@@ -19,6 +21,7 @@ public:
         float mass;
         float velocity;
         glm::vec3 center;
+        GameObject* gameObject;
 
     private:
     };

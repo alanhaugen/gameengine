@@ -1,4 +1,5 @@
 #include "aaphysics.h"
+#include <core/components/gameobject.h>
 
 AAPhysics::AAPhysics() {}
 

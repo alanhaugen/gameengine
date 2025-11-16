@@ -1,10 +1,7 @@
 #include "mainwindow.h"
-#include "core/platforms/application.h"
-#include "core/platforms/qt/qtapplication.h"
 #include "ui_MainWindow.h"
 #include "systems/renderer/vulkan/vulkanrenderer.h"
 #include "core/components/mesh.h"
-#include "core/components/cube.h"
 #include <QTimer>
 #include <QApplication>
 #include "core/components/gameobject.h"
@@ -190,7 +187,6 @@ void MainWindow::cleanup()
 void MainWindow::MainGameLoop()
 {
     Locator::input.Update();
-    scene->editor->UpdateStatusBar((std::string("(") + std::to_string(Locator::input.mouse.x) + ", " + std::to_string(Locator::input.mouse.y) + std::string(")")).c_str());
 
     //working area
     if(ObjSelected)
@@ -212,6 +208,7 @@ void MainWindow::MainGameLoop()
 
     if (scene)
     {
+        scene->editor->UpdateStatusBar((std::string("(") + std::to_string(Locator::input.mouse.x) + ", " + std::to_string(Locator::input.mouse.y) + std::string(")")).c_str());
         scene->camera.Update();
         scene->Update();
 
@@ -288,7 +285,7 @@ void MainWindow::OnRightClickGameObjectWidget(const QPoint &ClickedOn)
 
             if(obj)
             {
-                obj->SetName(newName);
+                obj->name = newName.toStdString();
             }
         }
     }
@@ -320,7 +317,7 @@ void MainWindow::OnLeftClickGameObjectWidget(QTreeWidgetItem *item, int column)
 
     uint32_t EntityID =  item->data(column,Qt::UserRole).toUInt();
     QString type = item->data(column,Qt::UserRole+1).toString();
-    auto it = std::find_if(scene->gameObjects.begin(),scene->gameObjects.end(),[EntityID](GameObject* go){return go->GetEntityId() == EntityID;});
+    auto it = std::find_if(scene->gameObjects.begin(),scene->gameObjects.end(),[EntityID](GameObject* go){return go->id == EntityID;});
     GameObject* obj;
     if(it != scene->gameObjects.end())
     {
@@ -369,28 +366,40 @@ void MainWindow::UpdateInspector()
 {
     IsInspectorUpdated = true;
 
-    ui->PosXSpin->setValue(ObjSelected->mTransform.mPosition.x);
-    ui->PosYSpin->setValue(ObjSelected->mTransform.mPosition.y);
-    ui->PosZSpin->setValue(ObjSelected->mTransform.mPosition.z);
+    glm::vec3 pos = glm::vec3(ObjSelected->matrix[3]);
 
+    ui->PosXSpin->setValue(pos.x);
+    ui->PosYSpin->setValue(pos.y);
+    ui->PosZSpin->setValue(pos.z);
 
-    ui->RotationXSpin->setValue(ObjSelected->mTransform.mRotation.x);
-    ui->RotationYSpin->setValue(ObjSelected->mTransform.mRotation.y);
-    ui->RotationZSpin->setValue(ObjSelected->mTransform.mRotation.z);
+    glm::quat rotation = glm::quat(ObjSelected->matrix);
+    glm::vec3 eulerAngles = glm::eulerAngles(rotation);
 
-    ui->ScaleXSpin->setValue(ObjSelected->mTransform.mScale.x);
-    ui->ScaleYSpin->setValue(ObjSelected->mTransform.mScale.y);
-    ui->ScaleZSpin->setValue(ObjSelected->mTransform.mScale.z);
+    ui->RotationXSpin->setValue(eulerAngles.x);
+    ui->RotationYSpin->setValue(eulerAngles.y);
+    ui->RotationZSpin->setValue(eulerAngles.z);
 
+    glm::vec3 col1 = glm::vec3(ObjSelected->matrix[0]); // X-axis
+    glm::vec3 col2 = glm::vec3(ObjSelected->matrix[1]); // Y-axis
+    glm::vec3 col3 = glm::vec3(ObjSelected->matrix[2]); // Z-axis
 
-    // qDebug() <<"helllllll"<<ObjSelected->mTransform.mScale.y;
-    //when it get completed the editor this will attach the info of the components to the inspector
+    // Calculate the length of each vector to get the scaling factors
+    glm::vec3 scale;
+    scale.x = glm::length(col1);
+    scale.y = glm::length(col2);
+    scale.z = glm::length(col3);
+
+    ui->ScaleXSpin->setValue(scale.x);
+    ui->ScaleYSpin->setValue(scale.y);
+    ui->ScaleZSpin->setValue(scale.z);
+
+    // when it get completed the editor this will attach the info of the components to the inspector
     if(!ObjSelected->components.empty())
     {
         for (Component* comp: ObjSelected->components)
         {
             qDebug()<<"found componentes" <<"/n";
-            QString typeName = comp->GetName();
+            QString typeName = comp->name.c_str();
 
             if(typeName == "Mesh")
             {
@@ -407,7 +416,6 @@ void MainWindow::UpdateInspector()
         }
     }
 
-
     IsInspectorUpdated = false;
 }
 
@@ -415,7 +423,7 @@ void MainWindow::AddNewObj(const QString &ObjectName)
 {
     QString FilePath = mAssetManager->FindMesh(ObjectName);
     qDebug() << "Connected action" << FilePath;
-    GameObject* gameobj = new GameObject(ObjectName);
+    GameObject* gameobj = new GameObject(ObjectName.toStdString());
     std::string path = FilePath.toStdString();
 
     Mesh* mesh = new Mesh(path.c_str());
@@ -436,14 +444,14 @@ void MainWindow::AddNewObj(const QString &ObjectName)
 
     QTreeWidgetItem * MainObj = new QTreeWidgetItem(ui->treeGameObjects);
 
-    MainObj->setText(0,gameobj->GetName());
-    MainObj->setData(0, Qt::UserRole, QVariant::fromValue(gameobj->GetEntityId()));
+    MainObj->setText(0,gameobj->name.c_str());
+    MainObj->setData(0, Qt::UserRole, QVariant::fromValue(gameobj->id));
     MainObj->setData(0,Qt::UserRole +1,"GameObject");
     MainObj->setExpanded(true);
 
     QTreeWidgetItem * ObjItem = new QTreeWidgetItem(MainObj);
     ObjItem->setText(0,"mesh");
-    ObjItem->setData(0, Qt::UserRole, QVariant::fromValue(gameobj->GetEntityId()));
+    ObjItem->setData(0, Qt::UserRole, QVariant::fromValue(gameobj->id));
     ObjItem->setData(0,Qt::UserRole +1,"Component");
 
     MainObj->addChild(ObjItem);
@@ -462,12 +470,12 @@ void MainWindow::ChangeMesh(const QString &meshname)
     //qDebug() << "Fucky";
     for (Component* comp: ObjSelected->components)
     {
-        if(comp->GetName() =="Mesh")
+        if(comp->name == "Mesh")
         {
-            Mesh* mesh =dynamic_cast<Mesh*>(comp);
+            Mesh* mesh = dynamic_cast<Mesh*>(comp);
 
             QString path = mAssetManager->FindMesh(meshname);
-           mesh->loadMesh( path.toStdString().c_str());
+            mesh->loadMesh( path.toStdString().c_str());
         }
     }
 }
@@ -490,23 +498,22 @@ void MainWindow::PosObj(double)
     float Posy = static_cast<float>(ui->PosYSpin->value());
     float Posz = static_cast<float>(ui->PosZSpin->value());
 
-
-    glm::vec3 Pos =glm::vec3(Posx, Posy, Posz);
-
     float Rotx = static_cast<float>(ui->RotationXSpin->value());
     float Roty = static_cast<float>(ui->RotationYSpin->value());
     float Rotz = static_cast<float>(ui->RotationZSpin->value());
-
-    glm::vec3 Rotation =glm::vec3(Rotx, Roty, Rotz);
 
     float Scalex = static_cast<float>(ui->ScaleXSpin->value());
     float Scaley = static_cast<float>(ui->ScaleYSpin->value());
     float Scalez = static_cast<float>(ui->ScaleZSpin->value());
 
-    glm::vec3 Scale =glm::vec3(Scalex, Scaley, Scalez);
+    // Rebuild model matrix from scratch
+    ObjSelected->matrix = glm::mat4(1.0f);
+    ObjSelected->matrix = glm::translate(ObjSelected->matrix, glm::vec3(Posx, Posy, Posz));
+    ObjSelected->matrix = glm::rotate(ObjSelected->matrix, glm::radians(Rotx), glm::vec3(1, 0, 0));
+    ObjSelected->matrix = glm::rotate(ObjSelected->matrix, glm::radians(Roty), glm::vec3(0, 1, 0));
+    ObjSelected->matrix = glm::rotate(ObjSelected->matrix, glm::radians(Rotz), glm::vec3(0, 0, 1));
+    ObjSelected->matrix = glm::scale(ObjSelected->matrix, glm::vec3(Scalex, Scaley, Scalez));
 
-
-    ObjSelected->UpdateTransform(Pos,Rotation,Scale);
     UpdateInspector();
 }
 
