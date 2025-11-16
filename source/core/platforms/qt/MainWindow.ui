@@ -29,15 +29,23 @@
      <x>0</x>
      <y>0</y>
      <width>1037</width>
-     <height>37</height>
+     <height>17</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
     <property name="title">
      <string>&amp;File</string>
     </property>
+    <widget class="QMenu" name="menuNew_Scene_2">
+     <property name="title">
+      <string>New Scene</string>
+     </property>
+     <addaction name="actionEmpty_2"/>
+     <addaction name="actionVikingRoom_2"/>
+     <addaction name="actionPong_2"/>
+    </widget>
     <addaction name="actionNew_Project"/>
-    <addaction name="actionNew_Scene"/>
+    <addaction name="menuNew_Scene_2"/>
     <addaction name="actionLoad_Project"/>
     <addaction name="action_Open"/>
     <addaction name="separator"/>
@@ -49,23 +57,11 @@
     <property name="title">
      <string>&amp;Edit</string>
     </property>
-
     <addaction name="actionNewScene"/>
     <addaction name="actionRedo"/>
     <addaction name="separator"/>
     <addaction name="actionCopy"/>
     <addaction name="actionPaste"/>
-
-    <widget class="QMenu" name="menuNew_Scene">
-     <property name="title">
-      <string>New Scene</string>
-     </property>
-     <addaction name="actionEmpty"/>
-     <addaction name="actionVikingRoom"/>
-     <addaction name="actionPong"/>
-    </widget>
-    <addaction name="menuNew_Scene"/>
-
    </widget>
    <widget class="QMenu" name="menuAdd">
     <property name="title">
@@ -291,8 +287,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>275</width>
-             <height>856</height>
+             <width>239</width>
+             <height>689</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -646,7 +642,13 @@
         </attribute>
         <layout class="QVBoxLayout" name="verticalLayout_4">
          <item>
-          <widget class="QTreeWidget" name="treeWidget"/>
+          <widget class="QTreeWidget" name="treeWidget">
+           <column>
+            <property name="text">
+             <string notr="true">1</string>
+            </property>
+           </column>
+          </widget>
          </item>
         </layout>
        </widget>
@@ -685,13 +687,11 @@
     <string>Quit the application</string>
    </property>
   </action>
-
   <action name="actionNewScene">
    <property name="text">
     <string>Undo</string>
    </property>
   </action>
-
   <action name="actionPlay">
    <property name="checkable">
     <bool>true</bool>
@@ -731,11 +731,6 @@
   <action name="actionNew_Project">
    <property name="text">
     <string>New Project</string>
-   </property>
-  </action>
-  <action name="actionNew_Scene">
-   <property name="text">
-    <string>New Scene</string>
    </property>
   </action>
   <action name="actionLoad_Project">
@@ -815,6 +810,21 @@
    </property>
   </action>
   <action name="actionPong">
+   <property name="text">
+    <string>Pong</string>
+   </property>
+  </action>
+  <action name="actionEmpty_2">
+   <property name="text">
+    <string>Empty</string>
+   </property>
+  </action>
+  <action name="actionVikingRoom_2">
+   <property name="text">
+    <string>VikingRoom</string>
+   </property>
+  </action>
+  <action name="actionPong_2">
    <property name="text">
     <string>Pong</string>
    </property>
