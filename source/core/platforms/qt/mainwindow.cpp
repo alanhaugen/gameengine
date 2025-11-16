@@ -486,12 +486,10 @@ void MainWindow::AvailableMeshes()
     ui->Mesh_Combo->clear();
     QStringList meshNames = mAssetManager->GetMeshNames();
     ui->Mesh_Combo->addItems(meshNames);
-    //qDebug() <<"Hereitis" << ui->Mesh_Combo->count() << "/n";
 }
 
 void MainWindow::ChangeMesh(const QString &meshname)
 {
-    //qDebug() << "Fucky";
     for (Component* comp: ObjSelected->components)
     {
         if(comp->name == "Mesh")
@@ -537,6 +535,9 @@ void MainWindow::PosObj(double)
     ObjSelected->matrix = glm::rotate(ObjSelected->matrix, glm::radians(Roty), glm::vec3(0, 1, 0));
     ObjSelected->matrix = glm::rotate(ObjSelected->matrix, glm::radians(Rotz), glm::vec3(0, 0, 1));
     ObjSelected->matrix = glm::scale(ObjSelected->matrix, glm::vec3(Scalex, Scaley, Scalez));
+
+    // Update collison box for mouse picking in editor
+    ObjSelected->dimensions = glm::vec3(Scalex, Scaley, Scalez);
 
     UpdateInspector();
 }
