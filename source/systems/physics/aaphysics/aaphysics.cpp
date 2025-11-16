@@ -1,5 +1,6 @@
 #include "aaphysics.h"
 #include <core/components/gameobject.h>
+#include <core/x-platform/locator.h>
 
 AAPhysics::AAPhysics() {}
 
@@ -11,29 +12,31 @@ void AAPhysics::Update()
     CollisionDetection();
 }
 
-void AAPhysics::ApplyGravity(float deltaTime) {}
+void AAPhysics::ApplyGravity(float deltaTime)
+{
+}
 
 void AAPhysics::CollisionDetection()
 {
     // Implement broad and narrow phase
-    for (int i = 0; i < sceneColliders.size(); i++)
+    for (int i = 0; i < colliders.size(); i++)
     {
-        for (int j = 0; j < sceneColliders.size(); j++)
+        for (int j = 0; j < colliders.size(); j++)
         {
-            glm::vec3 diff = sceneColliders[j]->center - sceneColliders[i]->center;
-            float doubleRadiance = sceneColliders[i]->radius + sceneColliders[j]->radius;
+            glm::vec3 diff = colliders[j]->center - colliders[i]->center;
+            float doubleRadiance = colliders[i]->radius + colliders[j]->radius;
             float distSquared = glm::dot(diff, diff);
 
             if (distSquared < doubleRadiance)
             {
-                if (sceneColliders[i] == sceneColliders[j])
+                if (colliders[i] == colliders[j])
                 {
                     return;
                 }
                 else
                 {
-                    CollisionResponse(sceneColliders[i], sceneColliders[j]);
-                    //Log("Collision");
+                    CollisionResponse(colliders[i], colliders[j]);
+                    Log("Collision");
                 }
             }
         }
@@ -50,11 +53,12 @@ void AAPhysics::CalculateImpulses(float massA, float massB, float speedA, float 
     //formel for inelastisk kollisjon: m1v1 + m2v2 = m1v1' + m2v2'
 }
 
-Physics::Collider* AAPhysics::CreateCollider(int response)
+Physics::Collider* AAPhysics::CreateCollider(GameObject* gameObject, int response)
 {
     Collider* collider = new Collider();
+    collider->gameObject = gameObject;
 
-    sceneColliders.push_back(collider);
+    colliders.push_back(collider);
 
     return collider;
     //return Physics::Collider();

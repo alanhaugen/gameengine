@@ -9,10 +9,10 @@ void NullPhysics::Update()
 {
 }
 
-
-Physics::Collider* NullPhysics::CreateCollider(int response)
+Physics::Collider* NullPhysics::CreateCollider(GameObject* gameObject, int response)
 {
     Collider* collider = new Collider();
+    collider->gameObject = gameObject;
 
     colliders.push_back(Collider());
 

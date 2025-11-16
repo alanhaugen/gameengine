@@ -28,5 +28,5 @@ public:
 
     virtual bool Init() = 0;
     virtual void Update() = 0;
-    virtual Collider* CreateCollider(int response) = 0;
+    virtual Collider* CreateCollider(GameObject* gameObject, int response) = 0;
 };

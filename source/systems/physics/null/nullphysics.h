@@ -12,6 +12,5 @@ public:
     bool Init();
     void Update();
 
-    Collider* CreateCollider(int response);
-
+    Collider* CreateCollider(GameObject* gameObject, int response);
 };

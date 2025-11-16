@@ -1,14 +1,13 @@
 #pragma once
 
 #include "systems/system.h"
-#include <QtCore/QtCore>
 
 struct KeyMap
 {
     enum
     {
         NONE,
-        A = Qt::Key_A,
+        A = 65,
         B,
         C,
         D,
@@ -70,7 +69,7 @@ struct KeyMap
         F11,
         F12,
 
-        ESCAPE = Qt::Key_Escape,
+        ESCAPE = 27,
         TILDE,
         MINUS,
         EQUALS,
@@ -78,7 +77,7 @@ struct KeyMap
         TAB,
         OPENBRACE,
         CLOSEBRACE,
-        ENTER = Qt::Key_Enter,
+        ENTER = 13,
         SEMICOLON,
         QUOTE,
         BACKSLASH,
@@ -86,7 +85,7 @@ struct KeyMap
         COMMA,
         FULLSTOP,
         SLASH,
-        SPACE = Qt::Key_Space,
+        SPACE = 32,
 
         INSERT,
         DELETE_KEY,
@@ -94,10 +93,10 @@ struct KeyMap
         END,
         PGUP,
         PGDN,
-        LEFT = Qt::LeftArrow,
-        RIGHT = Qt::RightArrow,
-        UP = Qt::UpArrow,
-        DOWN = Qt::DownArrow,
+        LEFT = 37,
+        UP,
+        RIGHT,
+        DOWN,
 
         PAD_SLASH,
         PAD_ASTERISK,

@@ -13,9 +13,9 @@ public:
     bool Init() override;
     void Update() override;
 
-    Collider* CreateCollider(int response) override;
+    Collider* CreateCollider(GameObject* gameObject, int response) override;
 
-    std::vector<Collider*> sceneColliders;
+    std::vector<Collider*> colliders;
 
 private:
     void SetGravity(const glm::vec3& gravity) { mGravity = gravity; }

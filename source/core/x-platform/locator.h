@@ -9,10 +9,6 @@
 #include "systems/renderer/null/nullrenderer.h"
 #include "systems/script/null/nullscript.h"
 
-#include <vector>
-#include <string>
-#include "systems/system.h"
-
 class Locator
 {
 public:
