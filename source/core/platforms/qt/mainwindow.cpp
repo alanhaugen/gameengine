@@ -322,6 +322,11 @@ void MainWindow::OnLeftClickGameObjectWidget(QTreeWidgetItem *item, int column)
         return;
     }
 
+    if (ObjSelected)
+    {
+        ObjSelected->wiredCube->Hide();
+    }
+
     qDebug() << "Left-click detected at" << item;
 
 
@@ -362,9 +367,12 @@ void MainWindow::OnLeftClickGameObjectWidget(QTreeWidgetItem *item, int column)
         // qDebug()<<"componentboi"<< column;
     }
 
+    if (ObjSelected)
+    {
+        ObjSelected->wiredCube->Show();
+    }
 
     UpdateInspector();
-
 }
 
 bool MainWindow::eventFilter(QObject *obj, QEvent *event)
