@@ -81,9 +81,9 @@ MainWindow::MainWindow(QWidget *parent, const char* windowTitle, int windowWidth
 
 
     //Scenes
-
-
-    connect(ui->actionNewScene,&QAction::triggered, this,&MainWindow::NewScenes);
+    connect(ui->actionEmpty,&QAction::triggered, this, [this](){NewScenes(0);});
+    connect(ui->actionVikingRoom,&QAction::triggered, this, [this](){NewScenes(1);});
+    connect(ui->actionPong,&QAction::triggered, this, [this](){NewScenes(3);});
 
 
 
@@ -510,9 +510,11 @@ void MainWindow::PosObj(double)
     UpdateInspector();
 }
 
-void MainWindow::NewScenes()
+void MainWindow::NewScenes(int index)
 {
-   // qDebug()<<"boingScene";
+    //qDebug()<<"boingScene";
+   Service.SetScene(index);
+
 
 
 }

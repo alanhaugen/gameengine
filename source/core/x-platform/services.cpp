@@ -22,16 +22,38 @@ void Services::AddScene(Scene *scene)
 
     if (currentScene == nullptr)
     {
-        SetScene(scene);
+        SetScene(scenes.at(0));
     }
 }
 
 void Services::SetScene(Scene *scene)
 {
+    if(currentScene)
+    {
+        currentScene->Clean();
+        currentScene=nullptr;
+    }
+
     currentScene = scene;
-    scene->Init();
+    currentScene->Init();
 }
 
 void Services::SetScene(int index)
 {
+    if(currentScene)
+    {
+        currentScene->Clean();
+        currentScene=nullptr;
+    }
+    currentScene = scenes.at(index);
+    scenes.at(index)->Init();
+}
+
+Scene *Services::GetScenes()
+{
+    for(int index = 0; index < scenes.size(); index++)
+    {
+        return scenes.at(index);
+    }
+    return nullptr;
 }

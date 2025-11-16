@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <qtreewidget.h>
+#include "core/x-platform/services.h"
 #include "systems/renderer/vulkan/vulkanrenderer.h"
 
 class Scene;
@@ -44,6 +45,9 @@ public:
 private:
     QWidget* vulkanWidget;
 
+    //Service
+    Services Service;
+
     //ObjectSelect
     GameObject* ObjSelected = nullptr;
 
@@ -76,7 +80,7 @@ private:
 
     void PosObj(double);
 
-    void NewScenes();
+    void NewScenes(int index);
 
     QTimer* timer;
 

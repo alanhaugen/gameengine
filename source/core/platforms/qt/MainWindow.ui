@@ -43,7 +43,15 @@
     <property name="title">
      <string>&amp;Edit</string>
     </property>
-    <addaction name="actionNewScene"/>
+    <widget class="QMenu" name="menuNew_Scene">
+     <property name="title">
+      <string>New Scene</string>
+     </property>
+     <addaction name="actionEmpty"/>
+     <addaction name="actionVikingRoom"/>
+     <addaction name="actionPong"/>
+    </widget>
+    <addaction name="menuNew_Scene"/>
    </widget>
    <widget class="QMenu" name="menuAdd">
     <property name="title">
@@ -643,11 +651,6 @@
     <string>Quit the application</string>
    </property>
   </action>
-  <action name="actionNewScene">
-   <property name="text">
-    <string>New Scene</string>
-   </property>
-  </action>
   <action name="actionPlay">
    <property name="checkable">
     <bool>true</bool>
@@ -688,6 +691,21 @@
    </property>
    <property name="menuRole">
     <enum>QAction::MenuRole::NoRole</enum>
+   </property>
+  </action>
+  <action name="actionEmpty">
+   <property name="text">
+    <string>Empty</string>
+   </property>
+  </action>
+  <action name="actionVikingRoom">
+   <property name="text">
+    <string>VikingRoom</string>
+   </property>
+  </action>
+  <action name="actionPong">
+   <property name="text">
+    <string>Pong</string>
    </property>
   </action>
  </widget>

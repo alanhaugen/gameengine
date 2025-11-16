@@ -12,6 +12,8 @@ public:
     virtual void Update() = 0;
     virtual void Clean() = 0;
 
+    QString SceneName= "";
+
     Camera camera;
 
     std::vector<GameObject*> gameObjects;
