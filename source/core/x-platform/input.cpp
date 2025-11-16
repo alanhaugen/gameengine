@@ -18,6 +18,7 @@ bool Input::Pressed(int key)
 bool Input::Init()
 {
     mouse.Down = false;
+    mouse.DownRight = false;
     mouse.x = 0;
     mouse.y = 0;
     mouse.xOld = 0;

@@ -1974,12 +1974,26 @@ void VulkanRenderer::keyReleaseEvent(QKeyEvent* event)
 
 void VulkanRenderer::mousePressEvent(QMouseEvent *eventPress)
 {
-    Locator::input.mouse.Down = true;
+    if (eventPress->button() == Qt::RightButton)
+    {
+        Locator::input.mouse.DownRight = true;
+    }
+    else if (eventPress->button() == Qt::LeftButton)
+    {
+        Locator::input.mouse.Down = true;
+    }
 }
 
 void VulkanRenderer::mouseReleaseEvent(QMouseEvent *releaseEvent)
 {
-    Locator::input.mouse.Down = false;
+    if (releaseEvent->button() == Qt::RightButton)
+    {
+        Locator::input.mouse.DownRight = false;
+    }
+    else if (releaseEvent->button() == Qt::LeftButton)
+    {
+        Locator::input.mouse.Down = false;
+    }
 }
 
 void VulkanRenderer::mouseMoveEvent(QMouseEvent *eventMove)

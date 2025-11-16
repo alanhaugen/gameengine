@@ -210,13 +210,26 @@ void MainWindow::MainGameLoop()
 
     if (scene)
     {
-        Locator::editor->UpdateStatusBar((std::string("(") + std::to_string(Locator::input.mouse.x) + ", " + std::to_string(Locator::input.mouse.y) + std::string(")")).c_str());
         scene->camera.Update();
         scene->Update();
 
         for (auto* obj : scene->gameObjects)
         {
             obj->Update();
+
+            if (Locator::editor)
+            {
+                Locator::editor->UpdateStatusBar((std::string("(") + std::to_string(Locator::input.mouse.x) + ", " + std::to_string(Locator::input.mouse.y) + std::string(")")).c_str());
+
+                if (Locator::input.mouse.Down)
+                {
+                    if (Locator::physics->isColliding(scene->camera.ScreenPointToRay(Locator::input.mouse.x, Locator::input.mouse.y), obj))
+                    {
+                        ObjSelected = obj;
+                        UpdateInspector();
+                    }
+                }
+            }
         }
     }
 
@@ -516,11 +529,7 @@ void MainWindow::PosObj(double)
 
 void MainWindow::NewScenes(int index)
 {
-    //qDebug()<<"boingScene";
-   Service.SetScene(index);
-
-
-
+    Service.SetScene(index);
 }
 
 

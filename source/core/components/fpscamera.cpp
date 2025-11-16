@@ -9,7 +9,7 @@ void FPSCamera::Update()
 {
     UpdateCamera();
 
-    if (input.mouse.Down)
+    if (input.mouse.DownRight)
     {
         if (input.Held(input.Key.W))
         {

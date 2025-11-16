@@ -163,6 +163,7 @@ private:
     struct Mouse
     {
         bool Down;
+        bool DownRight;
         bool Dragging;
         int dx, dy;
         int xOld, yOld;
