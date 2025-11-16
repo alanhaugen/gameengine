@@ -1,18 +1,19 @@
-#include "physicstest.h"
+#include "PhysicsTest.h"
 
-physicstest::physicstest() {}
-
-void physicstest::Init()
+PhysicsTest::PhysicsTest()
 {
-
 }
 
-void physicstest::Update()
+void PhysicsTest::Init()
 {
-
+    first  = new GameObject("First");
+    second = new GameObject("Second");
 }
 
-void physicstest::Clean()
+void PhysicsTest::Update()
 {
+}
 
+void PhysicsTest::Clean()
+{
 }

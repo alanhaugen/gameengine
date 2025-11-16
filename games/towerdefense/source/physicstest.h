@@ -3,12 +3,15 @@
 
 #include "core/x-platform/scene.h"
 
-class physicstest : public Scene
+class PhysicsTest : public Scene
 {
 public:
-    physicstest();
+    PhysicsTest();
     void Init();
     void Clean();
+
+    GameObject* first;
+    GameObject* second;
 private:
     void Update();
 
