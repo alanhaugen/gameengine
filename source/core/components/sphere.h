@@ -7,6 +7,7 @@ class Sphere : public Mesh
 {
 public:
     Sphere(float x, float y, float z, glm::vec3 scale = glm::vec3(1.0f));
+    Sphere(glm::vec3 scale = glm::vec3(1.0f));
 };
 
 #endif // SPHERE_H

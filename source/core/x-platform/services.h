@@ -14,9 +14,10 @@ private:
 
 public:
     static Scene* currentScene;
+    unsigned currentSceneID = 0;
 
     void AddScene(Scene* scene);
-    void SetScene(Scene* scene);
+    static void SetScene(Scene* scene);
     static void SetScene(int index);
 };
 

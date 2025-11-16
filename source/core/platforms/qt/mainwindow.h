@@ -33,7 +33,6 @@ public:
 
     VulkanRenderer* renderer{nullptr};
 
-    Scene* scene = nullptr;
     Ui::MainWindow *ui = nullptr;
 
     void mousePressed(QMouseEvent*event);

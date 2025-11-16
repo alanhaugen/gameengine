@@ -8,6 +8,6 @@ class Component : public Locator
 {
 public:
     std::string name;
-    GameObject* gameObject;
+    GameObject* gameObject = nullptr;
     virtual void Update() = 0;
 };

@@ -7,7 +7,7 @@
 #include "core/components/gameobject.h"
 #include <qinputdialog.h>
 #include "core/x-platform/locator.h"
-#include "core/x-platform/scene.h"
+#include "core/x-platform/services.h"
 #include "systems/audio/openal/openalaudio.h"
 #include "systems/audio/qtaudio/qtmultimediaaudio.h"
 #include "systems/physics/aaphysics/aaphysics.h"
@@ -206,9 +206,11 @@ void MainWindow::MainGameLoop()
         ui->Inspectorwidget->setHidden(true);
     }
 
+    Scene* scene = Services::currentScene;
+
     if (scene)
     {
-        scene->editor->UpdateStatusBar((std::string("(") + std::to_string(Locator::input.mouse.x) + ", " + std::to_string(Locator::input.mouse.y) + std::string(")")).c_str());
+        Locator::editor->UpdateStatusBar((std::string("(") + std::to_string(Locator::input.mouse.x) + ", " + std::to_string(Locator::input.mouse.y) + std::string(")")).c_str());
         scene->camera.Update();
         scene->Update();
 
@@ -314,6 +316,7 @@ void MainWindow::OnLeftClickGameObjectWidget(QTreeWidgetItem *item, int column)
     //ObjSelected = reinterpret_cast<GameObject*>(ptrToObj);
 
 
+    Scene* scene = Services::currentScene;
 
     uint32_t EntityID =  item->data(column,Qt::UserRole).toUInt();
     QString type = item->data(column,Qt::UserRole+1).toString();
@@ -435,12 +438,6 @@ void MainWindow::AddNewObj(const QString &ObjectName)
     //     qDebug() << "Failed to load mesh:" << e.what();
     // }
     gameobj->AddComponent(mesh);
-
-
-
-
-
-    scene->gameObjects.push_back(gameobj);
 
     QTreeWidgetItem * MainObj = new QTreeWidgetItem(ui->treeGameObjects);
 

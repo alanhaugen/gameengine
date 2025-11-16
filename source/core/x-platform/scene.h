@@ -13,6 +13,7 @@ public:
     virtual void Clean() = 0;
 
     Camera camera;
+    unsigned id;
 
     std::vector<GameObject*> gameObjects;
 };

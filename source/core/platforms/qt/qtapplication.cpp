@@ -16,7 +16,8 @@ QtApplication::QtApplication(int argc, char* argv[], const char* windowTitle, in
 
 void QtApplication::NextScene()
 {
-    LogWarning("Qt platform does not support moving to next scene");
+    currentScene->Clean();
+    SetScene(currentScene->id + 1);
 }
 
 void QtApplication::Quit()
@@ -26,6 +27,5 @@ void QtApplication::Quit()
 
 int QtApplication::Run()
 {
-    w.scene = currentScene;
     return a.exec();
 }

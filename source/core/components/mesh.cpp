@@ -89,5 +89,8 @@ void Mesh::loadMesh(const char *filePath, const char *vertexShaderPath, const ch
 
 void Mesh::Update()
 {
-    drawable->ubo.model = gameObject->matrix;
+    if (gameObject)
+    {
+        drawable->ubo.model = gameObject->matrix;
+    }
 }

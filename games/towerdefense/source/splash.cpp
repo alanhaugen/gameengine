@@ -12,13 +12,13 @@ void Splash::Init()
 
     renderer->SetClearColor(1,1,1);
     audio->PlaySound("Assets/Sounds/brick-hit-2.wav");
+
+    timer.Start();
 }
 
 void Splash::Update()
 {
-    i++;
-
-    if (i > 200)
+    if (timer.TimeSinceStarted() > 2000.0f)
     {
         Application::NextScene();
     }
@@ -26,5 +26,6 @@ void Splash::Update()
 
 void Splash::Clean()
 {
-    delete logo;
+    logo->Hide();
+    //delete logo;
 }

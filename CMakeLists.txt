@@ -131,6 +131,7 @@ add_library(Core STATIC
     source/core/components/wiredcube.h
     source/core/x-platform/generatedscene.h
     source/core/x-platform/generatedscene.cpp
+    source/core/x-platform/timer.cpp source/core/x-platform/timer.h
 )
 
 target_include_directories(Core PRIVATE "source")

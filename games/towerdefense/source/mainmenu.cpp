@@ -44,6 +44,8 @@ void MainMenu::Init()
     ball = new Sphere(0,0,0);
     ball->Hide();
     camera.position = glm::vec3(478.072021, 275.375214, 534.582336);
+
+    renderer->SetClearColor(0.0f, 0.3f, 0.5f);
 }
 
 void MainMenu::Update()

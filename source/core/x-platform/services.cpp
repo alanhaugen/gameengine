@@ -13,6 +13,9 @@ void Services::AddScene(Scene *scene)
     scene->renderer = renderer;
     scenes.push_back(scene);
 
+    scene->id = currentSceneID;
+    currentSceneID++;
+
     if (currentScene == nullptr)
     {
         SetScene(scene);
@@ -34,4 +37,5 @@ void Services::SetScene(Scene *scene)
 
 void Services::SetScene(int index)
 {
+    SetScene(scenes[index]);
 }
