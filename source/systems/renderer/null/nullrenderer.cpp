@@ -20,6 +20,11 @@ void NullRenderer::SetLightPos(glm::vec3 pos)
 {
 }
 
+glm::mat4 NullRenderer::GetProjectionMatrix()
+{
+    return glm::mat4();
+}
+
 Renderer::Drawable &NullRenderer::CreateDrawable(std::vector<Vertex> vertices,
                                                  std::vector<uint32_t> indices,
                                                  const char *vertexShader,

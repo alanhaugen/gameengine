@@ -14,6 +14,7 @@ public:
     Camera(float x, float y, float z);
     ~Camera() {}
 
+    Physics::Ray ScreenPointToRay(float x, float y) const;
     void Update() override;
 
     glm::vec3 position;

@@ -46,9 +46,10 @@ private:
     int texturesQuantity = 0;
     Drawable drawables[MAX_DRAWABLES];
     VulkanTexture textures[MAX_DRAWABLES];
-    glm::mat4 cameraView;
     glm::vec3 cameraPos;
     glm::vec3 lightPos;
+
+    glm::mat4 GetProjectionMatrix() override;
 
     size_t PadUniformBufferSize(size_t originalSize);
     VkPhysicalDeviceProperties deviceProperties;

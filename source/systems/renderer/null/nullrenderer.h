@@ -23,4 +23,5 @@ public:
     void SetViewMatrix(glm::mat4 view);
     void SetCameraPosition(glm::vec3 pos);
     void SetLightPos(glm::vec3 pos);
+    glm::mat4 GetProjectionMatrix();
 };

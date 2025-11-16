@@ -79,6 +79,8 @@ public:
     virtual void SetCameraPosition(glm::vec3 pos) = 0;
     virtual void SetLightPos(glm::vec3 pos) = 0;
 
+    glm::mat4 cameraView;
+    virtual glm::mat4 GetProjectionMatrix() = 0;
     float clearColor[4] = {0.0f, 0.3f, 0.5f, 1.0f};
 
     inline void SetClearColor(float r, float g, float b) {
