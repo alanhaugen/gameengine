@@ -3,6 +3,7 @@
 
 #include "core/components/visualobject.h"
 #include <glm/gtc/matrix_transform.hpp>
+#include "core/components/wiredcube.h"
 #include <glm/glm.hpp>
 #include <vector>
 
@@ -16,6 +17,8 @@ public:
 
     glm::mat4 matrix;
     std::vector<Component*> components;
+
+    WiredCube* wiredCube;
 
     std::string name;
     glm::vec3 dimensions = glm::vec3(1.0f);

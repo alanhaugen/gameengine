@@ -10,6 +10,9 @@ GameObject::GameObject(const std::string innName)
     id = idCurrent;
     idCurrent++;
 
+    wiredCube = new WiredCube();
+    wiredCube->Hide();
+
     Services::currentScene->gameObjects.push_back(this);
 }
 
@@ -21,6 +24,8 @@ void GameObject::AddComponent(Component* newComponent)
 
 void GameObject::Update()
 {
+    wiredCube->drawable->ubo.model = matrix;
+
     for (unsigned i = 0; i < components.size(); i++)
     {
         components[i]->Update();

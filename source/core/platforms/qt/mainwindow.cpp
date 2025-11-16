@@ -225,7 +225,13 @@ void MainWindow::MainGameLoop()
                 {
                     if (Locator::physics->isColliding(scene->camera.ScreenPointToRay(Locator::input.mouse.x, Locator::input.mouse.y), obj))
                     {
+                        if (ObjSelected)
+                        {
+                            ObjSelected->wiredCube->Hide();
+                        }
+
                         ObjSelected = obj;
+                        ObjSelected->wiredCube->Show();
                         UpdateInspector();
                     }
                 }
