@@ -129,6 +129,8 @@ add_library(Core STATIC
     source/core/x-platform/services.cpp
     source/core/components/wiredcube.cpp
     source/core/components/wiredcube.h
+    source/core/x-platform/generatedscene.h
+    source/core/x-platform/generatedscene.cpp
 )
 
 target_include_directories(Core PRIVATE "source")

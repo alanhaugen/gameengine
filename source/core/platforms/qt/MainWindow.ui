@@ -29,14 +29,20 @@
      <x>0</x>
      <y>0</y>
      <width>1037</width>
-     <height>17</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
     <property name="title">
      <string>&amp;File</string>
     </property>
+    <addaction name="actionNew_Project"/>
+    <addaction name="actionNew_Scene"/>
+    <addaction name="actionLoad_Project"/>
     <addaction name="action_Open"/>
+    <addaction name="separator"/>
+    <addaction name="actionSave_Scene"/>
+    <addaction name="separator"/>
     <addaction name="action_Quit"/>
    </widget>
    <widget class="QMenu" name="menuEdit">
@@ -44,15 +50,45 @@
      <string>&amp;Edit</string>
     </property>
     <addaction name="actionNewScene"/>
+    <addaction name="actionRedo"/>
+    <addaction name="separator"/>
+    <addaction name="actionCopy"/>
+    <addaction name="actionPaste"/>
    </widget>
    <widget class="QMenu" name="menuAdd">
     <property name="title">
      <string>Add</string>
     </property>
    </widget>
+   <widget class="QMenu" name="menuProject">
+    <property name="title">
+     <string>Project</string>
+    </property>
+    <addaction name="actionSettings"/>
+   </widget>
+   <widget class="QMenu" name="menuWindow">
+    <property name="title">
+     <string>Window</string>
+    </property>
+    <addaction name="actionScene_Overview"/>
+    <addaction name="actionEntity_Overview"/>
+    <addaction name="actionInspector_Panel"/>
+    <addaction name="separator"/>
+    <addaction name="actionLog_panel"/>
+    <addaction name="actionAsset_panel"/>
+   </widget>
+   <widget class="QMenu" name="menuHelp">
+    <property name="title">
+     <string>Help</string>
+    </property>
+    <addaction name="actionAbout"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
    <addaction name="menuAdd"/>
+   <addaction name="menuProject"/>
+   <addaction name="menuWindow"/>
+   <addaction name="menuHelp"/>
   </widget>
   <widget class="QToolBar" name="toolBar">
    <property name="sizePolicy">
@@ -92,7 +128,7 @@
    <property name="minimumSize">
     <size>
      <width>500</width>
-     <height>322</height>
+     <height>324</height>
     </size>
    </property>
    <property name="baseSize">
@@ -105,7 +141,7 @@
     <enum>Qt::LayoutDirection::LeftToRight</enum>
    </property>
    <property name="windowTitle">
-    <string>Scenes</string>
+    <string>Scene</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>4</number>
@@ -130,7 +166,7 @@
         <number>4</number>
        </property>
        <property name="sizeConstraint">
-        <enum>QLayout::SizeConstraint::SetDefaultConstraint</enum>
+        <enum>QLayout::SizeConstraint::SetFixedSize</enum>
        </property>
        <property name="leftMargin">
         <number>0</number>
@@ -172,7 +208,7 @@
     <bool>false</bool>
    </property>
    <property name="windowTitle">
-    <string>GameObjects</string>
+    <string>Scene Graph</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>4</number>
@@ -189,7 +225,7 @@
        </property>
        <property name="minimumSize">
         <size>
-         <width>180</width>
+         <width>50</width>
          <height>0</height>
         </size>
        </property>
@@ -243,8 +279,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>239</width>
-             <height>689</height>
+             <width>220</width>
+             <height>756</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -558,11 +594,11 @@
    <property name="minimumSize">
     <size>
      <width>400</width>
-     <height>160</height>
+     <height>162</height>
     </size>
    </property>
    <property name="windowTitle">
-    <string>Folders</string>
+    <string>Drawer panel</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>8</number>
@@ -629,7 +665,7 @@
   </widget>
   <action name="action_Open">
    <property name="text">
-    <string>&amp;Open</string>
+    <string>&amp;Open Scene</string>
    </property>
    <property name="toolTip">
     <string>Open scene</string>
@@ -645,7 +681,7 @@
   </action>
   <action name="actionNewScene">
    <property name="text">
-    <string>New Scene</string>
+    <string>Undo</string>
    </property>
   </action>
   <action name="actionPlay">
@@ -688,6 +724,76 @@
    </property>
    <property name="menuRole">
     <enum>QAction::MenuRole::NoRole</enum>
+   </property>
+  </action>
+  <action name="actionSave_Scene">
+   <property name="text">
+    <string>Save Scene</string>
+   </property>
+  </action>
+  <action name="actionNew_Project">
+   <property name="text">
+    <string>New Project</string>
+   </property>
+  </action>
+  <action name="actionNew_Scene">
+   <property name="text">
+    <string>New Scene</string>
+   </property>
+  </action>
+  <action name="actionLoad_Project">
+   <property name="text">
+    <string>Load Project</string>
+   </property>
+  </action>
+  <action name="actionRedo">
+   <property name="text">
+    <string>Redo</string>
+   </property>
+  </action>
+  <action name="actionCopy">
+   <property name="text">
+    <string>Copy</string>
+   </property>
+  </action>
+  <action name="actionPaste">
+   <property name="text">
+    <string>Paste</string>
+   </property>
+  </action>
+  <action name="actionSettings">
+   <property name="text">
+    <string>Settings</string>
+   </property>
+  </action>
+  <action name="actionScene_Overview">
+   <property name="text">
+    <string>Scene Overview</string>
+   </property>
+  </action>
+  <action name="actionEntity_Overview">
+   <property name="text">
+    <string>Entity Scene Graph</string>
+   </property>
+  </action>
+  <action name="actionInspector_Panel">
+   <property name="text">
+    <string>Inspector Panel</string>
+   </property>
+  </action>
+  <action name="actionLog_panel">
+   <property name="text">
+    <string>Log panel</string>
+   </property>
+  </action>
+  <action name="actionAsset_panel">
+   <property name="text">
+    <string>Asset panel</string>
+   </property>
+  </action>
+  <action name="actionAbout">
+   <property name="text">
+    <string>About</string>
    </property>
   </action>
  </widget>
