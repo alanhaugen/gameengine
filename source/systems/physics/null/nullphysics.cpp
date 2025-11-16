@@ -9,6 +9,11 @@ void NullPhysics::Update()
 {
 }
 
+bool NullPhysics::isColliding(GameObject *firstObject, GameObject *secondObject)
+{
+    return false;
+}
+
 Physics::Collider* NullPhysics::CreateCollider(GameObject* gameObject, float radius, int response)
 {
     Collider collider;

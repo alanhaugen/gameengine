@@ -12,6 +12,26 @@ void AAPhysics::Update()
     CollisionDetection();
 }
 
+bool AAPhysics::isColliding(GameObject *firstObject, GameObject *secondObject)
+{
+    for (int i = 0; i < colliders.size(); i++)
+    {
+        if (colliders[i].gameObject == firstObject && colliders[i].isColliding)
+        {
+            if (secondObject == nullptr)
+            {
+                return true;
+            }
+            else if (secondObject == colliders[i].collidesWithObject)
+            {
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
 void AAPhysics::ApplyGravity(float deltaTime)
 {
 }
@@ -36,12 +56,13 @@ void AAPhysics::CollisionDetection()
 
             if (distSquared < radiusSum * radiusSum)
             {
-                // collision
-                Log("Collision");
+                colliders[i].isColliding = true;
+                colliders[i].collidesWithObject = colliders[j].gameObject;
             }
             else
             {
-                Log("No Collision");
+                colliders[i].isColliding = false;
+                colliders[i].collidesWithObject = nullptr;
             }
         }
     }
@@ -62,6 +83,7 @@ Physics::Collider* AAPhysics::CreateCollider(GameObject* gameObject, float radiu
     Collider collider;
     collider.gameObject = gameObject;
     collider.radius = radius;
+    collider.isColliding = false;
 
     colliders.push_back(collider);
 

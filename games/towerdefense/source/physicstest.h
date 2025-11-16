@@ -3,6 +3,8 @@
 
 #include "core/x-platform/scene.h"
 
+class SphereCollider;
+
 class PhysicsTest : public Scene
 {
 public:

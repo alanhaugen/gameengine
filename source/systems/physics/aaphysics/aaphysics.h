@@ -12,6 +12,7 @@ public:
 
     bool Init() override;
     void Update() override;
+    bool isColliding(GameObject* firstObject, GameObject* secondObject) override;
 
     Collider* CreateCollider(GameObject* gameObject, float radius, int response) override;
 

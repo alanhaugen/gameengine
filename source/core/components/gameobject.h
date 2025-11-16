@@ -1,7 +1,8 @@
 #ifndef GAMEOBJECT_H
 #define GAMEOBJECT_H
 
-#include "glm/gtc/matrix_transform.hpp"
+#include "core/components/visualobject.h"
+#include <glm/gtc/matrix_transform.hpp>
 #include <glm/glm.hpp>
 #include <vector>
 
@@ -67,6 +68,32 @@ public:
     {
         glm::vec3 translation(x, y, z);
         matrix = glm::translate(matrix, translation);
+    }
+
+    void Hide()
+    {
+        for (int i = 0; i < components.size(); i++)
+        {
+            VisualObject* visualObject = dynamic_cast<VisualObject*>(components[i]);
+
+            if (visualObject)
+            {
+                visualObject->Hide();
+            }
+        }
+    }
+
+    void Show()
+    {
+        for (int i = 0; i < components.size(); i++)
+        {
+            VisualObject* visualObject = dynamic_cast<VisualObject*>(components[i]);
+
+            if (visualObject)
+            {
+                visualObject->Show();
+            }
+        }
     }
 };
 

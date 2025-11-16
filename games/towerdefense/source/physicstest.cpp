@@ -31,6 +31,15 @@ void PhysicsTest::Update()
     {
         first->Translate(glm::vec3(-0.01f,0,0));
     }
+
+    if (physics->isColliding(first))
+    {
+        first->Hide();
+    }
+    else
+    {
+        first->Show();
+    }
 }
 
 void PhysicsTest::Clean()
