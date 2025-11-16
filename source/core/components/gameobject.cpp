@@ -13,7 +13,7 @@ GameObject::GameObject(const std::string innName)
     Services::currentScene->gameObjects.push_back(this);
 }
 
-void GameObject::AddComponent(Component *newComponent)
+void GameObject::AddComponent(Component* newComponent)
 {
     newComponent->gameObject = this;
     components.push_back(newComponent);

@@ -11,6 +11,6 @@ private:
 
 public:
     TriangleCollider(float innR = 1.0f,
-                     int collisionResponse = Physics::CollisionResponse::NONE);
+                     int collisionResponse = Physics::CollisionResponse::STATIC);
     void Update();
 };

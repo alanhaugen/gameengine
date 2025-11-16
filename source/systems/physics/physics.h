@@ -10,8 +10,8 @@ class Physics : public System
 public:
     enum CollisionResponse
     {
-        NONE,
-        BOUNCE
+        STATIC,
+        DYNAMIC
     };
 
     class Collider
@@ -20,7 +20,6 @@ public:
         float radius;
         float mass;
         float velocity;
-        glm::vec3 center;
         GameObject* gameObject;
 
     private:
@@ -28,5 +27,5 @@ public:
 
     virtual bool Init() = 0;
     virtual void Update() = 0;
-    virtual Collider* CreateCollider(GameObject* gameObject, int response) = 0;
+    virtual Collider* CreateCollider(GameObject* gameObject, float radius, int response) = 0;
 };

@@ -23,21 +23,25 @@ void AAPhysics::CollisionDetection()
     {
         for (int j = 0; j < colliders.size(); j++)
         {
-            glm::vec3 diff = colliders[j]->center - colliders[i]->center;
-            float doubleRadiance = colliders[i]->radius + colliders[j]->radius;
+            // Do not detect against self
+            if (colliders[i].gameObject == colliders[j].gameObject)
+            {
+                continue;
+            }
+
+            // Calculate sphere collision
+            glm::vec3 diff = colliders[j].gameObject->GetPosition() - colliders[i].gameObject->GetPosition();
+            float radiusSum = colliders[i].radius + colliders[j].radius;
             float distSquared = glm::dot(diff, diff);
 
-            if (distSquared < doubleRadiance)
+            if (distSquared < radiusSum * radiusSum)
             {
-                if (colliders[i] == colliders[j])
-                {
-                    return;
-                }
-                else
-                {
-                    CollisionResponse(colliders[i], colliders[j]);
-                    Log("Collision");
-                }
+                // collision
+                Log("Collision");
+            }
+            else
+            {
+                Log("No Collision");
             }
         }
     }
@@ -53,13 +57,13 @@ void AAPhysics::CalculateImpulses(float massA, float massB, float speedA, float 
     //formel for inelastisk kollisjon: m1v1 + m2v2 = m1v1' + m2v2'
 }
 
-Physics::Collider* AAPhysics::CreateCollider(GameObject* gameObject, int response)
+Physics::Collider* AAPhysics::CreateCollider(GameObject* gameObject, float radius, int response)
 {
-    Collider* collider = new Collider();
-    collider->gameObject = gameObject;
+    Collider collider;
+    collider.gameObject = gameObject;
+    collider.radius = radius;
 
     colliders.push_back(collider);
 
-    return collider;
-    //return Physics::Collider();
+    return &colliders.back();
 }
