@@ -1,6 +1,7 @@
 #include "physicstest.h"
 #include "core/components/sphere.h"
 #include "core/components/spherecollider.h"
+#include "core/platforms/application.h"
 
 PhysicsTest::PhysicsTest()
 {
@@ -43,6 +44,11 @@ void PhysicsTest::Update()
     else
     {
         first->Show();
+    }
+
+    if (input.Held(input.Key.SPACE))
+    {
+        Application::NextScene();
     }
 }
 
