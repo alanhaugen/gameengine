@@ -8,6 +8,7 @@
 #include <qinputdialog.h>
 #include "core/x-platform/locator.h"
 #include "core/x-platform/services.h"
+#include <QFileDialog>
 #include "systems/audio/openal/openalaudio.h"
 #include "systems/audio/qtaudio/qtmultimediaaudio.h"
 #include "systems/physics/aaphysics/aaphysics.h"
@@ -288,8 +289,19 @@ void MainWindow::MainGameLoop()
 
 void MainWindow::SaveScene()
 {
-    Services::currentScene->Save();
-    Log("Scene saved");
+    QString fileName = QFileDialog::getSaveFileName(
+        this,
+        tr("Save Scene"),
+        "",
+        tr("Scene Files (*.json);;All Files (*)")
+        );
+
+    // Check if user canceled
+    if (fileName.isEmpty())
+        return;
+
+    Services::currentScene->Save(fileName.toStdString());
+    Log("Scene saved: " + fileName.toStdString());
 }
 
 void MainWindow::resizeEvent(QResizeEvent *event)
@@ -453,7 +465,6 @@ void MainWindow::UpdateInspector()
     {
         for (Component* comp: ObjSelected->components)
         {
-            qDebug()<<"found componentes" <<"/n";
             QString typeName = comp->name.c_str();
 
             if(typeName == "Mesh")

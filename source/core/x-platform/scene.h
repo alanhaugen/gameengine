@@ -15,9 +15,9 @@ public:
     virtual void Init() = 0;
     virtual void Update() = 0;
     virtual void Clean() = 0;
-    void Save()
+    void Save(std::string fileName)
     {
-        std::ofstream file("save.json");
+        std::ofstream file(fileName);
         json j;
 
         for (int i = 0; i < gameObjects.size(); i++)
