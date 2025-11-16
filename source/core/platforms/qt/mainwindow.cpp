@@ -24,7 +24,17 @@ MainWindow::MainWindow(QWidget *parent, const char* windowTitle, int windowWidth
     ui->setupUi(this);
     ui->treeGameObjects->setContextMenuPolicy(Qt::CustomContextMenu);
     //MainWindow size:
-    resize(windowWidth, windowHeight);
+
+    QScreen *screen = this->screen();  // Qt finds the correct monitor
+    QRect screenGeometry = screen->geometry();
+    int height = screenGeometry.height();
+    int width = screenGeometry.width();
+
+    this->resize(width, height);
+
+    this->setGeometry(0, 0,
+                      screenGeometry.width(),
+                      screenGeometry.height());
 
     setWindowTitle(windowTitle);  //Main app title
 
@@ -40,17 +50,14 @@ MainWindow::MainWindow(QWidget *parent, const char* windowTitle, int windowWidth
 
     // Wrap VulkanRenderer (QWindow) into a QWidget
     vulkanWidget = QWidget::createWindowContainer(renderer, this);
-    //vulkanWidget->setMinimumSize(windowWidth, windowHeight);
 
-    vulkanWidget->setMinimumWidth(windowWidth);
-    vulkanWidget->setMinimumHeight(windowHeight);
+    vulkanWidget->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 
-    vulkanWidget->sizePolicy().setHorizontalPolicy(QSizePolicy::Fixed);
-    vulkanWidget->sizePolicy().setVerticalPolicy(QSizePolicy::Fixed);
+    vulkanWidget->setFixedSize(windowWidth, windowHeight);
 
     vulkanWidget->setFocusPolicy(Qt::StrongFocus);
 
-    ui->VulkanLayout->addWidget(vulkanWidget);
+    ui->VulkanLayout->addWidget(vulkanWidget, 0);
 
     //ui->splitter->setSizes(QList<int>()<<200<<900<<300);
 
