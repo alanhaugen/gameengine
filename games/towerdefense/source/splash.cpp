@@ -3,10 +3,12 @@
 
 void Splash::Init()
 {
-    logo = new Sprite("Assets/Textures/huldralogo.png");
+    GameObject* logo = new GameObject;
+    Sprite* sprite = new Sprite("Assets/Textures/huldralogo.png");
+    logo->AddComponent(sprite);
 
-    float posX = renderer->windowWidth / 2 - logo->drawable->textureWidth / 2;
-    float posY = renderer->windowHeight / 2 - logo->drawable->textureHeight / 2;
+    float posX = renderer->windowWidth / 2 - sprite->drawable->textureWidth / 2;
+    float posY = renderer->windowHeight / 2 - sprite->drawable->textureHeight / 2;
 
     logo->SetPosition(glm::vec3(posX,posY,0));
 
@@ -22,10 +24,4 @@ void Splash::Update()
     {
         Application::NextScene();
     }
-}
-
-void Splash::Clean()
-{
-    logo->Hide();
-    //delete logo;
 }

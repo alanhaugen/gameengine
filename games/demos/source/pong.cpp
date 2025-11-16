@@ -201,7 +201,3 @@ void Pong::Update()
 
     ballMatrix = glm::translate(ballMatrix, direction);
 }
-
-void Pong::Clean()
-{
-}

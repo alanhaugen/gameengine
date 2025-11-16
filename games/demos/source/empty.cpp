@@ -11,7 +11,3 @@ void Empty::Init()
 void Empty::Update()
 {
 }
-
-void Empty::Clean()
-{
-}

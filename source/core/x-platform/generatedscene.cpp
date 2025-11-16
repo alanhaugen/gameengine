@@ -59,8 +59,4 @@ void GeneratedScene::Update()
 
 void GeneratedScene::Clean()
 {
-    for (int i = 0; i < gameObjects.size(); i++)
-    {
-        gameObjects[i]->Hide();
-    }
 }

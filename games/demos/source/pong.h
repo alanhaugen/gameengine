@@ -43,7 +43,6 @@ public:
     Pong();
     void Init();
     void Update();
-    void Clean();
 };
 
 #endif // PONG_H

@@ -12,7 +12,6 @@ public:
     FlappyBird();
     void Init();
     void Update();
-    void Clean();
 
     std::vector<Text*> scores;
     Text* score;

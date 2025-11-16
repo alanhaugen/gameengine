@@ -8,14 +8,12 @@
 class Splash : public Scene
 {
 private:
-    Sprite* logo;
     int i = 0;
     Timer timer;
 
 public:
     void Init();
     void Update();
-    void Clean();
 };
 
 #endif // SPLASH_H

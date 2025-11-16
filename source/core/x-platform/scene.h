@@ -14,7 +14,20 @@ class Scene : public Locator
 public:
     virtual void Init() = 0;
     virtual void Update() = 0;
-    virtual void Clean() = 0;
+
+    Camera camera;
+    unsigned id;
+
+    std::vector<GameObject*> gameObjects;
+
+    void Clean()
+    {
+        for (int i = 0; i < gameObjects.size(); i++)
+        {
+            gameObjects[i]->Hide();
+        }
+    }
+
     void Save(std::string fileName)
     {
         std::ofstream file(fileName);
@@ -27,9 +40,4 @@ public:
 
         file << j.dump(4);
     }
-
-    Camera camera;
-    unsigned id;
-
-    std::vector<GameObject*> gameObjects;
 };

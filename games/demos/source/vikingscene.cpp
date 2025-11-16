@@ -33,9 +33,3 @@ void VikingScene::Update()
     first->Rotate(glm::radians(1.0f), glm::vec3(0,0,1));
     second->Rotate(glm::radians(-1.0f), glm::vec3(0,0,1));
 }
-
-void VikingScene::Clean()
-{
-    first->Show();
-    second->Show();
-}

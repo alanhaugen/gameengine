@@ -1,4 +1,5 @@
 #include "sprite.h"
+#include "core/components/gameobject.h"
 #include "glm/gtc/matrix_transform.hpp"
 
 Sprite::Sprite(const char* texture, float x, float y, float scaleX, float scaleY, int width, int height, const char *glyphs)
@@ -73,8 +74,11 @@ Sprite::Sprite(const char* texture, float x, float y, float scaleX, float scaleY
 
 void Sprite::Update()
 {
+    if (gameObject)
+    {
+        drawable->ubo.model = gameObject->matrix;
+    }
 }
-
 
 bool Sprite::IsPressed()
 {
@@ -96,4 +100,3 @@ bool Sprite::IsPressed()
 
     return false;
 }
-

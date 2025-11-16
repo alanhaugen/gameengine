@@ -42,9 +42,3 @@ void RollingBall::Update()
 
     ballMesh->SetPosition(pos);
 }
-
-void RollingBall::Clean()
-{
-    ballMesh->Hide();
-    terrainMesh->Hide();
-}

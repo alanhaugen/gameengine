@@ -9,7 +9,3 @@ void GameOver::Update()
 {
 
 }
-
-void GameOver::Clean()
-{
-}

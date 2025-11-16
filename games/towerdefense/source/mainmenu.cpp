@@ -85,8 +85,3 @@ void MainMenu::Update()
 
     ball->SetPosition(pos);
 }
-
-void MainMenu::Clean()
-{
-    delete terrain;
-}
