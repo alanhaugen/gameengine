@@ -14,13 +14,13 @@ void Pong::Init()
     direction = glm::vec3(0.5f, 0.5f, 0.0f);
 
     score1 = new Text("Player 1: 0", 0, 0);
-    score2 = new Text("Player 2: 0", 700.0f, 0.0f);
+    score2 = new Text("Player 2: 0", renderer->windowWidth - 370.0f, 0.0f);
 
-    instructions1 = new Text("Press SPACE to play", 250.0f, 200.0f);
-    instructions2 = new Text("Use W and S to move", 250.0f, 250.0f);
+    instructions1 = new Text("Press SPACE to play", (renderer->windowWidth / 2) - 320.0f, (renderer->windowHeight / 2) - 150.0f);
+    instructions2 = new Text("Use W and S to move", (renderer->windowWidth / 2) - 320.0f, (renderer->windowHeight / 2) - 100.0f);
 
-    win1 = new Text("Player 1 Wins!", 300.0f, 200.0f);
-    win2 = new Text("Player 2 Wins!", 300.0f, 200.0f);
+    win1 = new Text("Player 1 Wins!", (renderer->windowWidth / 2) - 320.0f, renderer->windowHeight / 2);
+    win2 = new Text("Player 2 Wins!", (renderer->windowWidth / 2) - 320.0f, renderer->windowHeight / 2);
     win1->drawable->isVisible = false;
     win2->drawable->isVisible = false;
 
@@ -52,7 +52,7 @@ void Pong::Update()
 
             score2->drawable->isVisible = false;
             delete score2;
-            score2 = new Text((std::string("Player 2: ") + std::to_string(playerOneScore)).c_str(), 700.0f, 0.0f);
+            score2 = new Text((std::string("Player 2: ") + std::to_string(playerOneScore)).c_str(), renderer->windowWidth - 370.0f, 0.0f);
 
             win1->drawable->isVisible = false;
             win2->drawable->isVisible = false;
@@ -177,7 +177,7 @@ void Pong::Update()
         playerTwoScore++;
         score2->drawable->isVisible = false;
         delete score2;
-        score2 = new Text((std::string("Player 2: ") + std::to_string(playerTwoScore)).c_str(), 700.0f, 0.0f);
+        score2 = new Text((std::string("Player 2: ") + std::to_string(playerTwoScore)).c_str(), renderer->windowWidth - 370.0f, 0.0f);
         audio->PlaySound("Assets/Sounds/score.wav");
         if (playerTwoScore >= 10)
         {

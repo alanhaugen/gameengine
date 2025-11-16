@@ -57,12 +57,16 @@ public:
     void Show()
     {
         if(drawable)
-        drawable->isVisible = true;
+        {
+            drawable->isVisible = true;
+        }
     }
 
     void Hide()
     {
         if(drawable)
-        drawable->isVisible = false;
+        {
+            drawable->isVisible = false;
+        }
     }
 };
