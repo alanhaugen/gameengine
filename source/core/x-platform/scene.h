@@ -11,7 +11,13 @@ public:
     virtual void Init() = 0;
     virtual void Update() = 0;
     virtual void Clean() = 0;
-
+    void Save()
+    {
+        for (int i = 0; i < gameObjects.size(); i++)
+        {
+            //std::cout <<
+        }
+    }
 
     Camera camera;
     unsigned id;

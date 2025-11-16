@@ -24,7 +24,7 @@ void RollingBall::Update()
 {
     glm::vec3 pos = ballMesh->GetPosition();
 
-    if (input.Held(input.Key.A))
+    if (input.Held(input.Key.R))
     {
         pos = camera.position;
         velocity = glm::vec3(camera.forward / 90.0f);
