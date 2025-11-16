@@ -27,15 +27,38 @@ void Services::AddScene(Scene *scene)
         camera->components.push_back(new FPSCamera(&scene->camera));
         scene->gameObjects.push_back(camera);
     }
+
+    if (currentScene == nullptr)
+    {
+        SetScene(scenes.at(0));
+    }
+
 }
 
 void Services::SetScene(Scene *scene)
 {
+    if(currentScene)
+    {
+        currentScene->Clean();
+        currentScene=nullptr;
+    }
+
     currentScene = scene;
-    scene->Init();
+    currentScene->Init();
 }
 
 void Services::SetScene(int index)
 {
     SetScene(scenes[index]);
+
+}
+
+Scene *Services::GetScenes()
+{
+    for(int index = 0; index < scenes.size(); index++)
+    {
+        return scenes.at(index);
+    }
+    return nullptr;
+
 }
