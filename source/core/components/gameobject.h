@@ -37,9 +37,21 @@ public:
             {"name", name},
             {"id", id},
             {"matrix", mat4_to_json(matrix)},
-            {"components", json::array()}
-            //{"components", serialize_components(o.components)}
+            {"components", serialize_components(components)}
         };
+    }
+
+    json serialize_components(std::vector<Component*> components)
+    {
+        json j = json::array();
+        for (int i = 0; i < components.size(); i++)
+        {
+            j.push_back( {
+                {"name", components[i]->name}
+            });
+        }
+
+        return j;
     }
 
     void from_json(const json& j, GameObject& o)

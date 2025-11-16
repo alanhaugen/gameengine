@@ -7,7 +7,7 @@ class GameObject;
 class Component : public Locator
 {
 public:
-    std::string name;
+    std::string name = "Component";
     GameObject* gameObject = nullptr;
     virtual void Update() = 0;
 };
