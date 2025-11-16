@@ -18,6 +18,7 @@ public:
     std::vector<Component*> components;
 
     std::string name;
+    glm::vec3 dimensions = glm::vec3(1.0f);
 
     void AddComponent(Component* newComponent);
 

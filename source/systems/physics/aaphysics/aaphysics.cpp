@@ -2,14 +2,61 @@
 #include <core/components/gameobject.h>
 #include <core/x-platform/locator.h>
 
-AAPhysics::AAPhysics() {}
+#define max(x, y) (((x) > (y)) ? (x) : (y))
+#define min(x, y) (((x) < (y)) ? (x) : (y))
 
-bool AAPhysics::Init() { return true; }
+AAPhysics::AAPhysics()
+{
+}
+
+bool AAPhysics::Init()
+{
+    return true;
+}
 
 void AAPhysics::Update()
 {
     ApplyGravity();
     CollisionDetection();
+}
+
+bool AAPhysics::isColliding(Ray ray, GameObject *gameObject)
+{
+    // lb is the corner of AABB with minimal coordinates - left bottom, rt is maximal corner
+    // ray.orig is origin of ray
+    float lbx = gameObject->GetPosition().x - gameObject->dimensions.x;
+    float rtx = gameObject->GetPosition().x + gameObject->dimensions.x;
+    float lby = gameObject->GetPosition().y - gameObject->dimensions.y;
+    float rty = gameObject->GetPosition().y + gameObject->dimensions.y;
+    float lbz = gameObject->GetPosition().z + gameObject->dimensions.z;
+    float rtz = gameObject->GetPosition().z - gameObject->dimensions.z;
+
+    float t1 = (lbx - ray.origin.x) * ray.invdir.x;
+    float t2 = (rtx - ray.origin.x) * ray.invdir.x;
+    float t3 = (lby - ray.origin.y) * ray.invdir.y;
+    float t4 = (rty - ray.origin.y) * ray.invdir.y;
+    float t5 = (lbz - ray.origin.z) * ray.invdir.z;
+    float t6 = (rtz - ray.origin.z) * ray.invdir.z;
+
+    float tmin = max(max(min(t1, t2), min(t3, t4)), min(t5, t6));
+    float tmax = min(min(max(t1, t2), max(t3, t4)), max(t5, t6));
+
+    // if tmax < 0, ray (line) is intersecting AABB, but the whole AABB is behind us
+    if (tmax < 0)
+    {
+        //t = tmax;
+        return false;
+    }
+
+    // if tmin > tmax, ray doesn't intersect AABB
+    if (tmin > tmax)
+    {
+        //t = tmax;
+        return false;
+    }
+
+    //t = tmin;
+    return true;
 }
 
 bool AAPhysics::isColliding(GameObject *firstObject, GameObject *secondObject)

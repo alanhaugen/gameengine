@@ -2,16 +2,17 @@
 #define AAPHYSICS_H
 
 #include <glm/glm.hpp>
-#include "../physics.h"
+#include "../null/nullphysics.h"
 #include "vector"
 
-class AAPhysics : public Physics
+class AAPhysics : public NullPhysics
 {
 public:
     AAPhysics();
 
     bool Init() override;
     void Update() override;
+    bool isColliding(Ray ray, GameObject* gameObject) override;
     bool isColliding(GameObject* firstObject, GameObject* secondObject) override;
 
     Collider* CreateCollider(GameObject* gameObject, float radius, int response) override;

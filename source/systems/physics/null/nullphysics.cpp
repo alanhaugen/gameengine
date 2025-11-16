@@ -9,6 +9,11 @@ void NullPhysics::Update()
 {
 }
 
+bool NullPhysics::isColliding(Ray ray, GameObject *gameObject)
+{
+    return false;
+}
+
 bool NullPhysics::isColliding(GameObject *firstObject, GameObject *secondObject)
 {
     return false;
