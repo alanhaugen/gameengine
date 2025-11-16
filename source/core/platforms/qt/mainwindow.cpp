@@ -78,9 +78,9 @@ MainWindow::MainWindow(QWidget *parent, const char* windowTitle, int windowWidth
 
 
     //Scenes
-    connect(ui->actionEmpty,&QAction::triggered, this, [this](){NewScenes(0);});
-    connect(ui->actionVikingRoom,&QAction::triggered, this, [this](){NewScenes(1);});
-    connect(ui->actionPong,&QAction::triggered, this, [this](){NewScenes(3);});
+    connect(ui->actionEmpty_2,&QAction::triggered, this, [this](){NewScenes(0);});
+    connect(ui->actionVikingRoom_2,&QAction::triggered, this, [this](){NewScenes(1);});
+    connect(ui->actionPong_2,&QAction::triggered, this, [this](){NewScenes(3);});
 
 
 
