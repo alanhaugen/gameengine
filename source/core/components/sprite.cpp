@@ -3,6 +3,7 @@
 
 Sprite::Sprite(const char* texture, float x, float y, float scaleX, float scaleY, int width, int height, const char *glyphs)
 {
+    name = "Sprite";
     std::vector<Vertex> vertices;
     std::vector<uint32_t> indices;
 

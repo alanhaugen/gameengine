@@ -2,6 +2,7 @@
 
 FPSCamera::FPSCamera(Camera* innCamera)
 {
+    name = "FPS Camera";
     camera = innCamera;
 }
 

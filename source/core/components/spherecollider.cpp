@@ -2,6 +2,7 @@
 
 SphereCollider::SphereCollider(GameObject* gameObject, float innR, int response)
 {
+    name = "Sphere Collider";
     collider = physics->CreateCollider(gameObject, innR, Physics::DYNAMIC);
 }
 

@@ -31,6 +31,7 @@ void Terrain::Init()
 
 Terrain::Terrain()
 {
+    name = "Terrain";
     Init();
 
     drawable = &renderer->CreateDrawable(vertices, indices, "shaders/color.vert.spv", "shaders/color.frag.spv");
@@ -42,6 +43,7 @@ Terrain::Terrain(const char *filePath,
                  const char* fragmentShaderPath,
                  bool isCloud)
 {
+    name = "Terrain";
     /*std::ifstream infile(filePath);
 
     float x, y, z;

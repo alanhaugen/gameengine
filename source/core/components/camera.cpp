@@ -4,6 +4,7 @@
 
 void Camera::Init()
 {
+    name = "Camera";
     position = glm::vec3(0.0f, 0.0f, 0.0f);
 
     forward = glm::vec3(0.0f, 0.0f, -1.0f);

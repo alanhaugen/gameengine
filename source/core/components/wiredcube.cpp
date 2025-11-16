@@ -2,6 +2,7 @@
 
 WiredCube::WiredCube(float x, float y, float z, glm::vec3 scale)
 {
+    name = "Wired Cube";
     std::vector<Vertex> vertices;
     std::vector<uint32_t> indices;
 

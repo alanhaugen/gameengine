@@ -2,6 +2,7 @@
 
 TriangleCollider::TriangleCollider(float innR, int response)
 {
+    name = "Triangle Collider";
     r = innR;
 
     //collider = physics->CreateCollider(response);
