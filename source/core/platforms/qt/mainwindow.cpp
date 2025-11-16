@@ -8,6 +8,7 @@
 #include <qinputdialog.h>
 #include "core/x-platform/locator.h"
 #include "core/x-platform/services.h"
+#include "core/x-platform/generatedscene.h"
 #include <QFileDialog>
 #include "systems/audio/openal/openalaudio.h"
 #include "systems/audio/qtaudio/qtmultimediaaudio.h"
@@ -129,6 +130,7 @@ MainWindow::MainWindow(QWidget *parent, const char* windowTitle, int windowWidth
     connect(ui->treeGameObjects, &QTreeWidget::itemClicked, this, &MainWindow::OnLeftClickGameObjectWidget);
 
     connect(ui->actionSave_Scene, &QAction::triggered, this, &MainWindow::SaveScene);
+    connect(ui->action_Open, &QAction::triggered, this, &MainWindow::OpenScene);
 
     //
     connect(ui->Mesh_Combo, &QComboBox::currentTextChanged, this,&MainWindow::ChangeMesh);
@@ -302,6 +304,22 @@ void MainWindow::SaveScene()
 
     Services::currentScene->Save(fileName.toStdString());
     Log("Scene saved: " + fileName.toStdString());
+}
+
+void MainWindow::OpenScene()
+{
+    QString fileName = QFileDialog::getOpenFileName(
+        this,
+        tr("Open Scene"),
+        "",
+        tr("Scene Files (*.json);;All Files (*)")
+        );
+
+    // Check if user canceled
+    if (fileName.isEmpty())
+        return;
+
+    Services::SetScene(new GeneratedScene(fileName.toStdString()));
 }
 
 void MainWindow::resizeEvent(QResizeEvent *event)

@@ -32,6 +32,7 @@ public:
 
     void MainGameLoop();
     void SaveScene();
+    void OpenScene();
 
     VulkanRenderer* renderer{nullptr};
 

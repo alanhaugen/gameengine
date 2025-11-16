@@ -54,4 +54,6 @@ void PhysicsTest::Update()
 
 void PhysicsTest::Clean()
 {
+    first->Hide();
+    second->Hide();
 }

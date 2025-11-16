@@ -1,6 +1,6 @@
 #include "generatedscene.h"
 
-GeneratedScene::GeneratedScene()
+GeneratedScene::GeneratedScene(std::string fileName)
 {
 }
 

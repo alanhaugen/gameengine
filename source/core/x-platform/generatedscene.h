@@ -6,7 +6,7 @@
 class GeneratedScene : public Scene
 {
 public:
-    GeneratedScene();
+    GeneratedScene(std::string fileName);
     void Init();
     void Update();
     void Clean();
