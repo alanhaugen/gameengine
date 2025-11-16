@@ -54,14 +54,16 @@ public:
         return j;
     }
 
-    void from_json(const json& j, GameObject& o)
+    GameObject from_json(const json& j, GameObject& o)
     {
         o.name = j.value("name", "GameObject");
-        o.id = j.at("id");
-        //o.matrix = mat4_from_json(j.at("matrix"));
+        o.id = j.at("id").get<unsigned>();
+        o.matrix = mat4_from_json(j.at("matrix"));
 
+        o.components.clear();
         // Your custom component handling (or skip)
         // o.components = deserialize_components(j.at("components"));
+        return o;
     }
 
 public:
