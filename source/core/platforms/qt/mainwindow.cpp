@@ -127,6 +127,7 @@ MainWindow::MainWindow(QWidget *parent, const char* windowTitle, int windowWidth
     connect(ui->treeGameObjects, &QTreeWidget::customContextMenuRequested, this, &MainWindow::OnRightClickGameObjectWidget);
     connect(ui->treeGameObjects, &QTreeWidget::itemClicked, this, &MainWindow::OnLeftClickGameObjectWidget);
 
+    connect(ui->actionSave_Scene, &QAction::triggered, this, &MainWindow::SaveScene);
 
     //
     connect(ui->Mesh_Combo, &QComboBox::currentTextChanged, this,&MainWindow::ChangeMesh);
@@ -283,6 +284,12 @@ void MainWindow::MainGameLoop()
 
         vulkanWidget->repaint();
     }
+}
+
+void MainWindow::SaveScene()
+{
+    Services::currentScene->Save();
+    Log("Scene saved");
 }
 
 void MainWindow::resizeEvent(QResizeEvent *event)

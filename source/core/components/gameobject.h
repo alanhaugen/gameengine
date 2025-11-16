@@ -6,11 +6,52 @@
 #include "core/components/wiredcube.h"
 #include <glm/glm.hpp>
 #include <vector>
+#include <json.hpp>
+
+using json = nlohmann::json;
 
 class Component;
 
 class GameObject
 {
+public:
+    json mat4_to_json(const glm::mat4& m)
+    {
+        json j = json::array();
+        for (int i = 0; i < 16; i++)
+            j.push_back(((float*)&m)[i]);
+        return j;
+    }
+
+    glm::mat4 mat4_from_json(const json& j)
+    {
+        glm::mat4 m(1.0f);
+        for (int i = 0; i < 16; i++)
+            ((float*)&m)[i] = j[i];
+        return m;
+    }
+
+    json to_json()
+    {
+        return json{
+            {"name", name},
+            {"id", id},
+            {"matrix", mat4_to_json(matrix)},
+            {"components", json::array()}
+            //{"components", serialize_components(o.components)}
+        };
+    }
+
+    void from_json(const json& j, GameObject& o)
+    {
+        o.name = j.value("name", "GameObject");
+        o.id = j.at("id");
+        //o.matrix = mat4_from_json(j.at("matrix"));
+
+        // Your custom component handling (or skip)
+        // o.components = deserialize_components(j.at("components"));
+    }
+
 public:
     GameObject(std::string innName = "GameObject");
     unsigned id;
