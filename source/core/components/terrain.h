@@ -13,10 +13,10 @@ private:
 public:
     Terrain();
     Terrain(const char* filePath,
+            const bool isCloud = false,
             const char* texturePath = "",
             const char* vertexShaderPath = "shaders/phong.vert.spv",
-            const char* fragmentShaderPath = "shaders/phong.frag.spv",
-            bool isCloud = false);
+            const char* fragmentShaderPath = "shaders/phong.frag.spv");
     void Update();
 
     float GetHeightAt(float x, float z) const;

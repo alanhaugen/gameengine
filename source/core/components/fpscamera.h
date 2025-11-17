@@ -8,7 +8,7 @@ class FPSCamera : public Component
 {
 private:
     void UpdateCamera();
-    float speed = 0.01;
+    float speed = 1.00;
     Camera* camera;
 
 public:
