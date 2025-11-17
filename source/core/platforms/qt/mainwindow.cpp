@@ -109,6 +109,7 @@ MainWindow::MainWindow(QWidget *parent, const char* windowTitle, int windowWidth
 
     //MeshAvailables
     AvailableMeshes();
+    AvailableTextures();
 
     ui->Inspectorwidget->setHidden(true);
 
@@ -453,6 +454,15 @@ void MainWindow::AddNewObj(const QString &ObjectName)
 
     MainObj->addChild(ObjItem);
 }
+
+void MainWindow::AvailableTextures()
+{
+    ui->Material_box->clear();
+    QStringList TextureNames = mAssetManager->GetTexturesNames();
+    ui->Material_box->addItems(TextureNames);
+}
+
+
 
 void MainWindow::AvailableMeshes()
 {

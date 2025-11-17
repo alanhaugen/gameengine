@@ -71,6 +71,10 @@ private:
     //add Objects to the scene and to the gameobject
     void AddNewObj(const QString& ObjectName);
 
+    //add Textures to the scene and to the gameobject
+    void AvailableTextures();
+
+
     //Adds the meshes to the combobox of meshes
     void AvailableMeshes();
 
