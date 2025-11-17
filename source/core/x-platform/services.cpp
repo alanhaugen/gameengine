@@ -37,6 +37,8 @@ void Services::AddScene(Scene *scene)
 
 void Services::SetScene(Scene *scene)
 {
+    audio->Stop();
+
     if(currentScene)
     {
         currentScene->Clean();
