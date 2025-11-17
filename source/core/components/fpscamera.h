@@ -9,9 +9,10 @@ class FPSCamera : public Component
 private:
     void UpdateCamera();
     float speed = 1.00;
-    Camera* camera;
+
 
 public:
+    Camera* camera;
     FPSCamera(Camera* camera = nullptr);
     void Update();
 };
