@@ -88,28 +88,28 @@ int main(int argc, char* argv[])
 
         if (largestX < pos.x)
         {
-             largestX = pos.x;
+            largestX = pos.x;
         }
         if (largestY < pos.y)
         {
-             largestY = pos.y;
+            largestY = pos.y;
         }
         if (largestZ < pos.z)
         {
-             largestZ = pos.z;
+            largestZ = pos.z;
         }
 
         if (smallestX > pos.x)
         {
-             smallestX = pos.x;
+            smallestX = pos.x;
         }
         if (smallestY > pos.y)
         {
-             smallestY = pos.y;
+            smallestY = pos.y;
         }
         if (smallestZ > pos.z)
         {
-             smallestZ = pos.z;
+            smallestZ = pos.z;
         }
 
         points.push_back(pos);
@@ -120,13 +120,49 @@ int main(int argc, char* argv[])
         float normX = (point.x - smallestX) / float(largestX - smallestX);
         float normZ = (point.z - smallestZ) / float(largestZ - smallestZ);
         float normY = (point.y - smallestY) / float(largestY - smallestY);
-        
+
         int x = std::min(width  - 1, int(normX * (width  - 1)));
         int z = std::min(height - 1, int(normZ * (height - 1)));
-        
+
         vertices[x][z] = u8(normY * 255.0f);
     }
 
+    // Fill holes
+    for (int z = 0; z < height; z++)
+    {
+        for (int x = 0; x < width; x++)
+        {
+            if (vertices[x][z] == 0)
+            {
+                int nearest = -1;
+
+                // Look in a 3x3 neighborhood
+                for (int dz = -1; dz <= 1; dz++)
+                {
+                    for (int dx = -1; dx <= 1; dx++)
+                    {
+                        int nx = x + dx;
+                        int nz = z + dz;
+
+                        if (nx >= 0 && nx < width && nz >= 0 && nz < height)
+                        {
+                            if (vertices[nx][nz] > 0)
+                            {
+                                nearest = vertices[nx][nz];
+                            }
+                        }
+                    }
+                }
+
+                if (nearest >= 0)
+                {
+                    vertices[x][z] = nearest;
+                }
+            }
+        }
+    }
+
+    // Generate image
     u8 *data;
 
     data = new u8[width * height * channels];

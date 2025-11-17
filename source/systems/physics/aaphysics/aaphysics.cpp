@@ -22,6 +22,11 @@ void AAPhysics::Update()
 
 bool AAPhysics::isColliding(Ray ray, GameObject *gameObject)
 {
+    if (gameObject->isVisible == false)
+    {
+        return false;
+    }
+
     // lb is the corner of AABB with minimal coordinates - left bottom, rt is maximal corner
     // ray.orig is origin of ray
     float lbx = gameObject->GetPosition().x - gameObject->dimensions.x;

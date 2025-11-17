@@ -37,13 +37,10 @@ Terrain::Terrain()
     drawable = &renderer->CreateDrawable(vertices, indices, "shaders/color.vert.spv", "shaders/color.frag.spv");
 }
 
-Terrain::Terrain(const char *filePath,
-                 const bool isCloud,
-                 const char* texturePath,
-                 const char* vertexShaderPath,
-                 const char* fragmentShaderPath)
+Terrain::Terrain(const char *filePath, const bool isCloud)
 {
     name = "Terrain";
+
     if (isCloud)
     {
         std::ifstream infile(filePath);
@@ -54,63 +51,76 @@ Terrain::Terrain(const char *filePath,
             static glm::vec3 offset = glm::vec3(x,y,z);
             vertices.push_back(Vertex{x - offset.x, y - offset.y, z - offset.z});
         }
+
+        drawable = &renderer->CreateDrawable(vertices, indices, "shaders/color.vert.spv", "shaders/color.frag.spv", Renderer::POINTS);
     }
     else
     {
-        int width,height,n;
-        unsigned char *data = stbi_load(filePath, &width, &height, &n, 0);
-
-        if (n != 1)
-        {
-            LogError("The texture used for the terrain has to many colour channles. Only images with one 8-bit grayscale channel are supported");
-            exit(0);
-        }
-        int index = 0;
-        for (int y = 0; y < height - 1; y++)
-        {
-            for (int x = 0; x < width - 1; x++)
-            {
-                glm::vec3 topLeft     = glm::vec3(x, data[x + y * width], y);
-                glm::vec3 topRight    = glm::vec3(x + 1, data[(x + 1) + y * width], y);
-                glm::vec3 bottomLeft  = glm::vec3(x, data[x + (y + 1) * width], y + 1);
-                glm::vec3 bottomRight = glm::vec3(x + 1, data[(x + 1) + (y + 1) * width], y + 1);
-
-                glm::vec2 uvTopLeft(x / float(width), y / float(height));
-                glm::vec2 uvTopRight((x + 1) / float(width), y / float(height));
-                glm::vec2 uvBottomLeft(x / float(width), (y + 1) / float(height));
-                glm::vec2 uvBottomRight((x + 1) / float(width), (y + 1) / float(height));
-
-                Vertex v1 = Vertex(bottomLeft, uvBottomLeft);
-                Vertex v2 = Vertex(bottomRight, uvBottomRight);
-                Vertex v3 = Vertex(topRight, uvTopRight);
-                Vertex v4 = Vertex(topLeft, uvBottomLeft);
-
-                vertices.push_back(v1);
-                vertices.push_back(v2);
-                vertices.push_back(v3);
-                vertices.push_back(v4);
-
-                indices.push_back(0 + index);
-                indices.push_back(1 + index);
-                indices.push_back(2 + index);
-
-                indices.push_back(2 + index);
-                indices.push_back(3 + index);
-                indices.push_back(0 + index);
-
-                index += 4;
-            }
-        }
+        Terrain(filePath, "");
     }
+}
 
-    if (isCloud)
+Terrain::Terrain(const char *filePath,
+                 const char* texturePath,
+                 const char* vertexShaderPath,
+                 const char* fragmentShaderPath)
+{
+    name = "Terrain";
+    int width,height,n;
+    unsigned char *data = stbi_load(filePath, &width, &height, &n, 0);
+
+    if (!data)
     {
-        drawable = &renderer->CreateDrawable(vertices, indices, vertexShaderPath, fragmentShaderPath, Renderer::POINTS, texturePath);
+        LogError("Failed to load heightmap");
+        exit(1);
     }
-    else
+
+    if (n != 1)
     {
-        drawable = &renderer->CreateDrawable(vertices, indices, vertexShaderPath, fragmentShaderPath, Renderer::TRIANGLES, texturePath);
+        LogError("The texture used for the terrain has to many colour channles. Only images with one 8-bit grayscale channel are supported");
+        exit(0);
     }
+
+    int index = 0;
+    for (int y = 0; y < height - 1; y++)
+    {
+        for (int x = 0; x < width - 1; x++)
+        {
+            glm::vec3 topLeft     = glm::vec3(x, data[x + y * width], y);
+            glm::vec3 topRight    = glm::vec3(x + 1, data[(x + 1) + y * width], y);
+            glm::vec3 bottomLeft  = glm::vec3(x, data[x + (y + 1) * width], y + 1);
+            glm::vec3 bottomRight = glm::vec3(x + 1, data[(x + 1) + (y + 1) * width], y + 1);
+
+            glm::vec2 uvTopLeft(x / float(width), y / float(height));
+            glm::vec2 uvTopRight((x + 1) / float(width), y / float(height));
+            glm::vec2 uvBottomLeft(x / float(width), (y + 1) / float(height));
+            glm::vec2 uvBottomRight((x + 1) / float(width), (y + 1) / float(height));
+
+            Vertex v1 = Vertex(bottomLeft, uvBottomLeft);
+            Vertex v2 = Vertex(bottomRight, uvBottomRight);
+            Vertex v3 = Vertex(topRight, uvTopRight);
+            Vertex v4 = Vertex(topLeft, uvTopLeft);
+
+            vertices.push_back(v1);
+            vertices.push_back(v2);
+            vertices.push_back(v3);
+            vertices.push_back(v4);
+
+            indices.push_back(0 + index);
+            indices.push_back(1 + index);
+            indices.push_back(2 + index);
+
+            indices.push_back(2 + index);
+            indices.push_back(3 + index);
+            indices.push_back(0 + index);
+
+            index += 4;
+        }
+    }
+
+    stbi_image_free(data);
+
+    drawable = &renderer->CreateDrawable(vertices, indices, vertexShaderPath, fragmentShaderPath, Renderer::TRIANGLES, texturePath);
 }
 
 void Terrain::Update()

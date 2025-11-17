@@ -78,6 +78,8 @@ public:
     std::string name;
     glm::vec3 dimensions = glm::vec3(1.0f);
 
+    bool isVisible = true;
+
     void AddComponent(Component* newComponent);
 
     void Update();
@@ -131,6 +133,8 @@ public:
 
     void Hide()
     {
+        isVisible = false;
+
         for (int i = 0; i < components.size(); i++)
         {
             VisualObject* visualObject = dynamic_cast<VisualObject*>(components[i]);
@@ -144,6 +148,8 @@ public:
 
     void Show()
     {
+        isVisible = true;
+
         for (int i = 0; i < components.size(); i++)
         {
             VisualObject* visualObject = dynamic_cast<VisualObject*>(components[i]);

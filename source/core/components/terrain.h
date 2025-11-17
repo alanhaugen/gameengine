@@ -13,7 +13,8 @@ private:
 public:
     Terrain();
     Terrain(const char* filePath,
-            const bool isCloud = false,
+            const bool isCloud);
+    Terrain(const char* filePath,
             const char* texturePath = "",
             const char* vertexShaderPath = "shaders/phong.vert.spv",
             const char* fragmentShaderPath = "shaders/phong.frag.spv");
