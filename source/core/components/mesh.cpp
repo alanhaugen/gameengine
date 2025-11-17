@@ -39,16 +39,20 @@ void Mesh::loadMesh(const char *filePath, const char *vertexShaderPath, const ch
         exit(0);
     }
 
-    const char* texture = "";
 
-    if (materials.size() > 0)
+    if(texture.empty())
     {
-        texture = materials[0].diffuse_texname.c_str();
+        if (materials.size() > 0)
+        {
+            texture = materials[0].diffuse_texname.c_str();
+        }
+        else
+        {
+            texture = "Assets/Textures/pink.jpg";
+        }
     }
-    else
-    {
-        texture = "Assets/Textures/pink.jpg";
-    }
+
+
 
     std::unordered_map<Vertex, uint32_t> uniqueVertices{};
 
@@ -84,7 +88,8 @@ void Mesh::loadMesh(const char *filePath, const char *vertexShaderPath, const ch
         }
     }
 
-    drawable = &renderer->CreateDrawable(vertices, indices, vertexShaderPath, fragmentShaderPath, Renderer::TRIANGLES, texture);
+    drawable = &renderer->CreateDrawable(vertices, indices, vertexShaderPath, fragmentShaderPath, Renderer::TRIANGLES, texture.c_str());
+
 }
 
 void Mesh::Update()
@@ -94,3 +99,5 @@ void Mesh::Update()
         drawable->ubo.model = gameObject->matrix;
     }
 }
+
+

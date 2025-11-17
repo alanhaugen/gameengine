@@ -133,8 +133,9 @@ MainWindow::MainWindow(QWidget *parent, const char* windowTitle, int windowWidth
     connect(ui->actionSave_Scene, &QAction::triggered, this, &MainWindow::SaveScene);
     connect(ui->action_Open, &QAction::triggered, this, &MainWindow::OpenScene);
 
-    //
+    //Mesh part
     connect(ui->Mesh_Combo, &QComboBox::currentTextChanged, this,&MainWindow::ChangeMesh);
+    connect(ui->Material_box, &QComboBox::currentTextChanged, this,&MainWindow::ChangeMaterial);
 
     //GameObject treewidget
     ui->treeGameObjects->setMinimumWidth(100);
@@ -491,12 +492,18 @@ void MainWindow::UpdateInspector()
                 qDebug()<<"Has Mesh" <<"/n";
                 Mesh* mesh = dynamic_cast<Mesh*>(comp);
                 QString currentMeshName = QFileInfo(QString(mesh->FilePath.c_str())).baseName();
+                QString currentTexture = QFileInfo(mesh->texture.c_str()).baseName();
+
                 qDebug()<<"info here:"<<currentMeshName <<"/n";
                 int index = ui->Mesh_Combo->findText(currentMeshName);
+                int TextureIndex= ui->Material_box->findText(currentTexture);
 
+                //qDebug()<<"Wow"<< mesh->texture << " :" << TextureIndex;
                 //block it from colling change mesh
                 QSignalBlocker blocker( ui->Mesh_Combo);
+                QSignalBlocker blockerMaterial( ui->Material_box);
                 ui->Mesh_Combo->setCurrentIndex(index);
+                ui->Material_box->setCurrentIndex(TextureIndex);
             }
         }
     }
@@ -562,6 +569,23 @@ void MainWindow::ChangeMesh(const QString &meshname)
 
             QString path = mAssetManager->FindMesh(meshname);
             mesh->loadMesh( path.toStdString().c_str());
+        }
+    }
+}
+
+void MainWindow::ChangeMaterial(const QString &Materialname)
+{
+   // qDebug() << "Fucky";
+    for (Component* comp: ObjSelected->components)
+    {
+        if(comp->name == "Mesh")
+        {
+            Mesh* mesh = dynamic_cast<Mesh*>(comp);
+
+            QString path = mAssetManager->FindTexture(Materialname);
+            mesh->texture = path.toStdString().c_str();
+            qDebug() << path;
+            ChangeMesh(ui->Mesh_Combo->currentText());
         }
     }
 }
