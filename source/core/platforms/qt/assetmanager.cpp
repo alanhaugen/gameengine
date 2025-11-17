@@ -12,23 +12,37 @@ AssetManager::AssetManager()
 void AssetManager::ImportMesh(const QString &AssethPath)
 {
     //goes through the filesystem starting at assethPath. adn finds all files with the filter .obj
-    QDirIterator it(AssethPath,QStringList() << FileType, QDir::Files,QDirIterator::Subdirectories);
+    QDirIterator it(AssethPath, QDir::Files,QDirIterator::Subdirectories);
 
 
     //check if there more files
     while (it.hasNext())
     {
         QFileInfo File(it.next());
-         qDebug()<<"Found:"<< File.filePath() <<" \n";
-        //Log("Found:"+ File.filePath().toStdString() +" \n");
+        if(FileType == "*."+File.suffix())
+        {
+            qDebug()<<"Found:"<< File.filePath() <<" \n";
+            //Log("Found:"+ File.filePath().toStdString() +" \n");
 
-        QString name = File.baseName();
+            QString name = File.baseName();
 
-        auto mesh = std::make_unique<Mesh>(File.filePath().toStdString().c_str());
+            auto mesh = std::make_unique<Mesh>(File.filePath().toStdString().c_str());
 
-        mMesh.push_back(std::move(mesh));
-        mFilesNames.insert(name,mMesh.size()-1);
-        mFilesPath.insert(name,File.filePath());
+            mMesh.push_back(std::move(mesh));
+            mFilesNames.insert(name,mMesh.size()-1);
+            mFilesPath.insert(name,File.filePath());
+        }
+        else if(TextureType.contains("*."+File.suffix()))
+        {
+            qDebug()<<"FoundTextures:"<< File.filePath() <<" \n";
+            QString name = File.baseName();
+
+            auto Texture = std::make_unique<QString>(File.filePath().toStdString().c_str());
+
+            mTextures.push_back(std::move(Texture));
+            mTexturesPath.insert(name,File.filePath());
+        }
+
 
     }
 
@@ -52,4 +66,20 @@ QString AssetManager::FindMesh(const QString &Name)
     }
 
     return mFilesPath.value(Name,QString());
+}
+
+QStringList AssetManager::GetTexturesNames() const
+{
+     return mTexturesPath.keys();
+}
+
+QString AssetManager::FindTexture(const QString &Name)
+{
+    if(!mTexturesPath.contains(Name))
+    {
+        qDebug()<<"does not have: "<<Name;
+        return QString();
+    }
+
+    return mTexturesPath.value(Name,QString());
 }
