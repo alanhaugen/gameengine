@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <qtreewidget.h>
+#include "core/components/fpscamera.h"
 #include "core/x-platform/services.h"
 #include "systems/renderer/vulkan/vulkanrenderer.h"
 
@@ -46,6 +47,8 @@ public:
 private:
     QWidget* vulkanWidget;
 
+    //FPSCamera
+    FPSCamera Cam;
     //Service
     Services Service;
 

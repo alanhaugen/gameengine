@@ -91,9 +91,9 @@ MainWindow::MainWindow(QWidget *parent, const char* windowTitle, int windowWidth
 
 
     //Scenes
-    connect(ui->actionEmpty_2,&QAction::triggered, this, [this](){NewScenes(0);});
+    connect(ui->actionEmpty_2,&QAction::triggered, this, [this](){NewScenes(4);});
     connect(ui->actionVikingRoom_2,&QAction::triggered, this, [this](){NewScenes(1);});
-    connect(ui->actionPong_2,&QAction::triggered, this, [this](){NewScenes(3);});
+    connect(ui->actionPong_2,&QAction::triggered, this, [this](){NewScenes(2);});
 
 
 
@@ -150,7 +150,7 @@ MainWindow::MainWindow(QWidget *parent, const char* windowTitle, int windowWidth
     timer->start(8); // 120 Hz
 
 
-    //Camera
+
 
     //Connections to functions
     //connect(ui->actionViking_Room, &QAction::triggered, this, &MainWindow::AddVikingRoom);
@@ -173,6 +173,9 @@ MainWindow::MainWindow(QWidget *parent, const char* windowTitle, int windowWidth
     Locator::physics->Init();
     Locator::renderer->Init();
     Locator::filesystem->Init();
+
+    //Camera
+
 }
 
 MainWindow::~MainWindow()
@@ -229,6 +232,8 @@ void MainWindow::MainGameLoop()
 
     if (scene)
     {
+        Cam.camera = (&scene->camera);
+        Cam.Update();
         scene->camera.Update();
         scene->Update();
 
@@ -647,6 +652,7 @@ void MainWindow::NewScenes(int index)
 {
     if(ObjSelected)
     {
+        ObjSelected->wiredCube->Hide();
         ObjSelected = nullptr;
     }
     ui->treeGameObjects->clear();
