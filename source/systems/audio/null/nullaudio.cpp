@@ -30,3 +30,8 @@ void NullAudio::PlayMusic(std::string filename)
 
 
 }
+
+void NullAudio::Stop()
+{
+
+}

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../audio.h"
+#include "../null/nullaudio.h"
 
 #ifdef _WIN32
 #include <AL/al.h>
@@ -13,7 +13,7 @@
 
 //TODO: Array of soundsources
 
-class OpenALAudio : public Audio
+class OpenALAudio : public NullAudio
 {
 public:
     OpenALAudio();
