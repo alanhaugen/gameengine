@@ -1,4 +1,5 @@
 #include "mainwindow.h"
+#include "core/components/fpscamera.h"
 #include "ui_MainWindow.h"
 #include "systems/renderer/vulkan/vulkanrenderer.h"
 #include "core/components/mesh.h"
@@ -148,6 +149,8 @@ MainWindow::MainWindow(QWidget *parent, const char* windowTitle, int windowWidth
 
     timer->start(8); // 120 Hz
 
+
+    //Camera
 
     //Connections to functions
     //connect(ui->actionViking_Room, &QAction::triggered, this, &MainWindow::AddVikingRoom);
@@ -388,13 +391,13 @@ void MainWindow::OnLeftClickGameObjectWidget(QTreeWidgetItem *item, int column)
 
 
 
-    //void* ptrToObj = item->data(column,Qt::UserRole).value<void*>();
+    // void* ptrToObj = item->data(column,Qt::UserRole).value<void*>();
 
-    //QString type = item->data(column,Qt::UserRole+1).toString();
+    // QString type = item->data(column,Qt::UserRole+1).toString();
     // GameObject* obj =reinterpret_cast<GameObject*>(ptrToObj);
-    //Component* comp =reinterpret_cast<Component*>(ptrToObj);
+    // Component* comp =reinterpret_cast<Component*>(ptrToObj);
 
-    //ObjSelected = reinterpret_cast<GameObject*>(ptrToObj);
+    // ObjSelected = reinterpret_cast<GameObject*>(ptrToObj);
 
 
     Scene* scene = Services::currentScene;
@@ -406,10 +409,12 @@ void MainWindow::OnLeftClickGameObjectWidget(QTreeWidgetItem *item, int column)
     if(it != scene->gameObjects.end())
     {
         obj= *it;
+       // qDebug()<<"aya" << obj->name;
     }
     else
     {
         obj = nullptr;
+       // qDebug()<<"Balls";
     }
 
     //check what i click, but always connects it to the parent
@@ -452,6 +457,14 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
 void MainWindow::UpdateInspector()
 {
     IsInspectorUpdated = true;
+
+
+
+    if (!ObjSelected)
+    {
+         qDebug()<<"no where";
+        return;
+    }
 
     glm::vec3 pos = glm::vec3(ObjSelected->matrix[3]);
 
@@ -528,19 +541,19 @@ void MainWindow::AddNewObj(const QString &ObjectName)
     // }
     gameobj->AddComponent(mesh);
 
-    QTreeWidgetItem * MainObj = new QTreeWidgetItem(ui->treeGameObjects);
+    // QTreeWidgetItem * MainObj = new QTreeWidgetItem(ui->treeGameObjects);
 
-    MainObj->setText(0,gameobj->name.c_str());
-    MainObj->setData(0, Qt::UserRole, QVariant::fromValue(gameobj->id));
-    MainObj->setData(0,Qt::UserRole +1,"GameObject");
-    MainObj->setExpanded(true);
+    // MainObj->setText(0,gameobj->name.c_str());
+    // MainObj->setData(0, Qt::UserRole, QVariant::fromValue(gameobj->id));
+    // MainObj->setData(0,Qt::UserRole +1,"GameObject");
+    // MainObj->setExpanded(true);
 
-    QTreeWidgetItem * ObjItem = new QTreeWidgetItem(MainObj);
-    ObjItem->setText(0,"mesh");
-    ObjItem->setData(0, Qt::UserRole, QVariant::fromValue(gameobj->id));
-    ObjItem->setData(0,Qt::UserRole +1,"Component");
+    // QTreeWidgetItem * ObjItem = new QTreeWidgetItem(MainObj);
+    // ObjItem->setText(0,"mesh");
+    // ObjItem->setData(0, Qt::UserRole, QVariant::fromValue(gameobj->id));
+    // ObjItem->setData(0,Qt::UserRole +1,"Component");
 
-    MainObj->addChild(ObjItem);
+    // MainObj->addChild(ObjItem);
 }
 
 void MainWindow::AvailableTextures()
@@ -632,6 +645,11 @@ void MainWindow::PosObj(double)
 
 void MainWindow::NewScenes(int index)
 {
+    if(ObjSelected)
+    {
+        ObjSelected = nullptr;
+    }
+    ui->treeGameObjects->clear();
     Service.SetScene(index);
 }
 

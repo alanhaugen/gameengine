@@ -17,7 +17,7 @@ GameObject::GameObject(const std::string innName)
 
     if (Locator::editor)
     {
-        Locator::editor->AddEntity(name.c_str());
+        Locator::editor->AddEntity(name.c_str(),id);
     }
 }
 

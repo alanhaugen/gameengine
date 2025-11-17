@@ -1,5 +1,6 @@
 #pragma once
 
+#include <qtreewidget.h>
 #include <vector>
 #include "core/components/gameobject.h"
 #include "core/components/camera.h"
@@ -26,6 +27,7 @@ public:
         {
             gameObjects[i]->Hide();
         }
+
     }
 
     void Save(std::string fileName)

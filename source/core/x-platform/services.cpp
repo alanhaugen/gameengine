@@ -23,9 +23,9 @@ void Services::AddScene(Scene *scene)
 
     if (editor != nullptr)
     {
-        GameObject* camera = new GameObject("Camera");
-        camera->components.push_back(new FPSCamera(&scene->camera));
-        scene->gameObjects.push_back(camera);
+        // GameObject* camera = new GameObject("Camera");
+        // camera->components.push_back(new FPSCamera(&scene->camera));
+        // scene->gameObjects.push_back(camera);
     }
 
     if (currentScene == nullptr)

@@ -12,7 +12,7 @@ private:
 
 public:
     QtEditor(Ui::MainWindow* inUi, QStatusBar* inStatusBar);
-    void AddEntity(const char* name);
+    void AddEntity(const char* name, unsigned int id);
     void UpdateStatusBar(const char* text);
     void AddLogMessage(const char* text);
 };
