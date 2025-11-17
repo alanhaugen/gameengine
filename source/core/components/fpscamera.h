@@ -6,15 +6,13 @@
 
 class FPSCamera : public Component
 {
-private:
-    void UpdateCamera();
-    float speed = 1.00;
-
-
 public:
-    Camera* camera;
     FPSCamera(Camera* camera = nullptr);
     void Update();
+
+    void UpdateCamera();
+    float speed = 1.00;
+    Camera* camera;
 };
 
 #endif // FPSCAMERA_H

@@ -232,7 +232,16 @@ void MainWindow::MainGameLoop()
 
     if (scene)
     {
-        Cam.camera = (&scene->camera);
+        if (Locator::input.Held(Locator::input.Key.O))
+        {
+            Cam.speed += 0.01f;
+        }
+        if (Locator::input.Held(Locator::input.Key.L))
+        {
+            Cam.speed -= 0.01f;
+        }
+
+        Cam.camera = &scene->camera;
         Cam.Update();
         scene->camera.Update();
         scene->Update();

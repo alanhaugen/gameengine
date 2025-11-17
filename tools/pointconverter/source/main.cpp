@@ -6,8 +6,8 @@
 #define STB_PERLIN_IMPLEMENTATION
 #include "stb_perlin.h"
 
-const int width = 512;
-const int height = 512;
+const int width = 1024;
+const int height = 1024;
 const int channels = 1;
 
 typedef uint8_t u8;
@@ -125,41 +125,6 @@ int main(int argc, char* argv[])
         int z = std::min(height - 1, int(normZ * (height - 1)));
 
         vertices[x][z] = u8(normY * 255.0f);
-    }
-
-    // Fill holes
-    for (int z = 0; z < height; z++)
-    {
-        for (int x = 0; x < width; x++)
-        {
-            if (vertices[x][z] == 0)
-            {
-                int nearest = -1;
-
-                // Look in a 3x3 neighborhood
-                for (int dz = -1; dz <= 1; dz++)
-                {
-                    for (int dx = -1; dx <= 1; dx++)
-                    {
-                        int nx = x + dx;
-                        int nz = z + dz;
-
-                        if (nx >= 0 && nx < width && nz >= 0 && nz < height)
-                        {
-                            if (vertices[nx][nz] > 0)
-                            {
-                                nearest = vertices[nx][nz];
-                            }
-                        }
-                    }
-                }
-
-                if (nearest >= 0)
-                {
-                    vertices[x][z] = nearest;
-                }
-            }
-        }
     }
 
     // Generate image

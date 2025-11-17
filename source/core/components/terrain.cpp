@@ -52,7 +52,7 @@ Terrain::Terrain(const char *filePath, const bool isCloud)
             vertices.push_back(Vertex{x - offset.x, y - offset.y, z - offset.z});
         }
 
-        drawable = &renderer->CreateDrawable(vertices, indices, "shaders/color.vert.spv", "shaders/color.frag.spv", Renderer::POINTS);
+        drawable = &renderer->CreateDrawable(vertices, indices, "shaders/phong.vert.spv", "shaders/phong.frag.spv", Renderer::POINTS);
     }
     else
     {
@@ -81,44 +81,68 @@ Terrain::Terrain(const char *filePath,
         exit(0);
     }
 
-    int index = 0;
-    for (int y = 0; y < height - 1; y++)
+    vertices.resize(width * height);
+
+    for (int y = 0; y < height; y++)
     {
-        for (int x = 0; x < width - 1; x++)
+        for (int x = 0; x < width; x++)
         {
-            glm::vec3 topLeft     = glm::vec3(x, data[x + y * width], y);
-            glm::vec3 topRight    = glm::vec3(x + 1, data[(x + 1) + y * width], y);
-            glm::vec3 bottomLeft  = glm::vec3(x, data[x + (y + 1) * width], y + 1);
-            glm::vec3 bottomRight = glm::vec3(x + 1, data[(x + 1) + (y + 1) * width], y + 1);
+            int idx = x + y * width;
 
-            glm::vec2 uvTopLeft(x / float(width), y / float(height));
-            glm::vec2 uvTopRight((x + 1) / float(width), y / float(height));
-            glm::vec2 uvBottomLeft(x / float(width), (y + 1) / float(height));
-            glm::vec2 uvBottomRight((x + 1) / float(width), (y + 1) / float(height));
+            float h = data[idx]; // height
 
-            Vertex v1 = Vertex(bottomLeft, uvBottomLeft);
-            Vertex v2 = Vertex(bottomRight, uvBottomRight);
-            Vertex v3 = Vertex(topRight, uvTopRight);
-            Vertex v4 = Vertex(topLeft, uvTopLeft);
+            vertices[idx].pos = glm::vec3(x, h, y);
+            vertices[idx].texCoord = glm::vec2(x / float(width), y / float(height));
+            vertices[idx].normal = glm::vec3(0,0,0);
+        }
+    }
 
-            vertices.push_back(v1);
-            vertices.push_back(v2);
-            vertices.push_back(v3);
-            vertices.push_back(v4);
+    for (int y = 0; y < height - 1; y++) {
+        for (int x = 0; x < width - 1; x++) {
 
-            indices.push_back(0 + index);
-            indices.push_back(1 + index);
-            indices.push_back(2 + index);
+            int i0 = x + y * width;
+            int i1 = (x+1) + y * width;
+            int i2 = x + (y+1) * width;
+            int i3 = (x+1) + (y+1) * width;
 
-            indices.push_back(2 + index);
-            indices.push_back(3 + index);
-            indices.push_back(0 + index);
+            indices.push_back(i0);
+            indices.push_back(i1);
+            indices.push_back(i2);
 
-            index += 4;
+            indices.push_back(i1);
+            indices.push_back(i3);
+            indices.push_back(i2);
         }
     }
 
     stbi_image_free(data);
+
+    // For each triangle, accumulate face normals
+    for (size_t i = 0; i < indices.size(); i += 3)
+    {
+        unsigned int i0 = indices[i];
+        unsigned int i1 = indices[i + 1];
+        unsigned int i2 = indices[i + 2];
+
+        glm::vec3& p0 = vertices[i0].pos;
+        glm::vec3& p1 = vertices[i1].pos;
+        glm::vec3& p2 = vertices[i2].pos;
+
+        glm::vec3 edge1 = p1 - p0;
+        glm::vec3 edge2 = p2 - p0;
+
+        glm::vec3 faceNormal = glm::normalize(glm::cross(edge2, edge1));
+
+        vertices[i0].normal += faceNormal;
+        vertices[i1].normal += faceNormal;
+        vertices[i2].normal += faceNormal;
+    }
+
+    // Normalize vertices
+    for (auto& v : vertices)
+    {
+        v.normal = glm::normalize(v.normal);
+    }
 
     drawable = &renderer->CreateDrawable(vertices, indices, vertexShaderPath, fragmentShaderPath, Renderer::TRIANGLES, texturePath);
 }
