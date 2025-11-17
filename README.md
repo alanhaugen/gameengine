@@ -15,17 +15,17 @@ All files should be in lowercase for cross platform support.
 
 ## Architecture
 
-The engine is modular and has a core, consisting of components and platform specific code, and modules
+The engine is modular and has a core, consisting of components and platform specific code, and systems.
 
-Applications made with the engine are found in games
+Applications made with the engine are found in games.
 
 Here is a birdseye's view of the project:
 
 * games
 * source/core
-* source/modules
+* source/systems
 
-The following modules (systems) are supported and can be swapped out:
+The following systems are supported and can be swapped out:
 
 * ai
 * audio
@@ -34,7 +34,7 @@ The following modules (systems) are supported and can be swapped out:
 * renderer
 * script
 
-There are already multiple implementations of some of the modules, and there are also null implementations of each module for disabling a system
+There are already multiple implementations of some of the systems, and there are also null implementations of each system for disabling a system.
 
 ## Sources
 
