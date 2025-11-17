@@ -8,15 +8,19 @@ QtEditor::QtEditor(Ui::MainWindow *inUi, QStatusBar *inStatusBar)
     statusBar = inStatusBar;
 }
 
-void QtEditor::AddEntity(const char *name)
+void QtEditor::AddEntity(const char *name,unsigned id)
 {
     QTreeWidgetItem * MainObj = new QTreeWidgetItem(ui->treeGameObjects);
 
+
     MainObj->setText(0, "GameObject");
+    MainObj->setData(0, Qt::UserRole, QVariant::fromValue(id));
+    MainObj->setData(0,Qt::UserRole +1,"GameObject");
     MainObj->setExpanded(true);
 
     QTreeWidgetItem * ObjItem = new QTreeWidgetItem(MainObj);
     ObjItem->setText(0, "mesh");
+    ObjItem->setData(0,Qt::UserRole +1,"Component");
 
     MainObj->addChild(ObjItem);
 }
