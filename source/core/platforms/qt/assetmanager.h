@@ -22,7 +22,7 @@ protected:
     QString AssethPath = "Assets";
 
     QString FileType = "*.obj";
-     QString TextureType = "*.jpg";
+     QStringList TextureType = {"*.jpg", "*.png"};
     //contains all meshes
     std::vector<std::unique_ptr<Mesh>> mMesh;
     std::vector<std::unique_ptr<QString>> mTextures;
@@ -44,8 +44,9 @@ public:
 
     QString FindMesh(const QString& Name);
 
-
      QStringList GetTexturesNames()const;
+
+     QString FindTexture(const QString& Name);
 
 };
 

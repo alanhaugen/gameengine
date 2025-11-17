@@ -81,6 +81,8 @@ private:
     //change mesh
     void ChangeMesh(const QString &meshname);
 
+    void ChangeMaterial(const QString &Materialname);
+
     void PosObj(double);
 
     void NewScenes(int index);

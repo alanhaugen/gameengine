@@ -32,7 +32,7 @@ void AssetManager::ImportMesh(const QString &AssethPath)
             mFilesNames.insert(name,mMesh.size()-1);
             mFilesPath.insert(name,File.filePath());
         }
-        else if(TextureType == "*."+File.suffix())
+        else if(TextureType.contains("*."+File.suffix()))
         {
             qDebug()<<"FoundTextures:"<< File.filePath() <<" \n";
             QString name = File.baseName();
@@ -71,4 +71,15 @@ QString AssetManager::FindMesh(const QString &Name)
 QStringList AssetManager::GetTexturesNames() const
 {
      return mTexturesPath.keys();
+}
+
+QString AssetManager::FindTexture(const QString &Name)
+{
+    if(!mTexturesPath.contains(Name))
+    {
+        qDebug()<<"does not have: "<<Name;
+        return QString();
+    }
+
+    return mTexturesPath.value(Name,QString());
 }

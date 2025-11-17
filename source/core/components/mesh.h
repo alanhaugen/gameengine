@@ -15,4 +15,9 @@ public:
                    const char* vertexShaderPath = "shaders/phong.vert.spv",
                    const char* fragmentShaderPath = "shaders/phong.frag.spv");
     void Update() override;
+
+   std::string texture = "";
+
+
+
 };
