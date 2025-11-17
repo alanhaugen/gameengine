@@ -72,9 +72,9 @@ int main(int argc, char* argv[])
     }
 
     std::vector<vec3> points;
-    long largestX = -100000;
-    long largestY = -100000;
-    long largestZ = -100000;
+    long largestX = -999999;
+    long largestY = -999999;
+    long largestZ = -999999;
     long smallestX = 999999;
     long smallestY = 999999;
     long smallestZ = 999999;
@@ -105,7 +105,7 @@ int main(int argc, char* argv[])
         }
         if (smallestY > pos.y)
         {
-             smallestY > pos.y;
+             smallestY = pos.y;
         }
         if (smallestZ > pos.z)
         {
@@ -117,11 +117,14 @@ int main(int argc, char* argv[])
 
     for (auto point : points)
     {
-        int x = abs((point.x / (largestX - smallestX)) * width);
-        int y = abs(point.y);
-        int z = abs((point.z / (largestX - smallestX)) * height);
-
-        vertices[x][z] = y;
+        float normX = (point.x - smallestX) / float(largestX - smallestX);
+        float normZ = (point.z - smallestZ) / float(largestZ - smallestZ);
+        float normY = (point.y - smallestY) / float(largestY - smallestY);
+        
+        int x = std::min(width  - 1, int(normX * (width  - 1)));
+        int z = std::min(height - 1, int(normZ * (height - 1)));
+        
+        vertices[x][z] = u8(normY * 255.0f);
     }
 
     u8 *data;
@@ -136,7 +139,7 @@ int main(int argc, char* argv[])
             //u8 scale = ((1.0f + stb_perlin_noise3(x * 0.01f,y * 0.01f,0.0f,0,0,0)) / 2.0f) * 256.0f;//vertices[x][y];
             u8 scale = vertices[x][y];
 
-            data[++index] = scale;
+            data[index++] = scale;
         }
     }
 
