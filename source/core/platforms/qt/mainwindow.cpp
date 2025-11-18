@@ -189,6 +189,8 @@ void MainWindow::start()
     {
         renderer->requestUpdate();
     }
+
+    deltaTime.Start();
 }
 
 void MainWindow::cleanup()
@@ -244,7 +246,7 @@ void MainWindow::MainGameLoop()
         Cam.camera = &scene->camera;
         Cam.Update();
         scene->camera.Update();
-        scene->Update();
+        scene->Update(deltaTime.TimeSinceStarted());
 
         for (auto* obj : scene->gameObjects)
         {
@@ -306,6 +308,8 @@ void MainWindow::MainGameLoop()
 
         vulkanWidget->repaint();
     }
+
+    deltaTime.Reset();
 }
 
 void MainWindow::SaveScene()

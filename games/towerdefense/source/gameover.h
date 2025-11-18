@@ -6,7 +6,7 @@
 class GameOver : public Scene
 {
     void Init();
-    void Update();
+    void Update(float deltaTime);
 };
 
 #endif

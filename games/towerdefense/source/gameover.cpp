@@ -5,7 +5,7 @@ void GameOver::Init()
 
 }
 
-void GameOver::Update()
+void GameOver::Update(float deltaTime)
 {
 
 }

@@ -13,7 +13,7 @@ private:
 
 public:
     void Init();
-    void Update();
+    void Update(float deltaTime);
 };
 
 #endif // SPLASH_H

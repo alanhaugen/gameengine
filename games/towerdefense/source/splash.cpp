@@ -18,7 +18,7 @@ void Splash::Init()
     timer.Start();
 }
 
-void Splash::Update()
+void Splash::Update(float deltaTime)
 {
     if (timer.TimeSinceStarted() > 2000.0f)
     {

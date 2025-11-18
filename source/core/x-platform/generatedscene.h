@@ -12,7 +12,7 @@ public:
     json j;
     GeneratedScene(std::string fileName);
     void Init();
-    void Update();
+    void Update(float deltaTime = 0.0f);
     void Clean();
     glm::mat4 mat4_from_json(const json& j)
     {

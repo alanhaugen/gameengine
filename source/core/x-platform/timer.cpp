@@ -41,7 +41,7 @@ void Timer::Reset()
 {
     addedTime = 0;
     startTime = std::chrono::high_resolution_clock::now();
-    isStarted = false;
+    isStarted = true;
     isPaused = false;
 }
 

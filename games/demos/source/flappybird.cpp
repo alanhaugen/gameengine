@@ -35,7 +35,7 @@ void FlappyBird::Init()
     startPos = bird->drawable->ubo.model[3];
 }
 
-void FlappyBird::Update()
+void FlappyBird::Update(float deltaTime)
 {
     // Scroll background and ground
     background->drawable->ubo.model[3].x -= 0.7f;

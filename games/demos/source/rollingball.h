@@ -65,7 +65,7 @@ class RollingBall : public Scene
 public:
     RollingBall();
     void Init();
-    void Update();
+    void Update(float deltaTime);
 
     BSplineCurve curve;
 
@@ -74,6 +74,7 @@ public:
 
     float acceleration = 1.0f;
     float mass = 1.0f;
+    float frictionCoeff = 0.001f;
 
     Renderer::Drawable* splineDrawable;
 

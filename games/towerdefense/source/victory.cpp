@@ -5,7 +5,7 @@ void Victory::Init()
 
 }
 
-void Victory::Update()
+void Victory::Update(float deltaTime)
 {
 
 }

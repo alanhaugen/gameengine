@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <qtreewidget.h>
 #include "core/components/fpscamera.h"
+#include "core/x-platform/timer.h"
 #include "core/x-platform/services.h"
 #include "systems/renderer/vulkan/vulkanrenderer.h"
 
@@ -40,6 +41,8 @@ public:
     Ui::MainWindow *ui = nullptr;
 
     void mousePressed(QMouseEvent*event);
+
+    Timer deltaTime;
 
 
 

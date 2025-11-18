@@ -22,7 +22,7 @@ void PhysicsTest::Init()
     renderer->SetClearColor(0, 0, 0);
 }
 
-void PhysicsTest::Update()
+void PhysicsTest::Update(float deltaTime)
 {
     if (input.Held(input.Key.D))
     {

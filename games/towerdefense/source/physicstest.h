@@ -15,7 +15,7 @@ public:
     GameObject* first;
     GameObject* second;
 private:
-    void Update();
+    void Update(float deltaTime);
 
 };
 

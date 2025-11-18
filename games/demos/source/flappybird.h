@@ -11,7 +11,7 @@ class FlappyBird : public Scene
 public:
     FlappyBird();
     void Init();
-    void Update();
+    void Update(float deltaTime);
 
     std::vector<Text*> scores;
     Text* score;

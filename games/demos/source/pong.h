@@ -42,7 +42,7 @@ private:
 public:
     Pong();
     void Init();
-    void Update();
+    void Update(float deltaTime);
 };
 
 #endif // PONG_H

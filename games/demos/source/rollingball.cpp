@@ -18,7 +18,7 @@ void RollingBall::Init()
     camera.position = glm::vec3(0.0f, 0.0f, 4.0f);
 }
 
-void RollingBall::Update()
+void RollingBall::Update(float deltaTime)
 {
     glm::vec3 pos = ballMesh->GetPosition();
 
@@ -34,9 +34,17 @@ void RollingBall::Update()
     }*/
 
     velocity += terrainMesh->GetNormal(pos) / 500.0f;
+    velocity -= velocity * frictionCoeff * deltaTime;
+
+    Log(std::to_string(deltaTime));
+
+    if (velocity.length() <= (1.0f))
+    {
+        velocity = glm::vec3(0.0f);
+    }
 
     pos += velocity;
-    pos.y = terrainMesh->GetHeightAt(pos);
+    pos.y = terrainMesh->GetHeightAt(pos) + 1.0f;
 
     ballMesh->SetPosition(pos);
 }

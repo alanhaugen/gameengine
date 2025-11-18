@@ -28,7 +28,7 @@ void Pong::Init()
     audio->PlayMusic("Assets/Sounds/musicMono.wav");
 }
 
-void Pong::Update()
+void Pong::Update(float deltaTime)
 {
     if (state == WIN)
     {

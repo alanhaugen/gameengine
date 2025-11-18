@@ -8,6 +8,6 @@ void Empty::Init()
 {
 }
 
-void Empty::Update()
+void Empty::Update(float deltaTime)
 {
 }

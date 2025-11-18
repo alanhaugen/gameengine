@@ -18,7 +18,7 @@ void VikingScene::Init()
     second->Translate(glm::vec3(1.7, 0, 0));
 }
 
-void VikingScene::Update()
+void VikingScene::Update(float deltaTime)
 {
     if(input.Held(input.Key.SPACE))
     {

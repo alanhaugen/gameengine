@@ -14,7 +14,7 @@ class Scene : public Locator
 {
 public:
     virtual void Init() = 0;
-    virtual void Update() = 0;
+    virtual void Update(float deltaTime = 0.0f) = 0;
 
     Camera camera;
     unsigned id;

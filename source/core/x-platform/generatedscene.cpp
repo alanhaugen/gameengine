@@ -53,7 +53,7 @@ void GeneratedScene::Init()
     }
 }
 
-void GeneratedScene::Update()
+void GeneratedScene::Update(float deltaTime)
 {
 }
 

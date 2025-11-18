@@ -11,7 +11,7 @@ class Empty : public Scene
 public:
     Empty();
     void Init();
-    void Update();
+    void Update(float deltaTime);
 };
 
 #endif // EMPTY_H

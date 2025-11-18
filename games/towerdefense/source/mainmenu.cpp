@@ -48,7 +48,7 @@ void MainMenu::Init()
     renderer->SetClearColor(0.0f, 0.3f, 0.5f);
 }
 
-void MainMenu::Update()
+void MainMenu::Update(float deltaTime)
 {
     if (playGameButton->IsPressed())
     {
