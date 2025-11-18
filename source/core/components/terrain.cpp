@@ -66,7 +66,7 @@ Terrain::Terrain(const char *filePath,
                  const char* fragmentShaderPath)
 {
     name = "Terrain";
-    int width,height,n;
+    int n;
     unsigned char *data = stbi_load(filePath, &width, &height, &n, 0);
 
     if (!data)
@@ -158,88 +158,79 @@ float Terrain::GetHeightAt(float x, float z) const
 
 float Terrain::GetHeightAt(const glm::vec3 positionXZ) const
 {
-    glm::vec2 point(positionXZ.x, positionXZ.z);
+    float x = positionXZ.x;
+    float z = positionXZ.z;
 
-    for (size_t i = 0; i < indices.size(); i += 3) {
-        const Vertex& v0 = vertices[indices[i]];
-        const Vertex& v1 = vertices[indices[i + 1]];
-        const Vertex& v2 = vertices[indices[i + 2]];
+    // Convert to grid coordinates
+    int ix = int(floor(x));
+    int iz = int(floor(z));
 
-        glm::vec2 a(v0.pos.x, v0.pos.z);
-        glm::vec2 b(v1.pos.x, v1.pos.z);
-        glm::vec2 c(v2.pos.x, v2.pos.z);
+    // Bounds check
+    if (ix < 0 || iz < 0 || ix >= width - 1 || iz >= height - 1)
+        return 0.0f;
 
-        glm::vec2 v0v2 = c - a;
-        glm::vec2 v0v1 = b - a;
-        glm::vec2 v0p = point - a;
+    // Get vertex indices in the heightmap grid
+    const Vertex& v00 = vertices[iz * width + ix];
+    const Vertex& v10 = vertices[iz * width + (ix + 1)];
+    const Vertex& v01 = vertices[(iz + 1) * width + ix];
+    const Vertex& v11 = vertices[(iz + 1) * width + (ix + 1)];
 
-        float d00 = glm::dot(v0v1, v0v1);
-        float d01 = glm::dot(v0v1, v0v2);
-        float d11 = glm::dot(v0v2, v0v2);
-        float d20 = glm::dot(v0p, v0v1);
-        float d21 = glm::dot(v0p, v0v2);
+    // Local coords in the cell
+    float dx = x - ix;
+    float dz = z - iz;
 
-        float denom = d00 * d11 - d01 * d01;
-        if (denom == 0.0f) continue;
+    float h;
 
-        float v = (d11 * d20 - d01 * d21) / denom;
-        float w = (d00 * d21 - d01 * d20) / denom;
-        float u = 1.0f - v - w;
-
-        if (u >= 0.0f && v >= 0.0f && w >= 0.0f) {
-            return v0.pos.y * u + v1.pos.y * v + v2.pos.y * w;
-        }
+    // Determine which of the two triangles we're in
+    if (dx + dz < 1.0f) {
+        // Triangle 1: v00 - v10 - v01
+        float u = 1 - dx - dz;
+        float v = dx;
+        float w = dz;
+        h = v00.pos.y * u + v10.pos.y * v + v01.pos.y * w;
+    } else {
+        // Triangle 2: v10 - v11 - v01
+        float u = 1 - (1 - dx) - (1 - dz);
+        float v = 1 - dz;
+        float w = 1 - dx;
+        h = v10.pos.y * u + v11.pos.y * v + v01.pos.y * w;
     }
 
-    return 0.0f;  // Default flat
+    return h;
 }
 
 glm::vec3 Terrain::GetNormal(const glm::vec3 position) const
 {
-    glm::vec2 point(position.x, position.z);
+    float x = position.x;
+    float z = position.z;
 
-    for (size_t i = 0; i < indices.size(); i += 3) {
-        const Vertex& v0 = vertices[indices[i]];
-        const Vertex& v1 = vertices[indices[i + 1]];
-        const Vertex& v2 = vertices[indices[i + 2]];
+    int ix = int(floor(x));
+    int iz = int(floor(z));
 
-        glm::vec2 a(v0.pos.x, v0.pos.z);
-        glm::vec2 b(v1.pos.x, v1.pos.z);
-        glm::vec2 c(v2.pos.x, v2.pos.z);
+    if (ix < 0 || iz < 0 || ix >= width - 1 || iz >= height - 1)
+        return glm::vec3(0, 1, 0);
 
-        glm::vec2 v0v2 = c - a;
-        glm::vec2 v0v1 = b - a;
-        glm::vec2 v0p = point - a;
+    const Vertex& v00 = vertices[iz * width + ix];
+    const Vertex& v10 = vertices[iz * width + (ix + 1)];
+    const Vertex& v01 = vertices[(iz + 1) * width + ix];
+    const Vertex& v11 = vertices[(iz + 1) * width + (ix + 1)];
 
-        float d00 = glm::dot(v0v1, v0v1);
-        float d01 = glm::dot(v0v1, v0v2);
-        float d11 = glm::dot(v0v2, v0v2);
-        float d20 = glm::dot(v0p, v0v1);
-        float d21 = glm::dot(v0p, v0v2);
+    float dx = x - ix;
+    float dz = z - iz;
 
-        float denom = d00 * d11 - d01 * d01;
-        if (denom == 0.0f) continue;
+    glm::vec3 n;
 
-        float v = (d11 * d20 - d01 * d21) / denom;
-        float w = (d00 * d21 - d01 * d20) / denom;
-        float u = 1.0f - v - w;
-
-        if (u >= 0.0f && v >= 0.0f && w >= 0.0f)
-        {
-            glm::vec3 dir;
-            glm::vec3 p1(v0.pos.x, v0.pos.y, v0.pos.z);
-            glm::vec3 p2(v1.pos.x, v1.pos.y, v1.pos.z);
-            glm::vec3 p3(v2.pos.x, v2.pos.y, v2.pos.z);
-
-            glm::vec3 A = p2 - p1;
-            glm::vec3 B = p3 - p1;
-
-            dir.x = A.y * B.z - A.z * B.y;
-            dir.y = A.z * B.x - A.x * B.z;
-            dir.z = A.x * B.y - A.y * B.x;
-
-            return dir;
-        }
+    if (dx + dz < 1.0f) {
+        float u = 1 - dx - dz;
+        float v = dx;
+        float w = dz;
+        n = v00.normal * u + v10.normal * v + v01.normal * w;
+    } else {
+        float u = dx + dz - 1.0f; // derived to match continuity
+        float v = 1 - dz;
+        float w = 1 - dx;
+        n = v10.normal * u + v11.normal * v + v01.normal * w;
     }
-    return glm::vec3();
+
+    return glm::normalize(n);
 }

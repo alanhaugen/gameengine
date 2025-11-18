@@ -7,6 +7,7 @@ class Terrain : public VisualObject
 private:
     std::vector<Vertex> vertices;
     std::vector<uint32_t> indices;
+    int width,height;
 
     void Init();
 
