@@ -36,8 +36,6 @@ void RollingBall::Update(float deltaTime)
     velocity += terrainMesh->GetNormal(pos) / 500.0f;
     velocity -= velocity * frictionCoeff * deltaTime;
 
-    Log(std::to_string(deltaTime));
-
     if (velocity.length() <= (1.0f))
     {
         velocity = glm::vec3(0.0f);
