@@ -132,7 +132,7 @@ void main(void)
     vec3 Ispe = specularLighting(N, L, V);
 
     // diffuse color of the object from texture
-    vec3 diffuseColor = texture(u_diffuseTexture, o_texcoords).rgb;
+    vec3 diffuseColor = texture(u_diffuseTexture, o_texcoords).rgb + o_colour.rgb;
 
     // combination of all components and diffuse color of the object
     resultingColor.xyz = diffuseColor * (Iamb + Idif + Ispe);

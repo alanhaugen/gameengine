@@ -732,6 +732,10 @@ VkPipeline VulkanRenderer::createGraphicsPipeline(const char* vertexShaderPath,
     {
         inputAssembly.topology = VK_PRIMITIVE_TOPOLOGY_LINE_LIST;
     }
+    else if (topology == LINES_STRIP)
+    {
+        inputAssembly.topology = VK_PRIMITIVE_TOPOLOGY_LINE_STRIP;
+    }
     else if (topology == POINTS)
     {
         inputAssembly.topology = VK_PRIMITIVE_TOPOLOGY_POINT_LIST;

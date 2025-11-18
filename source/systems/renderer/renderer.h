@@ -14,6 +14,7 @@ public:
     {
         TRIANGLES,
         LINES,
+        LINES_STRIP,
         POINTS
     };
 

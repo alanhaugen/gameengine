@@ -2,6 +2,7 @@
 #define ROLLINGBALL_H
 
 #include "core/x-platform/scene.h"
+#include "core/x-platform/timer.h"
 
 class Mesh;
 class Terrain;
@@ -74,15 +75,20 @@ public:
 
     float acceleration = 1.0f;
     float mass = 1.0f;
-    float frictionCoeff = 0.001f;
+    float frictionCoeff = 0.004f;
 
-    Renderer::Drawable* splineDrawable;
+    GameObject* ball;
+    Renderer::Drawable* splineDrawable = nullptr;
+    Renderer::Drawable* linesDrawable = nullptr;
+
+    std::vector<Vertex> points;
+
+    Timer sampleTimer;
 
     int index = 0;
 
     Terrain* terrainMesh;
     Terrain* terrainMeshPoints;
-    Mesh* ballMesh;
 };
 
 #endif // ROLLINGBALL_H

@@ -94,6 +94,11 @@ Terrain::Terrain(const char *filePath,
             vertices[idx].pos = glm::vec3(x, h, y);
             vertices[idx].texCoord = glm::vec2(x / float(width), y / float(height));
             vertices[idx].normal = glm::vec3(0,0,0);
+
+            if (x > width / 2.0f)
+            {
+                vertices[idx].color = glm::vec3(1,0,0);
+            }
         }
     }
 
