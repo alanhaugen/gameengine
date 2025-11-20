@@ -132,6 +132,7 @@ add_library(Core STATIC
     source/core/x-platform/generatedscene.h
     source/core/x-platform/generatedscene.cpp
     source/core/x-platform/timer.cpp source/core/x-platform/timer.h
+    source/core/components/boxcollider.h source/core/components/boxcollider.cpp
 )
 
 target_include_directories(Core PRIVATE "source")

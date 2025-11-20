@@ -74,6 +74,14 @@ MainWindow::MainWindow(QWidget *parent, const char* windowTitle, int windowWidth
     ui->RotationYSpin->setMinimum(-990);
     ui->RotationZSpin->setMinimum(-990);
 
+    ui->PosXSpin->setMaximum(990);
+    ui->PosYSpin->setMaximum(990);
+    ui->PosZSpin->setMaximum(990);
+
+    ui->RotationXSpin->setMaximum(990);
+    ui->RotationYSpin->setMaximum(990);
+    ui->RotationZSpin->setMaximum(990);
+
 
     splitDockWidget(ui->dockGameObjects,ui->SceneDock,Qt::Horizontal);
     splitDockWidget(ui->SceneDock,ui->DockInspector ,Qt::Horizontal);

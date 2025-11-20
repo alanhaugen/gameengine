@@ -13,7 +13,7 @@
 struct SwapChainSupportDetails;
 struct QueueFamilyIndices;
 
-const int MAX_DRAWABLES = 4000;
+const int MAX_DRAWABLES = 40000;
 
 class VulkanRenderer : public QWindow, public NullRenderer
 {
@@ -21,6 +21,17 @@ class VulkanRenderer : public QWindow, public NullRenderer
 public:
     void Init() override;
     void Update() override;
+
+    struct Pipeline
+    {
+        VkPipeline pipeline;
+        std::string vertexShader;
+        std::string fragmentShader;
+        int topology;
+        bool depthTesting;
+    };
+
+    std::vector<Pipeline> pipelines;
 
     explicit VulkanRenderer(QWindow* parent = nullptr);
     ~VulkanRenderer();

@@ -2,7 +2,7 @@
 #include "glm/gtc/matrix_transform.hpp"
 
 Sphere::Sphere(float x, float y, float z, glm::vec3 scale)
-    : Mesh("Assets/Models/ball.obj", "shaders/color.vert.spv", "shaders/color.frag.spv")
+    : Mesh("Assets/Models/ball.obj", "shaders/phong.vert.spv", "shaders/phong.frag.spv")
 {
     name = "Sphere";
     glm::mat4& matrix = drawable->ubo.model;
@@ -10,10 +10,11 @@ Sphere::Sphere(float x, float y, float z, glm::vec3 scale)
     matrix = glm::scale(matrix, scale);
 }
 
-Sphere::Sphere(glm::vec3 scale)
-    : Mesh("Assets/Models/ball.obj", "shaders/color.vert.spv", "shaders/color.frag.spv")
+Sphere::Sphere(glm::vec3 scale, glm::vec3 colour, const char* vertShader, const char* fragShader)
+    : Mesh("Assets/Models/ball.obj", vertShader, fragShader)
 {
     name = "Sphere";
     glm::mat4& matrix = drawable->ubo.model;
     matrix = glm::scale(matrix, scale);
+    drawable->ubo.colour = glm::vec4(colour, 1.0f);
 }

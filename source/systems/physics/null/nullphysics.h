@@ -5,9 +5,6 @@
 
 class NullPhysics : public Physics
 {
-private:
-    std::vector<Collider> colliders;
-
 public:
     bool Init();
     void Update();
@@ -15,4 +12,5 @@ public:
     bool isColliding(GameObject* firstObject, GameObject* secondObject);
 
     Collider* CreateCollider(GameObject* gameObject, float radius, int response);
+    Collider* CreateCollider(GameObject* gameObject, int response);
 };

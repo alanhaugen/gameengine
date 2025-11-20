@@ -98,6 +98,7 @@ Terrain::Terrain(const char *filePath,
             if (x > width / 2.0f)
             {
                 vertices[idx].color = glm::vec3(1,0,0);
+                vertices[idx].friction = 0.1f;
             }
         }
     }
@@ -238,4 +239,27 @@ glm::vec3 Terrain::GetNormal(const glm::vec3 position) const
     }
 
     return glm::normalize(n);
+}
+
+float Terrain::GetFriction(const glm::vec3 positionXZ) const
+{
+    float x = positionXZ.x;
+    float z = positionXZ.z;
+
+    // Convert to grid coordinates
+    int ix = int(floor(x));
+    int iz = int(floor(z));
+
+    // Bounds check
+    if (ix < 0 || iz < 0 || ix >= width - 1 || iz >= height - 1)
+        return 0.0f;
+
+    // Get vertex indices in the heightmap grid
+    const Vertex& v00 = vertices[iz * width + ix];
+    const Vertex& v10 = vertices[iz * width + (ix + 1)];
+    const Vertex& v01 = vertices[(iz + 1) * width + ix];
+    const Vertex& v11 = vertices[(iz + 1) * width + (ix + 1)];
+
+    // Return average of vertices friction
+    return ((v00.friction + v10.friction + v01.friction + v11.friction) / 4.0f);
 }

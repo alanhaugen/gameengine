@@ -42,6 +42,7 @@ public:
             alignas(16) glm::vec4 screenHeight;
             alignas(16) glm::vec4 flip;
             alignas(16) glm::vec4 flipVertical;
+            alignas(16) glm::vec4 colour;
         } ubo;
 
         VkPipeline graphicsPipeline;

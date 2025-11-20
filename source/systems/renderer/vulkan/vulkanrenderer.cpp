@@ -685,6 +685,17 @@ VkPipeline VulkanRenderer::createGraphicsPipeline(const char* vertexShaderPath,
                                                   const int topology,
                                                   const bool depthTesting)
 {
+    for (int i = 0; i < pipelines.size(); i++)
+    {
+        if (pipelines[i].vertexShader == vertexShaderPath &&
+            pipelines[i].fragmentShader == fragmentShaderPath &&
+            pipelines[i].topology == topology &&
+            pipelines[i].depthTesting == depthTesting)
+        {
+            return pipelines[i].pipeline;
+        }
+    }
+
     auto vertShaderCode = readFile(vertexShaderPath);
     auto fragShaderCode = readFile(fragmentShaderPath);
 
@@ -878,6 +889,14 @@ VkPipeline VulkanRenderer::createGraphicsPipeline(const char* vertexShaderPath,
     //Destroy the shader modules, no longer needed after the pipeline has been created
     vkDestroyShaderModule(device, fragShaderModule, nullptr);
     vkDestroyShaderModule(device, vertShaderModule, nullptr);
+
+    Pipeline newPipeline;
+    newPipeline.topology = topology;
+    newPipeline.pipeline = graphicsPipeline;
+    newPipeline.depthTesting = depthTesting;
+    newPipeline.vertexShader = vertexShaderPath;
+    newPipeline.fragmentShader = fragmentShaderPath;
+    pipelines.push_back(newPipeline);
 
     return graphicsPipeline;
 }

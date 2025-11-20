@@ -13,6 +13,7 @@ struct Vertex {
     glm::vec3 color;
     glm::vec3 normal;
     glm::vec2 texCoord;
+    glm::float32_t friction;
     glm::float32_t glyph;
 
     Vertex(float x, float y, float z, glm::vec3 inColor = glm::vec3(0.0f)) {
@@ -20,6 +21,7 @@ struct Vertex {
         color = inColor;
         normal = glm::vec3(1.0f, 1.0f, 1.0f);
         glyph = -1.0f;
+        friction = 0.004f;
     }
 
     Vertex()
@@ -27,6 +29,7 @@ struct Vertex {
         color = glm::vec3(0.0f);
         normal = glm::vec3(1.0f, 1.0f, 1.0f);
         glyph = -1.0f;
+        friction = 0.004f;
     }
 
     Vertex(glm::vec3 pos_, glm::vec3 inColor = glm::vec3(0.0f))
@@ -35,6 +38,7 @@ struct Vertex {
         color = inColor;
         normal = glm::vec3(1.0f, 1.0f, 1.0f);
         glyph = -1.0f;
+        friction = 0.004f;
     }
 
     Vertex(glm::vec3 pos_, glm::vec2 uvs)
@@ -45,6 +49,7 @@ struct Vertex {
         texCoord = uvs;
         normal = glm::vec3(1.0f, 1.0f, 1.0f);
         glyph = -1.0f;
+        friction = 0.004f;
     }
 
     static VkVertexInputBindingDescription getBindingDescription() {

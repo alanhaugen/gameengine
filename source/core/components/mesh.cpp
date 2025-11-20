@@ -48,7 +48,7 @@ void Mesh::loadMesh(const char *filePath, const char *vertexShaderPath, const ch
         }
         else
         {
-            texture = "Assets/Textures/pink.jpg";
+            //texture = "Assets/Textures/pink.jpg";
         }
     }
 

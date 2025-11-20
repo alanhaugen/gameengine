@@ -12,10 +12,9 @@ void QtEditor::AddEntity(const char *name,unsigned id)
 {
     QTreeWidgetItem * MainObj = new QTreeWidgetItem(ui->treeGameObjects);
 
-
-    MainObj->setText(0, "GameObject");
+    MainObj->setText(0, name);
     MainObj->setData(0, Qt::UserRole, QVariant::fromValue(id));
-    MainObj->setData(0,Qt::UserRole +1,"GameObject");
+    MainObj->setData(0,Qt::UserRole +1, name);
     MainObj->setExpanded(true);
 
     QTreeWidgetItem * ObjItem = new QTreeWidgetItem(MainObj);

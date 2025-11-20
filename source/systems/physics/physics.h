@@ -49,4 +49,5 @@ public:
     virtual bool isColliding(Ray ray, GameObject* gameObject) = 0;
     virtual bool isColliding(GameObject* firstObject, GameObject* secondObject = nullptr) = 0;
     virtual Collider* CreateCollider(GameObject* gameObject, float radius, int response) = 0;
+    virtual Collider* CreateCollider(GameObject* gameObject, int response) = 0;
 };
