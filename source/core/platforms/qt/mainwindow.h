@@ -58,7 +58,7 @@ private:
     //ObjectSelect
     GameObject* ObjSelected = nullptr;
 
-    void resizeEvent(QResizeEvent* event) override;
+    void showEvent(QShowEvent *event) override;
 
     std::chrono::time_point<std::chrono::steady_clock> lastTime;
 

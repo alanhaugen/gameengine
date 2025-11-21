@@ -158,8 +158,6 @@ MainWindow::MainWindow(QWidget *parent, const char* windowTitle, int windowWidth
     timer->start(8); // 120 Hz
 
 
-
-
     //Connections to functions
     //connect(ui->actionViking_Room, &QAction::triggered, this, &MainWindow::AddVikingRoom);
     //connect(ui->actionCube, &QAction::triggered, this, &MainWindow::AddCube);
@@ -353,11 +351,10 @@ void MainWindow::OpenScene()
     Services::SetScene(new GeneratedScene(fileName.toStdString()));
 }
 
-void MainWindow::resizeEvent(QResizeEvent *event)
+void MainWindow::showEvent(QShowEvent *event)
 {
-    QMainWindow::resizeEvent(event);
+    QMainWindow::showEvent(event);
 
-   // qDebug() << "Bitch up";
     QList<int>sizes;
     sizes << height()*0.8 << height()*0.8 << height()*0.8 << height()*0.3;
     resizeDocks({ui->dockGameObjects,ui->SceneDock,ui->DockInspector,ui->dockAssets},sizes,Qt::Vertical);
