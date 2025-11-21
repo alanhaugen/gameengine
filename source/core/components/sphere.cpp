@@ -1,4 +1,5 @@
 #include "sphere.h"
+#include "core/components/gameobject.h"
 #include "glm/gtc/matrix_transform.hpp"
 
 void Sphere::GenerateIcoSphere(const char *vert, const char *frag, const char* texture)
@@ -91,11 +92,22 @@ void Sphere::Init(const char *vert, const char *frag, const char *texture)
 
 Sphere::Sphere(const char* texture)
 {
-    Init("shaders/phong.vert.spv", "shaders/phong.frag.spv", texture);
+    if (texture[0] == '\0')
+    {
+        Init("shaders/color.vert.spv", "shaders/color.frag.spv", texture);
+    }
+    else
+    {
+        Init("shaders/phong.vert.spv", "shaders/phong.frag.spv", texture);
+    }
 
     glm::mat4& matrix = drawable->ubo.model;
-}
 
+    if (texture[0] == '\0')
+    {
+        drawable->ubo.colour = glm::vec4(1.0f); // white
+    }
+}
 
 Sphere::Sphere(float x, float y, float z, glm::vec3 scale)
 {
@@ -117,4 +129,8 @@ Sphere::Sphere(glm::vec3 scale, glm::vec3 colour, const char* vertShader, const 
 
 void Sphere::Update()
 {
+    if (gameObject)
+    {
+        drawable->ubo.model = gameObject->matrix;
+    }
 }

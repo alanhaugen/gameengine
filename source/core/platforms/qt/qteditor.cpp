@@ -14,7 +14,6 @@ void QtEditor::AddEntity(const char *name,unsigned id)
 
     MainObj->setText(0, name);
     MainObj->setData(0, Qt::UserRole, QVariant::fromValue(id));
-    MainObj->setData(0,Qt::UserRole +1, name);
     MainObj->setExpanded(true);
 
     QTreeWidgetItem * ObjItem = new QTreeWidgetItem(MainObj);
