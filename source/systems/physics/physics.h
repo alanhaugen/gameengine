@@ -18,6 +18,8 @@ public:
     {
     public:
         float radius;
+        int response;
+        glm::vec3 oldPosition;
         //float mass;
         //float velocity;
         bool isColliding;

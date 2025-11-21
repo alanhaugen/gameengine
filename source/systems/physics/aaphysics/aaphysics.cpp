@@ -18,6 +18,11 @@ void AAPhysics::Update()
 {
     ApplyGravity();
     CollisionDetection();
+
+    for (int i = 0; i < colliders.size(); i++)
+    {
+        colliders[i].oldPosition = colliders[i].gameObject->GetPosition();
+    }
 }
 
 bool AAPhysics::isColliding(Ray ray, GameObject *gameObject)
@@ -110,6 +115,7 @@ void AAPhysics::CollisionDetection()
             {
                 colliders[i].isColliding = true;
                 colliders[i].collidesWithObject = colliders[j].gameObject;
+                CollisionResponse(&colliders[i], &colliders[j]);
             }
             else
             {
@@ -123,6 +129,14 @@ void AAPhysics::CollisionDetection()
 void AAPhysics::CollisionResponse(Collider* colliderA, Collider* colliderB)
 {
     //calculateImpulses(bodyA.mass, bodyB.mass, bodyA.speed, bodyB.speed);
+    if (colliderA->response == DYNAMIC)
+    {
+        colliderA->gameObject->SetPosition(colliderA->oldPosition);
+    }
+    if (colliderB->response == DYNAMIC)
+    {
+        colliderB->gameObject->SetPosition(colliderB->oldPosition);
+    }
 }
 
 void AAPhysics::CalculateImpulses(float massA, float massB, float speedA, float speedB)
@@ -136,6 +150,8 @@ Physics::Collider* AAPhysics::CreateCollider(GameObject* gameObject, float radiu
     collider.gameObject = gameObject;
     collider.radius = radius;
     collider.isColliding = false;
+    collider.response = response;
+    collider.oldPosition = gameObject->GetPosition();
 
     colliders.push_back(collider);
 
