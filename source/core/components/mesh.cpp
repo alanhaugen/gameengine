@@ -89,7 +89,6 @@ void Mesh::loadMesh(const char *filePath, const char *vertexShaderPath, const ch
     }
 
     drawable = &renderer->CreateDrawable(vertices, indices, vertexShaderPath, fragmentShaderPath, Renderer::TRIANGLES, texture.c_str());
-
 }
 
 void Mesh::Update()
@@ -99,5 +98,3 @@ void Mesh::Update()
         drawable->ubo.model = gameObject->matrix;
     }
 }
-
-

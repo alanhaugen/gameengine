@@ -30,6 +30,7 @@ bool Input::Init()
     {
         keys[i] = false;
     }
+
     return true;
 }
 

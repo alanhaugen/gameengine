@@ -218,8 +218,6 @@ void MainWindow::cleanup()
 // Fixed update time step
 void MainWindow::MainGameLoop()
 {
-    Locator::input.Update();
-
     //working area
     if(ObjSelected)
     {
@@ -316,6 +314,8 @@ void MainWindow::MainGameLoop()
 
         vulkanWidget->repaint();
     }
+
+    Locator::input.Update();
 
     deltaTime.Reset();
 }

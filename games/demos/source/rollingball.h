@@ -73,10 +73,7 @@ public:
 
     Ball(Terrain* terrain = nullptr)
     {
-        ballMesh = new Sphere(glm::vec3(1.0f),
-                              glm::vec3(0.0f / 256.0f, 124.0f / 256.0f, 181.0f / 256.0f),
-                              "shaders/color.vert.spv",
-                              "shaders/color.frag.spv");
+        ballMesh = new Sphere();
         terrainMesh = terrain;
     }
 
@@ -125,17 +122,30 @@ public:
     }
 };
 
+class InstancedBall : public Ball
+{
+public:
+    InstancedBall(Terrain* terrain = nullptr)
+    {
+        ballMesh = new Sphere(glm::vec3(1.0f),
+                              glm::vec3(0.0f / 256.0f, 124.0f / 256.0f, 181.0f / 256.0f),
+                              "shaders/instanced.vert.spv",
+                              "shaders/instanced.frag.spv");
+        terrainMesh = terrain;
+    }
+};
+
 class BallParticleSystem : public Component
 {
 public:
-    std::vector<Ball*> balls;
+    std::vector<InstancedBall*> balls;
     std::vector<bool> active;
 
     BallParticleSystem(Terrain* terrain = nullptr)
     {
-        for (int i = 0; i < 5500; i++)
+        for (int i = 0; i < 1500; i++)
         {
-            balls.push_back(new Ball(terrain));
+            balls.push_back(new InstancedBall(terrain));
         }
 
         for (int i = 0; i < balls.size(); i++)

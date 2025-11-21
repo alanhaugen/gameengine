@@ -1,20 +1,111 @@
 #include "sphere.h"
 #include "glm/gtc/matrix_transform.hpp"
 
-Sphere::Sphere(float x, float y, float z, glm::vec3 scale)
-    : Mesh("Assets/Models/ball.obj", "shaders/phong.vert.spv", "shaders/phong.frag.spv")
+void Sphere::GenerateIcoSphere(const char *vert, const char *frag)
+{
+    // Generate a sphere
+    std::vector<Vertex> vertices;
+    std::vector<unsigned> indices;
+
+    drawable = &renderer->CreateDrawable(vertices, indices, vert, frag);
+}
+
+void Sphere::GenerateUVSphere(const char *vert, const char *frag)
+{
+    std::vector<Vertex> vertices;
+    std::vector<unsigned> indices;
+
+    float radius = 1.0f;
+    const int stackCount = 32;
+    const int sectorCount = 32;
+
+    float pi = glm::pi<float>();
+    float stackStep  = pi / stackCount;
+    float sectorStep = 2.0f * pi / sectorCount;
+
+    // Generate vertices
+    for (int i = 0; i <= stackCount; ++i)
+    {
+        float stackAngle = pi / 2.0f - i * stackStep;   // +pi/2 to -pi/2
+        float xy = radius * cosf(stackAngle);
+        float z  = radius * sinf(stackAngle);
+
+        for (int j = 0; j <= sectorCount; ++j)
+        {
+            float sectorAngle = j * sectorStep; // 0 to 2pi
+
+            float x = xy * cosf(sectorAngle);
+            float y = xy * sinf(sectorAngle);
+
+            Vertex vertex;
+            vertex.pos = glm::vec3(x, y, z);
+
+            // Normal = normalized position for a sphere
+            vertex.normal = glm::normalize(vertex.pos);
+
+            // UV coordinates (0-1)
+            vertex.texCoord = glm::vec2(
+                (float)j / sectorCount,
+                (float)i / stackCount
+                );
+
+            vertices.push_back(vertex);
+        }
+    }
+
+    // Generate index buffer
+    for (int i = 0; i < stackCount; ++i)
+    {
+        int k1 = i * (sectorCount + 1);
+        int k2 = k1 + sectorCount + 1;
+
+        for (int j = 0; j < sectorCount; ++j)
+        {
+            // Ignore top and bottom poles
+            if (i != 0)
+            {
+                indices.push_back(k1 + j);
+                indices.push_back(k2 + j);
+                indices.push_back(k1 + j + 1);
+            }
+
+            if (i != (stackCount - 1))
+            {
+                indices.push_back(k1 + j + 1);
+                indices.push_back(k2 + j);
+                indices.push_back(k2 + j + 1);
+            }
+        }
+    }
+
+    drawable = &renderer->CreateDrawable(vertices, indices, vert, frag);
+}
+
+void Sphere::Init(const char *vert, const char *frag)
 {
     name = "Sphere";
+
+    GenerateUVSphere(vert, frag);
+}
+
+Sphere::Sphere(float x, float y, float z, glm::vec3 scale)
+{
+    Init();
+
     glm::mat4& matrix = drawable->ubo.model;
     matrix = glm::translate(matrix, glm::vec3(x, y, z));
     matrix = glm::scale(matrix, scale);
 }
 
-Sphere::Sphere(glm::vec3 scale, glm::vec3 colour, const char* vertShader, const char* fragShader)
-    : Mesh("Assets/Models/ball.obj", vertShader, fragShader)
+Sphere::Sphere(glm::vec3 scale, glm::vec3 colour, const char* vertShader, const char* fragShader, bool instanced)
 {
-    name = "Sphere";
+    Init(vertShader, fragShader);
+
     glm::mat4& matrix = drawable->ubo.model;
     matrix = glm::scale(matrix, scale);
     drawable->ubo.colour = glm::vec4(colour, 1.0f);
+}
+
+void Sphere::Update()
+{
 }
