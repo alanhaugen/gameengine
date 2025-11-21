@@ -109,8 +109,8 @@ void AAPhysics::CollisionDetection()
 
             bool collision = false;
 
-            // Calculate sphere collision
-            if (colliders[i].shape == SPHERE)
+            // Calculate sphere v sphere collision
+            if (colliders[i].shape == SPHERE && colliders[j].shape == SPHERE)
             {
                 glm::vec3 diff = colliders[j].gameObject->GetPosition() - colliders[i].gameObject->GetPosition();
                 float radiusSum = colliders[i].radius + colliders[j].radius;
@@ -118,7 +118,13 @@ void AAPhysics::CollisionDetection()
 
                 collision = distSquared < radiusSum * radiusSum;
             }
-            else if (colliders[i].shape == BOX)
+            // Calculate sphere v box collision
+            else if (colliders[i].shape == SPHERE && colliders[j].shape == BOX)
+            {
+                // Box collider
+            }
+            // Calculate box v box collision
+            else if (colliders[i].shape == BOX && colliders[j].shape == BOX)
             {
                 // Box collider
             }

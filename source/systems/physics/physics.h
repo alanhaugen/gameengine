@@ -20,9 +20,8 @@ public:
         BOX
     };
 
-    class Collider
+    struct Collider
     {
-    public:
         float radius;
         int response;
         int shape;
@@ -32,8 +31,6 @@ public:
         bool isColliding;
         GameObject* gameObject;
         GameObject* collidesWithObject;
-
-    private:
     };
 
     class Ray
