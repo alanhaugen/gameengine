@@ -443,17 +443,7 @@ void MainWindow::OnLeftClickGameObjectWidget(QTreeWidgetItem *item, int column)
        // qDebug()<<"Balls";
     }
 
-    //check what i click, but always connects it to the parent
-    if(type == "GameObject")
-    {
-        ObjSelected =obj;
-        //qDebug()<<"Parent";
-    }
-    else if(type == "Component")
-    {
-        ObjSelected = obj;
-        // qDebug()<<"componentboi"<< column;
-    }
+    ObjSelected = obj;
 
     if (ObjSelected)
     {
@@ -642,7 +632,6 @@ void MainWindow::PosObj(double)
         return;
     }
 
-    qDebug()<<"found it";
     float Posx = static_cast<float>(ui->PosXSpin->value());
     float Posy = static_cast<float>(ui->PosYSpin->value());
     float Posz = static_cast<float>(ui->PosZSpin->value());
