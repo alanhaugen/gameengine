@@ -71,9 +71,9 @@ public:
     float acceleration = 1.0f;
     float mass = 1.0f;
 
-    Ball(Terrain* terrain = nullptr)
+    Ball(Terrain* terrain = nullptr, const char* texture = "")
     {
-        ballMesh = new Sphere();
+        ballMesh = new Sphere(texture);
         terrainMesh = terrain;
     }
 

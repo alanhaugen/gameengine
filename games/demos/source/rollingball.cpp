@@ -13,7 +13,7 @@ void RollingBall::Init()
     particleSystem->SetPosition(300,300,500);
 
     ball = new GameObject("Ball");
-    ball->AddComponent(new Ball(terrainMesh));
+    ball->AddComponent(new Ball(terrainMesh, "Assets/Textures/orange.jpg"));
 
     cube = new GameObject("Cube");
     cube->AddComponent(new Cube);

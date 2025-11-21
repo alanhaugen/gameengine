@@ -1,17 +1,18 @@
 #include "sphere.h"
 #include "glm/gtc/matrix_transform.hpp"
 
-void Sphere::GenerateIcoSphere(const char *vert, const char *frag)
+void Sphere::GenerateIcoSphere(const char *vert, const char *frag, const char* texture)
 {
-    // Generate a sphere
+    // Generate a sphere (TODO: implement for fun)
     std::vector<Vertex> vertices;
     std::vector<unsigned> indices;
 
     drawable = &renderer->CreateDrawable(vertices, indices, vert, frag);
 }
 
-void Sphere::GenerateUVSphere(const char *vert, const char *frag)
+void Sphere::GenerateUVSphere(const char *vert, const char *frag, const char* texture)
 {
+    // Thanks to https://www.songho.ca/opengl/gl_sphere.html
     std::vector<Vertex> vertices;
     std::vector<unsigned> indices;
 
@@ -78,15 +79,23 @@ void Sphere::GenerateUVSphere(const char *vert, const char *frag)
         }
     }
 
-    drawable = &renderer->CreateDrawable(vertices, indices, vert, frag);
+    drawable = &renderer->CreateDrawable(vertices, indices, vert, frag, Renderer::TRIANGLES, texture);
 }
 
-void Sphere::Init(const char *vert, const char *frag)
+void Sphere::Init(const char *vert, const char *frag, const char *texture)
 {
     name = "Sphere";
 
-    GenerateUVSphere(vert, frag);
+    GenerateUVSphere(vert, frag, texture);
 }
+
+Sphere::Sphere(const char* texture)
+{
+    Init("shaders/phong.vert.spv", "shaders/phong.frag.spv", texture);
+
+    glm::mat4& matrix = drawable->ubo.model;
+}
+
 
 Sphere::Sphere(float x, float y, float z, glm::vec3 scale)
 {
