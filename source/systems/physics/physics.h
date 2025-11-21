@@ -14,11 +14,18 @@ public:
         DYNAMIC
     };
 
+    enum CollisionShape
+    {
+        SPHERE,
+        BOX
+    };
+
     class Collider
     {
     public:
         float radius;
         int response;
+        int shape;
         glm::vec3 oldPosition;
         //float mass;
         //float velocity;

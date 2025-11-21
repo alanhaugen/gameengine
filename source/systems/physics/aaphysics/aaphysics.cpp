@@ -22,6 +22,7 @@ void AAPhysics::Update()
     for (int i = 0; i < colliders.size(); i++)
     {
         colliders[i].oldPosition = colliders[i].gameObject->GetPosition();
+        colliders[i].radius = colliders[i].gameObject->dimensions.length() / 2.0f; // Recalculate radius
     }
 }
 
@@ -106,12 +107,23 @@ void AAPhysics::CollisionDetection()
                 continue;
             }
 
-            // Calculate sphere collision
-            glm::vec3 diff = colliders[j].gameObject->GetPosition() - colliders[i].gameObject->GetPosition();
-            float radiusSum = colliders[i].radius + colliders[j].radius;
-            float distSquared = glm::dot(diff, diff);
+            bool collision = false;
 
-            if (distSquared < radiusSum * radiusSum)
+            // Calculate sphere collision
+            if (colliders[i].shape == SPHERE)
+            {
+                glm::vec3 diff = colliders[j].gameObject->GetPosition() - colliders[i].gameObject->GetPosition();
+                float radiusSum = colliders[i].radius + colliders[j].radius;
+                float distSquared = glm::dot(diff, diff);
+
+                collision = distSquared < radiusSum * radiusSum;
+            }
+            else if (colliders[i].shape == BOX)
+            {
+                // Box collider
+            }
+
+            if (collision)
             {
                 colliders[i].isColliding = true;
                 colliders[i].collidesWithObject = colliders[j].gameObject;
@@ -151,6 +163,21 @@ Physics::Collider* AAPhysics::CreateCollider(GameObject* gameObject, float radiu
     collider.radius = radius;
     collider.isColliding = false;
     collider.response = response;
+    collider.shape = SPHERE;
+    collider.oldPosition = gameObject->GetPosition();
+
+    colliders.push_back(collider);
+
+    return &colliders.back();
+}
+
+Physics::Collider *AAPhysics::CreateCollider(GameObject *gameObject, int response)
+{
+    Collider collider;
+    collider.gameObject = gameObject;
+    collider.isColliding = false;
+    collider.response = response;
+    collider.shape = BOX;
     collider.oldPosition = gameObject->GetPosition();
 
     colliders.push_back(collider);

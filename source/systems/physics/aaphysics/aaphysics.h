@@ -16,6 +16,7 @@ public:
     bool isColliding(GameObject* firstObject, GameObject* secondObject) override;
 
     Collider* CreateCollider(GameObject* gameObject, float radius, int response) override;
+    Collider* CreateCollider(GameObject* gameObject, int response) override;
 
     std::vector<Collider> colliders;
 
