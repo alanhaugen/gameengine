@@ -483,6 +483,7 @@
     <addaction name="actionMusic"/>
     <addaction name="separator"/>
     <addaction name="actionBSpline_curve"/>
+    <addaction name="actionBSpline_surface"/>
     <addaction name="separator"/>
     <addaction name="actionTimer"/>
     <addaction name="actionFPS_counter"/>
@@ -494,6 +495,7 @@
     <addaction name="actionFPV_Camera"/>
     <addaction name="actionShoot_mechanic"/>
     <addaction name="actionDie_mechanic"/>
+    <addaction name="separator"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
@@ -896,6 +898,11 @@
   <action name="actionComponent">
    <property name="text">
     <string>Component</string>
+   </property>
+  </action>
+  <action name="actionBSpline_surface">
+   <property name="text">
+    <string>BSpline surface</string>
    </property>
   </action>
  </widget>

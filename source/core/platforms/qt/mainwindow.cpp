@@ -27,7 +27,6 @@ MainWindow::MainWindow(QWidget *parent, const char* windowTitle, int windowWidth
     //AssetManager
     mAssetManager = new AssetManager();
 
-
     ui->setupUi(this);
     ui->treeGameObjects->setContextMenuPolicy(Qt::CustomContextMenu);
     //MainWindow size:
