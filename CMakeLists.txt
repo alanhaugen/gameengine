@@ -131,8 +131,9 @@ add_library(Core STATIC
     source/core/components/wiredcube.h
     source/core/x-platform/generatedscene.h
     source/core/x-platform/generatedscene.cpp
-    source/core/x-platform/timer.cpp source/core/x-platform/timer.h
+    source/core/components/timer.cpp source/core/components/timer.h
     source/core/components/boxcollider.h source/core/components/boxcollider.cpp
+    source/core/components/fpscounter.h source/core/components/fpscounter.cpp
 )
 
 target_include_directories(Core PRIVATE "source")

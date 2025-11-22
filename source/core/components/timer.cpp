@@ -1,4 +1,4 @@
-#include "timer.h"
+#include "../x-platform/../components/../x-platform/../components/timer.h"
 
 Timer::Timer() {
     addedTime = 0;

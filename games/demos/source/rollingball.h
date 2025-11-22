@@ -2,7 +2,7 @@
 #define ROLLINGBALL_H
 
 #include "core/x-platform/scene.h"
-#include "core/x-platform/timer.h"
+#include "core/components/timer.h"
 #include "core/components/sphere.h"
 #include "core/components/terrain.h"
 

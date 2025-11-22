@@ -4,7 +4,7 @@
 #include <QMainWindow>
 #include <qtreewidget.h>
 #include "core/components/fpscamera.h"
-#include "core/x-platform/timer.h"
+#include "core/components/timer.h"
 #include "core/x-platform/services.h"
 #include "systems/renderer/vulkan/vulkanrenderer.h"
 
@@ -78,6 +78,16 @@ private:
     //for the Menuadd
     //add Objects to the scene and to the gameobject
     void AddNewObj(const QString& ObjectName);
+    void NewGameObject();
+    void OpenComponentSelection();
+
+    void CreateCube();
+    void CreateSphere();
+    void CreateText();
+    void CreateSprite();
+    void CreateParticleSystem();
+    void CreateTerrain();
+    void CreateWaterEmittor();
 
     //add Textures to the scene and to the gameobject
     void AvailableTextures();

@@ -1,13 +1,10 @@
 #include "assetmanager.h"
 #include <qdiriterator.h>
 
-
-
 AssetManager::AssetManager()
 {
     ImportMesh(AssethPath);
 }
-
 
 void AssetManager::ImportMesh(const QString &AssethPath)
 {
@@ -26,9 +23,9 @@ void AssetManager::ImportMesh(const QString &AssethPath)
 
             QString name = File.baseName();
 
-            auto mesh = std::make_unique<Mesh>(File.filePath().toStdString().c_str());
+            //auto mesh = std::make_unique<Mesh>(File.filePath().toStdString().c_str());
 
-            mMesh.push_back(std::move(mesh));
+            //mMesh.push_back(std::move(mesh));
             mFilesNames.insert(name,mMesh.size()-1);
             mFilesPath.insert(name,File.filePath());
         }

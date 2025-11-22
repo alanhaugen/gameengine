@@ -1,5 +1,9 @@
 #include "mainwindow.h"
+#include "core/components/cube.h"
 #include "core/components/fpscamera.h"
+#include "core/components/sphere.h"
+#include "core/components/terrain.h"
+#include "core/components/text.h"
 #include "ui_MainWindow.h"
 #include "systems/renderer/vulkan/vulkanrenderer.h"
 #include "core/components/mesh.h"
@@ -106,13 +110,13 @@ MainWindow::MainWindow(QWidget *parent, const char* windowTitle, int windowWidth
 
 
     //new version
-    for (const QString& Objects : mAssetManager->GetMeshNames())
+    /*for (const QString& Objects : mAssetManager->GetMeshNames())
     {
         QAction* action =ui->menuAdd->addAction(Objects);
 
 
         connect(action,&QAction::triggered, this, [this, Objects](){AddNewObj(Objects);});
-    }
+    }*/
 
     //SpinBoxes
     //Position
@@ -141,6 +145,19 @@ MainWindow::MainWindow(QWidget *parent, const char* windowTitle, int windowWidth
 
     connect(ui->actionSave_Scene, &QAction::triggered, this, &MainWindow::SaveScene);
     connect(ui->action_Open, &QAction::triggered, this, &MainWindow::OpenScene);
+
+    // New game object
+    connect(ui->actionNew_GameObject, &QAction::triggered, this, &MainWindow::NewGameObject);
+    connect(ui->AddComponentButton, &QPushButton::pressed, this, &MainWindow::OpenComponentSelection);
+
+    // Component actions
+    connect(ui->actionCube_2, &QAction::triggered, this, &MainWindow::CreateCube);
+    connect(ui->actionSphere, &QAction::triggered, this, &MainWindow::CreateSphere);
+    connect(ui->actionSprite, &QAction::triggered, this, &MainWindow::CreateSprite);
+    connect(ui->actionText, &QAction::triggered, this, &MainWindow::CreateText);
+    connect(ui->actionParticle_system, &QAction::triggered, this, &MainWindow::CreateParticleSystem);
+    connect(ui->actionTerrain, &QAction::triggered, this, &MainWindow::CreateTerrain);
+    connect(ui->actionWater, &QAction::triggered, this, &MainWindow::CreateWaterEmittor);
 
     //Mesh part
     connect(ui->Mesh_Combo, &QComboBox::currentTextChanged, this,&MainWindow::ChangeMesh);
@@ -569,14 +586,92 @@ void MainWindow::AddNewObj(const QString &ObjectName)
     // MainObj->addChild(ObjItem);
 }
 
+void MainWindow::NewGameObject()
+{
+    GameObject* newObject = new GameObject();
+}
+
+void MainWindow::OpenComponentSelection()
+{
+    ui->menuComponent->show();
+}
+
+void MainWindow::CreateCube()
+{
+    if (ObjSelected == nullptr)
+    {
+        ObjSelected = new GameObject();
+    }
+
+    ObjSelected->AddComponent(new Cube);
+}
+
+void MainWindow::CreateSphere()
+{
+    if (ObjSelected == nullptr)
+    {
+        ObjSelected = new GameObject();
+    }
+
+    ObjSelected->AddComponent(new Sphere);
+}
+
+void MainWindow::CreateText()
+{
+    if (ObjSelected == nullptr)
+    {
+        ObjSelected = new GameObject();
+    }
+
+    ObjSelected->AddComponent(new Text("Empty text"));
+}
+
+void MainWindow::CreateSprite()
+{
+    if (ObjSelected == nullptr)
+    {
+        ObjSelected = new GameObject();
+    }
+
+    ObjSelected->AddComponent(new Sprite("Assets/Textures/orange.jpg"));
+}
+
+void MainWindow::CreateParticleSystem()
+{
+    if (ObjSelected == nullptr)
+    {
+        ObjSelected = new GameObject();
+    }
+
+    //ObjSelected->AddComponent(new P(""));
+}
+
+void MainWindow::CreateTerrain()
+{
+    if (ObjSelected == nullptr)
+    {
+        ObjSelected = new GameObject();
+    }
+
+    ObjSelected->AddComponent(new Terrain("Assets/HeightMaps/vulkano_1.png"));
+}
+
+void MainWindow::CreateWaterEmittor()
+{
+    if (ObjSelected == nullptr)
+    {
+        ObjSelected = new GameObject();
+    }
+
+    //ObjSelected->AddComponent(new WaterEmittor));
+}
+
 void MainWindow::AvailableTextures()
 {
     ui->Material_box->clear();
     QStringList TextureNames = mAssetManager->GetTexturesNames();
     ui->Material_box->addItems(TextureNames);
 }
-
-
 
 void MainWindow::AvailableMeshes()
 {

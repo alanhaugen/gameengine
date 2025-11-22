@@ -67,6 +67,8 @@
     <property name="title">
      <string>Add</string>
     </property>
+    <addaction name="actionNew_GameObject"/>
+    <addaction name="separator"/>
    </widget>
    <widget class="QMenu" name="menuProject">
     <property name="title">
@@ -91,9 +93,29 @@
     </property>
     <addaction name="actionAbout"/>
    </widget>
+   <widget class="QMenu" name="menuComponent">
+    <property name="title">
+     <string>Component</string>
+    </property>
+    <addaction name="actionCube_2"/>
+    <addaction name="actionSphere_2"/>
+    <addaction name="actionMesh"/>
+    <addaction name="separator"/>
+    <addaction name="actionSprite"/>
+    <addaction name="actionText"/>
+    <addaction name="separator"/>
+    <addaction name="actionSphere_Collider"/>
+    <addaction name="actionBox_Collider"/>
+    <addaction name="separator"/>
+    <addaction name="actionTerrain"/>
+    <addaction name="separator"/>
+    <addaction name="actionParticle_system"/>
+    <addaction name="actionWater"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
    <addaction name="menuAdd"/>
+   <addaction name="menuComponent"/>
    <addaction name="menuProject"/>
    <addaction name="menuWindow"/>
    <addaction name="menuHelp"/>
@@ -595,6 +617,13 @@
        </layout>
       </widget>
      </item>
+     <item>
+      <widget class="QPushButton" name="AddComponentButton">
+       <property name="text">
+        <string>Add Component</string>
+       </property>
+      </widget>
+     </item>
     </layout>
    </widget>
   </widget>
@@ -833,6 +862,61 @@
   <action name="actionPong_2">
    <property name="text">
     <string>Pong</string>
+   </property>
+  </action>
+  <action name="actionNew_GameObject">
+   <property name="text">
+    <string>New GameObject</string>
+   </property>
+  </action>
+  <action name="actionCube_2">
+   <property name="text">
+    <string>Cube</string>
+   </property>
+  </action>
+  <action name="actionSphere_2">
+   <property name="text">
+    <string>Sphere</string>
+   </property>
+  </action>
+  <action name="actionMesh">
+   <property name="text">
+    <string>Mesh</string>
+   </property>
+  </action>
+  <action name="actionText">
+   <property name="text">
+    <string>Text</string>
+   </property>
+  </action>
+  <action name="actionSphere_Collider">
+   <property name="text">
+    <string>Sphere collider</string>
+   </property>
+  </action>
+  <action name="actionBox_Collider">
+   <property name="text">
+    <string>Box collider</string>
+   </property>
+  </action>
+  <action name="actionSprite">
+   <property name="text">
+    <string>Sprite</string>
+   </property>
+  </action>
+  <action name="actionTerrain">
+   <property name="text">
+    <string>Terrain</string>
+   </property>
+  </action>
+  <action name="actionParticle_system">
+   <property name="text">
+    <string>Particle system</string>
+   </property>
+  </action>
+  <action name="actionWater">
+   <property name="text">
+    <string>Water emitter</string>
    </property>
   </action>
  </widget>

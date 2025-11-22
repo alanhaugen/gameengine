@@ -1,8 +1,8 @@
 #ifndef SPLASH_H
 #define SPLASH_H
 
-#include <core/x-platform/timer.h>
 #include <core/x-platform/scene.h>
+#include <core/components/timer.h>
 #include <core/components/sprite.h>
 
 class Splash : public Scene
