@@ -86,16 +86,6 @@ MainWindow::MainWindow(QWidget *parent, const char* windowTitle, int windowWidth
     ui->RotationYSpin->setMaximum(990);
     ui->RotationZSpin->setMaximum(990);
 
-
-    splitDockWidget(ui->dockGameObjects,ui->SceneDock,Qt::Horizontal);
-    splitDockWidget(ui->SceneDock,ui->DockInspector ,Qt::Horizontal);
-
-
-    QList<int>sizes;
-    sizes << windowHeight*0.8 << windowHeight*0.8 << windowHeight*0.8 << windowHeight*0.3;
-    resizeDocks({ui->dockGameObjects,ui->SceneDock,ui->DockInspector,ui->dockAssets},sizes,Qt::Vertical);
-
-
     //Connections to functions Old version
     // connect(ui->actionViking_Room, &QAction::triggered, this, &MainWindow::AddVikingRoom);
     // connect(ui->actionCube, &QAction::triggered, this, &MainWindow::AddCube);
@@ -136,7 +126,7 @@ MainWindow::MainWindow(QWidget *parent, const char* windowTitle, int windowWidth
     AvailableMeshes();
     AvailableTextures();
 
-    ui->Inspectorwidget->setHidden(true);
+    //ui->Inspectorwidget->setHidden(true);
 
 
     //clicks
@@ -236,7 +226,7 @@ void MainWindow::MainGameLoop()
     //working area
     if(ObjSelected)
     {
-        ui->Inspectorwidget->setHidden(false);
+        //ui->Inspectorwidget->setHidden(false);
         if(ObjSelected->components.empty())
         {
             ui->MeshBox->setHidden(true);
@@ -248,7 +238,7 @@ void MainWindow::MainGameLoop()
     }
     else
     {
-        ui->Inspectorwidget->setHidden(true);
+        //ui->Inspectorwidget->setHidden(true);
     }
 
     Scene* scene = Services::currentScene;
@@ -371,10 +361,6 @@ void MainWindow::OpenScene()
 void MainWindow::showEvent(QShowEvent *event)
 {
     QMainWindow::showEvent(event);
-
-    QList<int>sizes;
-    sizes << height()*0.8 << height()*0.8 << height()*0.8 << height()*0.3;
-    resizeDocks({ui->dockGameObjects,ui->SceneDock,ui->DockInspector,ui->dockAssets},sizes,Qt::Vertical);
 }
 
 void MainWindow::OnRightClickGameObjectWidget(const QPoint &ClickedOn)

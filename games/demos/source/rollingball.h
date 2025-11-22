@@ -60,6 +60,7 @@ public:
     }
 };
 
+// Move this into physics...
 class Ball : public Component
 {
 public:
@@ -207,6 +208,7 @@ public:
 
     int index = 0;
 
+    GameObject* terrain;
     Terrain* terrainMesh;
     Terrain* terrainMeshPoints;
 };

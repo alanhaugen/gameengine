@@ -20,7 +20,368 @@
      <verstretch>0</verstretch>
     </sizepolicy>
    </property>
-   <layout class="QGridLayout" name="gridLayout_5"/>
+   <layout class="QGridLayout" name="gridLayout_5">
+    <item row="1" column="0">
+     <widget class="QTreeWidget" name="treeGameObjects">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>0</height>
+       </size>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="2">
+     <widget class="QWidget" name="Inspectorwidget" native="true">
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <item>
+        <widget class="QScrollArea" name="scrollArea">
+         <property name="widgetResizable">
+          <bool>true</bool>
+         </property>
+         <widget class="QWidget" name="scrollAreaWidgetContents">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>709</width>
+            <height>856</height>
+           </rect>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_3">
+           <item>
+            <widget class="QGroupBox" name="TransformBox">
+             <property name="title">
+              <string>Transform</string>
+             </property>
+             <property name="checkable">
+              <bool>true</bool>
+             </property>
+             <layout class="QVBoxLayout" name="verticalLayout">
+              <item>
+               <widget class="QGroupBox" name="groupTransform">
+                <property name="maximumSize">
+                 <size>
+                  <width>16777215</width>
+                  <height>120</height>
+                 </size>
+                </property>
+                <property name="title">
+                 <string/>
+                </property>
+                <layout class="QFormLayout" name="formLayout">
+                 <item row="0" column="0">
+                  <widget class="QLabel" name="PositionX">
+                   <property name="text">
+                    <string>Position X:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="1">
+                  <widget class="QDoubleSpinBox" name="PosXSpin">
+                   <property name="minimum">
+                    <double>-99.000000000000000</double>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="0">
+                  <widget class="QLabel" name="PositionY">
+                   <property name="text">
+                    <string>Position Y:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="1">
+                  <widget class="QDoubleSpinBox" name="PosYSpin"/>
+                 </item>
+                 <item row="2" column="0">
+                  <widget class="QLabel" name="PositionZ">
+                   <property name="text">
+                    <string>Position Z:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="1">
+                  <widget class="QDoubleSpinBox" name="PosZSpin"/>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+              <item>
+               <widget class="QGroupBox" name="groupRotation">
+                <property name="maximumSize">
+                 <size>
+                  <width>16777215</width>
+                  <height>120</height>
+                 </size>
+                </property>
+                <property name="title">
+                 <string>Rotation</string>
+                </property>
+                <layout class="QFormLayout" name="formLayout_2">
+                 <item row="0" column="0">
+                  <widget class="QLabel" name="RotationX">
+                   <property name="text">
+                    <string>Rotation X:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="1">
+                  <widget class="QDoubleSpinBox" name="RotationXSpin"/>
+                 </item>
+                 <item row="1" column="1">
+                  <widget class="QDoubleSpinBox" name="RotationYSpin"/>
+                 </item>
+                 <item row="1" column="0">
+                  <widget class="QLabel" name="RotationY">
+                   <property name="text">
+                    <string>Rotation Y:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="1">
+                  <widget class="QDoubleSpinBox" name="RotationZSpin"/>
+                 </item>
+                 <item row="2" column="0">
+                  <widget class="QLabel" name="RotationZ">
+                   <property name="text">
+                    <string>Rotation Z:</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+              <item>
+               <widget class="QGroupBox" name="groupScale">
+                <property name="maximumSize">
+                 <size>
+                  <width>16777215</width>
+                  <height>120</height>
+                 </size>
+                </property>
+                <property name="title">
+                 <string>Scale</string>
+                </property>
+                <layout class="QFormLayout" name="formLayout_3">
+                 <item row="0" column="0">
+                  <widget class="QLabel" name="ScaleX">
+                   <property name="text">
+                    <string>Scale X:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="1">
+                  <widget class="QDoubleSpinBox" name="ScaleXSpin"/>
+                 </item>
+                 <item row="1" column="1">
+                  <widget class="QDoubleSpinBox" name="ScaleYSpin"/>
+                 </item>
+                 <item row="1" column="0">
+                  <widget class="QLabel" name="ScaleY">
+                   <property name="text">
+                    <string>Scale Y:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="1">
+                  <widget class="QDoubleSpinBox" name="ScaleZSpin"/>
+                 </item>
+                 <item row="2" column="0">
+                  <widget class="QLabel" name="ScaleZ">
+                   <property name="text">
+                    <string>Scale Z:</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item>
+            <widget class="QGroupBox" name="MeshBox">
+             <property name="title">
+              <string>Mesh</string>
+             </property>
+             <property name="checkable">
+              <bool>true</bool>
+             </property>
+             <layout class="QVBoxLayout" name="verticalLayout_6">
+              <item>
+               <widget class="QGroupBox" name="groupBox_2">
+                <property name="title">
+                 <string/>
+                </property>
+                <layout class="QFormLayout" name="formLayout_4">
+                 <item row="0" column="0">
+                  <widget class="QLabel" name="Mesh_Label">
+                   <property name="text">
+                    <string>Mesh:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="0">
+                  <widget class="QLabel" name="Material_Label">
+                   <property name="text">
+                    <string>Material:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="1">
+                  <widget class="QComboBox" name="Mesh_Combo"/>
+                 </item>
+                 <item row="1" column="1">
+                  <widget class="QComboBox" name="Material_box"/>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item>
+            <widget class="QGroupBox" name="ColliderBox">
+             <property name="title">
+              <string>Collider</string>
+             </property>
+             <layout class="QVBoxLayout" name="verticalLayout_8">
+              <item>
+               <widget class="QGroupBox" name="groupBox">
+                <property name="title">
+                 <string/>
+                </property>
+                <layout class="QFormLayout" name="formLayout_5">
+                 <item row="0" column="0">
+                  <widget class="QLabel" name="label">
+                   <property name="text">
+                    <string>ColliderType</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="1">
+                  <widget class="QComboBox" name="Collider_Combo">
+                   <property name="editable">
+                    <bool>false</bool>
+                   </property>
+                   <property name="maxVisibleItems">
+                    <number>1000</number>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="0">
+                  <widget class="QLabel" name="ColliderXPos">
+                   <property name="text">
+                    <string>ColliderXPos</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="0">
+                  <widget class="QLabel" name="ColliderYPos">
+                   <property name="text">
+                    <string>ColliderYPos</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="3" column="0">
+                  <widget class="QLabel" name="ColliderZPos">
+                   <property name="frameShape">
+                    <enum>QFrame::Shape::NoFrame</enum>
+                   </property>
+                   <property name="text">
+                    <string>ColliderZPos</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="1">
+                  <widget class="QDoubleSpinBox" name="doubleSpinBox"/>
+                 </item>
+                 <item row="2" column="1">
+                  <widget class="QDoubleSpinBox" name="doubleSpinBox_2"/>
+                 </item>
+                 <item row="3" column="1">
+                  <widget class="QDoubleSpinBox" name="doubleSpinBox_3"/>
+                 </item>
+                 <item row="4" column="0">
+                  <widget class="QLabel" name="ColliderXscale">
+                   <property name="text">
+                    <string>ColliderXscale</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="5" column="0">
+                  <widget class="QLabel" name="ColliderZscale">
+                   <property name="text">
+                    <string>ColliderZscale</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="6" column="0">
+                  <widget class="QLabel" name="ColliderZscale_2">
+                   <property name="text">
+                    <string>ColliderZscale</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="4" column="1">
+                  <widget class="QDoubleSpinBox" name="doubleSpinBox_4"/>
+                 </item>
+                 <item row="5" column="1">
+                  <widget class="QDoubleSpinBox" name="doubleSpinBox_5"/>
+                 </item>
+                 <item row="6" column="1">
+                  <widget class="QDoubleSpinBox" name="doubleSpinBox_6"/>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="AddComponentButton">
+         <property name="text">
+          <string>Add Component</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item row="1" column="1">
+     <layout class="QVBoxLayout" name="VulkanLayout">
+      <property name="spacing">
+       <number>4</number>
+      </property>
+      <property name="sizeConstraint">
+       <enum>QLayout::SizeConstraint::SetFixedSize</enum>
+      </property>
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>26</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
+     </layout>
+    </item>
+   </layout>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <widget class="QMenuBar" name="menubar">
@@ -69,12 +430,17 @@
     </property>
     <addaction name="actionNew_GameObject"/>
     <addaction name="separator"/>
+    <addaction name="actionComponent"/>
    </widget>
    <widget class="QMenu" name="menuProject">
     <property name="title">
      <string>Project</string>
     </property>
     <addaction name="actionSettings"/>
+    <addaction name="separator"/>
+    <addaction name="actionScene_order"/>
+    <addaction name="actionCamera_speed"/>
+    <addaction name="actionPhysics_constants"/>
    </widget>
    <widget class="QMenu" name="menuWindow">
     <property name="title">
@@ -108,9 +474,26 @@
     <addaction name="actionBox_Collider"/>
     <addaction name="separator"/>
     <addaction name="actionTerrain"/>
+    <addaction name="actionTerrain_snap"/>
     <addaction name="separator"/>
     <addaction name="actionParticle_system"/>
     <addaction name="actionWater"/>
+    <addaction name="separator"/>
+    <addaction name="actionAudio_clip"/>
+    <addaction name="actionMusic"/>
+    <addaction name="separator"/>
+    <addaction name="actionBSpline_curve"/>
+    <addaction name="separator"/>
+    <addaction name="actionTimer"/>
+    <addaction name="actionFPS_counter"/>
+    <addaction name="separator"/>
+    <addaction name="actionLua_script"/>
+    <addaction name="separator"/>
+    <addaction name="actionChase_AI"/>
+    <addaction name="separator"/>
+    <addaction name="actionFPV_Camera"/>
+    <addaction name="actionShoot_mechanic"/>
+    <addaction name="actionDie_mechanic"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
@@ -147,485 +530,6 @@
    </attribute>
    <addaction name="actionPlay"/>
    <addaction name="actionPause"/>
-  </widget>
-  <widget class="QDockWidget" name="SceneDock">
-   <property name="sizePolicy">
-    <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-     <horstretch>0</horstretch>
-     <verstretch>0</verstretch>
-    </sizepolicy>
-   </property>
-   <property name="minimumSize">
-    <size>
-     <width>500</width>
-     <height>324</height>
-    </size>
-   </property>
-   <property name="baseSize">
-    <size>
-     <width>0</width>
-     <height>400</height>
-    </size>
-   </property>
-   <property name="layoutDirection">
-    <enum>Qt::LayoutDirection::LeftToRight</enum>
-   </property>
-   <property name="windowTitle">
-    <string>Scene</string>
-   </property>
-   <attribute name="dockWidgetArea">
-    <number>4</number>
-   </attribute>
-   <widget class="QWidget" name="DockScene">
-    <property name="sizePolicy">
-     <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-      <horstretch>0</horstretch>
-      <verstretch>0</verstretch>
-     </sizepolicy>
-    </property>
-    <property name="minimumSize">
-     <size>
-      <width>300</width>
-      <height>300</height>
-     </size>
-    </property>
-    <layout class="QGridLayout" name="gridLayout_2">
-     <item row="0" column="0">
-      <layout class="QVBoxLayout" name="VulkanLayout">
-       <property name="spacing">
-        <number>4</number>
-       </property>
-       <property name="sizeConstraint">
-        <enum>QLayout::SizeConstraint::SetFixedSize</enum>
-       </property>
-       <property name="leftMargin">
-        <number>0</number>
-       </property>
-       <property name="topMargin">
-        <number>26</number>
-       </property>
-       <property name="rightMargin">
-        <number>0</number>
-       </property>
-       <property name="bottomMargin">
-        <number>0</number>
-       </property>
-      </layout>
-     </item>
-    </layout>
-   </widget>
-  </widget>
-  <widget class="QDockWidget" name="dockGameObjects">
-   <property name="sizePolicy">
-    <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-     <horstretch>0</horstretch>
-     <verstretch>0</verstretch>
-    </sizepolicy>
-   </property>
-   <property name="minimumSize">
-    <size>
-     <width>200</width>
-     <height>300</height>
-    </size>
-   </property>
-   <property name="maximumSize">
-    <size>
-     <width>300</width>
-     <height>524287</height>
-    </size>
-   </property>
-   <property name="baseSize">
-    <size>
-     <width>0</width>
-     <height>400</height>
-    </size>
-   </property>
-   <property name="floating">
-    <bool>false</bool>
-   </property>
-   <property name="windowTitle">
-    <string>Scene Graph</string>
-   </property>
-   <attribute name="dockWidgetArea">
-    <number>4</number>
-   </attribute>
-   <widget class="QWidget" name="dockWidgetContents">
-    <layout class="QGridLayout" name="gridLayout">
-     <item row="0" column="0">
-      <widget class="QTreeWidget" name="treeGameObjects">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="minimumSize">
-        <size>
-         <width>0</width>
-         <height>0</height>
-        </size>
-       </property>
-       <column>
-        <property name="text">
-         <string notr="true">1</string>
-        </property>
-       </column>
-      </widget>
-     </item>
-    </layout>
-   </widget>
-  </widget>
-  <widget class="QDockWidget" name="DockInspector">
-   <property name="sizePolicy">
-    <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-     <horstretch>0</horstretch>
-     <verstretch>0</verstretch>
-    </sizepolicy>
-   </property>
-   <property name="minimumSize">
-    <size>
-     <width>200</width>
-     <height>300</height>
-    </size>
-   </property>
-   <property name="baseSize">
-    <size>
-     <width>0</width>
-     <height>400</height>
-    </size>
-   </property>
-   <property name="windowTitle">
-    <string>Inspector</string>
-   </property>
-   <attribute name="dockWidgetArea">
-    <number>4</number>
-   </attribute>
-   <widget class="QWidget" name="dockWidgetContents_2">
-    <layout class="QVBoxLayout" name="verticalLayout_7">
-     <item>
-      <widget class="QWidget" name="Inspectorwidget" native="true">
-       <layout class="QVBoxLayout" name="verticalLayout_2">
-        <item>
-         <widget class="QScrollArea" name="scrollArea">
-          <property name="widgetResizable">
-           <bool>true</bool>
-          </property>
-          <widget class="QWidget" name="scrollAreaWidgetContents">
-           <property name="geometry">
-            <rect>
-             <x>0</x>
-             <y>0</y>
-             <width>275</width>
-             <height>856</height>
-            </rect>
-           </property>
-           <layout class="QVBoxLayout" name="verticalLayout_3">
-            <item>
-             <widget class="QGroupBox" name="TransformBox">
-              <property name="title">
-               <string>Transform</string>
-              </property>
-              <property name="checkable">
-               <bool>true</bool>
-              </property>
-              <layout class="QVBoxLayout" name="verticalLayout">
-               <item>
-                <widget class="QGroupBox" name="groupTransform">
-                 <property name="maximumSize">
-                  <size>
-                   <width>16777215</width>
-                   <height>120</height>
-                  </size>
-                 </property>
-                 <property name="title">
-                  <string/>
-                 </property>
-                 <layout class="QFormLayout" name="formLayout">
-                  <item row="0" column="0">
-                   <widget class="QLabel" name="PositionX">
-                    <property name="text">
-                     <string>Position X:</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="0" column="1">
-                   <widget class="QDoubleSpinBox" name="PosXSpin">
-                    <property name="minimum">
-                     <double>-99.000000000000000</double>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="1" column="0">
-                   <widget class="QLabel" name="PositionY">
-                    <property name="text">
-                     <string>Position Y:</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="1" column="1">
-                   <widget class="QDoubleSpinBox" name="PosYSpin"/>
-                  </item>
-                  <item row="2" column="0">
-                   <widget class="QLabel" name="PositionZ">
-                    <property name="text">
-                     <string>Position Z:</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="2" column="1">
-                   <widget class="QDoubleSpinBox" name="PosZSpin"/>
-                  </item>
-                 </layout>
-                </widget>
-               </item>
-               <item>
-                <widget class="QGroupBox" name="groupRotation">
-                 <property name="maximumSize">
-                  <size>
-                   <width>16777215</width>
-                   <height>120</height>
-                  </size>
-                 </property>
-                 <property name="title">
-                  <string>Rotation</string>
-                 </property>
-                 <layout class="QFormLayout" name="formLayout_2">
-                  <item row="0" column="0">
-                   <widget class="QLabel" name="RotationX">
-                    <property name="text">
-                     <string>Rotation X:</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="0" column="1">
-                   <widget class="QDoubleSpinBox" name="RotationXSpin"/>
-                  </item>
-                  <item row="1" column="1">
-                   <widget class="QDoubleSpinBox" name="RotationYSpin"/>
-                  </item>
-                  <item row="1" column="0">
-                   <widget class="QLabel" name="RotationY">
-                    <property name="text">
-                     <string>Rotation Y:</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="2" column="1">
-                   <widget class="QDoubleSpinBox" name="RotationZSpin"/>
-                  </item>
-                  <item row="2" column="0">
-                   <widget class="QLabel" name="RotationZ">
-                    <property name="text">
-                     <string>Rotation Z:</string>
-                    </property>
-                   </widget>
-                  </item>
-                 </layout>
-                </widget>
-               </item>
-               <item>
-                <widget class="QGroupBox" name="groupScale">
-                 <property name="maximumSize">
-                  <size>
-                   <width>16777215</width>
-                   <height>120</height>
-                  </size>
-                 </property>
-                 <property name="title">
-                  <string>Scale</string>
-                 </property>
-                 <layout class="QFormLayout" name="formLayout_3">
-                  <item row="0" column="0">
-                   <widget class="QLabel" name="ScaleX">
-                    <property name="text">
-                     <string>Scale X:</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="0" column="1">
-                   <widget class="QDoubleSpinBox" name="ScaleXSpin"/>
-                  </item>
-                  <item row="1" column="1">
-                   <widget class="QDoubleSpinBox" name="ScaleYSpin"/>
-                  </item>
-                  <item row="1" column="0">
-                   <widget class="QLabel" name="ScaleY">
-                    <property name="text">
-                     <string>Scale Y:</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="2" column="1">
-                   <widget class="QDoubleSpinBox" name="ScaleZSpin"/>
-                  </item>
-                  <item row="2" column="0">
-                   <widget class="QLabel" name="ScaleZ">
-                    <property name="text">
-                     <string>Scale Z:</string>
-                    </property>
-                   </widget>
-                  </item>
-                 </layout>
-                </widget>
-               </item>
-              </layout>
-             </widget>
-            </item>
-            <item>
-             <widget class="QGroupBox" name="MeshBox">
-              <property name="title">
-               <string>Mesh</string>
-              </property>
-              <property name="checkable">
-               <bool>true</bool>
-              </property>
-              <layout class="QVBoxLayout" name="verticalLayout_6">
-               <item>
-                <widget class="QGroupBox" name="groupBox_2">
-                 <property name="title">
-                  <string/>
-                 </property>
-                 <layout class="QFormLayout" name="formLayout_4">
-                  <item row="0" column="0">
-                   <widget class="QLabel" name="Mesh_Label">
-                    <property name="text">
-                     <string>Mesh:</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="1" column="0">
-                   <widget class="QLabel" name="Material_Label">
-                    <property name="text">
-                     <string>Material:</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="0" column="1">
-                   <widget class="QComboBox" name="Mesh_Combo"/>
-                  </item>
-                  <item row="1" column="1">
-                   <widget class="QComboBox" name="Material_box"/>
-                  </item>
-                 </layout>
-                </widget>
-               </item>
-              </layout>
-             </widget>
-            </item>
-            <item>
-             <widget class="QGroupBox" name="ColliderBox">
-              <property name="title">
-               <string>Collider</string>
-              </property>
-              <layout class="QVBoxLayout" name="verticalLayout_8">
-               <item>
-                <widget class="QGroupBox" name="groupBox">
-                 <property name="title">
-                  <string/>
-                 </property>
-                 <layout class="QFormLayout" name="formLayout_5">
-                  <item row="0" column="0">
-                   <widget class="QLabel" name="label">
-                    <property name="text">
-                     <string>ColliderType</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="0" column="1">
-                   <widget class="QComboBox" name="Collider_Combo">
-                    <property name="editable">
-                     <bool>false</bool>
-                    </property>
-                    <property name="maxVisibleItems">
-                     <number>1000</number>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="1" column="0">
-                   <widget class="QLabel" name="ColliderXPos">
-                    <property name="text">
-                     <string>ColliderXPos</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="2" column="0">
-                   <widget class="QLabel" name="ColliderYPos">
-                    <property name="text">
-                     <string>ColliderYPos</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="3" column="0">
-                   <widget class="QLabel" name="ColliderZPos">
-                    <property name="frameShape">
-                     <enum>QFrame::Shape::NoFrame</enum>
-                    </property>
-                    <property name="text">
-                     <string>ColliderZPos</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="1" column="1">
-                   <widget class="QDoubleSpinBox" name="doubleSpinBox"/>
-                  </item>
-                  <item row="2" column="1">
-                   <widget class="QDoubleSpinBox" name="doubleSpinBox_2"/>
-                  </item>
-                  <item row="3" column="1">
-                   <widget class="QDoubleSpinBox" name="doubleSpinBox_3"/>
-                  </item>
-                  <item row="4" column="0">
-                   <widget class="QLabel" name="ColliderXscale">
-                    <property name="text">
-                     <string>ColliderXscale</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="5" column="0">
-                   <widget class="QLabel" name="ColliderZscale">
-                    <property name="text">
-                     <string>ColliderZscale</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="6" column="0">
-                   <widget class="QLabel" name="ColliderZscale_2">
-                    <property name="text">
-                     <string>ColliderZscale</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="4" column="1">
-                   <widget class="QDoubleSpinBox" name="doubleSpinBox_4"/>
-                  </item>
-                  <item row="5" column="1">
-                   <widget class="QDoubleSpinBox" name="doubleSpinBox_5"/>
-                  </item>
-                  <item row="6" column="1">
-                   <widget class="QDoubleSpinBox" name="doubleSpinBox_6"/>
-                  </item>
-                 </layout>
-                </widget>
-               </item>
-              </layout>
-             </widget>
-            </item>
-           </layout>
-          </widget>
-         </widget>
-        </item>
-       </layout>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="AddComponentButton">
-       <property name="text">
-        <string>Add Component</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </widget>
   </widget>
   <widget class="QDockWidget" name="dockAssets">
    <property name="sizePolicy">
@@ -917,6 +821,81 @@
   <action name="actionWater">
    <property name="text">
     <string>Water emitter</string>
+   </property>
+  </action>
+  <action name="actionAudio_clip">
+   <property name="text">
+    <string>Audio clip</string>
+   </property>
+  </action>
+  <action name="actionMusic">
+   <property name="text">
+    <string>Music</string>
+   </property>
+  </action>
+  <action name="actionBSpline_curve">
+   <property name="text">
+    <string>BSpline curve</string>
+   </property>
+  </action>
+  <action name="actionTimer">
+   <property name="text">
+    <string>Timer</string>
+   </property>
+  </action>
+  <action name="actionTerrain_snap">
+   <property name="text">
+    <string>Terrain snap</string>
+   </property>
+  </action>
+  <action name="actionChase_AI">
+   <property name="text">
+    <string>Chase AI</string>
+   </property>
+  </action>
+  <action name="actionLua_script">
+   <property name="text">
+    <string>Lua script</string>
+   </property>
+  </action>
+  <action name="actionFPS_counter">
+   <property name="text">
+    <string>FPS counter</string>
+   </property>
+  </action>
+  <action name="actionFPV_Camera">
+   <property name="text">
+    <string>FPV camera</string>
+   </property>
+  </action>
+  <action name="actionShoot_mechanic">
+   <property name="text">
+    <string>Shoot mechanic</string>
+   </property>
+  </action>
+  <action name="actionDie_mechanic">
+   <property name="text">
+    <string>Die mechanic</string>
+   </property>
+  </action>
+  <action name="actionScene_order">
+   <property name="text">
+    <string>Scene order</string>
+   </property>
+  </action>
+  <action name="actionCamera_speed">
+   <property name="text">
+    <string>Camera speed</string>
+   </property>
+  </action>
+  <action name="actionPhysics_constants">
+   <property name="text">
+    <string>Physics constants</string>
+   </property>
+  </action>
+  <action name="actionComponent">
+   <property name="text">
+    <string>Component</string>
    </property>
   </action>
  </widget>
