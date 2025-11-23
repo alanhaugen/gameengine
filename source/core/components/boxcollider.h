@@ -8,7 +8,7 @@ class BoxCollider : public Component
 public:
     Physics::Collider* collider;
 
-    BoxCollider();
+    BoxCollider(GameObject* inGameObject, int type = Physics::DYNAMIC);
     void Update();
 };
 

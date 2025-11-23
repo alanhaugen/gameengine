@@ -118,15 +118,29 @@ void AAPhysics::CollisionDetection()
 
                 collision = distSquared < radiusSum * radiusSum;
             }
-            // Calculate sphere v box collision
             else if (colliders[i].shape == SPHERE && colliders[j].shape == BOX)
             {
-                // Box collider
+                glm::vec3 spherePos = colliders[i].gameObject->GetPosition();
+                glm::vec3 boxPos = colliders[j].gameObject->GetPosition();
+                glm::vec3 boxExtents = colliders[j].gameObject->dimensions;
+
+                // Clamp sphere center to the box's AABB
+                glm::vec3 closestPoint = glm::clamp(spherePos, boxPos - boxExtents, boxPos + boxExtents);
+
+                glm::vec3 diff = spherePos - closestPoint;
+                collision = glm::dot(diff, diff) < colliders[i].radius * colliders[i].radius;
             }
-            // Calculate box v box collision
+            // Box vs Box
             else if (colliders[i].shape == BOX && colliders[j].shape == BOX)
             {
-                // Box collider
+                glm::vec3 posA = colliders[i].gameObject->GetPosition();
+                glm::vec3 posB = colliders[j].gameObject->GetPosition();
+                glm::vec3 halfA = colliders[i].gameObject->dimensions * 0.5f;
+                glm::vec3 halfB = colliders[j].gameObject->dimensions * 0.5f;
+
+                collision = (abs(posA.x - posB.x) <= (halfA.x + halfB.x)) &&
+                            (abs(posA.y - posB.y) <= (halfA.y + halfB.y)) &&
+                            (abs(posA.z - posB.z) <= (halfA.z + halfB.z));
             }
 
             if (collision)

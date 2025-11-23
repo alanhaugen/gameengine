@@ -1,8 +1,8 @@
 #include "boxcollider.h"
 
-BoxCollider::BoxCollider()
+BoxCollider::BoxCollider(GameObject* inGameObject, int type)
 {
-    collider = physics->CreateCollider(gameObject, Physics::STATIC);
+    collider = physics->CreateCollider(inGameObject, type);
 }
 
 void BoxCollider::Update()

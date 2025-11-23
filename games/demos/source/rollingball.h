@@ -7,7 +7,7 @@
 #include "core/components/terrain.h"
 #include "core/x-platform/bsplinecurve.h"
 
-// Move this into physics...
+// Move this into physics ...
 class Ball : public Component
 {
 public:

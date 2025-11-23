@@ -7,7 +7,7 @@ void RollingBall::Init()
 {
     cube = new GameObject("Cube");
     cube->AddComponent(new Cube);
-    cube->AddComponent(new SphereCollider(cube, 1.0f, Physics::STATIC));
+    cube->AddComponent(new BoxCollider(cube, Physics::STATIC));
     cube->SetPosition(320, 0, 500);
 
     terrain = new GameObject("Terrain");

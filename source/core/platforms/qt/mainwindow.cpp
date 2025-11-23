@@ -9,12 +9,12 @@
 #include "core/components/mesh.h"
 #include <QTimer>
 #include <QApplication>
-#include "core/components/gameobject.h"
+#include <QFileDialog>
 #include <qinputdialog.h>
+#include "core/components/gameobject.h"
 #include "core/x-platform/locator.h"
 #include "core/x-platform/services.h"
 #include "core/x-platform/generatedscene.h"
-#include <QFileDialog>
 #include "systems/audio/openal/openalaudio.h"
 #include "systems/audio/qtaudio/qtmultimediaaudio.h"
 #include "systems/physics/aaphysics/aaphysics.h"
@@ -23,7 +23,6 @@ MainWindow::MainWindow(QWidget *parent, const char* windowTitle, int windowWidth
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
-
     //AssetManager
     mAssetManager = new AssetManager();
 
