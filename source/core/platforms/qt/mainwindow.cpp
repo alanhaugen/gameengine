@@ -476,8 +476,6 @@ void MainWindow::UpdateInspector()
 {
     IsInspectorUpdated = true;
 
-
-
     if (!ObjSelected)
     {
          qDebug()<<"no where";
@@ -581,6 +579,8 @@ void MainWindow::NewGameObject()
     newObject->SetPosition(camera->position + (camera->forward * 10.0f));
     newObject->wiredCube->Show();
     ObjSelected = newObject;
+
+    UpdateInspector();
 }
 
 void MainWindow::OpenComponentSelection()
