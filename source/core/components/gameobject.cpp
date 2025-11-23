@@ -25,6 +25,11 @@ void GameObject::AddComponent(Component* newComponent)
 {
     newComponent->gameObject = this;
     components.push_back(newComponent);
+
+    if (Locator::editor)
+    {
+        Locator::editor->AddComponent(newComponent->name.c_str(), id);
+    }
 }
 
 void GameObject::Update()

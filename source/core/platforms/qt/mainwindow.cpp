@@ -1,7 +1,9 @@
 #include "mainwindow.h"
+#include "core/components/boxcollider.h"
 #include "core/components/cube.h"
 #include "core/components/fpscamera.h"
 #include "core/components/sphere.h"
+#include "core/components/spherecollider.h"
 #include "core/components/terrain.h"
 #include "core/components/text.h"
 #include "ui_MainWindow.h"
@@ -141,6 +143,8 @@ MainWindow::MainWindow(QWidget *parent, const char* windowTitle, int windowWidth
     // Component actions
     connect(ui->actionCube_2, &QAction::triggered, this, &MainWindow::CreateCube);
     connect(ui->actionSphere, &QAction::triggered, this, &MainWindow::CreateSphere);
+    connect(ui->actionSphere_Collider, &QAction::triggered, this, &MainWindow::CreateSphereCollider);
+    connect(ui->actionBox_Collider, &QAction::triggered, this, &MainWindow::CreateBoxCollider);
     connect(ui->actionSprite, &QAction::triggered, this, &MainWindow::CreateSprite);
     connect(ui->actionText, &QAction::triggered, this, &MainWindow::CreateText);
     connect(ui->actionParticle_system, &QAction::triggered, this, &MainWindow::CreateParticleSystem);
@@ -602,6 +606,26 @@ void MainWindow::CreateSphere()
     }
 
     ObjSelected->AddComponent(new Sphere);
+}
+
+void MainWindow::CreateSphereCollider()
+{
+    if (ObjSelected == nullptr)
+    {
+        NewGameObject();
+    }
+
+    ObjSelected->AddComponent(new SphereCollider(ObjSelected));
+}
+
+void MainWindow::CreateBoxCollider()
+{
+    if (ObjSelected == nullptr)
+    {
+        NewGameObject();
+    }
+
+    ObjSelected->AddComponent(new BoxCollider(ObjSelected));
 }
 
 void MainWindow::CreateText()

@@ -49,6 +49,8 @@ void Cube::Init(glm::vec3 color)
 
 Cube::Cube(float x, float y, float z, glm::vec3 scale, glm::vec3 color)
 {
+    name = "Cube";
+
     Init(color);
 
     drawable = &renderer->CreateDrawable(vertices,

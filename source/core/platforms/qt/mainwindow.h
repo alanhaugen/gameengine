@@ -83,6 +83,8 @@ private:
 
     void CreateCube();
     void CreateSphere();
+    void CreateSphereCollider();
+    void CreateBoxCollider();
     void CreateText();
     void CreateSprite();
     void CreateParticleSystem();

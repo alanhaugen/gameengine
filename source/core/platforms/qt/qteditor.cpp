@@ -10,14 +10,25 @@ QtEditor::QtEditor(Ui::MainWindow *inUi, QStatusBar *inStatusBar)
 
 void QtEditor::AddEntity(const char *name,unsigned id)
 {
-    QTreeWidgetItem * MainObj = new QTreeWidgetItem(ui->treeGameObjects);
+    QTreeWidgetItem* MainObj = new QTreeWidgetItem(ui->treeGameObjects);
 
     MainObj->setText(0, name);
     MainObj->setData(0, Qt::UserRole, QVariant::fromValue(id));
     MainObj->setExpanded(true);
 
-    QTreeWidgetItem * ObjItem = new QTreeWidgetItem(MainObj);
-    ObjItem->setText(0, "mesh");
+    entityItems[id] = MainObj;
+}
+
+void QtEditor::AddComponent(const char *name, unsigned int id)
+{
+    auto it = entityItems.find(id);
+    if (it == entityItems.end())
+        return; // No entity with this ID
+
+    QTreeWidgetItem* MainObj = it->second;
+
+    QTreeWidgetItem* ObjItem = new QTreeWidgetItem(MainObj);
+    ObjItem->setText(0, name);
     ObjItem->setData(0,Qt::UserRole +1,"Component");
 
     MainObj->addChild(ObjItem);
