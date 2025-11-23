@@ -588,7 +588,7 @@ void MainWindow::CreateCube()
 {
     if (ObjSelected == nullptr)
     {
-        ObjSelected = new GameObject();
+        NewGameObject();
     }
 
     ObjSelected->AddComponent(new Cube);
@@ -598,7 +598,7 @@ void MainWindow::CreateSphere()
 {
     if (ObjSelected == nullptr)
     {
-        ObjSelected = new GameObject();
+        NewGameObject();
     }
 
     ObjSelected->AddComponent(new Sphere);
@@ -608,7 +608,7 @@ void MainWindow::CreateText()
 {
     if (ObjSelected == nullptr)
     {
-        ObjSelected = new GameObject();
+        NewGameObject();
     }
 
     ObjSelected->AddComponent(new Text("Empty text"));
@@ -618,7 +618,7 @@ void MainWindow::CreateSprite()
 {
     if (ObjSelected == nullptr)
     {
-        ObjSelected = new GameObject();
+        NewGameObject();
     }
 
     ObjSelected->AddComponent(new Sprite("Assets/Textures/orange.jpg"));
@@ -628,7 +628,7 @@ void MainWindow::CreateParticleSystem()
 {
     if (ObjSelected == nullptr)
     {
-        ObjSelected = new GameObject();
+        NewGameObject();
     }
 
     //ObjSelected->AddComponent(new P(""));
@@ -638,7 +638,7 @@ void MainWindow::CreateTerrain()
 {
     if (ObjSelected == nullptr)
     {
-        ObjSelected = new GameObject();
+        NewGameObject();
     }
 
     ObjSelected->AddComponent(new Terrain("Assets/HeightMaps/vulkano_1.png"));
@@ -648,7 +648,7 @@ void MainWindow::CreateWaterEmittor()
 {
     if (ObjSelected == nullptr)
     {
-        ObjSelected = new GameObject();
+        NewGameObject();
     }
 
     //ObjSelected->AddComponent(new WaterEmittor));
