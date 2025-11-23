@@ -2,6 +2,7 @@
 #include "core/components/boxcollider.h"
 #include "core/components/cube.h"
 #include "core/components/fpscamera.h"
+#include "core/components/rigidbody.h"
 #include "core/components/sphere.h"
 #include "core/components/spherecollider.h"
 #include "core/components/terrain.h"
@@ -142,7 +143,7 @@ MainWindow::MainWindow(QWidget *parent, const char* windowTitle, int windowWidth
 
     // Component actions
     connect(ui->actionCube_2, &QAction::triggered, this, &MainWindow::CreateCube);
-    connect(ui->actionSphere, &QAction::triggered, this, &MainWindow::CreateSphere);
+    connect(ui->actionSphere_2, &QAction::triggered, this, &MainWindow::CreateSphere);
     connect(ui->actionSphere_Collider, &QAction::triggered, this, &MainWindow::CreateSphereCollider);
     connect(ui->actionBox_Collider, &QAction::triggered, this, &MainWindow::CreateBoxCollider);
     connect(ui->actionSprite, &QAction::triggered, this, &MainWindow::CreateSprite);
@@ -150,6 +151,7 @@ MainWindow::MainWindow(QWidget *parent, const char* windowTitle, int windowWidth
     connect(ui->actionParticle_system, &QAction::triggered, this, &MainWindow::CreateParticleSystem);
     connect(ui->actionTerrain, &QAction::triggered, this, &MainWindow::CreateTerrain);
     connect(ui->actionWater, &QAction::triggered, this, &MainWindow::CreateWaterEmittor);
+    connect(ui->actionRigid_Body_physics, &QAction::triggered, this, &MainWindow::CreateRigidBody);
 
     //Mesh part
     connect(ui->Mesh_Combo, &QComboBox::currentTextChanged, this,&MainWindow::ChangeMesh);
@@ -665,7 +667,8 @@ void MainWindow::CreateTerrain()
         NewGameObject();
     }
 
-    ObjSelected->AddComponent(new Terrain("tools/pointconverter/output.png", "Assets/Textures/snow.jpg"));
+    mainTerrain = new Terrain("tools/pointconverter/output.png", "Assets/Textures/snow.jpg");
+    ObjSelected->AddComponent(mainTerrain);
 }
 
 void MainWindow::CreateWaterEmittor()
@@ -676,6 +679,22 @@ void MainWindow::CreateWaterEmittor()
     }
 
     //ObjSelected->AddComponent(new WaterEmittor));
+}
+
+void MainWindow::CreateRigidBody()
+{
+
+    if (ObjSelected == nullptr)
+    {
+        NewGameObject();
+    }
+
+    if (mainTerrain == nullptr)
+    {
+        CreateTerrain();
+    }
+
+    ObjSelected->AddComponent(new RigidBody(mainTerrain));
 }
 
 void MainWindow::AvailableTextures()

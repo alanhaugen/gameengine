@@ -10,6 +10,7 @@
 
 class Scene;
 class GameObject;
+class Terrain;
 #include "assetmanager.h"
 
 QT_BEGIN_NAMESPACE
@@ -90,6 +91,9 @@ private:
     void CreateParticleSystem();
     void CreateTerrain();
     void CreateWaterEmittor();
+    void CreateRigidBody();
+
+    Terrain* mainTerrain;
 
     //add Textures to the scene and to the gameobject
     void AvailableTextures();
