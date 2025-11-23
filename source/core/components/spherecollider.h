@@ -8,6 +8,7 @@ public:
     SphereCollider(GameObject* gameObject, float innR = 1.0f, int collisionResponse = Physics::DYNAMIC);
     void Init();
     void Update();
+    bool IsCollided();
 
     Physics::Collider* collider;
 };

@@ -9,3 +9,8 @@ SphereCollider::SphereCollider(GameObject* gameObject, float innR, int response)
 void SphereCollider::Update()
 {
 }
+
+bool SphereCollider::IsCollided()
+{
+    return collider->isColliding;
+}
