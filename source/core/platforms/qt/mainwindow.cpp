@@ -639,7 +639,7 @@ void MainWindow::CreateBoxCollider()
         NewGameObject();
     }
 
-    ObjSelected->AddComponent(new BoxCollider(ObjSelected));
+    ObjSelected->AddComponent(new BoxCollider(ObjSelected, Physics::STATIC));
 }
 
 void MainWindow::CreateText()
