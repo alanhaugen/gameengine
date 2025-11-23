@@ -269,7 +269,7 @@ void MainWindow::MainGameLoop()
                 {
                     if (ObjSelected)
                     {
-                        scene->camera.position = ObjSelected->GetPosition();
+                        scene->camera.position = ObjSelected->GetPosition() - scene->camera.forward * 10.0f;
                     }
                 }
 
