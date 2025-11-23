@@ -665,7 +665,7 @@ void MainWindow::CreateTerrain()
         NewGameObject();
     }
 
-    ObjSelected->AddComponent(new Terrain("Assets/HeightMaps/vulkano_1.png"));
+    ObjSelected->AddComponent(new Terrain("tools/pointconverter/output.png", "Assets/Textures/snow.jpg"));
 }
 
 void MainWindow::CreateWaterEmittor()

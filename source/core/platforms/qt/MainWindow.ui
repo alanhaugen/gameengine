@@ -37,7 +37,7 @@
       </property>
       <column>
        <property name="text">
-        <string notr="true">1</string>
+        <string>Game Objects</string>
        </property>
       </column>
      </widget>
@@ -480,6 +480,7 @@
     <addaction name="separator"/>
     <addaction name="actionTerrain"/>
     <addaction name="actionTerrain_snap"/>
+    <addaction name="actionRigid_Body_physics"/>
     <addaction name="separator"/>
     <addaction name="actionParticle_system"/>
     <addaction name="actionWater"/>
@@ -908,6 +909,11 @@
   <action name="actionBSpline_surface">
    <property name="text">
     <string>BSpline surface</string>
+   </property>
+  </action>
+  <action name="actionRigid_Body_physics">
+   <property name="text">
+    <string>Rigid Body physics</string>
    </property>
   </action>
  </widget>

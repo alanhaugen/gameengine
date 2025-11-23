@@ -135,6 +135,7 @@ add_library(Core STATIC
     source/core/components/boxcollider.h source/core/components/boxcollider.cpp
     source/core/components/fpscounter.h source/core/components/fpscounter.cpp
     source/core/x-platform/bsplinecurve.h source/core/x-platform/bsplinecurve.cpp
+    source/core/components/rigidbody.h source/core/components/rigidbody.cpp
 )
 
 target_include_directories(Core PRIVATE "source")

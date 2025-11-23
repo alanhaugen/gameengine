@@ -1,5 +1,6 @@
 #include "rollingball.h"
 #include "core/components/boxcollider.h"
+#include "core/components/rigidbody.h"
 #include "core/components/spherecollider.h"
 #include "core/components/cube.h"
 
@@ -21,8 +22,9 @@ void RollingBall::Init()
     particleSystem->SetPosition(300,300,500);
 
     ball = new GameObject("Ball");
-    ball->AddComponent(new Ball(terrainMesh, "Assets/Textures/orange.jpg"));
+    ball->AddComponent(new Sphere("Assets/Textures/orange.jpg"));
     ball->AddComponent(new SphereCollider(ball));
+    ball->AddComponent(new RigidBody(terrainMesh));
 
     camera.position = glm::vec3(300.f, 300.0f, 500.0f);
 

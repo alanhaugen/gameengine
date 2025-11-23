@@ -1,78 +1,20 @@
 #ifndef ROLLINGBALL_H
 #define ROLLINGBALL_H
 
+#include "core/components/rigidbody.h"
 #include "core/x-platform/scene.h"
 #include "core/components/timer.h"
 #include "core/components/sphere.h"
 #include "core/components/terrain.h"
 #include "core/x-platform/bsplinecurve.h"
 
-// Move this into physics ...
-class Ball : public Component
+class InstancedBall : public Component
 {
 public:
-    Sphere* ballMesh;
     Terrain* terrainMesh;
-    glm::vec3 velocity;
-    glm::vec3 gravity = glm::vec3(0, -0.98, 0);
+    Sphere* ballMesh;
+    RigidBody* rigidBody;
 
-    float acceleration = 1.0f;
-    float mass = 1.0f;
-
-    Ball(Terrain* terrain = nullptr, const char* texture = "")
-    {
-        ballMesh = new Sphere(texture);
-        terrainMesh = terrain;
-    }
-
-    void Update()
-    {
-        glm::vec3 pos;
-
-        if (gameObject)
-        {
-            pos = gameObject->GetPosition();
-            ballMesh->drawable->ubo.model = gameObject->matrix;
-        }
-        else
-        {
-            pos = ballMesh->GetPosition();
-        }
-
-        velocity += terrainMesh->GetNormal(pos) / 500.0f;
-        velocity -= velocity * terrainMesh->GetFriction(pos);// * deltaTime;
-        velocity.y = 0.0f;
-
-        pos += velocity;
-        pos.y = terrainMesh->GetHeightAt(pos) + 1.0f;
-
-        if (glm::length(velocity) > 0.0001f)
-        {
-            glm::vec3 rollVector = glm::normalize(glm::cross(glm::normalize(velocity), terrainMesh->GetNormal(pos)));
-
-            if (glm::length(rollVector) > 0.0001f)
-            {
-                if (gameObject)
-                {
-                    gameObject->Rotate((glm::length(velocity)), rollVector);
-                }
-            }
-        }
-
-        if (gameObject)
-        {
-            gameObject->SetPosition(pos);
-        }
-        else
-        {
-            ballMesh->SetPosition(pos);
-        }
-    }
-};
-
-class InstancedBall : public Ball
-{
-public:
     InstancedBall(Terrain* terrain = nullptr)
     {
         ballMesh = new Sphere(glm::vec3(1.0f),
@@ -80,6 +22,14 @@ public:
                               "shaders/instanced.vert.spv",
                               "shaders/instanced.frag.spv");
         terrainMesh = terrain;
+        rigidBody = new RigidBody(terrain);
+        ballMesh->Hide();
+    }
+
+    void Update()
+    {
+        rigidBody->Update(ballMesh);
+        ballMesh->Update();
     }
 };
 
@@ -106,6 +56,7 @@ public:
     {
         for (int i = 0; i < active.size(); i++)
         {
+            balls[i]->ballMesh->Hide();
             active[i] = false;
         }
     }
@@ -122,6 +73,7 @@ public:
             if (active[i] == false)
             {
                 active[i] = true;
+                balls[i]->ballMesh->Show();
                 float randomNumber1 = rand() % 5;
                 float randomNumber2 = rand() % 5;
                 randomNumber1 -= randomNumber1 / 2;
