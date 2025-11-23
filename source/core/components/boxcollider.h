@@ -10,6 +10,7 @@ public:
 
     BoxCollider(GameObject* inGameObject, int type = Physics::DYNAMIC);
     void Update();
+    bool IsColliding();
 };
 
 #endif // BOXCOLLIDER_H
