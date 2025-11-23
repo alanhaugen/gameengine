@@ -137,6 +137,7 @@ add_library(Core STATIC
     source/core/x-platform/bsplinecurve.h source/core/x-platform/bsplinecurve.cpp
     source/core/components/rigidbody.h source/core/components/rigidbody.cpp
     source/core/components/ballemitter.h source/core/components/ballemitter.cpp
+    source/core/components/trackingspline.h source/core/components/trackingspline.cpp
 )
 
 target_include_directories(Core PRIVATE "source")

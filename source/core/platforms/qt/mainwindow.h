@@ -37,6 +37,8 @@ public:
     void SaveScene();
     void OpenScene();
 
+    bool paused = true;
+
     VulkanRenderer* renderer{nullptr};
 
     Ui::MainWindow *ui = nullptr;
@@ -92,6 +94,10 @@ private:
     void CreateTerrain();
     void CreateWaterEmittor();
     void CreateRigidBody();
+    void CreateTrackingSpline();
+
+    void Pause();
+    void Play();
 
     Terrain* mainTerrain;
 

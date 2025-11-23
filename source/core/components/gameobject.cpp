@@ -30,6 +30,13 @@ void GameObject::AddComponent(Component* newComponent)
     {
         Locator::editor->AddComponent(newComponent->name.c_str(), id);
     }
+
+    VisualObject* visualObject = dynamic_cast<VisualObject*>(newComponent);
+
+    if (visualObject)
+    {
+        visualObject->drawable->ubo.model = matrix;
+    }
 }
 
 void GameObject::Update()

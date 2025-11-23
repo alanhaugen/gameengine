@@ -8,6 +8,7 @@
 #include "core/components/spherecollider.h"
 #include "core/components/terrain.h"
 #include "core/components/text.h"
+#include "core/components/trackingspline.h"
 #include "ui_MainWindow.h"
 #include "systems/renderer/vulkan/vulkanrenderer.h"
 #include "core/components/mesh.h"
@@ -153,6 +154,10 @@ MainWindow::MainWindow(QWidget *parent, const char* windowTitle, int windowWidth
     connect(ui->actionTerrain, &QAction::triggered, this, &MainWindow::CreateTerrain);
     connect(ui->actionWater, &QAction::triggered, this, &MainWindow::CreateWaterEmittor);
     connect(ui->actionRigid_Body_physics, &QAction::triggered, this, &MainWindow::CreateRigidBody);
+    connect(ui->actionTracking_spline, &QAction::triggered, this, &MainWindow::CreateTrackingSpline);
+
+    connect(ui->actionPause, &QAction::triggered, this, &MainWindow::Pause);
+    connect(ui->actionPlay, &QAction::triggered, this, &MainWindow::Play);
 
     //Mesh part
     connect(ui->Mesh_Combo, &QComboBox::currentTextChanged, this,&MainWindow::ChangeMesh);
@@ -262,11 +267,18 @@ void MainWindow::MainGameLoop()
         Cam.camera = &scene->camera;
         Cam.Update();
         scene->camera.Update();
-        scene->Update(deltaTime.TimeSinceStarted());
+
+        if (paused == false)
+        {
+            scene->Update(deltaTime.TimeSinceStarted());
+        }
 
         for (auto* obj : scene->gameObjects)
         {
-            obj->Update();
+            if (paused == false)
+            {
+                obj->Update();
+            }
 
             if (Locator::editor)
             {
@@ -583,6 +595,8 @@ void MainWindow::NewGameObject()
     newObject->wiredCube->Show();
     ObjSelected = newObject;
 
+    newObject->wiredCube->drawable->ubo.model = newObject->matrix;
+
     UpdateInspector();
 }
 
@@ -695,6 +709,26 @@ void MainWindow::CreateRigidBody()
     }
 
     ObjSelected->AddComponent(new RigidBody(mainTerrain));
+}
+
+void MainWindow::CreateTrackingSpline()
+{
+    if (ObjSelected == nullptr)
+    {
+        NewGameObject();
+    }
+
+    ObjSelected->AddComponent(new TrackingSpline);
+}
+
+void MainWindow::Pause()
+{
+    paused = true;
+}
+
+void MainWindow::Play()
+{
+    paused = false;
 }
 
 void MainWindow::AvailableTextures()
