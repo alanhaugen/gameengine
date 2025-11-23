@@ -3,6 +3,8 @@
 
 TrackingSpline::TrackingSpline()
 {
+    name = "Tracking Spline";
+
     sampleTimer.Start();
 }
 

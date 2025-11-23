@@ -432,8 +432,6 @@ void MainWindow::OnLeftClickGameObjectWidget(QTreeWidgetItem *item, int column)
 
     qDebug() << "Left-click detected at" << item;
 
-
-
     // void* ptrToObj = item->data(column,Qt::UserRole).value<void*>();
 
     // QString type = item->data(column,Qt::UserRole+1).toString();
@@ -441,7 +439,6 @@ void MainWindow::OnLeftClickGameObjectWidget(QTreeWidgetItem *item, int column)
     // Component* comp =reinterpret_cast<Component*>(ptrToObj);
 
     // ObjSelected = reinterpret_cast<GameObject*>(ptrToObj);
-
 
     Scene* scene = Services::currentScene;
 
