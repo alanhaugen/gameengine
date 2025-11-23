@@ -1,4 +1,5 @@
 #include "mainwindow.h"
+#include "core/components/ballemitter.h"
 #include "core/components/boxcollider.h"
 #include "core/components/cube.h"
 #include "core/components/fpscamera.h"
@@ -667,7 +668,7 @@ void MainWindow::CreateTerrain()
         NewGameObject();
     }
 
-    mainTerrain = new Terrain("tools/pointconverter/output.png", "Assets/Textures/snow.jpg");
+    mainTerrain = new Terrain("tools/pointconverter/output.png", "Assets/Textures/aerial_rocks_04_diff_1k.jpg");//"Assets/Textures/snow.jpg");
     ObjSelected->AddComponent(mainTerrain);
 }
 
@@ -678,12 +679,11 @@ void MainWindow::CreateWaterEmittor()
         NewGameObject();
     }
 
-    //ObjSelected->AddComponent(new WaterEmittor));
+    ObjSelected->AddComponent(new BallEmitter(mainTerrain));
 }
 
 void MainWindow::CreateRigidBody()
 {
-
     if (ObjSelected == nullptr)
     {
         NewGameObject();

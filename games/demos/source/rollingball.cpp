@@ -1,4 +1,5 @@
 #include "rollingball.h"
+#include "core/components/ballemitter.h"
 #include "core/components/boxcollider.h"
 #include "core/components/rigidbody.h"
 #include "core/components/spherecollider.h"
@@ -17,7 +18,7 @@ void RollingBall::Init()
     terrain->AddComponent(terrainMesh);
 
     particleSystem = new GameObject("Ball Particle Emitter");
-    ballSystem = new BallParticleSystem(terrainMesh);
+    ballSystem = new BallEmitter(terrainMesh);
     particleSystem->AddComponent(ballSystem);
     particleSystem->SetPosition(300,300,500);
 
