@@ -3,6 +3,8 @@
 
 BallEmitter::BallEmitter(Terrain *terrain)
 {
+    name = "Ball Emitter";
+
     for (int i = 0; i < 1500; i++)
     {
         balls.push_back(new InstancedBall(terrain));
