@@ -573,6 +573,10 @@ void MainWindow::AddNewObj(const QString &ObjectName)
 void MainWindow::NewGameObject()
 {
     GameObject* newObject = new GameObject();
+    Camera* camera = &Services::currentScene->camera;
+    newObject->SetPosition(camera->position + (camera->forward * 10.0f));
+    newObject->wiredCube->Show();
+    ObjSelected = newObject;
 }
 
 void MainWindow::OpenComponentSelection()
