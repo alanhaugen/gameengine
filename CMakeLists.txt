@@ -138,6 +138,7 @@ add_library(Core STATIC
     source/core/components/rigidbody.h source/core/components/rigidbody.cpp
     source/core/components/ballemitter.h source/core/components/ballemitter.cpp
     source/core/components/trackingspline.h source/core/components/trackingspline.cpp
+    source/core/components/bsplinesurface.h source/core/components/bsplinesurface.cpp
 )
 
 target_include_directories(Core PRIVATE "source")
