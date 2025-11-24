@@ -95,6 +95,7 @@ private:
     void CreateWaterEmittor();
     void CreateRigidBody();
     void CreateTrackingSpline();
+    void CreateBSplineSurface();
 
     void Pause();
     void Play();

@@ -33,6 +33,7 @@ private:
                                        int my_u, int my_v);
 public :
     BSplineSurface();
+    void Update();
 };
 
 #endif // BSPLINESURFACE_H

@@ -31,7 +31,8 @@ Renderer::Drawable &NullRenderer::CreateDrawable(std::vector<Vertex> vertices,
                                                  const char *fragmentShader,
                                                  const int topology,
                                                  const char* texture,
-                                                 const bool depthTesting)
+                                                 const bool depthTesting,
+                                                 const bool isInstanced)
 {
     Drawable drawable;
     drawables.push_back(drawable);

@@ -18,7 +18,7 @@ public:
         ballMesh = new Sphere(glm::vec3(1.0f),
                               glm::vec3(0.0f / 256.0f, 124.0f / 256.0f, 181.0f / 256.0f),
                               "shaders/instanced.vert.spv",
-                              "shaders/instanced.frag.spv");
+                              "shaders/instanced.frag.spv", true);
         terrainMesh = terrain;
         rigidBody = new RigidBody(terrain);
         ballMesh->Hide();

@@ -111,9 +111,11 @@ Renderer::Drawable& VulkanRenderer::CreateDrawable(std::vector<Vertex> vertices,
                                                    const char* fragmentShader,
                                                    const int topology,
                                                    const char* texture,
-                                                   const bool depthTesting)
+                                                   const bool depthTesting,
+                                                   const bool isInstanced)
 {
     Drawable drawable;
+    drawable.isInstanced = isInstanced;
     drawable.offset = drawablesQuantity;
     drawable.indicesQuantity = indices.size();
     drawable.verticesQuantity = vertices.size();
@@ -130,11 +132,19 @@ Renderer::Drawable& VulkanRenderer::CreateDrawable(std::vector<Vertex> vertices,
         texturesQuantity++;
     }
 
-    createVertexBuffer(vertices, drawable);
-
-    if (indices.empty() == false)
+    if (isInstanced == false || instances == 0)
     {
-        createIndexBuffer(indices, drawable);
+        createVertexBuffer(vertices, drawable);
+
+        if (indices.empty() == false)
+        {
+            createIndexBuffer(indices, drawable);
+        }
+
+        if (isInstanced)
+        {
+            instances++;
+        }
     }
 
     drawables[drawablesQuantity] = drawable;
@@ -1620,12 +1630,14 @@ void VulkanRenderer::Render() {
     // In Vulkan, all of the rendering happens inside a VkRenderPass (NOTE: For Vulkan 1.3, this has changed)
     vkCmdBeginRenderPass(commandBuffers[imageIndex], &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
 
+    bool renderedInstances = false;
+
     // Main render loop. Loop through all drawables and draw/render them
     for (int i = 0; i < drawablesQuantity; i++)
     {
         Drawable& drawable = drawables[i];
 
-        if (drawable.isVisible == false || drawable.verticesQuantity == 0)
+        if (drawable.isVisible == false || drawable.verticesQuantity == 0 || (drawable.isInstanced && renderedInstances))
         {
             continue;
         }
@@ -1654,14 +1666,32 @@ void VulkanRenderer::Render() {
 
         if (drawable.indicesQuantity == 0)
         {
-            vkCmdDraw(commandBuffers[imageIndex], drawable.verticesQuantity, 1, 0, 0);
+            if (drawable.isInstanced)
+            {
+                vkCmdDraw(commandBuffers[imageIndex], drawable.verticesQuantity, 1, instances, 0);
+                renderedInstances = true;
+            }
+            else
+            {
+                vkCmdDraw(commandBuffers[imageIndex], drawable.verticesQuantity, 1, 0, 0);
+            }
         }
         else
         {
-            // Bind index buffer
-            vkCmdBindIndexBuffer(commandBuffers[imageIndex], drawable.indexBuffer, 0, VK_INDEX_TYPE_UINT32);
+            if (drawable.isInstanced)
+            {
+                vkCmdBindIndexBuffer(commandBuffers[imageIndex], drawable.indexBuffer, 0, VK_INDEX_TYPE_UINT32);
 
-            vkCmdDrawIndexed(commandBuffers[imageIndex], static_cast<uint32_t>(drawable.indicesQuantity), 1, 0, 0, 0);
+                vkCmdDrawIndexed(commandBuffers[imageIndex], static_cast<uint32_t>(drawable.indicesQuantity), 1, instances, 0, 0);
+                renderedInstances = true;
+            }
+            else
+            {
+                // Bind index buffer
+                vkCmdBindIndexBuffer(commandBuffers[imageIndex], drawable.indexBuffer, 0, VK_INDEX_TYPE_UINT32);
+
+                vkCmdDrawIndexed(commandBuffers[imageIndex], static_cast<uint32_t>(drawable.indicesQuantity), 1, 0, 0, 0);
+            }
         }
     }
 

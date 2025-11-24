@@ -31,6 +31,8 @@ public:
         bool depthTesting;
     };
 
+    int instances = 0;
+
     std::vector<Pipeline> pipelines;
 
     explicit VulkanRenderer(QWindow* parent = nullptr);
@@ -43,7 +45,8 @@ public:
                              const char* fragmentShader,
                              const int topology = TRIANGLES,
                              const char* texture = "",
-                             const bool depthTesting = true) override;
+                             const bool depthTesting = true,
+                             const bool isInstanced = false) override;
 
     void Render();
 

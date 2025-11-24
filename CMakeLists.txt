@@ -80,6 +80,8 @@ add_library(Core STATIC
     shaders/Shader.frag
     shaders/skinning.vert
     shaders/skinning.frag
+    shaders/instanced.vert
+    shaders/instanced.frag
     source/core/components/camera.cpp
     source/core/components/camera.h
     source/core/components/component.h
@@ -131,14 +133,22 @@ add_library(Core STATIC
     source/core/components/wiredcube.h
     source/core/x-platform/generatedscene.h
     source/core/x-platform/generatedscene.cpp
-    source/core/components/timer.cpp source/core/components/timer.h
-    source/core/components/boxcollider.h source/core/components/boxcollider.cpp
-    source/core/components/fpscounter.h source/core/components/fpscounter.cpp
-    source/core/x-platform/bsplinecurve.h source/core/x-platform/bsplinecurve.cpp
-    source/core/components/rigidbody.h source/core/components/rigidbody.cpp
-    source/core/components/ballemitter.h source/core/components/ballemitter.cpp
-    source/core/components/trackingspline.h source/core/components/trackingspline.cpp
-    source/core/components/bsplinesurface.h source/core/components/bsplinesurface.cpp
+    source/core/components/timer.cpp
+    source/core/components/timer.h
+    source/core/components/boxcollider.h
+    source/core/components/boxcollider.cpp
+    source/core/components/fpscounter.h
+    source/core/components/fpscounter.cpp
+    source/core/x-platform/bsplinecurve.h
+    source/core/x-platform/bsplinecurve.cpp
+    source/core/components/rigidbody.h
+    source/core/components/rigidbody.cpp
+    source/core/components/ballemitter.h
+    source/core/components/ballemitter.cpp
+    source/core/components/trackingspline.h
+    source/core/components/trackingspline.cpp
+    source/core/components/bsplinesurface.h
+    source/core/components/bsplinesurface.cpp
 )
 
 target_include_directories(Core PRIVATE "source")

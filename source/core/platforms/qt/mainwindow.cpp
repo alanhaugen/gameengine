@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "core/components/ballemitter.h"
 #include "core/components/boxcollider.h"
+#include "core/components/bsplinesurface.h"
 #include "core/components/cube.h"
 #include "core/components/fpscamera.h"
 #include "core/components/rigidbody.h"
@@ -155,9 +156,12 @@ MainWindow::MainWindow(QWidget *parent, const char* windowTitle, int windowWidth
     connect(ui->actionWater, &QAction::triggered, this, &MainWindow::CreateWaterEmittor);
     connect(ui->actionRigid_Body_physics, &QAction::triggered, this, &MainWindow::CreateRigidBody);
     connect(ui->actionTracking_spline, &QAction::triggered, this, &MainWindow::CreateTrackingSpline);
+    connect(ui->actionBSpline_surface, &QAction::triggered, this, &MainWindow::CreateBSplineSurface);
 
     connect(ui->actionPause, &QAction::triggered, this, &MainWindow::Pause);
     connect(ui->actionPlay, &QAction::triggered, this, &MainWindow::Play);
+
+    connect(ui->action_Quit, &QAction::triggered, this, &QApplication::quit);
 
     //Mesh part
     connect(ui->Mesh_Combo, &QComboBox::currentTextChanged, this,&MainWindow::ChangeMesh);
@@ -716,6 +720,16 @@ void MainWindow::CreateTrackingSpline()
     }
 
     ObjSelected->AddComponent(new TrackingSpline);
+}
+
+void MainWindow::CreateBSplineSurface()
+{
+    if (ObjSelected == nullptr)
+    {
+        NewGameObject();
+    }
+
+    ObjSelected->AddComponent(new BSplineSurface);
 }
 
 void MainWindow::Pause()

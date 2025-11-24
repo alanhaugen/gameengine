@@ -4,9 +4,9 @@
 // koeffisientene i hver parameter - B2 ma altsa vaere kalt
 glm::vec3 BSplineSurface::evaluateBiquadratic(int m_u, int m_v, glm::vec3 bu, glm::vec3 bv)
 {
-    // i - retning svarer til u
-    // j - retning svarer til v
-    glm::vec3 r { 0.0f , 0.0f , 0.0f } ; // resultat
+    // i-retning svarer til u
+    // j-retning svarer til v
+    glm::vec3 r {0.0f, 0.0f, 0.0f}; // resultat
     float w[3][3];
     // Beregner ytreprodukt:
     // alle b-spline koeffisientene * kontrollpunkt
@@ -81,14 +81,29 @@ BSplineSurface::BSplineSurface()
 {
     name = "BSpline Surface" ;
 
-    n_u = 4 ; n_v = 3 ; d_u = 2 ; d_v = 2 ;
+    n_u = 4;
+    n_v = 3;
+    d_u = 2;
+    d_v = 2;
 
     // Initiate knot vectors
-    mu.push_back(0); mu.push_back(0); mu.push_back(0);
+    mu.push_back(0);
+    mu.push_back(0);
+    mu.push_back(0);
+
     mu.push_back(1);
-    mu.push_back(2); mu.push_back(2); mu.push_back(2);
-    mv.push_back(0); mv.push_back(0); mv.push_back(0);
-    mv.push_back(1); mv.push_back(1); mv.push_back(1);
+
+    mu.push_back(2);
+    mu.push_back(2);
+    mu.push_back(2);
+
+    mv.push_back(0);
+    mv.push_back(0);
+    mv.push_back(0);
+
+    mv.push_back(1);
+    mv.push_back(1);
+    mv.push_back(1);
 
     // Initiate control points
     for (auto i = 0; i < n_u; i++)
@@ -108,4 +123,8 @@ BSplineSurface::BSplineSurface()
 
     // eller legg inn punktene i todimensjonal matrise
     makeBiquadraticSurface();
+}
+
+void BSplineSurface::Update()
+{
 }

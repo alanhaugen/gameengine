@@ -12,6 +12,8 @@ private:
               const char* frag = "shaders/color.frag.spv",
               const char* texture = "");
 
+    bool isInstanced = false;
+
 public:
     Sphere(const char* texture);
     Sphere(float x, float y, float z, glm::vec3 scale = glm::vec3(1.0f));

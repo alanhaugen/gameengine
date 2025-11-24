@@ -18,7 +18,8 @@ public:
                              const char* fragmentShader = "shaders/frag.spv",
                              const int topology = TRIANGLES,
                              const char* texture = "",
-                             const bool depthTesting = true);
+                             const bool depthTesting = true,
+                             const bool isInstanced = false);
 
     void SetViewMatrix(glm::mat4 view);
     void SetCameraPosition(glm::vec3 pos);

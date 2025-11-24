@@ -80,7 +80,7 @@ void Sphere::GenerateUVSphere(const char *vert, const char *frag, const char* te
         }
     }
 
-    drawable = &renderer->CreateDrawable(vertices, indices, vert, frag, Renderer::TRIANGLES, texture);
+    drawable = &renderer->CreateDrawable(vertices, indices, vert, frag, Renderer::TRIANGLES, texture, true, isInstanced);
 }
 
 void Sphere::Init(const char *vert, const char *frag, const char *texture)
@@ -120,6 +120,7 @@ Sphere::Sphere(float x, float y, float z, glm::vec3 scale)
 
 Sphere::Sphere(glm::vec3 scale, glm::vec3 colour, const char* vertShader, const char* fragShader, bool instanced)
 {
+    isInstanced = instanced;
     Init(vertShader, fragShader);
 
     glm::mat4& matrix = drawable->ubo.model;

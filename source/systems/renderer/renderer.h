@@ -57,6 +57,7 @@ public:
 
         bool isVisible  = true;
         bool isTextured = false;
+        bool isInstanced = false;
 
         std::string textureFilePath;
         int textureId;
@@ -75,7 +76,8 @@ public:
                                      const char* fragmentShader = "shaders/frag.spv",
                                      const int topology = TRIANGLES,
                                      const char* texture = "",
-                                     const bool depthTesting = true) = 0;
+                                     const bool depthTesting = true,
+                                     const bool isInstanced = false) = 0;
 
     virtual void SetViewMatrix(glm::mat4 view) = 0;
     virtual void SetCameraPosition(glm::vec3 pos) = 0;
