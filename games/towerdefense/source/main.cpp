@@ -10,7 +10,7 @@ int main(int argumentQuantity, char *argumentArray[])
 {
     Application application(argumentQuantity, argumentArray, "Tower Defense", 640, 480);
     application.AddScene(new Splash);
-    application.AddScene(new PhysicsTest);
+    //application.AddScene(new PhysicsTest);
     application.AddScene(new MainMenu);
     application.AddScene(new Game);
     application.AddScene(new Victory);

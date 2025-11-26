@@ -37,7 +37,7 @@ public:
     void SaveScene();
     void OpenScene();
 
-    bool paused = true;
+    bool paused = false;
 
     VulkanRenderer* renderer{nullptr};
 

@@ -1,4 +1,5 @@
 #include <core/platforms/application.h>
+#include <iostream>
 #include "splash.h"
 
 void Splash::Init()
@@ -10,7 +11,7 @@ void Splash::Init()
     float posX = renderer->windowWidth / 2 - sprite->drawable->textureWidth / 2;
     float posY = renderer->windowHeight / 2 - sprite->drawable->textureHeight / 2;
 
-    logo->SetPosition(glm::vec3(posX,posY,0));
+    logo->SetPosition(glm::vec3(posX, posY, 0));
 
     renderer->SetClearColor(1,1,1);
     audio->PlaySound("Assets/Sounds/brick-hit-2.wav");
