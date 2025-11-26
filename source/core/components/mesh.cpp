@@ -39,7 +39,6 @@ void Mesh::loadMesh(const char *filePath, const char *vertexShaderPath, const ch
         exit(0);
     }
 
-
     if(texture.empty())
     {
         if (materials.size() > 0)
@@ -51,8 +50,6 @@ void Mesh::loadMesh(const char *filePath, const char *vertexShaderPath, const ch
             //texture = "Assets/Textures/pink.jpg";
         }
     }
-
-
 
     std::unordered_map<Vertex, uint32_t> uniqueVertices{};
 
@@ -73,11 +70,14 @@ void Mesh::loadMesh(const char *filePath, const char *vertexShaderPath, const ch
 
             vertex.color = {0.0f, 0.0f, 0.0f};
 
-            vertex.normal = {
-                 attrib.normals[3 * index.vertex_index + 0],
-                 attrib.normals[3 * index.vertex_index + 1],
-                 attrib.normals[3 * index.vertex_index + 2]
-            };
+            if (attrib.normals.empty() == false)
+            {
+                vertex.normal = {
+                     attrib.normals[3 * index.normal_index + 0],
+                     attrib.normals[3 * index.normal_index + 1],
+                     attrib.normals[3 * index.normal_index + 2]
+                };
+            }
 
             if (uniqueVertices.count(vertex) == 0) {
                 uniqueVertices[vertex] = static_cast<uint32_t>(vertices.size());

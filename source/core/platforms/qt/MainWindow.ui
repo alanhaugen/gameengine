@@ -503,6 +503,9 @@
     <addaction name="actionShoot_mechanic"/>
     <addaction name="actionDie_mechanic"/>
     <addaction name="separator"/>
+    <addaction name="actionSun"/>
+    <addaction name="actionPoint_light"/>
+    <addaction name="actionSpot_light"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
@@ -920,6 +923,21 @@
   <action name="actionTracking_spline">
    <property name="text">
     <string>Tracking spline</string>
+   </property>
+  </action>
+  <action name="actionSun">
+   <property name="text">
+    <string>Sun</string>
+   </property>
+  </action>
+  <action name="actionPoint_light">
+   <property name="text">
+    <string>Point light</string>
+   </property>
+  </action>
+  <action name="actionSpot_light">
+   <property name="text">
+    <string>Spot light</string>
    </property>
   </action>
  </widget>
