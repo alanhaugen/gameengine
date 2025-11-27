@@ -6,6 +6,10 @@
 #define TINYOBJLOADER_IMPLEMENTATION
 #include "tiny_obj_loader.h"
 
+#define TINYGLTF_IMPLEMENTATION
+#define TINYGLTF_NO_STB_IMAGE_WRITE
+#include "tiny_gltf.h"
+
 #include <unordered_map>
 
 Mesh::Mesh(const char *filePath,
@@ -14,7 +18,14 @@ Mesh::Mesh(const char *filePath,
 {
     name = "Mesh";
 
-    loadMesh(filePath, vertexShaderPath, fragmentShaderPath);
+    if (GetFileExtension(filePath) == "obj")
+    {
+        loadMesh(filePath, vertexShaderPath, fragmentShaderPath);
+    }
+    if (GetFileExtension(filePath) == "glb")
+    {
+        loadMeshGLTF(filePath, vertexShaderPath, fragmentShaderPath);
+    }
 }
 
 void Mesh::loadMesh(const char *filePath, const char *vertexShaderPath, const char *fragmentShaderPath)
@@ -91,10 +102,55 @@ void Mesh::loadMesh(const char *filePath, const char *vertexShaderPath, const ch
     drawable = &renderer->CreateDrawable(vertices, indices, vertexShaderPath, fragmentShaderPath, Renderer::TRIANGLES, texture.c_str());
 }
 
+void Mesh::loadMeshGLTF(const char *filePath, const char *vertexShaderPath, const char *fragmentShaderPath)
+{
+    tinygltf::Model model;
+    tinygltf::TinyGLTF loader;
+    std::string err;
+    std::string warn;
+
+    bool res = loader.LoadBinaryFromFile(&model, &err, &warn, filePath);
+
+    if (!err.empty())
+    {
+        LogWarning(err);
+    }
+
+    if (!warn.empty())
+    {
+        LogWarning(warn);
+    }
+
+    if (res == false)
+    {
+        LogError("Failed to load mesh");
+        exit(0);
+    }
+
+    const tinygltf::Scene &scene = model.scenes[model.defaultScene];
+
+    for (size_t i = 0; i < scene.nodes.size(); ++i)
+    {
+        tinygltf::Node node = model.nodes[scene.nodes[i]];
+
+        if ((node.mesh >= 0) && (node.mesh < model.meshes.size()))
+        {
+            //bindMesh(vbos, model, model.meshes[node.mesh]);
+        }
+    }
+}
+
 void Mesh::Update()
 {
     if (gameObject)
     {
         drawable->ubo.model = gameObject->matrix;
     }
+}
+
+std::string Mesh::GetFileExtension(const char *string)
+{
+    std::string stdString = std::string(string);
+
+    return stdString.substr(stdString.length() - 3);
 }

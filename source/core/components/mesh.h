@@ -10,14 +10,15 @@ public:
          const char* vertexShaderPath = "shaders/phong.vert.spv",
          const char* fragmentShaderPath = "shaders/phong.frag.spv");
 
-     //loads mesh
     void loadMesh(const char* filePath,
+                   const char* vertexShaderPath = "shaders/phong.vert.spv",
+                   const char* fragmentShaderPath = "shaders/phong.frag.spv");
+    void loadMeshGLTF(const char* filePath,
                    const char* vertexShaderPath = "shaders/phong.vert.spv",
                    const char* fragmentShaderPath = "shaders/phong.frag.spv");
     void Update() override;
 
    std::string texture = "";
 
-
-
+   std::string GetFileExtension(const char* string);
 };
