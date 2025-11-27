@@ -480,6 +480,8 @@
       <string>Light</string>
      </property>
      <addaction name="actionDirectoinal_light"/>
+     <addaction name="actionSpot_Light"/>
+     <addaction name="actionPoint_light"/>
     </widget>
     <widget class="QMenu" name="menuAudio">
      <property name="title">
@@ -487,6 +489,13 @@
      </property>
      <addaction name="actionAudio_clip_2"/>
      <addaction name="actionBackground_Music"/>
+    </widget>
+    <widget class="QMenu" name="menuMechanics">
+     <property name="title">
+      <string>Mechanics</string>
+     </property>
+     <addaction name="actionDie_mechanic"/>
+     <addaction name="actionShoot_mechanic_2"/>
     </widget>
     <addaction name="actionCube_2"/>
     <addaction name="actionSphere_2"/>
@@ -518,8 +527,7 @@
     <addaction name="separator"/>
     <addaction name="actionChase_AI"/>
     <addaction name="separator"/>
-    <addaction name="actionShoot_mechanic"/>
-    <addaction name="actionDie_mechanic"/>
+    <addaction name="menuMechanics"/>
     <addaction name="separator"/>
     <addaction name="menuLight"/>
     <addaction name="separator"/>
@@ -875,22 +883,12 @@
   </action>
   <action name="actionLua_script">
    <property name="text">
-    <string>Lua script</string>
+    <string>Lua scripts</string>
    </property>
   </action>
   <action name="actionFPS_counter">
    <property name="text">
     <string>FPS counter</string>
-   </property>
-  </action>
-  <action name="actionShoot_mechanic">
-   <property name="text">
-    <string>Shoot mechanic</string>
-   </property>
-  </action>
-  <action name="actionDie_mechanic">
-   <property name="text">
-    <string>Die mechanic</string>
    </property>
   </action>
   <action name="actionScene_order">
@@ -935,7 +933,7 @@
   </action>
   <action name="actionDirectoinal_light">
    <property name="text">
-    <string>Directoinal light</string>
+    <string>Directional light</string>
    </property>
   </action>
   <action name="actionFirst_Person_View_Camera">
@@ -951,6 +949,26 @@
   <action name="actionBackground_Music">
    <property name="text">
     <string>Background Music</string>
+   </property>
+  </action>
+  <action name="actionSpot_Light">
+   <property name="text">
+    <string>Spot light</string>
+   </property>
+  </action>
+  <action name="actionPoint_light">
+   <property name="text">
+    <string>Point light</string>
+   </property>
+  </action>
+  <action name="actionDie_mechanic">
+   <property name="text">
+    <string>Die mechanic</string>
+   </property>
+  </action>
+  <action name="actionShoot_mechanic_2">
+   <property name="text">
+    <string>Shoot mechanic</string>
    </property>
   </action>
  </widget>

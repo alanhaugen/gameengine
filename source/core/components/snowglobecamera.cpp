@@ -5,6 +5,7 @@
 
 SnowGlobeCamera::SnowGlobeCamera(Camera* camera)
 {
+    name = "Snow Globe Camera";
     mainCamera = camera;
 }
 

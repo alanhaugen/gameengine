@@ -150,6 +150,7 @@ add_library(Core STATIC
     source/core/components/bsplinesurface.h
     source/core/components/bsplinesurface.cpp
     source/core/components/snowglobecamera.h source/core/components/snowglobecamera.cpp
+    source/core/components/terrainsnap.h source/core/components/terrainsnap.cpp
 )
 
 target_include_directories(Core PRIVATE "source")

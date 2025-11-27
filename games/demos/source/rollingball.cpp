@@ -4,19 +4,21 @@
 #include "core/components/rigidbody.h"
 #include "core/components/spherecollider.h"
 #include "core/components/cube.h"
+#include "core/components/terrainsnap.h"
 #include "core/components/trackingspline.h"
 
 void RollingBall::Init()
 {
-    cube = new GameObject("Cube");
-    cube->AddComponent(new Cube);
-    cube->AddComponent(new BoxCollider(cube, Physics::STATIC));
-    cube->SetPosition(320, 0, 500);
-
     terrain = new GameObject("Terrain");
     //terrainMeshPoints = new Terrain("Assets/PointClouds/snoehetta/output_smallest.txt", true);//("Assets/blurred.png", "Assets/Textures/forrest_ground_01_diff_1k.jpg");//("Assets/terrain.png");
     terrainMesh = new Terrain("tools/pointconverter/output.png", "Assets/Textures/snow.jpg");//("Assets/blurred.png", "Assets/Textures/forrest_ground_01_diff_1k.jpg");//("Assets/terrain.png");
     terrain->AddComponent(terrainMesh);
+
+    cube = new GameObject("Cube");
+    cube->AddComponent(new Cube);
+    cube->AddComponent(new BoxCollider(cube, Physics::STATIC));
+    cube->AddComponent(new TerrainSnap(terrainMesh));
+    cube->SetPosition(320, 0, 500);
 
     particleSystem = new GameObject("Ball Particle Emitter");
     ballSystem = new BallEmitter(terrainMesh);
@@ -35,10 +37,6 @@ void RollingBall::Init()
 void RollingBall::Update(float deltaTime)
 {
     particleSystem->Update();
-
-    cube->SetPosition(cube->GetPosition().x,
-                      terrainMesh->GetHeightAt(cube->GetPosition()),
-                      cube->GetPosition().z);
 
     if (input.Held(input.Key.R))
     {
