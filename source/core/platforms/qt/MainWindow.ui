@@ -468,6 +468,26 @@
     <property name="title">
      <string>Component</string>
     </property>
+    <widget class="QMenu" name="menuCamera">
+     <property name="title">
+      <string>Camera</string>
+     </property>
+     <addaction name="actionSnow_Globe_Camera"/>
+     <addaction name="actionFirst_Person_View_Camera"/>
+    </widget>
+    <widget class="QMenu" name="menuLight">
+     <property name="title">
+      <string>Light</string>
+     </property>
+     <addaction name="actionDirectoinal_light"/>
+    </widget>
+    <widget class="QMenu" name="menuAudio">
+     <property name="title">
+      <string>Audio</string>
+     </property>
+     <addaction name="actionAudio_clip_2"/>
+     <addaction name="actionBackground_Music"/>
+    </widget>
     <addaction name="actionCube_2"/>
     <addaction name="actionSphere_2"/>
     <addaction name="actionMesh"/>
@@ -485,8 +505,7 @@
     <addaction name="actionParticle_system"/>
     <addaction name="actionWater"/>
     <addaction name="separator"/>
-    <addaction name="actionAudio_clip"/>
-    <addaction name="actionMusic"/>
+    <addaction name="menuAudio"/>
     <addaction name="separator"/>
     <addaction name="actionBSpline_curve"/>
     <addaction name="actionBSpline_surface"/>
@@ -499,13 +518,12 @@
     <addaction name="separator"/>
     <addaction name="actionChase_AI"/>
     <addaction name="separator"/>
-    <addaction name="actionFPV_Camera"/>
     <addaction name="actionShoot_mechanic"/>
     <addaction name="actionDie_mechanic"/>
     <addaction name="separator"/>
-    <addaction name="actionSun"/>
-    <addaction name="actionPoint_light"/>
-    <addaction name="actionSpot_light"/>
+    <addaction name="menuLight"/>
+    <addaction name="separator"/>
+    <addaction name="menuCamera"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
@@ -835,16 +853,6 @@
     <string>Water emitter</string>
    </property>
   </action>
-  <action name="actionAudio_clip">
-   <property name="text">
-    <string>Audio clip</string>
-   </property>
-  </action>
-  <action name="actionMusic">
-   <property name="text">
-    <string>Music</string>
-   </property>
-  </action>
   <action name="actionBSpline_curve">
    <property name="text">
     <string>BSpline curve</string>
@@ -873,11 +881,6 @@
   <action name="actionFPS_counter">
    <property name="text">
     <string>FPS counter</string>
-   </property>
-  </action>
-  <action name="actionFPV_Camera">
-   <property name="text">
-    <string>FPV camera</string>
    </property>
   </action>
   <action name="actionShoot_mechanic">
@@ -925,19 +928,29 @@
     <string>Tracking spline</string>
    </property>
   </action>
-  <action name="actionSun">
+  <action name="actionSnow_Globe_Camera">
    <property name="text">
-    <string>Sun</string>
+    <string>Snow Globe Camera</string>
    </property>
   </action>
-  <action name="actionPoint_light">
+  <action name="actionDirectoinal_light">
    <property name="text">
-    <string>Point light</string>
+    <string>Directoinal light</string>
    </property>
   </action>
-  <action name="actionSpot_light">
+  <action name="actionFirst_Person_View_Camera">
    <property name="text">
-    <string>Spot light</string>
+    <string>First Person View Camera</string>
+   </property>
+  </action>
+  <action name="actionAudio_clip_2">
+   <property name="text">
+    <string>Audio clip</string>
+   </property>
+  </action>
+  <action name="actionBackground_Music">
+   <property name="text">
+    <string>Background Music</string>
    </property>
   </action>
  </widget>

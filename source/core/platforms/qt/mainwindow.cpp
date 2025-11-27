@@ -3,7 +3,7 @@
 #include "core/components/boxcollider.h"
 #include "core/components/bsplinesurface.h"
 #include "core/components/cube.h"
-#include "core/components/fpscamera.h"
+#include "core/components/fpvcamera.h"
 #include "core/components/rigidbody.h"
 #include "core/components/sphere.h"
 #include "core/components/spherecollider.h"

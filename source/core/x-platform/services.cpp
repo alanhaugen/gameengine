@@ -1,5 +1,5 @@
 #include "services.h"
-#include "core/components/fpscamera.h"
+#include "core/components/fpvcamera.h"
 
 Scene* Services::currentScene = nullptr;
 std::vector<Scene*> Services::scenes;

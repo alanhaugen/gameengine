@@ -27,8 +27,5 @@ void QtApplication::Quit()
 
 int QtApplication::Run()
 {
-    Scene* scene = Services::currentScene;
-    if(!scene){qDebug()<<"cookiesbool";}
-    new FPSCamera(&scene->camera);
     return a.exec();
 }

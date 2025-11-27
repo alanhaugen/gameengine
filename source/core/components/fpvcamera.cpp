@@ -1,12 +1,12 @@
-#include "fpscamera.h"
+#include "fpvcamera.h"
 
-FPSCamera::FPSCamera(Camera* innCamera)
+FPVCamera::FPVCamera(Camera* innCamera)
 {
     name = "FPS Camera";
     camera = innCamera;
 }
 
-void FPSCamera::Update()
+void FPVCamera::Update()
 {
     UpdateCamera();
 
@@ -36,7 +36,7 @@ void FPSCamera::Update()
     }
 }
 
-void FPSCamera::UpdateCamera()
+void FPVCamera::UpdateCamera()
 {
     if (camera->pitch > 89.0f)
     {

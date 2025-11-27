@@ -1,13 +1,13 @@
-#ifndef FPSCAMERA_H
-#define FPSCAMERA_H
+#ifndef FPVCAMERA_H
+#define FPVCAMERA_H
 
 #include "component.h"
 #include "camera.h"
 
-class FPSCamera : public Component
+class FPVCamera : public Component
 {
 public:
-    FPSCamera(Camera* camera = nullptr);
+    FPVCamera(Camera* camera = nullptr);
     void Update();
 
     void UpdateCamera();
@@ -15,4 +15,4 @@ public:
     Camera* camera;
 };
 
-#endif // FPSCAMERA_H
+#endif // FPVCAMERA_H

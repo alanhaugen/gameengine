@@ -87,8 +87,8 @@ add_library(Core STATIC
     source/core/components/component.h
     source/core/components/cube.cpp
     source/core/components/cube.h
-    source/core/components/fpscamera.cpp
-    source/core/components/fpscamera.h
+    source/core/components/fpvcamera.cpp
+    source/core/components/fpvcamera.h
     source/core/components/gameobject.cpp
     source/core/components/gameobject.h
     source/core/components/gameobject.cpp
@@ -149,6 +149,7 @@ add_library(Core STATIC
     source/core/components/trackingspline.cpp
     source/core/components/bsplinesurface.h
     source/core/components/bsplinesurface.cpp
+    source/core/components/snowglobecamera.h source/core/components/snowglobecamera.cpp
 )
 
 target_include_directories(Core PRIVATE "source")

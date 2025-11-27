@@ -3,7 +3,7 @@
 #include "core/components/cube.h"
 #include "core/components/wiredcube.h"
 #include "core/components/spherecollider.h"
-#include "core/components/fpscamera.h"
+#include "core/components/fpvcamera.h"
 #include <fstream>
 
 GeneratedScene::GeneratedScene(std::string fileName)
@@ -39,7 +39,7 @@ void GeneratedScene::Init()
             }
             else if (type == "FPS Camera")
             {
-                newObj->AddComponent(new FPSCamera(&camera));
+                newObj->AddComponent(new FPVCamera(&camera));
             }
             else if (type == "Cube")
             {
