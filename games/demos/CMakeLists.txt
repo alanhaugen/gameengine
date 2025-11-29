@@ -40,5 +40,23 @@ target_link_libraries(Demos PRIVATE
     QtMultimediaAudio
 )
 
+add_custom_command(
+    TARGET Demos
+    POST_BUILD # Executes after the target is built
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+            "${CMAKE_SOURCE_DIR}/Assets" # Source directory
+            "$<TARGET_FILE_DIR:Demos>/Assets" # Destination directory
+    COMMENT "Copying assets to Demos's build directory"
+)
+
+add_custom_command(
+    TARGET Demos
+    POST_BUILD # Executes after the target is built
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+            "${CMAKE_SOURCE_DIR}/Shaders" # Source directory
+            "$<TARGET_FILE_DIR:Demos>/Shaders" # Destination directory
+    COMMENT "Copying shaders to Demos's build directory"
+)
+
 target_include_directories(Demos PRIVATE "../../source")
 target_include_directories(Demos PRIVATE "../../include")

@@ -60,6 +60,7 @@ add_subdirectory(source/systems/renderer/opengl)
 add_subdirectory(games/demos)
 add_subdirectory(games/rpg)
 add_subdirectory(games/towerdefense)
+add_subdirectory(games/ballgame)
 
 find_package(Qt6 REQUIRED COMPONENTS Core Widgets Multimedia)
 

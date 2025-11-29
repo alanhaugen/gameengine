@@ -28,5 +28,23 @@ target_link_libraries(BallGame PRIVATE
     QtMultimediaAudio
 )
 
+add_custom_command(
+    TARGET BallGame
+    POST_BUILD # Executes after the target is built
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+            "${CMAKE_SOURCE_DIR}/Assets" # Source directory
+            "$<TARGET_FILE_DIR:BallGame>/Assets" # Destination directory
+    COMMENT "Copying assets to BallGame's build directory"
+)
+
+add_custom_command(
+    TARGET BallGame
+    POST_BUILD # Executes after the target is built
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+            "${CMAKE_SOURCE_DIR}/Shaders" # Source directory
+            "$<TARGET_FILE_DIR:BallGame>/Shaders" # Destination directory
+    COMMENT "Copying shaders to BallGame's build directory"
+)
+
 target_include_directories(BallGame PRIVATE "../../source")
 target_include_directories(BallGame PRIVATE "../../include")

@@ -39,5 +39,23 @@ target_link_libraries(TowerDefense PRIVATE
     QtMultimediaAudio
 )
 
+add_custom_command(
+    TARGET TowerDefense
+    POST_BUILD # Executes after the target is built
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+            "${CMAKE_SOURCE_DIR}/Assets" # Source directory
+            "$<TARGET_FILE_DIR:TowerDefense>/Assets" # Destination directory
+    COMMENT "Copying assets to TowerDefense's build directory"
+)
+
+add_custom_command(
+    TARGET TowerDefense
+    POST_BUILD # Executes after the target is built
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+            "${CMAKE_SOURCE_DIR}/Shaders" # Source directory
+            "$<TARGET_FILE_DIR:TowerDefense>/Shaders" # Destination directory
+    COMMENT "Copying shaders to TowerDefense's build directory"
+)
+
 target_include_directories(TowerDefense PRIVATE "../../source")
 target_include_directories(TowerDefense PRIVATE "../../include")

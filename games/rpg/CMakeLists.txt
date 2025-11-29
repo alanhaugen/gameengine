@@ -28,5 +28,23 @@ target_link_libraries(RPG PRIVATE
     QtMultimediaAudio
 )
 
+add_custom_command(
+    TARGET RPG
+    POST_BUILD # Executes after the target is built
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+            "${CMAKE_SOURCE_DIR}/Assets" # Source directory
+            "$<TARGET_FILE_DIR:RPG>/Assets" # Destination directory
+    COMMENT "Copying assets to RPG's build directory"
+)
+
+add_custom_command(
+    TARGET RPG
+    POST_BUILD # Executes after the target is built
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+            "${CMAKE_SOURCE_DIR}/Shaders" # Source directory
+            "$<TARGET_FILE_DIR:RPG>/Shaders" # Destination directory
+    COMMENT "Copying shaders to RPG's build directory"
+)
+
 target_include_directories(RPG PRIVATE "../../source")
 target_include_directories(RPG PRIVATE "../../include")
