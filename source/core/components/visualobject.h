@@ -26,25 +26,21 @@ public:
     void Scale(float scale_)
     {
         glm::vec3 scale(scale_);
-        //drawable->ubo.model = glm::scale(drawable->ubo.model, glm::vec3(scale));
         renderer->Scale(drawable, scale);
     }
 
     void Scale(glm::vec3 scale)
     {
-        //drawable->ubo.model = glm::scale(drawable->ubo.model, glm::vec3(scale));
         renderer->Scale(drawable, scale);
     }
 
     void Rotate(float radians, glm::vec3 rotation)
     {
         renderer->Rotate(drawable, radians, rotation);
-        //drawable->ubo.model = glm::rotate(drawable->ubo.model, radians, rotation);
     }
 
     void Translate(glm::vec3 translation)
     {
-        //drawable->ubo.model = glm::translate(drawable->ubo.model, translation);
         renderer->Translate(drawable, translation);
     }
 
@@ -52,7 +48,6 @@ public:
     {
         glm::vec3 translation(x, y, z);
         renderer->Translate(drawable, translation);
-        //drawable->ubo.model = glm::translate(drawable->ubo.model, translation);
     }
 
     void Show()

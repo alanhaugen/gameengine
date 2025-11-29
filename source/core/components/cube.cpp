@@ -67,6 +67,5 @@ void Cube::Update()
     if (gameObject)
     {
         renderer->SetModel(drawable, gameObject->matrix);
-        //drawable->ubo.model = gameObject->matrix;
     }
 }

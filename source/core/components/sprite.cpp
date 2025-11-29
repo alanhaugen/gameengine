@@ -53,15 +53,11 @@ Sprite::Sprite(const char* texture, float x, float y, float scaleX, float scaleY
 
     if (width == 0 && height == 0)
     {
-        //drawable->ubo.width.x  = drawable->textureWidth;
-        //drawable->ubo.height.x = drawable->textureHeight;
         renderer->SetWidth(drawable, renderer->GetTextureWidth(drawable));
         renderer->SetHeight(drawable, renderer->GetTextureHeight(drawable));
     }
     else
     {
-        //drawable->ubo.width.x  = width;
-        //drawable->ubo.height.x = height;
         renderer->SetWidth(drawable, width);
         renderer->SetHeight(drawable, height);
     }
@@ -72,22 +68,14 @@ Sprite::Sprite(const char* texture, float x, float y, float scaleX, float scaleY
     renderer->SetFlipY(drawable, 0.0f);
     renderer->SetScaleX(drawable, scaleX);
     renderer->SetScaleY(drawable, scaleY);
-    //drawable->ubo.totalWidth.x = drawable->textureWidth;
-    //drawable->ubo.totalHeight.x = drawable->textureHeight;
-    //drawable->ubo.flip.x = 0.0f;
-    //drawable->ubo.flipVertical.x = 0.0f;
-    //drawable->ubo.scaleX.x = scaleX;
-    //drawable->ubo.scaleY.x = scaleY;
 
     renderer->Translate(drawable, glm::vec3(x, y, 0));
-    //drawable->ubo.model = glm::translate(drawable->ubo.model, glm::vec3(x,y,0));
 }
 
 void Sprite::Update()
 {
     if (gameObject)
     {
-        //drawable->ubo.model = gameObject->matrix;
         renderer->SetModel(drawable, gameObject->matrix);
     }
 }

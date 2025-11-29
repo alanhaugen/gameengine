@@ -22,6 +22,39 @@ public:
     void Init() override;
     void Update() override;
 
+    void SetModel(int index, glm::mat4 model) override;
+    void SetColour(int index, glm::vec4 colour) override;
+    void SetPosition(int index, glm::vec3 pos) override;
+    glm::vec3 GetPosition(int index) override;
+    void Scale(int index, glm::vec3 scale) override;
+    void Rotate(int index, float angle, glm::vec3 axis) override;
+    void Translate(int index, glm::vec3 translation) override;
+    void Show(int index) override;
+    void Hide(int index) override;
+    void SetWidth(int index, float width) override;
+    float GetWidth(int index) override;
+    void SetHeight(int index, float height) override;
+    float GetHeight(int index) override;
+    void SetTotalTextureWidth(int index, float textureWidth) override;
+    float GetTotalTextureWidth(int index) override;
+    void SetTotalTextureHeight(int index, float textureHeight) override;
+    float GetTotalTextureHeight(int index) override;
+    void SetTextureWidth(int index, float textureWidth) override;
+    float GetTextureWidth(int index) override;
+    void SetTextureHeight(int index, float textureHeight) override;
+    float GetTextureHeight(int index) override;
+    void SetScaleX(int index, float scaleX) override;
+    float GetScaleX(int index) override;
+    void SetScaleY(int index, float scaleY) override;
+    float GetScaleY(int index) override;
+    void SetFlipX(int index, float flipX) override;
+    float GetFlipX(int index) override;
+    void SetFlipY(int index, float flipY) override;
+    float GetFlipY(int index) override;
+    void SetSpriteSheetFrameIndex(int drawable, float index) override;
+    int GetSpriteSheetFrameIndex(int drawable) override;
+    bool isVisible(int index) override;
+
     struct Pipeline
     {
         VkPipeline pipeline;

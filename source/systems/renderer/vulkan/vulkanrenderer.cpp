@@ -44,6 +44,168 @@ void VulkanRenderer::Update()
     Render();
 }
 
+void VulkanRenderer::SetModel(int index, glm::mat4 model)
+{
+    drawables[index].ubo.model = model;
+}
+
+void VulkanRenderer::SetColour(int index, glm::vec4 colour)
+{
+    drawables[index].ubo.colour = colour;
+}
+
+void VulkanRenderer::SetPosition(int index, glm::vec3 pos)
+{
+    drawables[index].ubo.model[3] = glm::vec4(pos, 1);
+}
+
+glm::vec3 VulkanRenderer::GetPosition(int index)
+{
+    glm::vec3 pos = glm::vec3(drawables[index].ubo.model[3].x, drawables[index].ubo.model[3].y, drawables[index].ubo.model[3].z);
+
+    return pos;
+}
+
+void VulkanRenderer::Scale(int index, glm::vec3 scale)
+{
+    drawables[index].ubo.model = glm::scale(drawables[index].ubo.model, glm::vec3(scale));
+}
+
+void VulkanRenderer::Rotate(int index, float angle, glm::vec3 axis)
+{
+    drawables[index].ubo.model = glm::rotate(drawables[index].ubo.model, angle, axis);
+}
+
+void VulkanRenderer::Translate(int index, glm::vec3 translation)
+{
+    drawables[index].ubo.model = glm::translate(drawables[index].ubo.model, translation);
+}
+
+void VulkanRenderer::Show(int index)
+{
+    drawables[index].isVisible = true;
+}
+
+void VulkanRenderer::Hide(int index)
+{
+    drawables[index].isVisible = false;
+}
+
+void VulkanRenderer::SetWidth(int index, float width)
+{
+    drawables[index].ubo.width.x = width;
+}
+
+float VulkanRenderer::GetWidth(int index)
+{
+    return drawables[index].ubo.width.x;
+}
+
+void VulkanRenderer::SetHeight(int index, float height)
+{
+    drawables[index].ubo.height.x = height;
+}
+
+float VulkanRenderer::GetHeight(int index)
+{
+    return drawables[index].ubo.height.x;
+}
+
+void VulkanRenderer::SetTotalTextureWidth(int index, float textureWidth)
+{
+    drawables[index].ubo.totalWidth.x = textureWidth;
+}
+
+float VulkanRenderer::GetTotalTextureWidth(int index)
+{
+    return drawables[index].ubo.totalWidth.x;
+}
+
+void VulkanRenderer::SetTotalTextureHeight(int index, float textureHeight)
+{
+    drawables[index].ubo.totalHeight.x = textureHeight;
+}
+
+float VulkanRenderer::GetTotalTextureHeight(int index)
+{
+    return drawables[index].ubo.totalHeight.x;
+}
+
+void VulkanRenderer::SetTextureWidth(int index, float textureWidth)
+{
+    drawables[index].textureWidth = textureWidth;
+}
+
+float VulkanRenderer::GetTextureWidth(int index)
+{
+    return drawables[index].textureWidth;
+}
+
+void VulkanRenderer::SetTextureHeight(int index, float textureHeight)
+{
+    drawables[index].textureHeight = textureHeight;
+}
+
+float VulkanRenderer::GetTextureHeight(int index)
+{
+    return drawables[index].textureHeight;
+}
+
+void VulkanRenderer::SetScaleX(int index, float scaleX)
+{
+    drawables[index].ubo.scaleX.x = scaleX;
+}
+
+float VulkanRenderer::GetScaleX(int index)
+{
+    return drawables[index].ubo.scaleX.x;
+}
+
+void VulkanRenderer::SetScaleY(int index, float scaleY)
+{
+    drawables[index].ubo.scaleY.x = scaleY;
+}
+
+float VulkanRenderer::GetScaleY(int index)
+{
+    return drawables[index].ubo.scaleY.x;
+}
+
+void VulkanRenderer::SetFlipX(int index, float flipX)
+{
+    drawables[index].ubo.flip.x = flipX;
+}
+
+float VulkanRenderer::GetFlipX(int index)
+{
+    return drawables[index].ubo.flip.x;
+}
+
+void VulkanRenderer::SetFlipY(int index, float flipY)
+{
+    drawables[index].ubo.flipVertical.x = flipY;
+}
+
+float VulkanRenderer::GetFlipY(int index)
+{
+    return drawables[index].ubo.flipVertical.x;
+}
+
+void VulkanRenderer::SetSpriteSheetFrameIndex(int drawable, float index)
+{
+    drawables[drawable].ubo.index.x = index;
+}
+
+int VulkanRenderer::GetSpriteSheetFrameIndex(int drawable)
+{
+    return drawables[drawable].ubo.index.x;
+}
+
+bool VulkanRenderer::isVisible(int index)
+{
+    return drawables[index].isVisible;
+}
+
 VulkanRenderer::VulkanRenderer(QWindow* parent)
 {
     setSurfaceType(QWindow::VulkanSurface);		// Seems to be important to get this to work

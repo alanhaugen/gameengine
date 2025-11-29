@@ -103,7 +103,6 @@ Sphere::Sphere(const char* texture)
 
     if (texture[0] == '\0')
     {
-        //drawable->ubo.colour = glm::vec4(1.0f); // white
         renderer->SetColour(drawable, glm::vec4(1.0f));
     }
 }
@@ -129,7 +128,6 @@ void Sphere::Update()
 {
     if (gameObject)
     {
-        //drawable->ubo.model = gameObject->matrix;
         renderer->SetModel(drawable, gameObject->matrix);
     }
 }
