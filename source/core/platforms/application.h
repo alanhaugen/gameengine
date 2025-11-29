@@ -8,7 +8,7 @@
  *
  * git is required, see Installing dependencies
  *
- *  > git clone ssh://git@github.com:INN-DGE/GEA2025.git
+ *  > git clone ssh://git@github.com:alanhaugen/gameengine.git
  *
  * \subsection dependencies_Windows Windows
  *
