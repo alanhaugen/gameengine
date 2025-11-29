@@ -10,6 +10,24 @@ TrackingSpline::TrackingSpline()
 
 void TrackingSpline::Update()
 {
+    if (curve.controlPoints.empty())
+    {
+        glm::vec3 pos;
+
+        if (gameObject)
+        {
+            pos = gameObject->GetPosition();
+        }
+        else if (followObject)
+        {
+            pos = followObject->GetPosition();
+        }
+
+        curve.controlPoints.push_back(pos);
+        curve.controlPoints.push_back(pos);
+        curve.controlPoints.push_back(pos);
+    }
+
     if (sampleTimer.TimeSinceStarted() > recreateSplineTime)
     {
         glm::vec3 pos;

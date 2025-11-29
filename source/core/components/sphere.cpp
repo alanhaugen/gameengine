@@ -1,6 +1,5 @@
 #include "sphere.h"
 #include "core/components/gameobject.h"
-#include "glm/gtc/matrix_transform.hpp"
 
 void Sphere::GenerateIcoSphere(const char *vert, const char *frag, const char* texture)
 {
