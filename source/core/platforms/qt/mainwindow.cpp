@@ -264,8 +264,6 @@ void MainWindow::MainGameLoop()
 
     if (scene)
     {
-        Cam.speed += Locator::input.mouse.roll;
-
         Cam.camera = &scene->camera;
         Cam.Update();
         scene->camera.Update();
@@ -285,6 +283,18 @@ void MainWindow::MainGameLoop()
             if (Locator::editor)
             {
                 Locator::editor->UpdateStatusBar((std::string("(") + std::to_string(Locator::input.mouse.x) + ", " + std::to_string(Locator::input.mouse.y) + std::string(")")).c_str());
+
+                if (Locator::input.mouse.roll != 0.0f)
+                {
+                    Cam.speed += Locator::input.mouse.roll;
+
+                    if (Cam.speed < 0.01)
+                    {
+                        Cam.speed = 0.01f;
+                    }
+
+                    Locator::editor->UpdateStatusBar(std::string(std::string("Camera speed updated: ") + std::to_string(Cam.speed)).c_str());
+                }
 
                 if (Locator::input.Held(Locator::input.Key.F))
                 {
@@ -657,7 +667,7 @@ void MainWindow::CreateSphere()
         NewGameObject();
     }
 
-    ObjSelected->AddComponent(new Sphere);
+    ObjSelected->AddComponent(new Sphere("Assets/Textures/orange.jpg"));
     UpdateInspector();
 }
 

@@ -68,6 +68,7 @@ qt_standard_project_setup()
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_AUTOUIC ON)
 
 add_library(Core STATIC
     README.md
@@ -114,6 +115,7 @@ add_library(Core STATIC
     source/core/platforms/qt/mainwindow.cpp
     source/core/platforms/qt/mainwindow.h
     source/core/platforms/qt/MainWindow.ui
+    source/core/platforms/qt/about.ui
     source/core/platforms/qt/qtapplication.cpp
     source/core/platforms/qt/qtapplication.h
     source/core/platforms/qt/qteditor.cpp

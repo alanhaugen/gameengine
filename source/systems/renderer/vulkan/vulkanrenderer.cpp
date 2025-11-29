@@ -2243,5 +2243,5 @@ void VulkanRenderer::mouseMoveEvent(QMouseEvent *eventMove)
 
 void VulkanRenderer::wheelEvent(QWheelEvent *eventWheel)
 {
-    Locator::input.mouse.roll = eventWheel->angleDelta().x();
+    Locator::input.mouse.roll = -(eventWheel->angleDelta().x() + eventWheel->angleDelta().y()) / 1000.0f;
 }
