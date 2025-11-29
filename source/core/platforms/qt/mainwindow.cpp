@@ -95,13 +95,10 @@ MainWindow::MainWindow(QWidget *parent, const char* windowTitle, int windowWidth
     // connect(ui->actionCube, &QAction::triggered, this, &MainWindow::AddCube);
     // connect(ui->actionSphere, &QAction::triggered, this, &MainWindow::AddSphere);
 
-
     //Scenes
     connect(ui->actionEmpty_2,&QAction::triggered, this, [this](){NewScenes(4);});
     connect(ui->actionVikingRoom_2,&QAction::triggered, this, [this](){NewScenes(1);});
     connect(ui->actionPong_2,&QAction::triggered, this, [this](){NewScenes(2);});
-
-
 
     //new version
     /*for (const QString& Objects : mAssetManager->GetMeshNames())
@@ -131,9 +128,7 @@ MainWindow::MainWindow(QWidget *parent, const char* windowTitle, int windowWidth
     AvailableTextures();
     AvailableColliders();
 
-
     //ui->Inspectorwidget->setHidden(true);
-
 
     //clicks
     connect(ui->treeGameObjects, &QTreeWidget::customContextMenuRequested, this, &MainWindow::OnRightClickGameObjectWidget);
@@ -159,9 +154,12 @@ MainWindow::MainWindow(QWidget *parent, const char* windowTitle, int windowWidth
     connect(ui->actionRigid_Body_physics, &QAction::triggered, this, &MainWindow::CreateRigidBody);
     connect(ui->actionTracking_spline, &QAction::triggered, this, &MainWindow::CreateTrackingSpline);
     connect(ui->actionBSpline_surface, &QAction::triggered, this, &MainWindow::CreateBSplineSurface);
+    connect(ui->actionPoint_cloud, &QAction::triggered, this, &MainWindow::CreatePointCloud);
 
     connect(ui->actionPause, &QAction::triggered, this, &MainWindow::Pause);
     connect(ui->actionPlay, &QAction::triggered, this, &MainWindow::Play);
+
+    connect(ui->checkBox, &QCheckBox::checkStateChanged, this, &MainWindow::ShowOrHideGameObject);
 
     connect(ui->action_Quit, &QAction::triggered, this, &QApplication::quit);
 
@@ -172,18 +170,11 @@ MainWindow::MainWindow(QWidget *parent, const char* windowTitle, int windowWidth
     //GameObject treewidget
     ui->treeGameObjects->setMinimumWidth(100);
 
-
     //hide
     ui->MeshBox->setHidden(true);
     ui->ColliderBox->setHidden(true);
     ui->TextBox->setHidden(true);
     ui->SpriteBox->setHidden(true);
-
-
-
-
-
-
 
     //sets the keyboard input focus to the renderer when program starts
     vulkanWidget->setFocus();
@@ -273,14 +264,7 @@ void MainWindow::MainGameLoop()
 
     if (scene)
     {
-        if (Locator::input.Held(Locator::input.Key.O))
-        {
-            Cam.speed += 0.01f;
-        }
-        if (Locator::input.Held(Locator::input.Key.L))
-        {
-            Cam.speed -= 0.01f;
-        }
+        Cam.speed += Locator::input.mouse.roll;
 
         Cam.camera = &scene->camera;
         Cam.Update();
@@ -507,6 +491,8 @@ void MainWindow::UpdateInspector()
         return;
     }
 
+    ui->checkBox->setText(QString(ObjSelected->name.c_str()));
+
     glm::vec3 pos = glm::vec3(ObjSelected->matrix[3]);
 
     ui->PosXSpin->setValue(pos.x);
@@ -574,7 +560,6 @@ void MainWindow::UpdateInspector()
 
                 BoxCollider* collider = dynamic_cast<BoxCollider*>(comp);
                 ui->Collider_Combo->setCurrentIndex(ui->Collider_Combo->findText(collider->name.c_str()));
-                //collider->physics.
 
             }
             if(typeName == "Sphere Collider")
@@ -592,6 +577,15 @@ void MainWindow::UpdateInspector()
 
             }
         }
+    }
+
+    if (ObjSelected->isVisible)
+    {
+        ui->checkBox->setChecked(true);
+    }
+    else
+    {
+        ui->checkBox->setChecked(false);
     }
 
     IsInspectorUpdated = false;
@@ -728,7 +722,7 @@ void MainWindow::CreateTerrain()
         NewGameObject();
     }
 
-    mainTerrain = new Terrain("Assets/output.png", "Assets/Textures/aerial_rocks_04_diff_1k.jpg");//"Assets/Textures/snow.jpg");
+    mainTerrain = new Terrain("Assets/output.png", "Assets/Textures/aerial_rocks_04_diff_1k.jpg");
     ObjSelected->AddComponent(mainTerrain);
     UpdateInspector();
 }
@@ -783,6 +777,28 @@ void MainWindow::CreateBSplineSurface()
     ObjSelected->AddComponent(new BSplineSurface);
 }
 
+void MainWindow::ShowOrHideGameObject()
+{
+    if (ui->checkBox->isChecked())
+    {
+        ObjSelected->Show();
+    }
+    else
+    {
+        ObjSelected->Hide();
+    }
+}
+
+void MainWindow::CreatePointCloud()
+{
+    if (ObjSelected == nullptr)
+    {
+        NewGameObject();
+    }
+
+    ObjSelected->AddComponent(new Terrain("Assets/output_smallest.txt", true));
+}
+
 void MainWindow::Pause()
 {
     paused = true;
@@ -835,7 +851,6 @@ void MainWindow::ChangeMesh(const QString &meshname)
 
 void MainWindow::ChangeMaterial(const QString &Materialname)
 {
-   // qDebug() << "Fucky";
     for (Component* comp: ObjSelected->components)
     {
         if(comp->name == "Mesh")
@@ -902,10 +917,7 @@ void MainWindow::NewScenes(int index)
 
 void MainWindow::CheckComponent()
 {
-
-
 }
-
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {

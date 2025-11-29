@@ -96,6 +96,8 @@ private:
     void CreateRigidBody();
     void CreateTrackingSpline();
     void CreateBSplineSurface();
+    void ShowOrHideGameObject();
+    void CreatePointCloud();
 
     void Pause();
     void Play();

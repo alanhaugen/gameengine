@@ -168,6 +168,7 @@ private:
         int dx, dy;
         int xOld, yOld;
         int x, y;
+        int roll;
     };
 
 public:
