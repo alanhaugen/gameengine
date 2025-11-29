@@ -10,9 +10,9 @@ int main(int argumentQuantity, char *argumentArray[])
     Application application(argumentQuantity, argumentArray, "Demos", 800, 500);
 
     //application.AddScene(new RollingBall);
-    //application.AddScene(new VikingScene);
-    //application.AddScene(new Pong);
-    //application.AddScene(new FlappyBird);
+    application.AddScene(new VikingScene);
+    application.AddScene(new Pong);
+    application.AddScene(new FlappyBird);
     application.AddScene(new Empty);
 
     return application.Run();

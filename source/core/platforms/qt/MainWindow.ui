@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1037</width>
+    <width>778</width>
     <height>672</height>
    </rect>
   </property>
@@ -54,23 +54,237 @@
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>0</y>
-            <width>709</width>
-            <height>856</height>
+            <y>-528</y>
+            <width>476</width>
+            <height>831</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_3">
            <item>
+            <widget class="QLabel" name="label_2">
+             <property name="text">
+              <string>Inspector</string>
+             </property>
+            </widget>
+           </item>
+           <item>
             <widget class="QGroupBox" name="TransformBox">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
              <property name="title">
               <string>Transform</string>
              </property>
              <property name="checkable">
               <bool>true</bool>
              </property>
-             <layout class="QVBoxLayout" name="verticalLayout">
-              <item>
-               <widget class="QGroupBox" name="groupTransform">
+             <layout class="QFormLayout" name="formLayout_3">
+              <item row="0" column="0">
+               <widget class="QLabel" name="label_11">
+                <property name="maximumSize">
+                 <size>
+                  <width>50</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>Position:</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QGroupBox" name="groupBox_5">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>0</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>16777215</width>
+                  <height>200</height>
+                 </size>
+                </property>
+                <property name="title">
+                 <string/>
+                </property>
+                <layout class="QGridLayout" name="gridLayout_3">
+                 <item row="0" column="4">
+                  <widget class="QLabel" name="PositionZ">
+                   <property name="maximumSize">
+                    <size>
+                     <width>10</width>
+                     <height>16777215</height>
+                    </size>
+                   </property>
+                   <property name="text">
+                    <string>Z:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="1">
+                  <widget class="QDoubleSpinBox" name="PosZSpin">
+                   <property name="minimum">
+                    <double>-999.000000000000000</double>
+                   </property>
+                   <property name="maximum">
+                    <double>999.000000000000000</double>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="0">
+                  <widget class="QLabel" name="PositionY">
+                   <property name="maximumSize">
+                    <size>
+                     <width>10</width>
+                     <height>16777215</height>
+                    </size>
+                   </property>
+                   <property name="text">
+                    <string>X:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="5">
+                  <widget class="QDoubleSpinBox" name="PosXSpin">
+                   <property name="minimum">
+                    <double>-999.000000000000000</double>
+                   </property>
+                   <property name="maximum">
+                    <double>999.000000000000000</double>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="3">
+                  <widget class="QDoubleSpinBox" name="PosYSpin">
+                   <property name="minimum">
+                    <double>-999.000000000000000</double>
+                   </property>
+                   <property name="maximum">
+                    <double>999.000000000000000</double>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="2">
+                  <widget class="QLabel" name="label_12">
+                   <property name="maximumSize">
+                    <size>
+                     <width>10</width>
+                     <height>16777215</height>
+                    </size>
+                   </property>
+                   <property name="text">
+                    <string>Y:</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+              <item row="1" column="0">
+               <widget class="QLabel" name="label_13">
+                <property name="text">
+                 <string>Rotation:</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="1">
+               <widget class="QGroupBox" name="groupBox_6">
+                <property name="title">
+                 <string/>
+                </property>
+                <layout class="QGridLayout" name="gridLayout_4">
+                 <item row="1" column="5">
+                  <widget class="QLabel" name="RotationZ">
+                   <property name="maximumSize">
+                    <size>
+                     <width>10</width>
+                     <height>16777215</height>
+                    </size>
+                   </property>
+                   <property name="text">
+                    <string>Z:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="6">
+                  <widget class="QDoubleSpinBox" name="RotationZSpin">
+                   <property name="minimum">
+                    <double>-999.000000000000000</double>
+                   </property>
+                   <property name="maximum">
+                    <double>999.000000000000000</double>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="0">
+                  <widget class="QLabel" name="RotationX">
+                   <property name="maximumSize">
+                    <size>
+                     <width>10</width>
+                     <height>16777215</height>
+                    </size>
+                   </property>
+                   <property name="text">
+                    <string>X:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="4">
+                  <widget class="QDoubleSpinBox" name="RotationYSpin">
+                   <property name="minimum">
+                    <double>-999.000000000000000</double>
+                   </property>
+                   <property name="maximum">
+                    <double>999.000000000000000</double>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="3">
+                  <widget class="QLabel" name="RotationY">
+                   <property name="maximumSize">
+                    <size>
+                     <width>10</width>
+                     <height>16777215</height>
+                    </size>
+                   </property>
+                   <property name="text">
+                    <string>Y:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="1">
+                  <widget class="QDoubleSpinBox" name="RotationXSpin">
+                   <property name="minimum">
+                    <double>-999.000000000000000</double>
+                   </property>
+                   <property name="maximum">
+                    <double>999.000000000000000</double>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+              <item row="2" column="0">
+               <widget class="QLabel" name="label_14">
+                <property name="text">
+                 <string>Scale:</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="1">
+               <widget class="QGroupBox" name="groupScale">
                 <property name="maximumSize">
                  <size>
                   <width>16777215</width>
@@ -80,128 +294,73 @@
                 <property name="title">
                  <string/>
                 </property>
-                <layout class="QFormLayout" name="formLayout">
-                 <item row="0" column="0">
-                  <widget class="QLabel" name="PositionX">
-                   <property name="text">
-                    <string>Position X:</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="0" column="1">
-                  <widget class="QDoubleSpinBox" name="PosXSpin">
+                <layout class="QGridLayout" name="gridLayout_6">
+                 <item row="0" column="3">
+                  <widget class="QDoubleSpinBox" name="ScaleYSpin">
                    <property name="minimum">
-                    <double>-99.000000000000000</double>
+                    <double>-999.000000000000000</double>
                    </property>
-                  </widget>
-                 </item>
-                 <item row="1" column="0">
-                  <widget class="QLabel" name="PositionY">
-                   <property name="text">
-                    <string>Position Y:</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="1" column="1">
-                  <widget class="QDoubleSpinBox" name="PosYSpin"/>
-                 </item>
-                 <item row="2" column="0">
-                  <widget class="QLabel" name="PositionZ">
-                   <property name="text">
-                    <string>Position Z:</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="2" column="1">
-                  <widget class="QDoubleSpinBox" name="PosZSpin"/>
-                 </item>
-                </layout>
-               </widget>
-              </item>
-              <item>
-               <widget class="QGroupBox" name="groupRotation">
-                <property name="maximumSize">
-                 <size>
-                  <width>16777215</width>
-                  <height>120</height>
-                 </size>
-                </property>
-                <property name="title">
-                 <string>Rotation</string>
-                </property>
-                <layout class="QFormLayout" name="formLayout_2">
-                 <item row="0" column="0">
-                  <widget class="QLabel" name="RotationX">
-                   <property name="text">
-                    <string>Rotation X:</string>
+                   <property name="maximum">
+                    <double>999.000000000000000</double>
                    </property>
                   </widget>
                  </item>
                  <item row="0" column="1">
-                  <widget class="QDoubleSpinBox" name="RotationXSpin"/>
-                 </item>
-                 <item row="1" column="1">
-                  <widget class="QDoubleSpinBox" name="RotationYSpin"/>
-                 </item>
-                 <item row="1" column="0">
-                  <widget class="QLabel" name="RotationY">
-                   <property name="text">
-                    <string>Rotation Y:</string>
+                  <widget class="QDoubleSpinBox" name="ScaleXSpin">
+                   <property name="minimum">
+                    <double>-999.000000000000000</double>
+                   </property>
+                   <property name="maximum">
+                    <double>999.000000000000000</double>
                    </property>
                   </widget>
                  </item>
-                 <item row="2" column="1">
-                  <widget class="QDoubleSpinBox" name="RotationZSpin"/>
-                 </item>
-                 <item row="2" column="0">
-                  <widget class="QLabel" name="RotationZ">
-                   <property name="text">
-                    <string>Rotation Z:</string>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </widget>
-              </item>
-              <item>
-               <widget class="QGroupBox" name="groupScale">
-                <property name="maximumSize">
-                 <size>
-                  <width>16777215</width>
-                  <height>120</height>
-                 </size>
-                </property>
-                <property name="title">
-                 <string>Scale</string>
-                </property>
-                <layout class="QFormLayout" name="formLayout_3">
                  <item row="0" column="0">
                   <widget class="QLabel" name="ScaleX">
+                   <property name="maximumSize">
+                    <size>
+                     <width>10</width>
+                     <height>16777215</height>
+                    </size>
+                   </property>
                    <property name="text">
-                    <string>Scale X:</string>
+                    <string>X:</string>
                    </property>
                   </widget>
                  </item>
-                 <item row="0" column="1">
-                  <widget class="QDoubleSpinBox" name="ScaleXSpin"/>
-                 </item>
-                 <item row="1" column="1">
-                  <widget class="QDoubleSpinBox" name="ScaleYSpin"/>
-                 </item>
-                 <item row="1" column="0">
-                  <widget class="QLabel" name="ScaleY">
-                   <property name="text">
-                    <string>Scale Y:</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="2" column="1">
-                  <widget class="QDoubleSpinBox" name="ScaleZSpin"/>
-                 </item>
-                 <item row="2" column="0">
+                 <item row="0" column="4">
                   <widget class="QLabel" name="ScaleZ">
+                   <property name="maximumSize">
+                    <size>
+                     <width>10</width>
+                     <height>16777215</height>
+                    </size>
+                   </property>
                    <property name="text">
-                    <string>Scale Z:</string>
+                    <string>Z:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="2">
+                  <widget class="QLabel" name="ScaleY">
+                   <property name="maximumSize">
+                    <size>
+                     <width>10</width>
+                     <height>16777215</height>
+                    </size>
+                   </property>
+                   <property name="text">
+                    <string>Y:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="5">
+                  <widget class="QDoubleSpinBox" name="ScaleZSpin">
+                   <property name="minimum">
+                    <double>-999.000000000000000</double>
+                   </property>
+                   <property name="maximum">
+                    <double>999.000000000000000</double>
                    </property>
                   </widget>
                  </item>
@@ -233,15 +392,15 @@
                    </property>
                   </widget>
                  </item>
+                 <item row="0" column="1">
+                  <widget class="QComboBox" name="Mesh_Combo"/>
+                 </item>
                  <item row="1" column="0">
                   <widget class="QLabel" name="Material_Label">
                    <property name="text">
                     <string>Material:</string>
                    </property>
                   </widget>
-                 </item>
-                 <item row="0" column="1">
-                  <widget class="QComboBox" name="Mesh_Combo"/>
                  </item>
                  <item row="1" column="1">
                   <widget class="QComboBox" name="Material_box"/>
@@ -282,67 +441,511 @@
                   </widget>
                  </item>
                  <item row="1" column="0">
-                  <widget class="QLabel" name="ColliderXPos">
+                  <widget class="QLabel" name="label_3">
                    <property name="text">
-                    <string>ColliderXPos</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="2" column="0">
-                  <widget class="QLabel" name="ColliderYPos">
-                   <property name="text">
-                    <string>ColliderYPos</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="3" column="0">
-                  <widget class="QLabel" name="ColliderZPos">
-                   <property name="frameShape">
-                    <enum>QFrame::Shape::NoFrame</enum>
-                   </property>
-                   <property name="text">
-                    <string>ColliderZPos</string>
+                    <string>CollisionType</string>
                    </property>
                   </widget>
                  </item>
                  <item row="1" column="1">
-                  <widget class="QDoubleSpinBox" name="doubleSpinBox"/>
+                  <widget class="QComboBox" name="CollisionType_combo"/>
                  </item>
-                 <item row="2" column="1">
-                  <widget class="QDoubleSpinBox" name="doubleSpinBox_2"/>
+                 <item row="3" column="0">
+                  <widget class="QLabel" name="label_4">
+                   <property name="text">
+                    <string>Transform:</string>
+                   </property>
+                  </widget>
                  </item>
                  <item row="3" column="1">
-                  <widget class="QDoubleSpinBox" name="doubleSpinBox_3"/>
-                 </item>
-                 <item row="4" column="0">
-                  <widget class="QLabel" name="ColliderXscale">
-                   <property name="text">
-                    <string>ColliderXscale</string>
+                  <widget class="QGroupBox" name="groupBox_3">
+                   <property name="title">
+                    <string/>
                    </property>
+                   <layout class="QGridLayout" name="gridLayout">
+                    <item row="0" column="2">
+                     <widget class="QLabel" name="label_6">
+                      <property name="maximumSize">
+                       <size>
+                        <width>10</width>
+                        <height>16777215</height>
+                       </size>
+                      </property>
+                      <property name="text">
+                       <string>y:</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="0" column="0">
+                     <widget class="QLabel" name="label_5">
+                      <property name="maximumSize">
+                       <size>
+                        <width>10</width>
+                        <height>16777215</height>
+                       </size>
+                      </property>
+                      <property name="text">
+                       <string>x:</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="0" column="5">
+                     <widget class="QDoubleSpinBox" name="doubleSpinBox">
+                      <property name="minimum">
+                       <double>-999.000000000000000</double>
+                      </property>
+                      <property name="maximum">
+                       <double>999.000000000000000</double>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="0" column="1">
+                     <widget class="QDoubleSpinBox" name="doubleSpinBox_3">
+                      <property name="minimum">
+                       <double>-999.000000000000000</double>
+                      </property>
+                      <property name="maximum">
+                       <double>999.000000000000000</double>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="0" column="3">
+                     <widget class="QDoubleSpinBox" name="doubleSpinBox_2">
+                      <property name="minimum">
+                       <double>-999.000000000000000</double>
+                      </property>
+                      <property name="maximum">
+                       <double>999.000000000000000</double>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="0" column="4">
+                     <widget class="QLabel" name="label_7">
+                      <property name="maximumSize">
+                       <size>
+                        <width>10</width>
+                        <height>16777215</height>
+                       </size>
+                      </property>
+                      <property name="text">
+                       <string>z:</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
                   </widget>
                  </item>
                  <item row="5" column="0">
-                  <widget class="QLabel" name="ColliderZscale">
+                  <widget class="QLabel" name="ColliderXscale">
                    <property name="text">
-                    <string>ColliderZscale</string>
+                    <string>Scale</string>
                    </property>
                   </widget>
-                 </item>
-                 <item row="6" column="0">
-                  <widget class="QLabel" name="ColliderZscale_2">
-                   <property name="text">
-                    <string>ColliderZscale</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="4" column="1">
-                  <widget class="QDoubleSpinBox" name="doubleSpinBox_4"/>
                  </item>
                  <item row="5" column="1">
-                  <widget class="QDoubleSpinBox" name="doubleSpinBox_5"/>
+                  <widget class="QGroupBox" name="groupBox_4">
+                   <property name="title">
+                    <string/>
+                   </property>
+                   <layout class="QGridLayout" name="gridLayout_2">
+                    <item row="0" column="1">
+                     <widget class="QDoubleSpinBox" name="doubleSpinBox_6">
+                      <property name="minimum">
+                       <double>-999.000000000000000</double>
+                      </property>
+                      <property name="maximum">
+                       <double>999.000000000000000</double>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="0" column="5">
+                     <widget class="QDoubleSpinBox" name="doubleSpinBox_4">
+                      <property name="minimum">
+                       <double>-999.000000000000000</double>
+                      </property>
+                      <property name="maximum">
+                       <double>999.000000000000000</double>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="0" column="2">
+                     <widget class="QLabel" name="label_9">
+                      <property name="maximumSize">
+                       <size>
+                        <width>10</width>
+                        <height>16777215</height>
+                       </size>
+                      </property>
+                      <property name="text">
+                       <string>y:</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="0" column="0">
+                     <widget class="QLabel" name="label_8">
+                      <property name="maximumSize">
+                       <size>
+                        <width>10</width>
+                        <height>16777215</height>
+                       </size>
+                      </property>
+                      <property name="text">
+                       <string>x:</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="0" column="3">
+                     <widget class="QDoubleSpinBox" name="doubleSpinBox_5">
+                      <property name="minimum">
+                       <double>-999.000000000000000</double>
+                      </property>
+                      <property name="maximum">
+                       <double>999.000000000000000</double>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="0" column="4">
+                     <widget class="QLabel" name="label_10">
+                      <property name="maximumSize">
+                       <size>
+                        <width>10</width>
+                        <height>16777215</height>
+                       </size>
+                      </property>
+                      <property name="text">
+                       <string>z:</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </widget>
                  </item>
-                 <item row="6" column="1">
-                  <widget class="QDoubleSpinBox" name="doubleSpinBox_6"/>
+                </layout>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item>
+            <widget class="QGroupBox" name="TextBox">
+             <property name="title">
+              <string>Text</string>
+             </property>
+             <layout class="QVBoxLayout" name="verticalLayout">
+              <item>
+               <widget class="QGroupBox" name="groupBox_8">
+                <property name="title">
+                 <string/>
+                </property>
+                <layout class="QFormLayout" name="formLayout">
+                 <item row="0" column="1">
+                  <widget class="QLineEdit" name="displayedit"/>
+                 </item>
+                 <item row="0" column="0">
+                  <widget class="QLabel" name="colorName">
+                   <property name="maximumSize">
+                    <size>
+                     <width>30</width>
+                     <height>16777215</height>
+                    </size>
+                   </property>
+                   <property name="text">
+                    <string>Name: </string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="0">
+                  <widget class="QLabel" name="label_16">
+                   <property name="text">
+                    <string>Color:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="1">
+                  <widget class="QComboBox" name="combo_Color"/>
+                 </item>
+                 <item row="2" column="0">
+                  <widget class="QLabel" name="colortransfrom">
+                   <property name="text">
+                    <string>Transform</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="1">
+                  <widget class="QGroupBox" name="groupBox_7">
+                   <property name="title">
+                    <string/>
+                   </property>
+                   <layout class="QGridLayout" name="gridLayout_8">
+                    <item row="2" column="1">
+                     <widget class="QDoubleSpinBox" name="doubleXColor">
+                      <property name="minimum">
+                       <double>-999.000000000000000</double>
+                      </property>
+                      <property name="maximum">
+                       <double>999.000000000000000</double>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="2" column="2">
+                     <widget class="QLabel" name="label_17">
+                      <property name="maximumSize">
+                       <size>
+                        <width>10</width>
+                        <height>16777215</height>
+                       </size>
+                      </property>
+                      <property name="text">
+                       <string>y:</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="2" column="3">
+                     <widget class="QDoubleSpinBox" name="doubleYColor">
+                      <property name="minimum">
+                       <double>-999.000000000000000</double>
+                      </property>
+                      <property name="maximum">
+                       <double>999.000000000000000</double>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="2" column="4">
+                     <widget class="QLabel" name="label_18">
+                      <property name="maximumSize">
+                       <size>
+                        <width>10</width>
+                        <height>16777215</height>
+                       </size>
+                      </property>
+                      <property name="text">
+                       <string>z:</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="2" column="0">
+                     <widget class="QLabel" name="label_15">
+                      <property name="maximumSize">
+                       <size>
+                        <width>10</width>
+                        <height>16777215</height>
+                       </size>
+                      </property>
+                      <property name="text">
+                       <string>x:</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="2" column="5">
+                     <widget class="QDoubleSpinBox" name="doubleZColor">
+                      <property name="minimum">
+                       <double>-999.000000000000000</double>
+                      </property>
+                      <property name="maximum">
+                       <double>999.000000000000000</double>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item>
+            <widget class="QGroupBox" name="SpriteBox">
+             <property name="title">
+              <string>Sprite</string>
+             </property>
+             <layout class="QVBoxLayout" name="verticalLayout_7">
+              <item>
+               <widget class="QGroupBox" name="groupBox_9">
+                <property name="title">
+                 <string/>
+                </property>
+                <layout class="QFormLayout" name="formLayout_2">
+                 <item row="0" column="0">
+                  <widget class="QLabel" name="label_19">
+                   <property name="text">
+                    <string>Transform:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="1">
+                  <widget class="QGroupBox" name="groupBox_10">
+                   <property name="title">
+                    <string/>
+                   </property>
+                   <layout class="QGridLayout" name="gridLayout_9">
+                    <item row="0" column="2">
+                     <widget class="QLabel" name="label_21">
+                      <property name="maximumSize">
+                       <size>
+                        <width>10</width>
+                        <height>16777215</height>
+                       </size>
+                      </property>
+                      <property name="text">
+                       <string>y:</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="0" column="0">
+                     <widget class="QLabel" name="label_20">
+                      <property name="maximumSize">
+                       <size>
+                        <width>10</width>
+                        <height>16777215</height>
+                       </size>
+                      </property>
+                      <property name="text">
+                       <string>x:</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="0" column="3">
+                     <widget class="QDoubleSpinBox" name="doubleYSprite">
+                      <property name="minimum">
+                       <double>-999.000000000000000</double>
+                      </property>
+                      <property name="maximum">
+                       <double>999.000000000000000</double>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="0" column="4">
+                     <widget class="QLabel" name="label_22">
+                      <property name="maximumSize">
+                       <size>
+                        <width>10</width>
+                        <height>16777215</height>
+                       </size>
+                      </property>
+                      <property name="text">
+                       <string>z:</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="0" column="1">
+                     <widget class="QDoubleSpinBox" name="doubleXSprite">
+                      <property name="minimum">
+                       <double>-999.000000000000000</double>
+                      </property>
+                      <property name="maximum">
+                       <double>999.000000000000000</double>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="0" column="5">
+                     <widget class="QDoubleSpinBox" name="doubleZSprite">
+                      <property name="minimum">
+                       <double>-999.000000000000000</double>
+                      </property>
+                      <property name="maximum">
+                       <double>999.000000000000000</double>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </widget>
+                 </item>
+                 <item row="1" column="0">
+                  <widget class="QLabel" name="label_26">
+                   <property name="text">
+                    <string>Scale:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="1">
+                  <widget class="QGroupBox" name="groupBox_12">
+                   <property name="title">
+                    <string/>
+                   </property>
+                   <layout class="QGridLayout" name="gridLayout_10">
+                    <item row="0" column="2">
+                     <widget class="QLabel" name="label_23">
+                      <property name="maximumSize">
+                       <size>
+                        <width>10</width>
+                        <height>16777215</height>
+                       </size>
+                      </property>
+                      <property name="text">
+                       <string>y:</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="0" column="0">
+                     <widget class="QLabel" name="label_24">
+                      <property name="maximumSize">
+                       <size>
+                        <width>10</width>
+                        <height>16777215</height>
+                       </size>
+                      </property>
+                      <property name="text">
+                       <string>x:</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="0" column="3">
+                     <widget class="QDoubleSpinBox" name="doubleScaleYSprite">
+                      <property name="minimum">
+                       <double>-999.000000000000000</double>
+                      </property>
+                      <property name="maximum">
+                       <double>999.000000000000000</double>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="0" column="4">
+                     <widget class="QLabel" name="label_25">
+                      <property name="maximumSize">
+                       <size>
+                        <width>10</width>
+                        <height>16777215</height>
+                       </size>
+                      </property>
+                      <property name="text">
+                       <string>z:</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="0" column="1">
+                     <widget class="QDoubleSpinBox" name="doubleScaleXSprite">
+                      <property name="minimum">
+                       <double>-999.000000000000000</double>
+                      </property>
+                      <property name="maximum">
+                       <double>999.000000000000000</double>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="0" column="5">
+                     <widget class="QDoubleSpinBox" name="doubleScaleZSprite">
+                      <property name="minimum">
+                       <double>-999.000000000000000</double>
+                      </property>
+                      <property name="maximum">
+                       <double>999.000000000000000</double>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </widget>
+                 </item>
+                 <item row="2" column="0">
+                  <widget class="QLabel" name="label_27">
+                   <property name="text">
+                    <string>Texture:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="1">
+                  <widget class="QComboBox" name="combo_SpriteTexture"/>
                  </item>
                 </layout>
                </widget>
@@ -394,8 +997,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1037</width>
-     <height>37</height>
+     <width>778</width>
+     <height>17</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">

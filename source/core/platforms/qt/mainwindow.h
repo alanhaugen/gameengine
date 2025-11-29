@@ -109,6 +109,9 @@ private:
     //Adds the meshes to the combobox of meshes
     void AvailableMeshes();
 
+    //Adds colliders to the combobox collider
+    void AvailableColliders();
+
     //change mesh
     void ChangeMesh(const QString &meshname);
 
@@ -117,6 +120,8 @@ private:
     void PosObj(double);
 
     void NewScenes(int index);
+
+    void CheckComponent();
 
     QTimer* timer;
 
