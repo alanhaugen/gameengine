@@ -74,21 +74,21 @@ MainWindow::MainWindow(QWidget *parent, const char* windowTitle, int windowWidth
 
 
     //allow the spinBox go to negative numbers
-    ui->PosXSpin->setMinimum(-990);
-    ui->PosYSpin->setMinimum(-990);
-    ui->PosZSpin->setMinimum(-990);
+    // ui->PosXSpin->setMinimum(-990);
+    // ui->PosYSpin->setMinimum(-990);
+    // ui->PosZSpin->setMinimum(-990);
 
-    ui->RotationXSpin->setMinimum(-990);
-    ui->RotationYSpin->setMinimum(-990);
-    ui->RotationZSpin->setMinimum(-990);
+    // ui->RotationXSpin->setMinimum(-990);
+    // ui->RotationYSpin->setMinimum(-990);
+    // ui->RotationZSpin->setMinimum(-990);
 
-    ui->PosXSpin->setMaximum(990);
-    ui->PosYSpin->setMaximum(990);
-    ui->PosZSpin->setMaximum(990);
+    // ui->PosXSpin->setMaximum(990);
+    // ui->PosYSpin->setMaximum(990);
+    // ui->PosZSpin->setMaximum(990);
 
-    ui->RotationXSpin->setMaximum(990);
-    ui->RotationYSpin->setMaximum(990);
-    ui->RotationZSpin->setMaximum(990);
+    // ui->RotationXSpin->setMaximum(990);
+    // ui->RotationYSpin->setMaximum(990);
+    // ui->RotationZSpin->setMaximum(990);
 
     //Connections to functions Old version
     // connect(ui->actionViking_Room, &QAction::triggered, this, &MainWindow::AddVikingRoom);
@@ -126,9 +126,11 @@ MainWindow::MainWindow(QWidget *parent, const char* windowTitle, int windowWidth
     connect(ui->ScaleYSpin, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &MainWindow::PosObj);
     connect(ui->ScaleZSpin, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &MainWindow::PosObj);
 
-    //MeshAvailables
+    //thingsAvailables
     AvailableMeshes();
     AvailableTextures();
+    AvailableColliders();
+
 
     //ui->Inspectorwidget->setHidden(true);
 
@@ -170,6 +172,19 @@ MainWindow::MainWindow(QWidget *parent, const char* windowTitle, int windowWidth
     //GameObject treewidget
     ui->treeGameObjects->setMinimumWidth(100);
 
+
+    //hide
+    ui->MeshBox->setHidden(true);
+    ui->ColliderBox->setHidden(true);
+    ui->TextBox->setHidden(true);
+    ui->SpriteBox->setHidden(true);
+
+
+
+
+
+
+
     //sets the keyboard input focus to the renderer when program starts
     vulkanWidget->setFocus();
 
@@ -178,14 +193,6 @@ MainWindow::MainWindow(QWidget *parent, const char* windowTitle, int windowWidth
 
     timer->start(8); // 120 Hz
 
-
-    //Connections to functions
-    //connect(ui->actionViking_Room, &QAction::triggered, this, &MainWindow::AddVikingRoom);
-    //connect(ui->actionCube, &QAction::triggered, this, &MainWindow::AddCube);
-    //connect(ui->actionSphere, &QAction::triggered, this, &MainWindow::AddSphere);
-
-    //
-    //connect(ui->treeGameObjects, &QTreeWidget::customContextMenuRequested, this, &MainWindow::OnRightClickGameObjectWidget);
 
     AUDIO* audio = new AUDIO();
     PHYSICS* physics = new PHYSICS();
@@ -241,18 +248,25 @@ void MainWindow::MainGameLoop()
     if(ObjSelected)
     {
         //ui->Inspectorwidget->setHidden(false);
+        ui->scrollAreaWidgetContents->setHidden(false);
         if(ObjSelected->components.empty())
         {
             ui->MeshBox->setHidden(true);
+            ui->ColliderBox->setHidden(true);
+            ui->TextBox->setHidden(true);
+            ui->SpriteBox->setHidden(true);
         }
-        else
-        {
-            ui->MeshBox->setHidden(false);
-        }
+        // else
+        // {
+
+        //     // ui->MeshBox->setHidden(false);
+        //     // ui->ColliderBox->setHidden(false);
+        // }
     }
     else
     {
         //ui->Inspectorwidget->setHidden(true);
+        ui->scrollAreaWidgetContents->setHidden(true);
     }
 
     Scene* scene = Services::currentScene;
@@ -425,7 +439,6 @@ void MainWindow::OnLeftClickGameObjectWidget(QTreeWidgetItem *item, int column)
 
     if(!item)
     {
-        ObjSelected = nullptr;
         return;
     }
 
@@ -435,14 +448,6 @@ void MainWindow::OnLeftClickGameObjectWidget(QTreeWidgetItem *item, int column)
     }
 
     qDebug() << "Left-click detected at" << item;
-
-    // void* ptrToObj = item->data(column,Qt::UserRole).value<void*>();
-
-    // QString type = item->data(column,Qt::UserRole+1).toString();
-    // GameObject* obj =reinterpret_cast<GameObject*>(ptrToObj);
-    // Component* comp =reinterpret_cast<Component*>(ptrToObj);
-
-    // ObjSelected = reinterpret_cast<GameObject*>(ptrToObj);
 
     Scene* scene = Services::currentScene;
 
@@ -482,6 +487,10 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
         {
             ObjSelected = nullptr;
             ui->treeGameObjects->clearSelection();
+            ui->MeshBox->setHidden(true);
+            ui->ColliderBox->setHidden(true);
+            ui->TextBox->setHidden(true);
+            ui->SpriteBox->setHidden(true);
         }
     }
 
@@ -534,7 +543,8 @@ void MainWindow::UpdateInspector()
 
             if(typeName == "Mesh")
             {
-                qDebug()<<"Has Mesh" <<"/n";
+                ui->MeshBox->setVisible(true);
+                //qDebug()<<"Has Mesh" <<"/n";
                 Mesh* mesh = dynamic_cast<Mesh*>(comp);
                 QString currentMeshName = QFileInfo(QString(mesh->FilePath.c_str())).baseName();
                 QString currentTexture = QFileInfo(mesh->texture.c_str()).baseName();
@@ -549,6 +559,37 @@ void MainWindow::UpdateInspector()
                 QSignalBlocker blockerMaterial( ui->Material_box);
                 ui->Mesh_Combo->setCurrentIndex(index);
                 ui->Material_box->setCurrentIndex(TextureIndex);
+            }
+            if(typeName == "Text")
+            {
+                ui->TextBox->setHidden(false);
+                Text* text = dynamic_cast<Text*>(comp);
+                std::string displaytext = text->textContent;
+                ui->displayedit->setText(displaytext.c_str());
+
+            }
+            if(typeName == "Box Collider")
+            {
+                ui->ColliderBox->setHidden(false);
+
+                BoxCollider* collider = dynamic_cast<BoxCollider*>(comp);
+                ui->Collider_Combo->setCurrentIndex(ui->Collider_Combo->findText(collider->name.c_str()));
+                //collider->physics.
+
+            }
+            if(typeName == "Sphere Collider")
+            {
+                ui->ColliderBox->setHidden(false);
+                BoxCollider* collider = dynamic_cast<BoxCollider*>(comp);
+                ui->Collider_Combo->setCurrentIndex(ui->Collider_Combo->findText(collider->name.c_str()));
+
+            }
+            if(typeName == "Triangle Collider")
+            {
+                ui->ColliderBox->setHidden(false);
+                BoxCollider* collider = dynamic_cast<BoxCollider*>(comp);
+                ui->Collider_Combo->setCurrentIndex(ui->Collider_Combo->findText(collider->name.c_str()));
+
             }
         }
     }
@@ -612,6 +653,7 @@ void MainWindow::CreateCube()
     }
 
     ObjSelected->AddComponent(new Cube);
+    UpdateInspector();
 }
 
 void MainWindow::CreateSphere()
@@ -622,6 +664,7 @@ void MainWindow::CreateSphere()
     }
 
     ObjSelected->AddComponent(new Sphere);
+    UpdateInspector();
 }
 
 void MainWindow::CreateSphereCollider()
@@ -632,6 +675,7 @@ void MainWindow::CreateSphereCollider()
     }
 
     ObjSelected->AddComponent(new SphereCollider(ObjSelected));
+    UpdateInspector();
 }
 
 void MainWindow::CreateBoxCollider()
@@ -642,6 +686,7 @@ void MainWindow::CreateBoxCollider()
     }
 
     ObjSelected->AddComponent(new BoxCollider(ObjSelected, Physics::STATIC));
+    UpdateInspector();
 }
 
 void MainWindow::CreateText()
@@ -652,6 +697,7 @@ void MainWindow::CreateText()
     }
 
     ObjSelected->AddComponent(new Text("Empty text"));
+    UpdateInspector();
 }
 
 void MainWindow::CreateSprite()
@@ -662,6 +708,7 @@ void MainWindow::CreateSprite()
     }
 
     ObjSelected->AddComponent(new Sprite("Assets/Textures/orange.jpg"));
+    UpdateInspector();
 }
 
 void MainWindow::CreateParticleSystem()
@@ -683,6 +730,7 @@ void MainWindow::CreateTerrain()
 
     mainTerrain = new Terrain("tools/pointconverter/output.png", "Assets/Textures/aerial_rocks_04_diff_1k.jpg");//"Assets/Textures/snow.jpg");
     ObjSelected->AddComponent(mainTerrain);
+    UpdateInspector();
 }
 
 void MainWindow::CreateWaterEmittor()
@@ -758,6 +806,18 @@ void MainWindow::AvailableMeshes()
     QStringList meshNames = mAssetManager->GetMeshNames();
     ui->Mesh_Combo->addItems(meshNames);
 }
+
+void MainWindow::AvailableColliders()
+{
+    ui->Collider_Combo->clear();
+    QString BoxCollider ="Box Collider";
+    QString SphereCollider ="Sphere Collider";
+    QString TriangleCollider ="Triangle Collider";
+    ui->Collider_Combo->addItem(BoxCollider);
+    ui->Collider_Combo->addItem(SphereCollider);
+    ui->Collider_Combo->addItem(TriangleCollider);
+}
+
 
 void MainWindow::ChangeMesh(const QString &meshname)
 {
@@ -838,6 +898,12 @@ void MainWindow::NewScenes(int index)
     }
     ui->treeGameObjects->clear();
     Service.SetScene(index);
+}
+
+void MainWindow::CheckComponent()
+{
+
+
 }
 
 
