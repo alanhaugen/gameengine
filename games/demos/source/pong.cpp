@@ -21,8 +21,8 @@ void Pong::Init()
 
     win1 = new Text("Player 1 Wins!", (renderer->windowWidth / 2) - 320.0f, renderer->windowHeight / 2);
     win2 = new Text("Player 2 Wins!", (renderer->windowWidth / 2) - 320.0f, renderer->windowHeight / 2);
-    win1->drawable->isVisible = false;
-    win2->drawable->isVisible = false;
+    renderer->Hide(win1->drawable);
+    renderer->Hide(win2->drawable);
 
     renderer->SetClearColor(0, 0, 0);
     audio->PlayMusic("Assets/Sounds/musicMono.wav");
@@ -34,11 +34,11 @@ void Pong::Update(float deltaTime)
     {
         if (playerOneScore >= 10)
         {
-            win1->drawable->isVisible = true;
+            renderer->Show(win1->drawable);
         }
         else
         {
-            win2->drawable->isVisible = true;
+            renderer->Show(win2->drawable);
         }
 
         if (input.Held(input.Key.SPACE))
@@ -46,16 +46,16 @@ void Pong::Update(float deltaTime)
             playerOneScore = 0;
             playerTwoScore = 0;
 
-            score1->drawable->isVisible = false;
+            renderer->Hide(score1->drawable);
             delete score1;
             score1 = new Text((std::string("Player 1: ") + std::to_string(playerOneScore)).c_str());
 
-            score2->drawable->isVisible = false;
+            renderer->Hide(score2->drawable);
             delete score2;
             score2 = new Text((std::string("Player 2: ") + std::to_string(playerOneScore)).c_str(), renderer->windowWidth - 370.0f, 0.0f);
 
-            win1->drawable->isVisible = false;
-            win2->drawable->isVisible = false;
+            renderer->Hide(win1->drawable);
+            renderer->Hide(win2->drawable);
 
             state = START;
         }
@@ -69,91 +69,96 @@ void Pong::Update(float deltaTime)
 
     if (state == START)
     {
-        instructions1->drawable->isVisible = true;
-        instructions2->drawable->isVisible = true;
+        renderer->Show(instructions1->drawable);
+        renderer->Show(instructions2->drawable);
+        //instructions1->drawable->isVisible = true;
+        //instructions2->drawable->isVisible = true;
         return;
     }
     else if (state == WAIT)
     {
-        instructions1->drawable->isVisible = true;
+        renderer->Show(instructions1->drawable);
+        //instructions1->drawable->isVisible = true;
         return;
     }
 
-    instructions1->drawable->isVisible = false;
-    instructions2->drawable->isVisible = false;
+    renderer->Hide(instructions1->drawable);
+    renderer->Hide(instructions2->drawable);
+    //instructions1->drawable->isVisible = false;
+    //instructions2->drawable->isVisible = false;
 
     // Get paddle positions
-    glm::mat4& playerMatrix = paddle1->drawable->ubo.model;
-    glm::mat4& aiMatrix     = paddle2->drawable->ubo.model;
+    glm::vec3 playerPos = renderer->GetPosition(paddle1->drawable);
+    glm::vec3 aiPos     = renderer->GetPosition(paddle2->drawable);
 
     // Move Player paddle
     if (input.Held(input.Key.UP) || input.Held(input.Key.W))
     {
-        if (playerMatrix[3].y < 2.5f)
+        if (playerPos.y < 2.5f)
         {
-            playerMatrix = glm::translate(playerMatrix, glm::vec3(0, 0.1f, 0.0f));
+            renderer->Translate(paddle1->drawable, glm::vec3(0, 0.1f, 0.0f));
         }
     }
     else if (input.Held(input.Key.DOWN) || input.Held(input.Key.S))
     {
-        if (playerMatrix[3].y > -2.5f)
+        if (playerPos.y > -2.5f)
         {
-            playerMatrix = glm::translate(playerMatrix, glm::vec3(0, -0.1f, 0.0f));
+            renderer->Translate(paddle1->drawable, glm::vec3(0, -0.1f, 0.0f));
         }
     }
 
-    // Get ball matrix
-    glm::mat4& ballMatrix = ball->drawable->ubo.model;
+    // Get ball position
+    glm::vec3 ballPos = renderer->GetPosition(ball->drawable);
 
-    if (aiMatrix[3].y < ballMatrix[3].y)
+    if (aiPos.y < ballPos.y)
     {
-        aiMatrix = glm::translate(aiMatrix, glm::vec3(0, 0.05f, 0.0f));
+        renderer->Translate(paddle2->drawable, glm::vec3(0, 0.05f, 0.0f));
     }
-    else if (aiMatrix[3].y > ballMatrix[3].y)
+    else if (aiPos.y > ballPos.y)
     {
-        aiMatrix = glm::translate(aiMatrix, glm::vec3(0, -0.05f, 0.0f));
+        renderer->Translate(paddle2->drawable, glm::vec3(0, -0.05f, 0.0f));
     }
 
     // Check collision with paddles
     if (goRight == false)
     {
-        if (ballMatrix[3].x < -4.6f && ballMatrix[3].x > -4.8f
-        && playerMatrix[3].y < ballMatrix[3].y + 0.5f && playerMatrix[3].y > ballMatrix[3].y - 0.5f)
+        if (ballPos.x < -4.6f && ballPos.x > -4.8f
+        && playerPos.y < ballPos.y + 0.5f && playerPos.y > ballPos.y - 0.5f)
         {
             audio->PlaySound("Assets/Sounds/paddle_hit.wav");
-            direction.y = (ballMatrix[3].y - playerMatrix[3].y);
+            direction.y = (ballPos.y - playerPos.y);
             goRight = true;
         }
     }
     else
     {
-        if (ballMatrix[3].x > 4.6f && ballMatrix[3].x < 4.8f
-        && aiMatrix[3].y < ballMatrix[3].y + 0.5f && aiMatrix[3].y > ballMatrix[3].y - 0.5f)
+        if (ballPos.x > 4.6f && ballPos.x < 4.8f
+        && aiPos.y < ballPos.y + 0.5f && aiPos.y > ballPos.y - 0.5f)
         {
             audio->PlaySound("Assets/Sounds/paddle_hit.wav");
-            direction.y = (ballMatrix[3].y - aiMatrix[3].y);
+            direction.y = (ballPos.y - aiPos.y);
             goRight = false;
         }
     }
 
     // Check collision with walls
-    if (ballMatrix[3].y < -3.0f || ballMatrix[3].y > 3.0f)
+    if (ballPos.y < -3.0f || ballPos.y > 3.0f)
     {
         direction.y *= -1;
         audio->PlaySound("Assets/Sounds/wall_hit.wav");
     }
 
     // Check score state
-    if (ballMatrix[3].x > 5.0f)
+    if (ballPos.x > 5.0f)
     {
-        ballMatrix[3].x = 0.0;
-        ballMatrix[3].y = 0.0;
-        playerMatrix[3].y = 0.0;
-        aiMatrix[3].y = 0.0;
+        ballPos.x = 0.0;
+        ballPos.y = 0.0;
+        playerPos.y = 0.0;
+        aiPos.y = 0.0;
         direction.y = 0.0;
         goRight = false;
         playerOneScore++;
-        score1->drawable->isVisible = false;
+        renderer->Hide(score1->drawable);
         delete score1;
         score1 = new Text((std::string("Player 1: ") + std::to_string(playerOneScore)).c_str());
         audio->PlaySound("Assets/Sounds/score.wav");
@@ -166,16 +171,16 @@ void Pong::Update(float deltaTime)
             state = WAIT;
         }
     }
-    else if (ballMatrix[3].x < -5.0f)
+    else if (ballPos.x < -5.0f)
     {
-        ballMatrix[3].x = 0.0;
-        ballMatrix[3].y = 0.0;
-        playerMatrix[3].y = 0.0;
-        aiMatrix[3].y = 0.0;
+        ballPos.x = 0.0;
+        ballPos.y = 0.0;
+        playerPos.y = 0.0;
+        aiPos.y = 0.0;
         direction.y = 0.0;
         goRight = true;
         playerTwoScore++;
-        score2->drawable->isVisible = false;
+        renderer->Hide(score2->drawable);
         delete score2;
         score2 = new Text((std::string("Player 2: ") + std::to_string(playerTwoScore)).c_str(), renderer->windowWidth - 370.0f, 0.0f);
         audio->PlaySound("Assets/Sounds/score.wav");
@@ -199,5 +204,5 @@ void Pong::Update(float deltaTime)
         direction.x = -abs(direction.x);
     }
 
-    ballMatrix = glm::translate(ballMatrix, direction);
+    renderer->Translate(ball->drawable, direction);
 }

@@ -84,7 +84,8 @@ VulkanRenderer::~VulkanRenderer()
 //     app->framebufferResized = true;
 // }
 
-void VulkanRenderer::initVulkan() {
+void VulkanRenderer::initVulkan()
+{
     createInstance();
     setupDebugMessenger();
     createSurface();
@@ -105,15 +106,31 @@ void VulkanRenderer::initVulkan() {
     createSyncObjects();
 }
 
-Renderer::Drawable& VulkanRenderer::CreateDrawable(std::vector<Vertex> vertices,
-                                                   std::vector<uint32_t> indices,
-                                                   const char* vertexShader,
-                                                   const char* fragmentShader,
-                                                   const int topology,
-                                                   const char* texture,
-                                                   const bool depthTesting,
-                                                   const bool isInstanced)
+void VulkanRenderer::RemoveDrawable(int index)
 {
+    int i = denseIndex[sparseIndex[index]];
+    int offset = drawables[i].offset;
+    drawables[i] = drawables[drawablesQuantity - 1];
+    drawables[i].offset = offset;
+    drawablesQuantity--;
+}
+
+int VulkanRenderer::CreateDrawable(std::vector<Vertex> vertices,
+                                   std::vector<uint32_t> indices,
+                                   const char* vertexShader,
+                                   const char* fragmentShader,
+                                   const int topology,
+                                   const char* texture,
+                                   const bool depthTesting,
+                                   const bool isInstanced)
+{
+    if (drawablesQuantity >= MAX_DRAWABLES)
+    {
+        LogError("Maximum drawables reached, you can't add more render components.");
+
+        return -1;
+    }
+
     Drawable drawable;
     drawable.isInstanced = isInstanced;
     drawable.offset = drawablesQuantity;
@@ -132,7 +149,7 @@ Renderer::Drawable& VulkanRenderer::CreateDrawable(std::vector<Vertex> vertices,
         texturesQuantity++;
     }
 
-    if (isInstanced == false || instances == 0)
+    if (isInstanced == false)
     {
         createVertexBuffer(vertices, drawable);
 
@@ -140,17 +157,14 @@ Renderer::Drawable& VulkanRenderer::CreateDrawable(std::vector<Vertex> vertices,
         {
             createIndexBuffer(indices, drawable);
         }
-
-        if (isInstanced)
-        {
-            instances++;
-        }
     }
 
     drawables[drawablesQuantity] = drawable;
+    sparseIndex.push_back(drawablesQuantity);
+
     drawablesQuantity++;
 
-    return drawables[drawablesQuantity - 1];
+    return drawablesQuantity - 1;
 }
 
 void VulkanRenderer::cleanupSwapChain() {
@@ -1630,14 +1644,12 @@ void VulkanRenderer::Render() {
     // In Vulkan, all of the rendering happens inside a VkRenderPass (NOTE: For Vulkan 1.3, this has changed)
     vkCmdBeginRenderPass(commandBuffers[imageIndex], &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
 
-    bool renderedInstances = false;
-
     // Main render loop. Loop through all drawables and draw/render them
     for (int i = 0; i < drawablesQuantity; i++)
     {
         Drawable& drawable = drawables[i];
 
-        if (drawable.isVisible == false || drawable.verticesQuantity == 0 || (drawable.isInstanced && renderedInstances))
+        if (drawable.isVisible == false || drawable.verticesQuantity == 0)
         {
             continue;
         }
@@ -1666,32 +1678,14 @@ void VulkanRenderer::Render() {
 
         if (drawable.indicesQuantity == 0)
         {
-            if (drawable.isInstanced)
-            {
-                vkCmdDraw(commandBuffers[imageIndex], drawable.verticesQuantity, 1, instances, 0);
-                renderedInstances = true;
-            }
-            else
-            {
-                vkCmdDraw(commandBuffers[imageIndex], drawable.verticesQuantity, 1, 0, 0);
-            }
+            vkCmdDraw(commandBuffers[imageIndex], drawable.verticesQuantity, drawable.instanceCount, 0, 0);
         }
         else
         {
-            if (drawable.isInstanced)
-            {
-                vkCmdBindIndexBuffer(commandBuffers[imageIndex], drawable.indexBuffer, 0, VK_INDEX_TYPE_UINT32);
+            // Bind index buffer
+            vkCmdBindIndexBuffer(commandBuffers[imageIndex], drawable.indexBuffer, 0, VK_INDEX_TYPE_UINT32);
 
-                vkCmdDrawIndexed(commandBuffers[imageIndex], static_cast<uint32_t>(drawable.indicesQuantity), 1, instances, 0, 0);
-                renderedInstances = true;
-            }
-            else
-            {
-                // Bind index buffer
-                vkCmdBindIndexBuffer(commandBuffers[imageIndex], drawable.indexBuffer, 0, VK_INDEX_TYPE_UINT32);
-
-                vkCmdDrawIndexed(commandBuffers[imageIndex], static_cast<uint32_t>(drawable.indicesQuantity), 1, 0, 0, 0);
-            }
+            vkCmdDrawIndexed(commandBuffers[imageIndex], static_cast<uint32_t>(drawable.indicesQuantity), drawable.instanceCount, 0, 0, 0);
         }
     }
 

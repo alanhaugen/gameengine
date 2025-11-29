@@ -9,12 +9,14 @@ void FlappyBird::Init()
     for (int i = 0; i < MAX_SCORE; i++)
     {
         Text* score = new Text(std::string("Score: " + std::to_string(i)).c_str());
-        score->drawable->isVisible = false;
+        renderer->isVisible(score->drawable);
+        //score->drawable->isVisible = false;
         scores.push_back(score);
     }
 
     score = scores[0];
-    score->drawable->isVisible = true;
+    renderer->Show(score->drawable);
+    //score->drawable->isVisible = true;
 
     instructions = new Text("Click or press SPACE to flap", 70, 250);
 
@@ -24,7 +26,8 @@ void FlappyBird::Init()
     for (int i = 0; i < MAX_SCORE; i++)
     {
         Sprite* pipe = new Sprite("Assets/Textures/pipe.png", 0, 0, 2, 2);
-        pipe->drawable->isVisible = false;
+        //pipe->drawable->isVisible = false;
+        renderer->Hide(pipe->drawable);
         pipes.push_back(pipe);
     }
 
@@ -32,16 +35,19 @@ void FlappyBird::Init()
 
     audio->PlayMusic("Assets/Sounds/marios_way.mp3");
 
-    startPos = bird->drawable->ubo.model[3];
+    //startPos = bird->drawable->ubo.model[3];
+    startPos = renderer->GetPosition(bird->drawable);
 }
 
 void FlappyBird::Update(float deltaTime)
 {
     // Scroll background and ground
-    background->drawable->ubo.model[3].x -= 0.7f;
-    ground->drawable->ubo.model[3].x -= 1.0f;
+    //background->drawable->ubo.model[3].x -= 0.7f;
+    //ground->drawable->ubo.model[3].x -= 1.0f;
+    renderer->Translate(background->drawable, glm::vec3(-0.7f,0,0));
+    renderer->Translate(ground->drawable, glm::vec3(-1.0f,0,0));
 
-    if (background->drawable->ubo.model[3].x
+    /*if (background->drawable->ubo.model[3].x
         < (-background->drawable->textureWidth))
     {
         background->drawable->ubo.model[3].x = -330;
@@ -151,5 +157,5 @@ void FlappyBird::Update(float deltaTime)
 
     matrix[3].y += force;
 
-    force += 0.1f;
+    force += 0.1f;*/
 }

@@ -8,7 +8,7 @@ void Sphere::GenerateIcoSphere(const char *vert, const char *frag, const char* t
     std::vector<Vertex> vertices;
     std::vector<unsigned> indices;
 
-    drawable = &renderer->CreateDrawable(vertices, indices, vert, frag);
+    drawable = renderer->CreateDrawable(vertices, indices, vert, frag);
 }
 
 void Sphere::GenerateUVSphere(const char *vert, const char *frag, const char* texture)
@@ -80,7 +80,7 @@ void Sphere::GenerateUVSphere(const char *vert, const char *frag, const char* te
         }
     }
 
-    drawable = &renderer->CreateDrawable(vertices, indices, vert, frag, Renderer::TRIANGLES, texture, true, isInstanced);
+    drawable = renderer->CreateDrawable(vertices, indices, vert, frag, Renderer::TRIANGLES, texture, true, isInstanced);
 }
 
 void Sphere::Init(const char *vert, const char *frag, const char *texture)
@@ -101,11 +101,10 @@ Sphere::Sphere(const char* texture)
         Init("shaders/phong.vert.spv", "shaders/phong.frag.spv", texture);
     }
 
-    glm::mat4& matrix = drawable->ubo.model;
-
     if (texture[0] == '\0')
     {
-        drawable->ubo.colour = glm::vec4(1.0f); // white
+        //drawable->ubo.colour = glm::vec4(1.0f); // white
+        renderer->SetColour(drawable, glm::vec4(1.0f));
     }
 }
 
@@ -113,9 +112,8 @@ Sphere::Sphere(float x, float y, float z, glm::vec3 scale)
 {
     Init();
 
-    glm::mat4& matrix = drawable->ubo.model;
-    matrix = glm::translate(matrix, glm::vec3(x, y, z));
-    matrix = glm::scale(matrix, scale);
+    renderer->Translate(drawable, glm::vec3(x, y, z));
+    renderer->Scale(drawable, scale);
 }
 
 Sphere::Sphere(glm::vec3 scale, glm::vec3 colour, const char* vertShader, const char* fragShader, bool instanced)
@@ -123,15 +121,15 @@ Sphere::Sphere(glm::vec3 scale, glm::vec3 colour, const char* vertShader, const 
     isInstanced = instanced;
     Init(vertShader, fragShader);
 
-    glm::mat4& matrix = drawable->ubo.model;
-    matrix = glm::scale(matrix, scale);
-    drawable->ubo.colour = glm::vec4(colour, 1.0f);
+    renderer->Scale(drawable, scale);
+    renderer->SetColour(drawable, glm::vec4(colour, 1.0f));
 }
 
 void Sphere::Update()
 {
     if (gameObject)
     {
-        drawable->ubo.model = gameObject->matrix;
+        //drawable->ubo.model = gameObject->matrix;
+        renderer->SetModel(drawable, gameObject->matrix);
     }
 }

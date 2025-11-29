@@ -1,6 +1,5 @@
 #include "cube.h"
 #include "core/components/gameobject.h"
-#include "glm/gtc/matrix_transform.hpp"
 
 void Cube::Init(glm::vec3 color)
 {
@@ -53,21 +52,21 @@ Cube::Cube(float x, float y, float z, glm::vec3 scale, glm::vec3 color)
 
     Init(color);
 
-    drawable = &renderer->CreateDrawable(vertices,
+    drawable = renderer->CreateDrawable(vertices,
                                          indices,
                                          "shaders/color.vert.spv",
                                          "shaders/color.frag.spv",
                                          Renderer::TRIANGLES);
 
-    glm::mat4& matrix = drawable->ubo.model;
-    matrix = glm::translate(matrix, glm::vec3(glm::vec3(x, y, z)));
-    matrix = glm::scale(matrix, scale);
+    renderer->Translate(drawable, glm::vec3(glm::vec3(x, y, z)));
+    renderer->Scale(drawable, scale);
 }
 
 void Cube::Update()
 {
     if (gameObject)
     {
-        drawable->ubo.model = gameObject->matrix;
+        renderer->SetModel(drawable, gameObject->matrix);
+        //drawable->ubo.model = gameObject->matrix;
     }
 }

@@ -12,7 +12,7 @@ using json = nlohmann::json;
 
 class Component;
 
-class GameObject
+class GameObject : public Locator
 {
 public:
     json mat4_to_json(const glm::mat4& m)

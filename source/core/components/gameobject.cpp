@@ -35,13 +35,15 @@ void GameObject::AddComponent(Component* newComponent)
 
     if (visualObject)
     {
-        visualObject->drawable->ubo.model = matrix;
+        //visualObject->drawable->ubo.model = matrix;
+        renderer->SetModel(visualObject->drawable, matrix);
     }
 }
 
 void GameObject::Update()
 {
-    wiredCube->drawable->ubo.model = matrix;
+    //wiredCube->drawable->ubo.model = matrix;
+    renderer->SetModel(wiredCube->drawable, matrix);
 
     for (unsigned i = 0; i < components.size(); i++)
     {

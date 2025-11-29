@@ -99,7 +99,7 @@ void Mesh::loadMesh(const char *filePath, const char *vertexShaderPath, const ch
         }
     }
 
-    drawable = &renderer->CreateDrawable(vertices, indices, vertexShaderPath, fragmentShaderPath, Renderer::TRIANGLES, texture.c_str());
+    drawable = renderer->CreateDrawable(vertices, indices, vertexShaderPath, fragmentShaderPath, Renderer::TRIANGLES, texture.c_str());
 }
 
 void Mesh::loadMeshGLTF(const char *filePath, const char *vertexShaderPath, const char *fragmentShaderPath)
@@ -144,7 +144,8 @@ void Mesh::Update()
 {
     if (gameObject)
     {
-        drawable->ubo.model = gameObject->matrix;
+        //drawable->ubo.model = gameObject->matrix;
+        renderer->SetModel(drawable, gameObject->matrix);
     }
 }
 

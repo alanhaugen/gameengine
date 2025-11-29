@@ -25,7 +25,7 @@ public:
 
     bool jumped = false;
     float force = 0.0f;
-    glm::vec4 startPos;
+    glm::vec3 startPos;
 
     Text* instructions;
 

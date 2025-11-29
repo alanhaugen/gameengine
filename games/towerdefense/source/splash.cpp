@@ -8,8 +8,8 @@ void Splash::Init()
     Sprite* sprite = new Sprite("Assets/Textures/huldralogo.png");
     logo->AddComponent(sprite);
 
-    float posX = renderer->windowWidth / 2 - sprite->drawable->textureWidth / 2;
-    float posY = renderer->windowHeight / 2 - sprite->drawable->textureHeight / 2;
+    float posX = renderer->windowWidth  / 2 - renderer->GetTextureWidth(sprite->drawable) / 2;
+    float posY = renderer->windowHeight / 2 - renderer->GetTextureHeight(sprite->drawable) / 2;
 
     logo->SetPosition(glm::vec3(posX, posY, 0));
 

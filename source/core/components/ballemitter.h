@@ -19,9 +19,11 @@ public:
     {
         ballMesh = new Sphere(glm::vec3(1.0f),
                               glm::vec3(0.0f / 256.0f, 124.0f / 256.0f, 181.0f / 256.0f),
-                              "shaders/phong.vert.spv",
-                              "shaders/phong.frag.spv", false);
+                              "shaders/color.vert.spv",
+                              "shaders/color.frag.spv", false);
         tracking = new TrackingSpline();
+        tracking->followObject = ballMesh;
+        tracking->recreateSplineTime = 1500.0f;
         terrainMesh = terrain;
         rigidBody = new RigidBody(terrain);
         ballMesh->Hide();
@@ -29,6 +31,11 @@ public:
 
     void Update()
     {
+        if (renderer->isVisible(ballMesh->drawable))
+        {
+            tracking->Update();
+        }
+
         rigidBody->Update(ballMesh);
         ballMesh->Update();
     }
@@ -39,6 +46,7 @@ class BallEmitter : public Component
 public:
     std::vector<InstancedBall*> balls;
     std::vector<bool> active;
+    std::vector<glm::vec3> ballVelocities;
 
     BallEmitter(Terrain* terrain);
     void Update();

@@ -596,8 +596,6 @@ void MainWindow::NewGameObject()
     newObject->wiredCube->Show();
     ObjSelected = newObject;
 
-    newObject->wiredCube->drawable->ubo.model = newObject->matrix;
-
     UpdateInspector();
 }
 
@@ -692,6 +690,11 @@ void MainWindow::CreateWaterEmittor()
     if (ObjSelected == nullptr)
     {
         NewGameObject();
+    }
+
+    if (mainTerrain == nullptr)
+    {
+        CreateTerrain();
     }
 
     ObjSelected->AddComponent(new BallEmitter(mainTerrain));

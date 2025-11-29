@@ -10,18 +10,24 @@ TrackingSpline::TrackingSpline()
 
 void TrackingSpline::Update()
 {
-    if (sampleTimer.TimeSinceStarted() > 500.0f)
+    if (sampleTimer.TimeSinceStarted() > recreateSplineTime)
     {
-        glm::vec3 pos = gameObject->GetPosition();
+        glm::vec3 pos;
+
+        if (gameObject)
+        {
+            pos = gameObject->GetPosition();
+        }
+        else if (followObject)
+        {
+            pos = followObject->GetPosition();
+        }
+
         sampleTimer.Reset();
         curve.controlPoints.push_back(pos);
         points.push_back(pos);
 
-        if (splineDrawable)
-        {
-            //linesDrawable->isVisible = false;
-            splineDrawable->isVisible = false;
-        }
+        renderer->RemoveDrawable(splineDrawable);
 
         std::vector<Vertex> vertices;
 
@@ -42,7 +48,7 @@ void TrackingSpline::Update()
             vertices.push_back(Vertex(curve.EvaluateBSplineSimple(u), glm::vec3(1,1,1)));
         }
 
-        splineDrawable = &renderer->CreateDrawable(vertices, std::vector<unsigned>(), "shaders/color.vert.spv", "shaders/color.frag.spv", Renderer::LINES_STRIP);
+        splineDrawable = renderer->CreateDrawable(vertices, std::vector<unsigned>(), "shaders/color.vert.spv", "shaders/color.frag.spv", Renderer::LINES_STRIP);
         //linesDrawable = &renderer->CreateDrawable(points, std::vector<unsigned>(), "shaders/color.vert.spv", "shaders/color.frag.spv", Renderer::LINES_STRIP);
     }
 }

@@ -33,15 +33,16 @@ WiredCube::WiredCube(float x, float y, float z, glm::vec3 scale)
     indices.push_back(2);indices.push_back(6);
     indices.push_back(3);indices.push_back(7);
 
-    drawable = &renderer->CreateDrawable(vertices,
+    drawable = renderer->CreateDrawable(vertices,
                                          indices,
                                          "shaders/color.vert.spv",
                                          "shaders/color.frag.spv",
                                          Renderer::LINES);
 
-    glm::mat4& matrix = drawable->ubo.model;
-    matrix = glm::translate(matrix, glm::vec3(glm::vec3(x, y, z)));
-    matrix = glm::scale(matrix, scale);
+    renderer->Translate(drawable, glm::vec3(glm::vec3(x, y, z)));
+    renderer->Scale(drawable, scale);
+    //matrix = glm::translate(matrix, glm::vec3(glm::vec3(x, y, z)));
+    //matrix = glm::scale(matrix, scale);
 }
 
 void WiredCube::Update()

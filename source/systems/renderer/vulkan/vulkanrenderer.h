@@ -13,7 +13,7 @@
 struct SwapChainSupportDetails;
 struct QueueFamilyIndices;
 
-const int MAX_DRAWABLES = 40000;
+const int MAX_DRAWABLES = 1000000;
 
 class VulkanRenderer : public QWindow, public NullRenderer
 {
@@ -31,22 +31,22 @@ public:
         bool depthTesting;
     };
 
-    int instances = 0;
-
     std::vector<Pipeline> pipelines;
 
     explicit VulkanRenderer(QWindow* parent = nullptr);
     ~VulkanRenderer();
 
     void initVulkan();
-    Drawable& CreateDrawable(std::vector<Vertex> vertices,
-                             std::vector<uint32_t> indices,
-                             const char* vertexShader,
-                             const char* fragmentShader,
-                             const int topology = TRIANGLES,
-                             const char* texture = "",
-                             const bool depthTesting = true,
-                             const bool isInstanced = false) override;
+    int CreateDrawable(std::vector<Vertex> vertices,
+                       std::vector<uint32_t> indices,
+                       const char* vertexShader,
+                       const char* fragmentShader,
+                       const int topology = TRIANGLES,
+                       const char* texture = "",
+                       const bool depthTesting = true,
+                       const bool isInstanced = false) override;
+
+    void RemoveDrawable(int index) override;
 
     void Render();
 
@@ -59,6 +59,8 @@ private:
     int drawablesQuantity = 0;
     int texturesQuantity = 0;
     Drawable drawables[MAX_DRAWABLES];
+    unsigned int denseIndex[MAX_DRAWABLES];
+    std::vector<unsigned int> sparseIndex;
     VulkanTexture textures[MAX_DRAWABLES];
     glm::vec3 cameraPos;
     glm::vec3 lightPos;

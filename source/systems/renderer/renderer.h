@@ -63,6 +63,8 @@ public:
         int textureId;
 
         int offset = 0;
+        int instanceCount = 1;
+        int instanceOffset;
 
         float textureWidth = 0.0f;
         float textureHeight = 0.0f;
@@ -70,7 +72,7 @@ public:
 
     float windowWidth, windowHeight;
 
-    virtual Drawable& CreateDrawable(std::vector<Vertex> vertices,
+    virtual int CreateDrawable(std::vector<Vertex> vertices,
                                      std::vector<uint32_t> indices = std::vector<uint32_t>(),
                                      const char* vertexShader = "shaders/vert.spv",
                                      const char* fragmentShader = "shaders/frag.spv",
@@ -78,6 +80,41 @@ public:
                                      const char* texture = "",
                                      const bool depthTesting = true,
                                      const bool isInstanced = false) = 0;
+
+    virtual void RemoveDrawable(int index) = 0;
+
+    virtual void SetModel(int drawable, glm::mat4 model) = 0;
+    virtual void SetColour(int drawable, glm::vec4 colour) = 0;
+    virtual void SetPosition(int drawable, glm::vec3 pos) = 0;
+    virtual glm::vec3 GetPosition(int drawable) = 0;
+    virtual void Scale(int drawable, glm::vec3 scale) = 0;
+    virtual void Rotate(int drawable, float angle, glm::vec3 axis) = 0;
+    virtual void Translate(int drawable, glm::vec3 translation) = 0;
+    virtual void Show(int drawable) = 0;
+    virtual void Hide(int drawable) = 0;
+    virtual void SetWidth(int drawable, float width) = 0;
+    virtual float GetWidth(int drawable) = 0;
+    virtual void SetHeight(int drawable, float height) = 0;
+    virtual float GetHeight(int drawable) = 0;
+    virtual void SetTotalTextureWidth(int drawable, float textureWidth) = 0;
+    virtual float GetTotalTextureWidth(int drawable) = 0;
+    virtual void SetTotalTextureHeight(int drawable, float textureHeight) = 0;
+    virtual float GetTotalTextureHeight(int drawable) = 0;
+    virtual void SetTextureWidth(int drawable, float textureWidth) = 0;
+    virtual float GetTextureWidth(int drawable) = 0;
+    virtual void SetTextureHeight(int drawable, float textureHeight) = 0;
+    virtual float GetTextureHeight(int drawable) = 0;
+    virtual void SetScaleX(int drawable, float scaleX) = 0;
+    virtual float GetScaleX(int drawable) = 0;
+    virtual void SetScaleY(int drawable, float scaleY) = 0;
+    virtual float GetScaleY(int drawable) = 0;
+    virtual void SetFlipX(int drawable, float flipX) = 0;
+    virtual float GetFlipX(int drawable) = 0;
+    virtual void SetFlipY(int drawable, float flipY) = 0;
+    virtual float GetFlipY(int drawable) = 0;
+    virtual void SetSpriteSheetFrameIndex(int drawable, float index) = 0;
+    virtual int GetSpriteSheetFrameIndex(int drawable) = 0;
+    virtual bool isVisible(int drawable) = 0;
 
     virtual void SetViewMatrix(glm::mat4 view) = 0;
     virtual void SetCameraPosition(glm::vec3 pos) = 0;

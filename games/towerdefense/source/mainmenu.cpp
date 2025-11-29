@@ -35,9 +35,9 @@ void MainMenu::Init()
     logo = new Sprite("Assets/Textures/towerofpowerlogo.png", 0, 0, 0.3, 0.3);
     playGameButton = new Sprite("Assets/Textures/playTowerDefenseButton.png", 0, 0, 0.2, 0.2);
     quitGameButton = new Sprite("Assets/Textures/quitTowerDefenseButton.png", 0, 0, 0.2, 0.2);
-    float logoOffsetX = ((renderer->windowWidth / 2) - (logo->drawable->textureWidth * 0.3) / 2);
+    float logoOffsetX = ((renderer->windowWidth / 2) - (renderer->GetTextureWidth(logo->drawable) * 0.3) / 2);
     logo->SetPosition(glm::vec3(logoOffsetX, 0, 0));
-    float playButtonOffsetX = ((renderer->windowWidth / 2) - (playGameButton->drawable->textureWidth * 0.2) / 2);
+    float playButtonOffsetX = ((renderer->windowWidth / 2) - (renderer->GetTextureWidth(playGameButton->drawable) * 0.2) / 2);
     playGameButton->SetPosition(glm::vec3(playButtonOffsetX - 200, 300, 0));
     quitGameButton->SetPosition(glm::vec3(playButtonOffsetX + 200, 300, 0));
 
@@ -62,7 +62,7 @@ void MainMenu::Update(float deltaTime)
         Application::Quit();
     }
 
-    if (playGameButton->drawable->isVisible)
+    if (renderer->isVisible(playGameButton->drawable))
     {
         return;
     }

@@ -24,17 +24,22 @@ void Breakout::Init()
     }
 
     paddle = new Sprite("Assets/Textures/blocks.png", 100, 600, 1, 1, 128, 16);
-    paddle->drawable->ubo.index.x = 6;
+    renderer->SetSpriteSheetFrameIndex(paddle->drawable, 6);
+    //paddle->drawable->ubo.index.x = 6;
 
     for (int i = 0; i < 7; i++)
     {
         balls.push_back(new Sprite("Assets/Textures/blocks.png", 600, 400, 1, 1, 8, 8));
         ballDirection.push_back(glm::vec3(1,1,0));
-        balls[i]->drawable->ubo.index[0] = 192 / 8 * 4;
-        balls[i]->drawable->isVisible = false;
+
+        renderer->SetSpriteSheetFrameIndex(balls[i]->drawable, 192 / 8 * 4);
+        renderer->Hide(balls[i]->drawable);
+        //balls[i]->drawable->ubo.index[0] = 192 / 8 * 4;
+        //balls[i]->drawable->isVisible = false;
     }
 
-    balls[0]->drawable->isVisible = true;
+    //balls[0]->drawable->isVisible = true;
+    renderer->Show(balls[0]->drawable);
 
     background = new Sprite("Assets/Textures/background_2.png", -5, -5, 3.8, 5.6);
 }
@@ -43,10 +48,12 @@ void Breakout::Update()
 {
     for (int i = 0; i < 7; i++)
     {
-        if (balls[i]->drawable->isVisible)
+        if (renderer->isVisible(balls[i]->drawable))
         {
-            balls[i]->drawable->ubo.model[3] += glm::vec4(ballDirection[i],1);
-            glm::vec4 pos = balls[i]->drawable->ubo.model[3];
+            renderer->Translate(balls[i]->drawable, ballDirection[i]);
+            glm::vec3 pos = renderer->GetPosition(balls[i]->drawable);
+            //balls[i]->drawable->ubo.model[3] += glm::vec4(ballDirection[i],1);
+            //glm::vec4 pos = balls[i]->drawable->ubo.model[3];
 
             if (pos.x > 1080)
             {
@@ -67,6 +74,11 @@ void Breakout::Update()
         }
     }
 
-    paddle->drawable->ubo.model[3].x = input.mouse.x * 2 - paddle->drawable->textureWidth / 2;
+    glm::vec3 pos = renderer->GetPosition(paddle->drawable);
+    renderer->SetPosition(paddle->drawable,
+                          glm::vec3(input.mouse.x * 2 - renderer->GetTextureWidth(paddle->drawable) / 2,
+                                    pos.y,
+                                    pos.z));
+    //paddle->drawable->ubo.model[3].x = input.mouse.x * 2 - paddle->drawable->textureWidth / 2;
 
 }

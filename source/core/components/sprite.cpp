@@ -43,46 +43,58 @@ Sprite::Sprite(const char* texture, float x, float y, float scaleX, float scaleY
         vertices.push_back(topLeft);
     }
 
-    drawable = &renderer->CreateDrawable(vertices,
-                                         indices,
-                                         "shaders/gui.vert.spv",
-                                         "shaders/gui.frag.spv",
-                                         Renderer::TRIANGLES,
-                                         texture,
-                                         false);
+    drawable = renderer->CreateDrawable(vertices,
+                                        indices,
+                                        "shaders/gui.vert.spv",
+                                        "shaders/gui.frag.spv",
+                                        Renderer::TRIANGLES,
+                                        texture,
+                                        false);
 
     if (width == 0 && height == 0)
     {
-        drawable->ubo.width.x  = drawable->textureWidth;
-        drawable->ubo.height.x = drawable->textureHeight;
+        //drawable->ubo.width.x  = drawable->textureWidth;
+        //drawable->ubo.height.x = drawable->textureHeight;
+        renderer->SetWidth(drawable, renderer->GetTextureWidth(drawable));
+        renderer->SetHeight(drawable, renderer->GetTextureHeight(drawable));
     }
     else
     {
-        drawable->ubo.width.x  = width;
-        drawable->ubo.height.x = height;
+        //drawable->ubo.width.x  = width;
+        //drawable->ubo.height.x = height;
+        renderer->SetWidth(drawable, width);
+        renderer->SetHeight(drawable, height);
     }
 
-    drawable->ubo.totalWidth.x = drawable->textureWidth;
-    drawable->ubo.totalHeight.x = drawable->textureHeight;
-    drawable->ubo.flip.x = 0.0f;
-    drawable->ubo.flipVertical.x = 0.0f;
-    drawable->ubo.scaleX.x = scaleX;
-    drawable->ubo.scaleY.x = scaleY;
+    renderer->SetTotalTextureWidth(drawable, renderer->GetTextureWidth(drawable));
+    renderer->SetTotalTextureHeight(drawable, renderer->GetTextureHeight(drawable));
+    renderer->SetFlipX(drawable, 0.0f);
+    renderer->SetFlipY(drawable, 0.0f);
+    renderer->SetScaleX(drawable, scaleX);
+    renderer->SetScaleY(drawable, scaleY);
+    //drawable->ubo.totalWidth.x = drawable->textureWidth;
+    //drawable->ubo.totalHeight.x = drawable->textureHeight;
+    //drawable->ubo.flip.x = 0.0f;
+    //drawable->ubo.flipVertical.x = 0.0f;
+    //drawable->ubo.scaleX.x = scaleX;
+    //drawable->ubo.scaleY.x = scaleY;
 
-    drawable->ubo.model = glm::translate(drawable->ubo.model, glm::vec3(x,y,0));
+    renderer->Translate(drawable, glm::vec3(x, y, 0));
+    //drawable->ubo.model = glm::translate(drawable->ubo.model, glm::vec3(x,y,0));
 }
 
 void Sprite::Update()
 {
     if (gameObject)
     {
-        drawable->ubo.model = gameObject->matrix;
+        //drawable->ubo.model = gameObject->matrix;
+        renderer->SetModel(drawable, gameObject->matrix);
     }
 }
 
 bool Sprite::IsPressed()
 {
-    if (drawable->isVisible == false)
+    if (renderer->isVisible(drawable) == false)
     {
         return false;
     }
@@ -90,9 +102,9 @@ bool Sprite::IsPressed()
     if (input.mouse.Down)
     {
         if (input.mouse.x > GetPosition().x &&
-            input.mouse.x < GetPosition().x + (drawable->textureWidth * drawable->ubo.scaleX.x) &&
+            input.mouse.x < GetPosition().x + (renderer->GetTextureWidth(drawable) * renderer->GetScaleX(drawable)) &&
             input.mouse.y > GetPosition().y &&
-            input.mouse.y < GetPosition().y + (drawable->textureHeight * drawable->ubo.scaleY.x))
+            input.mouse.y < GetPosition().y + (renderer->GetTextureHeight(drawable) * renderer->GetScaleY(drawable)))
         {
             return true;
         }

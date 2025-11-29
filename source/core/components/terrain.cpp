@@ -34,7 +34,7 @@ Terrain::Terrain()
     name = "Terrain";
     Init();
 
-    drawable = &renderer->CreateDrawable(vertices, indices, "shaders/color.vert.spv", "shaders/color.frag.spv");
+    drawable = renderer->CreateDrawable(vertices, indices, "shaders/color.vert.spv", "shaders/color.frag.spv");
 }
 
 Terrain::Terrain(const char *filePath, const bool isCloud)
@@ -52,7 +52,7 @@ Terrain::Terrain(const char *filePath, const bool isCloud)
             vertices.push_back(Vertex{x - offset.x, y - offset.y, z - offset.z});
         }
 
-        drawable = &renderer->CreateDrawable(vertices, indices, "shaders/phong.vert.spv", "shaders/phong.frag.spv", Renderer::POINTS);
+        drawable = renderer->CreateDrawable(vertices, indices, "shaders/phong.vert.spv", "shaders/phong.frag.spv", Renderer::POINTS);
     }
     else
     {
@@ -150,7 +150,7 @@ Terrain::Terrain(const char *filePath,
         v.normal = glm::normalize(v.normal);
     }
 
-    drawable = &renderer->CreateDrawable(vertices, indices, vertexShaderPath, fragmentShaderPath, Renderer::TRIANGLES, texturePath);
+    drawable = renderer->CreateDrawable(vertices, indices, vertexShaderPath, fragmentShaderPath, Renderer::TRIANGLES, texturePath);
 }
 
 void Terrain::Update()
