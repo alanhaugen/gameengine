@@ -91,9 +91,9 @@ protected:
 private:
     int drawablesQuantity = 0;
     int texturesQuantity = 0;
+    int currentID = 0;
     Drawable drawables[MAX_DRAWABLES];
-    unsigned int denseIndex[MAX_DRAWABLES];
-    std::vector<unsigned int> sparseIndex;
+    std::vector<int> sparseIndex;
     VulkanTexture textures[MAX_DRAWABLES];
     glm::vec3 cameraPos;
     glm::vec3 lightPos;

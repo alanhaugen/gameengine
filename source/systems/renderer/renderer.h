@@ -21,6 +21,8 @@ public:
     class Drawable
     {
     public:
+        int id;
+
         struct UniformBufferObject {
             alignas(16) glm::mat4 model;
             alignas(16) glm::mat4 view;

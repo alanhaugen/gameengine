@@ -681,7 +681,7 @@ void MainWindow::CreateTerrain()
         NewGameObject();
     }
 
-    mainTerrain = new Terrain("tools/pointconverter/output.png", "Assets/Textures/aerial_rocks_04_diff_1k.jpg");//"Assets/Textures/snow.jpg");
+    mainTerrain = new Terrain("Assets/output.png", "Assets/Textures/aerial_rocks_04_diff_1k.jpg");//"Assets/Textures/snow.jpg");
     ObjSelected->AddComponent(mainTerrain);
 }
 

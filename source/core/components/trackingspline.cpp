@@ -27,7 +27,10 @@ void TrackingSpline::Update()
         curve.controlPoints.push_back(pos);
         points.push_back(pos);
 
-        renderer->RemoveDrawable(splineDrawable);
+        if (splineDrawable != -1)
+        {
+            renderer->RemoveDrawable(splineDrawable);
+        }
 
         std::vector<Vertex> vertices;
 

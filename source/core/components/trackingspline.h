@@ -9,8 +9,8 @@
 class TrackingSpline : public Component
 {
 public:
-    int splineDrawable;
-    int linesDrawable;
+    int splineDrawable = -1;
+    int linesDrawable  = -1;
     std::vector<Vertex> points;
     VisualObject* followObject;
 
