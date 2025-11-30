@@ -50,9 +50,6 @@ public:
 
     Timer deltaTime;
 
-
-
-
 private:
     QWidget* vulkanWidget;
     QWidget* aboutWidget;
