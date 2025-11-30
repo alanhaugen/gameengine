@@ -10,7 +10,7 @@ class TerrainSnap : public Component
 public:
     Terrain* terrain;
     TerrainSnap(Terrain* inTerrain);
-    void Update();
+    void Update(float deltaTime);
 };
 
 #endif // TERRAINSNAP_H

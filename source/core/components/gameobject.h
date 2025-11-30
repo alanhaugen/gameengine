@@ -82,7 +82,7 @@ public:
 
     void AddComponent(Component* newComponent);
 
-    void Update();
+    void Update(float deltaTime);
 
     // Helper functions
     void SetPosition(float x, float y, float z)

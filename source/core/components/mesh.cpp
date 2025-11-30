@@ -140,7 +140,7 @@ void Mesh::loadMeshGLTF(const char *filePath, const char *vertexShaderPath, cons
     }
 }
 
-void Mesh::Update()
+void Mesh::Update(float deltaTime)
 {
     if (gameObject)
     {

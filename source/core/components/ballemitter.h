@@ -29,15 +29,15 @@ public:
         ballMesh->Hide();
     }
 
-    void Update()
+    void Update(float deltaTime)
     {
         if (renderer->isVisible(ballMesh->drawable))
         {
-            tracking->Update();
+            tracking->Update(deltaTime);
         }
 
-        rigidBody->Update(ballMesh);
-        ballMesh->Update();
+        rigidBody->Update(ballMesh, deltaTime);
+        ballMesh->Update(deltaTime);
     }
 };
 
@@ -49,7 +49,7 @@ public:
     std::vector<glm::vec3> ballVelocities;
 
     BallEmitter(Terrain* terrain);
-    void Update();
+    void Update(float deltaTime);
     void Reset();
 };
 

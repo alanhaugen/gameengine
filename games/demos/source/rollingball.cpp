@@ -36,7 +36,7 @@ void RollingBall::Init()
 
 void RollingBall::Update(float deltaTime)
 {
-    particleSystem->Update();
+    particleSystem->Update(deltaTime);
 
     if (input.Held(input.Key.R))
     {

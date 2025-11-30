@@ -15,7 +15,7 @@ public:
     ~Camera() {}
 
     Physics::Ray ScreenPointToRay(float x, float y) const;
-    void Update() override;
+    void Update(float deltaTime) override;
 
     glm::vec3 position;
     glm::vec3 forward;

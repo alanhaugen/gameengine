@@ -21,7 +21,7 @@ public:
     Timer sampleTimer;
 
     TrackingSpline();
-    void Update();
+    void Update(float deltaTime);
 };
 
 #endif // TRACKINGSPLINE_H

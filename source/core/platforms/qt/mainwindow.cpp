@@ -274,8 +274,8 @@ void MainWindow::MainGameLoop()
     if (scene)
     {
         Cam.camera = &scene->camera;
-        Cam.Update();
-        scene->camera.Update();
+        Cam.Update(deltaTime.TimeSinceStarted());
+        scene->camera.Update(deltaTime.TimeSinceStarted());
 
         if (paused == false)
         {
@@ -286,7 +286,7 @@ void MainWindow::MainGameLoop()
         {
             if (paused == false)
             {
-                obj->Update();
+                obj->Update(deltaTime.TimeSinceStarted());
             }
 
             if (Locator::editor)

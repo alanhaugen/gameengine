@@ -15,7 +15,7 @@ public:
          glm::vec3 scale = glm::vec3(0.1f),
          glm::vec3 color = glm::vec3(1.0f));
 private:
-    void Update();
+    void Update(float deltaTime);
 };
 
 #endif // CUBE_H

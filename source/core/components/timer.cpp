@@ -13,7 +13,7 @@ Timer::Timer(float msTime, void (*function)())
     startTime = std::chrono::high_resolution_clock::now();
 }
 
-void Timer::Update()
+void Timer::Update(float deltaTime)
 {
     if(isActive == false)
         return;

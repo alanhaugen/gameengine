@@ -8,12 +8,12 @@ RigidBody::RigidBody(Terrain *inTerrain)
     terrain = inTerrain;
 }
 
-void RigidBody::Update()
+void RigidBody::Update(float deltaTime)
 {
-    Update(nullptr);
+    Update(nullptr, deltaTime);
 }
 
-void RigidBody::Update(VisualObject *mesh)
+void RigidBody::Update(VisualObject *mesh, float deltaTime)
 {
     glm::vec3 pos;
 
@@ -26,8 +26,8 @@ void RigidBody::Update(VisualObject *mesh)
         pos = mesh->GetPosition();
     }
 
-    velocity += terrain->GetNormal(pos) / 500.0f;
-    velocity -= velocity * terrain->GetFriction(pos);// * deltaTime;
+    velocity += (terrain->GetNormal(pos) / 500.0f) * deltaTime;
+    velocity -= velocity * terrain->GetFriction(pos) * deltaTime;
     velocity.y = 0.0f;
 
     pos += velocity;

@@ -6,7 +6,7 @@ FPVCamera::FPVCamera(Camera* innCamera)
     camera = innCamera;
 }
 
-void FPVCamera::Update()
+void FPVCamera::Update(float deltaTime)
 {
     UpdateCamera();
 

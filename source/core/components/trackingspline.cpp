@@ -8,7 +8,7 @@ TrackingSpline::TrackingSpline()
     sampleTimer.Start();
 }
 
-void TrackingSpline::Update()
+void TrackingSpline::Update(float deltaTime)
 {
     if (curve.controlPoints.empty())
     {

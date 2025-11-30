@@ -13,8 +13,8 @@ public:
     float mass;
 
     RigidBody(Terrain* inTerrain);
-    void Update();
-    void Update(VisualObject* mesh);
+    void Update(float deltaTime);
+    void Update(VisualObject* mesh, float deltaTime);
 };
 
 #endif // RIGIDBODY_H

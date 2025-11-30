@@ -123,7 +123,7 @@ Sphere::Sphere(glm::vec3 scale, glm::vec3 colour, const char* vertShader, const 
     renderer->SetColour(drawable, glm::vec4(colour, 1.0f));
 }
 
-void Sphere::Update()
+void Sphere::Update(float deltaTime)
 {
     if (gameObject)
     {

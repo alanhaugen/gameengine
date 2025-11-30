@@ -11,7 +11,7 @@ public:
               float z = 0.0f,
               glm::vec3 scale = glm::vec3(1.0f));
 private:
-    void Update();
+    void Update(float deltaTime);
 };
 
 #endif // WIREDCUBE_H

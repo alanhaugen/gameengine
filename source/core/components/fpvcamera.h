@@ -8,7 +8,7 @@ class FPVCamera : public Component
 {
 public:
     FPVCamera(Camera* camera = nullptr);
-    void Update();
+    void Update(float deltaTime);
 
     void UpdateCamera();
     float speed = 1.00;

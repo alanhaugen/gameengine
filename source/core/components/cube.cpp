@@ -62,7 +62,7 @@ Cube::Cube(float x, float y, float z, glm::vec3 scale, glm::vec3 color)
     renderer->Scale(drawable, scale);
 }
 
-void Cube::Update()
+void Cube::Update(float deltaTime)
 {
     if (gameObject)
     {

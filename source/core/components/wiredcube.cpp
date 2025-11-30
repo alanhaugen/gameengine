@@ -45,6 +45,6 @@ WiredCube::WiredCube(float x, float y, float z, glm::vec3 scale)
     //matrix = glm::scale(matrix, scale);
 }
 
-void WiredCube::Update()
+void WiredCube::Update(float deltaTime)
 {
 }

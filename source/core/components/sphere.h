@@ -22,7 +22,7 @@ public:
            const char* vertShader = "shaders/color.vert.spv",
            const char* fragShader = "shaders/color.frag.spv",
            bool instanced = false);
-    void Update();
+    void Update(float deltaTime);
 };
 
 #endif // SPHERE_H

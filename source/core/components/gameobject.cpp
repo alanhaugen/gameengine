@@ -40,13 +40,13 @@ void GameObject::AddComponent(Component* newComponent)
     }
 }
 
-void GameObject::Update()
+void GameObject::Update(float deltaTime)
 {
     //wiredCube->drawable->ubo.model = matrix;
     renderer->SetModel(wiredCube->drawable, matrix);
 
     for (unsigned i = 0; i < components.size(); i++)
     {
-        components[i]->Update();
+        components[i]->Update(deltaTime);
     }
 }

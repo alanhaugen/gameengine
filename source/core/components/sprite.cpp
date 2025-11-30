@@ -72,7 +72,7 @@ Sprite::Sprite(const char* texture, float x, float y, float scaleX, float scaleY
     renderer->Translate(drawable, glm::vec3(x, y, 0));
 }
 
-void Sprite::Update()
+void Sprite::Update(float deltaTime)
 {
     if (gameObject)
     {

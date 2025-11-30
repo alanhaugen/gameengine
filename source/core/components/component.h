@@ -9,5 +9,5 @@ class Component : public Locator
 public:
     std::string name = "Component";
     GameObject* gameObject = nullptr;
-    virtual void Update() = 0;
+    virtual void Update(float deltaTime) = 0;
 };

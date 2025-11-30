@@ -9,7 +9,7 @@ public:
     Physics::Collider* collider;
 
     BoxCollider(GameObject* inGameObject, int type = Physics::DYNAMIC);
-    void Update();
+    void Update(float deltaTime);
     bool IsColliding();
 };
 

@@ -50,7 +50,7 @@ Terrain::Terrain(const char *filePath, const bool isCloud)
         while (infile >> x >> z >> y)
         {
             static glm::vec3 offset = glm::vec3(x,y,z);
-            vertices.push_back(Vertex{x - offset.x, y - offset.y, z - offset.z});
+            vertices.push_back(Vertex{x - offset.x, y - offset.y, z - offset.z, glm::vec3(81/255.f, 7/255.f,74/255.f)});
         }
 
         drawable = renderer->CreateDrawable(vertices, indices, "shaders/phong.vert.spv", "shaders/phong.frag.spv", Renderer::POINTS);
@@ -154,7 +154,7 @@ Terrain::Terrain(const char *filePath,
     drawable = renderer->CreateDrawable(vertices, indices, vertexShaderPath, fragmentShaderPath, Renderer::TRIANGLES, texturePath);
 }
 
-void Terrain::Update()
+void Terrain::Update(float deltaTime)
 {
 }
 

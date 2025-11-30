@@ -33,7 +33,7 @@ private:
                                        int my_u, int my_v);
 public :
     BSplineSurface();
-    void Update();
+    void Update(float deltaTime);
 };
 
 #endif // BSPLINESURFACE_H

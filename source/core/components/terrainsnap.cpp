@@ -8,7 +8,7 @@ TerrainSnap::TerrainSnap(Terrain* inTerrain)
     terrain = inTerrain;
 }
 
-void TerrainSnap::Update()
+void TerrainSnap::Update(float deltaTime)
 {
     if (gameObject)
     {

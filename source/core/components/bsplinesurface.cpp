@@ -125,6 +125,6 @@ BSplineSurface::BSplineSurface()
     makeBiquadraticSurface();
 }
 
-void BSplineSurface::Update()
+void BSplineSurface::Update(float deltaTime)
 {
 }

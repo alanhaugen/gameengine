@@ -7,7 +7,7 @@ BoxCollider::BoxCollider(GameObject* inGameObject, int type)
     collider = physics->CreateCollider(inGameObject, type);
 }
 
-void BoxCollider::Update()
+void BoxCollider::Update(float deltaTime)
 {
 }
 

@@ -13,7 +13,7 @@ public:
     bool isPaused;
     bool isStarted;
 
-    void Update() override;
+    void Update(float deltaTime) override;
     void Start();
     void Reset();
     void Pause();

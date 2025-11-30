@@ -16,11 +16,11 @@ BallEmitter::BallEmitter(Terrain *terrain)
     }
 }
 
-void BallEmitter::Update()
+void BallEmitter::Update(float deltaTime)
 {
     for (int i = 0; i < balls.size(); i++)
     {
-        balls[i]->Update();
+        balls[i]->Update(deltaTime);
     }
 
     for (int i = 0; i < active.size(); i++)

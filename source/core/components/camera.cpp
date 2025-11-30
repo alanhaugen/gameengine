@@ -28,7 +28,7 @@ Camera::Camera(float x, float y, float z)
     position = glm::vec3(x, y, z);
 }
 
-void Camera::Update()
+void Camera::Update(float deltaTime)
 {
     renderer->SetViewMatrix(glm::lookAtRH(position, position + forward, up));
     renderer->SetCameraPosition(position);
