@@ -345,7 +345,7 @@ int VulkanRenderer::CreateDrawable(std::vector<Vertex> vertices,
     }
 
     drawables[drawablesQuantity] = drawable;
-    sparseIndex.push_back(currentID);
+    sparseIndex.push_back(drawablesQuantity);
 
     drawablesQuantity++;
     currentID++;
