@@ -10,7 +10,9 @@
 #include "core/components/terrain.h"
 #include "core/components/text.h"
 #include "core/components/trackingspline.h"
+#include "source/core/platforms/qt/ui_about.h"
 #include "ui_MainWindow.h"
+#include "ui_about.h"
 #include "systems/renderer/vulkan/vulkanrenderer.h"
 #include "core/components/mesh.h"
 #include <QTimer>
@@ -28,6 +30,7 @@
 MainWindow::MainWindow(QWidget *parent, const char* windowTitle, int windowWidth, int windowHeight)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
+    , about(new Ui::About)
 {
     //AssetManager
     mAssetManager = new AssetManager();
@@ -58,6 +61,9 @@ MainWindow::MainWindow(QWidget *parent, const char* windowTitle, int windowWidth
     renderer->windowWidth = windowWidth;
     renderer->windowHeight = windowHeight;
     renderer->initVulkan();
+
+    aboutWindow = new QWidget;
+    about->setupUi(aboutWindow);
 
     // Wrap VulkanRenderer (QWindow) into a QWidget
     vulkanWidget = QWidget::createWindowContainer(renderer, this);
@@ -155,6 +161,9 @@ MainWindow::MainWindow(QWidget *parent, const char* windowTitle, int windowWidth
     connect(ui->actionTracking_spline, &QAction::triggered, this, &MainWindow::CreateTrackingSpline);
     connect(ui->actionBSpline_surface, &QAction::triggered, this, &MainWindow::CreateBSplineSurface);
     connect(ui->actionPoint_cloud, &QAction::triggered, this, &MainWindow::CreatePointCloud);
+
+    connect(ui->actionAbout, &QAction::triggered, this, &MainWindow::ShowAboutWidget);
+    connect(about->pushButton, &QPushButton::released, this, &MainWindow::HideAboutWidget);
 
     connect(ui->actionPause, &QAction::triggered, this, &MainWindow::Pause);
     connect(ui->actionPlay, &QAction::triggered, this, &MainWindow::Play);
@@ -807,6 +816,17 @@ void MainWindow::CreatePointCloud()
     }
 
     ObjSelected->AddComponent(new Terrain("Assets/output_smallest.txt", true));
+}
+
+void MainWindow::ShowAboutWidget()
+{
+    aboutWindow->show();
+    aboutWindow->setFocus();
+}
+
+void MainWindow::HideAboutWidget()
+{
+    aboutWindow->hide();
 }
 
 void MainWindow::Pause()

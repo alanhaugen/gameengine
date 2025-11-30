@@ -68,7 +68,14 @@ qt_standard_project_setup()
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_AUTOUIC ON)
+
+set(PLATFORM QtApplication)
+
+if(PLATFORM STREQUAL "QtApplication")
+    set(CMAKE_AUTOUIC ON) # Generate header files for ui
+    set(CMAKE_AUTOMOC ON)
+    set(CMAKE_AUTORCC ON)
+endif()
 
 add_library(Core STATIC
     README.md
