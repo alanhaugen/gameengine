@@ -46,6 +46,8 @@ void Input::Update()
 
     mouse.xOld = mouse.x;
     mouse.yOld = mouse.y;
+
+    mouse.roll = 0.0f;
 }
 
 void Input::OnButton(const int button, const bool isDown)

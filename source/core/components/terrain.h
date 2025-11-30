@@ -22,7 +22,7 @@ public:
     void Update();
 
     float GetHeightAt(float x, float z) const;
-    float GetHeightAt(const glm::vec3 positionXZ) const;
-    glm::vec3 GetNormal(const glm::vec3 position) const;
-    float GetFriction(const glm::vec3 position) const;
+    float GetHeightAt(glm::vec3 positionXZ) const;
+    glm::vec3 GetNormal(glm::vec3 position) const;
+    float GetFriction(glm::vec3 position) const;
 };

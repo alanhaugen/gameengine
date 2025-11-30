@@ -345,7 +345,7 @@ int VulkanRenderer::CreateDrawable(std::vector<Vertex> vertices,
     }
 
     drawables[drawablesQuantity] = drawable;
-    sparseIndex.push_back(currentID);
+    sparseIndex.push_back(drawablesQuantity);
 
     drawablesQuantity++;
     currentID++;
@@ -2239,4 +2239,9 @@ void VulkanRenderer::mouseMoveEvent(QMouseEvent *eventMove)
     {
         QCursor::setPos(windowWidth / 2, windowHeight / 2);
     }*/
+}
+
+void VulkanRenderer::wheelEvent(QWheelEvent *eventWheel)
+{
+    Locator::input.mouse.roll = -(eventWheel->angleDelta().x() + eventWheel->angleDelta().y()) / 1000.0f;
 }

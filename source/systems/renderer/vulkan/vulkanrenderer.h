@@ -5,6 +5,7 @@
 #include <vulkan/vulkan_core.h>
 #include <string>
 #include <vector>
+#include <QWheelEvent>
 #include "vulkantexture.h"
 #include "../vertex.h"
 #include "../null/nullrenderer.h"
@@ -229,6 +230,7 @@ protected:
     void mousePressEvent(QMouseEvent *eventPress) override;
     void mouseReleaseEvent(QMouseEvent *releaseEvent) override;
     void mouseMoveEvent(QMouseEvent *eventMove) override;
+    void wheelEvent(QWheelEvent *eventWheel) override;
 };
 
 

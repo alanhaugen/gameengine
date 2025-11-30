@@ -16,6 +16,7 @@ class Terrain;
 QT_BEGIN_NAMESPACE
 namespace Ui {
 class MainWindow;
+class About;
 }
 QT_END_NAMESPACE
 
@@ -42,16 +43,16 @@ public:
     VulkanRenderer* renderer{nullptr};
 
     Ui::MainWindow *ui = nullptr;
+    Ui::About *about = nullptr;
+    QWidget *aboutWindow;
 
     void mousePressed(QMouseEvent*event);
 
     Timer deltaTime;
 
-
-
-
 private:
     QWidget* vulkanWidget;
+    QWidget* aboutWidget;
 
     //FPSCamera
     FPVCamera Cam;
@@ -96,6 +97,11 @@ private:
     void CreateRigidBody();
     void CreateTrackingSpline();
     void CreateBSplineSurface();
+    void ShowOrHideGameObject();
+    void CreatePointCloud();
+
+    void ShowAboutWidget();
+    void HideAboutWidget();
 
     void Pause();
     void Play();

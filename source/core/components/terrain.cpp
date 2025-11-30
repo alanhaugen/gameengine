@@ -1,4 +1,5 @@
 #include "terrain.h"
+#include "core/components/gameobject.h"
 #include "stb_image.h"
 #include <fstream>
 
@@ -162,8 +163,13 @@ float Terrain::GetHeightAt(float x, float z) const
     return GetHeightAt(glm::vec3(x, 0, z));
 }
 
-float Terrain::GetHeightAt(const glm::vec3 positionXZ) const
+float Terrain::GetHeightAt(glm::vec3 positionXZ) const
 {
+    if (gameObject)
+    {
+        positionXZ -= gameObject->GetPosition();
+    }
+
     float x = positionXZ.x;
     float z = positionXZ.z;
 
@@ -205,8 +211,13 @@ float Terrain::GetHeightAt(const glm::vec3 positionXZ) const
     return h;
 }
 
-glm::vec3 Terrain::GetNormal(const glm::vec3 position) const
+glm::vec3 Terrain::GetNormal(glm::vec3 position) const
 {
+    if (gameObject)
+    {
+        position -= gameObject->GetPosition();
+    }
+
     float x = position.x;
     float z = position.z;
 
@@ -241,8 +252,13 @@ glm::vec3 Terrain::GetNormal(const glm::vec3 position) const
     return glm::normalize(n);
 }
 
-float Terrain::GetFriction(const glm::vec3 positionXZ) const
+float Terrain::GetFriction(glm::vec3 positionXZ) const
 {
+    if (gameObject)
+    {
+        positionXZ -= gameObject->GetPosition();
+    }
+
     float x = positionXZ.x;
     float z = positionXZ.z;
 
