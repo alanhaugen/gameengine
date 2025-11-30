@@ -539,65 +539,6 @@ void MainWindow::UpdateInspector()
     ui->ScaleYSpin->setValue(scale.y);
     ui->ScaleZSpin->setValue(scale.z);
 
-    // when it get completed the editor this will attach the info of the components to the inspector
-    if(!ObjSelected->components.empty())
-    {
-        for (Component* comp: ObjSelected->components)
-        {
-            QString typeName = comp->name.c_str();
-
-            if(typeName == "Mesh")
-            {
-                ui->MeshBox->setVisible(true);
-                //qDebug()<<"Has Mesh" <<"/n";
-                Mesh* mesh = dynamic_cast<Mesh*>(comp);
-                QString currentMeshName = QFileInfo(QString(mesh->FilePath.c_str())).baseName();
-                QString currentTexture = QFileInfo(mesh->texture.c_str()).baseName();
-
-                qDebug()<<"info here:"<<currentMeshName <<"/n";
-                int index = ui->Mesh_Combo->findText(currentMeshName);
-                int TextureIndex= ui->Material_box->findText(currentTexture);
-
-                //qDebug()<<"Wow"<< mesh->texture << " :" << TextureIndex;
-                //block it from colling change mesh
-                QSignalBlocker blocker( ui->Mesh_Combo);
-                QSignalBlocker blockerMaterial( ui->Material_box);
-                ui->Mesh_Combo->setCurrentIndex(index);
-                ui->Material_box->setCurrentIndex(TextureIndex);
-            }
-            if(typeName == "Text")
-            {
-                ui->TextBox->setHidden(false);
-                Text* text = dynamic_cast<Text*>(comp);
-                std::string displaytext = text->textContent;
-                ui->displayedit->setText(displaytext.c_str());
-
-            }
-            if(typeName == "Box Collider")
-            {
-                ui->ColliderBox->setHidden(false);
-
-                BoxCollider* collider = dynamic_cast<BoxCollider*>(comp);
-                ui->Collider_Combo->setCurrentIndex(ui->Collider_Combo->findText(collider->name.c_str()));
-
-            }
-            if(typeName == "Sphere Collider")
-            {
-                ui->ColliderBox->setHidden(false);
-                BoxCollider* collider = dynamic_cast<BoxCollider*>(comp);
-                ui->Collider_Combo->setCurrentIndex(ui->Collider_Combo->findText(collider->name.c_str()));
-
-            }
-            if(typeName == "Triangle Collider")
-            {
-                ui->ColliderBox->setHidden(false);
-                BoxCollider* collider = dynamic_cast<BoxCollider*>(comp);
-                ui->Collider_Combo->setCurrentIndex(ui->Collider_Combo->findText(collider->name.c_str()));
-
-            }
-        }
-    }
-
     if (ObjSelected->isVisible)
     {
         ui->checkBox->setChecked(true);
@@ -941,6 +882,7 @@ void MainWindow::NewScenes(int index)
         ObjSelected->wiredCube->Hide();
         ObjSelected = nullptr;
     }
+
     ui->treeGameObjects->clear();
     Service.SetScene(index);
 }
