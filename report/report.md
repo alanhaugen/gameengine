@@ -18,19 +18,19 @@ Section 2 describes the methods used to preprocess the LiDAR dataset, generate t
 
 A point cloud consists of a large amount of x, y, z coordinates which can be rendered with APIs such as OpenGL and Vulkan.
 
-The Norwegian state has LiDAR data taken the entire country available at the website [https://hoydedata.no](https://hoydedata.no). The dataset used represents a geographical location known as Snøhetta (Kartverket 2016). See figure 1 and 2.
+The Norwegian state has made LiDAR data taken of the entire country available at the website [https://hoydedata.no](https://hoydedata.no). The dataset used represents a geographical location known as Snøhetta (Kartverket, 2016). See figure 1 and 2.
 
 ![Snøhetta 62,343036$^\circ$, 9,179474$^\circ$ as seen on the Kartverket website.](snøhetta_kartverket.png)
 
 ![Snøhetta 62,343036$^\circ$, 9,179474$^\circ$ as seen on Google Maps.](snøhetta_maps.png)
 
-The downloaded LiDAR data has been compressed with LAzip and has to be converted into point cloud data. After this, to visaulise the point cloud as a mesh, it needs to be converted via technique called regular triangulation (Nylund 2025 page 166). Regular triangulation is a mesh with equal length between the vertices, making looking up data from the mesh trivial. See figure 3.
+The downloaded LiDAR data has been compressed with LAzip and has to be converted into point cloud data. After this, to visualise the point cloud as a mesh, it needs to be converted via technique called regular triangulation (Nylund, 2025, page 166). Regular triangulation is a mesh with equal length between the vertices, making looking up data from the mesh trivial. See figure 3.
 
 ![Regular triangulation mesh (Dag 2025 page 168).](triang.png)
 
 # 2.1 Point cloud visualisation
 
-See figure 9 shows a visualisation of the point clouds rendered with a points pipeline in Vulkan. The points have been calculated with the accompanying Python script importlas.py. 
+Figure 9 shows a visualisation of the point clouds rendered with a points pipeline in Vulkan.
 
 Table 1: An excerpt of the resulting importlas.py conversion of LiDAR data:
 
@@ -41,9 +41,11 @@ $$ 509599.89 \qquad 6908643.71 \qquad 1749.92 $$
 
 The engine written to visualise the terrain is Entity Component System (ECS) based, terrain is considered to be a Component. The following code renders the terrain as points. 
 
+```c++
     Terrain* terrainMeshPoints = new Terrain("Assets/output_smallest.txt", true);
+```
 
-There are different techniques available to turn a point cloud into a mesh. One of the better known algorithms is the Delaunay triangulation algorithm (Delanuay 1934). The technique is described in the lecture notes (Nylund 2025 page 161). It is possible to create the mesh offline, with a custom made program, and load in the data precomputed to save CPU-time. Another approach is to simply take all the points, and use a regular triangulation technique as described by Nylund on page 166 in the lecture notes. This was the approach was taken here, as it seemed simple. So, in order to render the height-map shown in figure 6, the point cloud was converted into a 2D image with a custom program, pointconverter. Pointconverter can be found in tools/pointconverter in the repository.
+There are different techniques available to turn a point cloud into a mesh. One of the better known algorithms is the Delaunay triangulation algorithm (Delaunay, 1934). The technique is described in the lecture notes (Nylund, 2025, page 161). It is possible to create the mesh offline, with a custom made program, and load in the data precomputed to save CPU-time. Another approach is to simply take all the points, and use a regular triangulation technique as described by Nylund on page 166 in the lecture notes. This was the approach taken here, as it seemed simple. So, in order to render the height-map shown in figure 6, the point cloud was converted into a 2D image with a custom program, pointconverter. Pointconverter can be found in tools/pointconverter in the repository.
 
 ## 2.2 Pointconverter and terrain mesh visualisation
 
@@ -55,6 +57,7 @@ The program will read the output of the python script importlas.py, and turn the
 
 The program will first figure out how large the data is and store all the point data in an array.
 
+```c++
     float x, y, z;
     while (infile >> x >> z >> y) // Notice z and y are swapped
     {
@@ -66,9 +69,11 @@ The program will first figure out how large the data is and store all the point 
 
         points.push_back(pos);
     }
+```
 
 The data is then used to create a 2D array which represents the height-map.
 
+```c++
     for (auto point : points)
     {
         float normX = (point.x - smallestX) / float(largestX - smallestX);
@@ -80,14 +85,17 @@ The data is then used to create a 2D array which represents the height-map.
 
         vertices[x][z] = u8(normY * 255.0f);
     }
+```
 
-stb_image_write is used to record the image. The resulting image can then be loaded into the engine, which will calculate vertices, normals and UVs based on the data. Figure 3 shows an example image of a height-map generated from point cloud data
+stb_image_write is used to record the image. The resulting image can then be loaded into the engine, which will calculate vertices, normals and UVs based on the data. Figure 6 shows an example rendering of a height-map.
 
 The benefit of using height-maps is the speed of loading the data and the widespread use of height-maps elsewhere in the games industry.
 
 The game engine Terrain component also supports height-maps. To load height-map data, the following code can be used:
 
+```c++
     Terrain* terrainMesh = new Terrain("Assets/output.png");
+```
 
 ## 2.3 Simulation
 
@@ -95,11 +103,13 @@ Code was written to make spheres (balls) which can roll along the normals of the
 
 A component called RigidBody was designed. Since the engine is using ECS (Entity Component System), a rolling ball can be devised like this:
 
+```c++
     GameObject* ball = new GameObject("Ball");
     ball->AddComponent(new Sphere("Assets/Textures/orange.jpg"));
     ball->AddComponent(new TrackingSpline);
     ball->AddComponent(new SphereCollider(ball));
     ball->AddComponent(new RigidBody(terrainMesh));
+```
 
 This will create a Game Object called Ball which can be edited in the editor, moved around, and it will roll automatically around on the terrain. It will also create a spline-based trail after it due to the TrackingSpline Component. This demo can be found in the demos project, games/demos/rollingball.cpp. Please note the engine is divided into many parts, and is designed to be used to make many different projects. See the screenshot below:
 
@@ -107,6 +117,7 @@ This will create a Game Object called Ball which can be edited in the editor, mo
 
 Most of the logic is found in the RigidBody component, found in source/core/components/rigidbody.cpp:
 
+```c++
     glm::vec3 pos = gameObject->GetPosition();
 
 	velocity += (terrain->GetNormal(pos) / 500.0f) * deltaTime;
@@ -116,23 +127,24 @@ Most of the logic is found in the RigidBody component, found in source/core/comp
     pos += velocity;
     pos.y = terrain->GetHeightAt(pos) + 1.0f;
     
-	mesh->SetPosition(pos);
+	gameObject->SetPosition(pos);
+```
 
 The code above is the Update method for the component RigidBody. If it is attached to a game object, like in the rolling ball demo, it will move the ball along with the terrain mesh, and it will use the friction from the terrain to slow down. Some of the terrain has higher friction, which is shown in red. See figure 7. Note the physics are not realistic. This is to keep the simulation simple.
 
 Phong shading is used to render the meshes, while a simpler colour shader is used for lines. The game engine supports as many pipelines as you like, and it is easy to swap out and try out new shader programs.
 
-Another part of the assignment was to create a ball emitter with trails for the balls. This was accomplished by using a object pool with many spheres, spline tracking curve and rigidbody components (Object Pool).  See figure 5 below.
+Another part of the assignment was to create a ball emitter with trails for the balls. This was accomplished by using an object pool with many spheres, spline tracking curve and rigidbody components (Nystrøm, 2025a).  See figure 5 below.
 
 ![An example of 1500 rolling balls spawning from a water emitter component, together with 1500 splines showing their paths.](water.png)
 
 # 3 Results
 
-The point cloud shown in figure 9 consists of over 4 GiB of data, and renders fine with the Vulkan renderer. All the Snøhetta laz data were concatenated into one large point cloud datafile. It does take a few minutes to load. The datafile is not included in the Assets folder in the repository, but all other necessary assets are included.
+The point cloud shown in figure 9 consists of about 2 GiB of data, and renders fine with the Vulkan renderer. All the Snøhetta laz data were concatenated into one large point cloud datafile. It does take a few minutes to load. The datafile is not included in the Assets folder in the repository, but all other necessary assets are included.
 
 The pointcloud converter converts the data into the image.
 
-The rolling balls simulation never allows balls to bounce off the surface. This is unrealistic, but it does simplify writing the code for the simulation. The algorithm described in section 9.6 of the lecture notes was applied (Dag 2025 page 136).
+The rolling balls simulation never allows balls to bounce off the surface. This is unrealistic, but it does simplify writing the code for the simulation. The algorithm described in section 9.6 of the lecture notes was applied (Dag, 2025, page 136).
 
 First, the triangle the ball is on was calculated. Thanks to the regular triangulation, looking up the two possible triangles it is on is trivial and very fast, calculating barycentric coordinates is only necessary for two triangles per look-up.
 
@@ -142,15 +154,17 @@ $$v_k+1 = v_k + a \Delta t$$
 
 $$p_k+1 = p_k + v_k \Delta t$$
 
-Acceleration is simply terrain normal devided by 500 to slow it down, gravity and velocity in the y-direction is ignored for simplicity.
+Acceleration is simply terrain normal divided by 500 to slow it down, gravity and velocity in the y-direction is ignored for simplicity.
+
+Because the simulation ignores gravity and the velocity's y-component, the terrain normal itself acts as a simplified acceleration vector.
 
 $$ a_{slope} = \frac{terrain \quad normal}{500.0f} $$
 
 GetHeight, GetNormal and GetFriction in terrain.cpp are all O(1) thanks to using a lookup table into the regular grid (generated with regular triangulation) instead of looping through all of the vertices and doing barycentric coordinate calculations on each vertex. This speeds up the simulation considerably. 
 
-The water emitter uses the Object Pool pattern (Nystrom 2021a). This pattern makes the simulation run faster by pre-allocating all the needed components up-front, and reusing them as needed. Sadly, this was not achieved with the tracking splines. Tracking splines take some processing to generate as old splines are removed and new ones are generated every so often, based on a timer. This results on noticeable lag, even on modern systems.
+The water emitter uses the Object Pool pattern (Nystrøm 2021a). This pattern makes the simulation run faster by pre-allocating all the needed components up-front, and reusing them as needed. Sadly, this was not achieved with the tracking splines. Tracking splines take some processing to generate as old splines are removed and new ones are generated every so often, based on a timer. This results in noticeable lag, even on modern systems.
 
-The engine has a built in collision detection and response engine, a physics engine. It is called AAPhysics, and is one of the Systems. You can use it to create Sphere Components and Box Components, which can be attached to game objects to make them register and react to collisions. By adding Box Collider to the rollingsphere game objects, the spheres collide and stop when touching other objects with box or sphere colliders attached to them.
+The engine has a built in collision detection and response engine, a physics engine. It is called AAPhysics, and is one of the Systems. You can use it to create Sphere Collision Components and Box Collision Components, which can be attached to game objects to make them register and react to collisions. By adding Box Collider to the rollingsphere game objects, the spheres collide and stop when touching other objects with box or sphere colliders attached to them.
 
 ![Textured mesh with normals of Snøhetta 62,343036$^\circ$, 9,179474$^\circ$, at Dovre, Norway.](mesh_hetta.png)
 
@@ -162,26 +176,24 @@ The engine has a built in collision detection and response engine, a physics eng
 
 # 4 Discussion
 
-Using a hieght-map to visualise point cloud data worked well, it is both fast to load and easy to understand. Post processing effects, such as Gaussian blurr can be added to the image with existing tools to improve the results.
+Using a height-map to visualise point cloud data worked well, it is both fast to load and easy to understand. Post processing effects, such as Gaussian blur can be added to the image with existing tools to improve the results. Figure 8 shows some of the issues that can occur when loading unprocessed point cloud data.
 
 The editor allows customization and one can play with the simulation, adding components, game objects, and so on is both easy and fun.
 
-All the tasks were completed. The hardest part was making RemoveDrawable in the renderer to work correctly. It has a dense array of render components, called drawawbles, and making holes in it can't be done. To make the program run as fast as possible, it is desired to make all the systems use components which are stored in contiguous data structures (Nystrom 2021b). The component lookup therefore uses sparse index array to make sure that already given out ids will still work when the size of the dense array changes.
+All tasks were completed; the most challenging was implementing RemoveDrawable in the renderer. It has a dense array of render components, called drawables, and making holes in it would make the program slower. To make the program run as fast as possible, it is desired to make all the systems use components which are stored in contiguous data structures (Nystrom, 2021b). The component lookup therefore uses sparse index array to make sure that already given out ids will still work when the size of the dense array changes.
 
-The data from the pointconverter progam, the height-map it produces, can be smoothed with gaussian blurr or similar techniques to prevent errors as seen in figure 8 , depending on the quality of the attained point cloud data.
+A limitation of the current simulation is the simplified physics model. To improve realism, a fully dynamic rigid body system could be implemented, incorporating Newtonian gravity, proper acceleration due to slopes, and correct rotation and collision response for rolling objects. Furthermore, dynamic weather, erosion simulation and night-day cycles could be implemented.
 
-To improve realism, a fully dynamic rigid body system could be implemented, incorporating Newtonian gravity, proper acceleration due to slopes, and correct rotation and collision response for rolling objects.
-
-Due to the ECS (Entity Component System) implementation, the performance is really good and a total of 1500 water particles are used in the water emitter. Thanks to fast GetHeight, GetNormal and GetFriction implementations, and thanks to data locality (ECS), the game engine ends up being performant.
+1500 particles are used in the water emitter, which would have been impossible without optimized code. In particular, the constant-time implementations of GetHeight, GetNormal and GetFriction significantly sped up the simulation. Data locality from the ECS architecture likely also contributes positively, although no alternative implementation was created for formal benchmarking.
 
 # References
 
 Delaunay, Boris (1934). "Sur la sphère vide" [On the empty sphere]. Bulletin de l'Académie des Sciences de l'URSS, Classe des Sciences Mathématiques et Naturelles
 
-Kartverket (2016) Fotogrammetrisk generert punktsky Snøhetta klassifisert med bakkepunkt, uklassifisert og støy.
+Kartverket (2016). Fotogrammetrisk generert punktsky Snøhetta klassifisert med bakkepunkt, uklassifisert og støy.
 
-Nylund, Dag (2025) MAT301 Matematikk III VSIM101 Visualisering og simulering forelesningsnotater og oppgaver
+Nylund, Dag (2025). MAT301 Matematikk III VSIM101 Visualisering og simulering forelesningsnotater og oppgaver
 
-Nystrøm, Robert (2021a) Object Pool https://gameprogrammingpatterns.com/object-pool.html
+Nystrøm, Robert (2021a). Object Pool. https://gameprogrammingpatterns.com/object-pool.html (Retrieved 1.12.2025)
 
-Nystrøm, Robert (2021b) Data Locality https://gameprogrammingpatterns.com/data-locality.html
+Nystrøm, Robert (2021b). Data Locality. https://gameprogrammingpatterns.com/data-locality.html (Retrieved 1.12.2025)
